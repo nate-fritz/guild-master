@@ -4,7 +4,7 @@ A text-based RPG game built with Blazor WebAssembly featuring guild management, 
 
 ## Play Online
 
-Play the game at: [https://sinogue.github.io/GuildMaster/](https://sinogue.github.io/GuildMaster/)
+Play the game at: [https://nate-fritz.github.io/guild-master/](https://nate-fritz.github.io/guild-master/)
 
 ## Features
 

@@ -36,7 +36,7 @@ jobs:
       run: dotnet publish -c Release -o release --nologo
 
     - name: Change base href in index.html
-      run: sed -i 's/<base href="\/" \/>/<base href="\/GuildMaster\/" \/>/g' release/wwwroot/index.html
+      run: sed -i 's/<base href="\/" \/>/<base href="\/guild-master\/" \/>/g' release/wwwroot/index.html
 
     - name: Add .nojekyll file
       run: touch release/wwwroot/.nojekyll
