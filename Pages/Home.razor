@@ -1,0 +1,217 @@
+@page "/"
+@using GuildMaster.Services
+@inject GameConsole GameConsole
+@inject GameEngine GameEngine
+@inject IJSRuntime JS
+
+<PageTitle>GuildMaster</PageTitle>
+
+<div class="game-container">
+    <div class="console-output" id="consoleOutput" @ref="outputDiv">
+        @foreach (var line in outputLines)
+        {
+            <div>@((MarkupString)line)</div>
+        }
+    </div>
+    
+    <div class="console-input">
+        <span class="prompt">&gt;</span>
+        <input @ref="inputField"
+               @bind="currentInput"
+               @bind:event="oninput"
+               @onkeydown="HandleKeyDown"
+               placeholder="What do you do?" />
+    </div>
+</div>
+
+@code {
+    private List<string> outputLines = new();
+    private string currentInput = "";
+    private ElementReference outputDiv;
+    private ElementReference inputField;
+    private bool awaitingName = false;
+    private bool awaitingClass = false;
+    private string pendingPlayerName = "";
+
+    protected override void OnInitialized()
+    {
+        GameConsole.OnOutput += HandleOutput;
+        GameConsole.OnClear += HandleClear;
+
+        GuildMaster.Services.Console.Initialize(GameConsole);
+        GuildMaster.Services.AnsiConsole.Initialize(GameConsole);
+
+        // Set callback for combat state changes
+        GameEngine.SetStateChangedCallback(() => InvokeAsync(StateHasChanged));
+
+        ShowTitle();
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await inputField.FocusAsync();
+        }
+        await ScrollToBottom();
+    }
+    
+    private async Task ScrollToBottom()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("eval", "document.getElementById('consoleOutput').scrollTop = document.getElementById('consoleOutput').scrollHeight");
+        }
+        catch { }
+    }
+    
+    private void ShowTitle()
+    {
+        GameConsole.MarkupLine("");
+        GameConsole.MarkupLine("[#FA935F]██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗[/]");
+        GameConsole.MarkupLine("[#FA8448]██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝[/]");
+        GameConsole.MarkupLine("[#FC7938]██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗  [/]");
+        GameConsole.MarkupLine("[#FA6419]██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝  [/]");
+        GameConsole.MarkupLine("[#FA5A0A]╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗[/]");
+        GameConsole.MarkupLine("[#BA3E00] ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝[/]");
+        GameConsole.MarkupLine("");
+        GameConsole.MarkupLine("[#FA935F]                    ████████╗ ██████╗ [/]");
+        GameConsole.MarkupLine("[#FA8448]                    ╚══██╔══╝██╔═══██╗[/]");
+        GameConsole.MarkupLine("[#FC7938]                       ██║   ██║   ██║[/]");
+        GameConsole.MarkupLine("[#FA6419]                       ██║   ██║   ██║[/]");
+        GameConsole.MarkupLine("[#FA5A0A]                       ██║   ╚██████╔╝[/]");
+        GameConsole.MarkupLine("[#BA3E00]                       ╚═╝    ╚═════╝ [/]");
+        GameConsole.MarkupLine("");
+        GameConsole.MarkupLine("[#FA935F] ██████╗ ██╗   ██╗██╗██╗     ██████╗ ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗ [/]");
+        GameConsole.MarkupLine("[#FA8448]██╔════╝ ██║   ██║██║██║     ██╔══██╗████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗[/]");
+        GameConsole.MarkupLine("[#FC7938]██║  ███╗██║   ██║██║██║     ██║  ██║██╔████╔██║███████║███████╗   ██║   █████╗  ██████╔╝[/]");
+        GameConsole.MarkupLine("[#FA6419]██║   ██║██║   ██║██║██║     ██║  ██║██║╚██╔╝██║██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗[/]");
+        GameConsole.MarkupLine("[#FA5A0A]╚██████╔╝╚██████╔╝██║███████╗██████╔╝██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║[/]");
+        GameConsole.MarkupLine("[#BA3E00] ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝[/]");
+        GameConsole.MarkupLine("");
+        GameConsole.MarkupLine("[#FA8448]                            A Text Adventure RPG Game[/]");
+        GameConsole.MarkupLine("");
+        GameConsole.MarkupLine("[#FA8448]                      ~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~[/]");
+        GameConsole.MarkupLine("");
+        GameConsole.MarkupLine("");
+        GameConsole.MarkupLine("[#90FF90]1.[/] New Game");
+        GameConsole.MarkupLine("[#75C8FF]2.[/] Load Game");
+        GameConsole.MarkupLine("");
+        GameConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+    }
+
+    private async void HandleOutput(string htmlLine)
+    {
+        outputLines.Add(htmlLine);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async void HandleClear()
+    {
+        outputLines.Clear();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            string input = currentInput?.Trim() ?? "";
+            currentInput = "";
+
+            // Always process if there's input, or if it's empty but the game wants it (for pagination)
+            if (!string.IsNullOrEmpty(input) || GameEngine.IsGameStarted)
+            {
+                if (!string.IsNullOrEmpty(input))
+                {
+                    outputLines.Add($"<span style=\"color:#44ff44\">&gt; {System.Web.HttpUtility.HtmlEncode(input)}</span>");
+                }
+                await ProcessCommand(input);
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+    private async Task ProcessCommand(string command)
+    {
+        // If GameEngine is waiting for load slot selection, pass through directly
+        if (GameEngine.IsWaitingForLoadSlot)
+        {
+            await GameEngine.ProcessCommand(command);
+            return;
+        }
+
+        if (awaitingName)
+        {
+            pendingPlayerName = string.IsNullOrEmpty(command) ? "Adventurer" : command;
+            awaitingName = false;
+            awaitingClass = true;
+
+            GameConsole.MarkupLine("");
+            GameConsole.MarkupLine("[#75C8FF]Choose your class:[/]");
+            GameConsole.MarkupLine("");
+            GameConsole.MarkupLine("[#FA935F]1. Legionnaire[/] - Heavily armored tank");
+            GameConsole.MarkupLine("   HP: 25 | EP: 8 | ATK: 2 | DEF: 3 | SPD: 1");
+            GameConsole.MarkupLine("");
+            GameConsole.MarkupLine("[#90FF90]2. Venator[/] - Swift ranger DPS");
+            GameConsole.MarkupLine("   HP: 18 | EP: 12 | ATK: 3 | DEF: 1 | SPD: 3");
+            GameConsole.MarkupLine("");
+            GameConsole.MarkupLine("[#75C8FF]3. Oracle[/] - Mystical support caster");
+            GameConsole.MarkupLine("   HP: 15 | EP: 18 | ATK: 1 | DEF: 0 | SPD: 2");
+            GameConsole.MarkupLine("");
+            return;
+        }
+
+        if (awaitingClass)
+        {
+            string className = command switch
+            {
+                "1" => "Legionnaire",
+                "2" => "Venator",
+                "3" => "Oracle",
+                _ => "Legionnaire"
+            };
+
+            awaitingClass = false;
+            GameConsole.MarkupLine($"\n[#90FF90]You have chosen: {className}[/]");
+            GameConsole.MarkupLine("");
+
+            GameEngine.StartNewGame(pendingPlayerName, className);
+            return;
+        }
+
+        // Handle start menu
+        if (!GameEngine.IsGameStarted)
+        {
+            if (command == "1" || command.ToLower() == "new game" || command.ToLower() == "start")
+            {
+                GameConsole.MarkupLine("");
+                GameConsole.MarkupLine("[#75C8FF]What should I call you?[/]");
+                awaitingName = true;
+                return;
+            }
+            else if (command == "2" || command.ToLower() == "load game" || command.ToLower() == "load")
+            {
+                GameConsole.MarkupLine("");
+                await GameEngine.ProcessCommand("load");
+                return;
+            }
+            else
+            {
+                GameConsole.MarkupLine("[dim]Please enter 1 for New Game or 2 for Load Game.[/]");
+                return;
+            }
+        }
+
+        if (GameEngine.IsGameStarted)
+        {
+            await GameEngine.ProcessCommand(command);
+        }
+    }
+
+    public void Dispose()
+    {
+        GameConsole.OnOutput -= HandleOutput;
+        GameConsole.OnClear -= HandleClear;
+    }
+}
