@@ -88,91 +88,126 @@ namespace GuildMaster.Managers
 
         public void StartCombat(List<NPC> enemies, Room currentRoom)
         {
-            var player = context.Player;
-
-            // Initialize combat state
-            activeEnemies = enemies;
-            combatRoom = currentRoom;
-            currentState = CombatState.ProcessingTurn;
-            currentTurnIndex = 0;
-            baseDefense = player.Defense;
-            isDefending = false;
-            combatActive = true;
-
-            // Pulsing red "COMBAT BEGINS" effect with animation
-            AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine("<span class='combat-glow'>⚔ COMBAT BEGINS ⚔</span>");
-            AnsiConsole.MarkupLine("");
-
-            if (enemies.Count == 1)
+            try
             {
-                AnsiConsole.MarkupLine($"\nYou are fighting [#fc3838]{enemies[0].Name}![/]");
-            }
-            else
-            {
-                Console.Write("\nYou are fighting: ");
-                for (int i = 0; i < enemies.Count; i++)
+                AnsiConsole.MarkupLine("[dim]DEBUG: StartCombat called[/]");
+                var player = context.Player;
+
+                // Initialize combat state
+                activeEnemies = enemies;
+                combatRoom = currentRoom;
+                currentState = CombatState.ProcessingTurn;
+                currentTurnIndex = 0;
+                baseDefense = player.Defense;
+                isDefending = false;
+                combatActive = true;
+
+                AnsiConsole.MarkupLine("[dim]DEBUG: Combat state initialized[/]");
+
+                // Pulsing red "COMBAT BEGINS" effect with animation
+                AnsiConsole.MarkupLine("");
+                AnsiConsole.MarkupLine("<span class='combat-glow'>⚔ COMBAT BEGINS ⚔</span>");
+                AnsiConsole.MarkupLine("");
+
+                if (enemies.Count == 1)
                 {
-                    if (i > 0) Console.Write(" and ");
-                    AnsiConsole.Markup($"[#fc3838]{enemies[i].Name}[/]");
+                    AnsiConsole.MarkupLine($"\nYou are fighting [#fc3838]{enemies[0].Name}![/]");
                 }
-                AnsiConsole.MarkupLine("!");
+                else
+                {
+                    Console.Write("\nYou are fighting: ");
+                    for (int i = 0; i < enemies.Count; i++)
+                    {
+                        if (i > 0) Console.Write(" and ");
+                        AnsiConsole.Markup($"[#fc3838]{enemies[i].Name}[/]");
+                    }
+                    AnsiConsole.MarkupLine("!");
+                }
+
+                AnsiConsole.MarkupLine("[dim]DEBUG: About to roll initiative[/]");
+
+                // Roll initiative
+                turnOrder = RollInitiative(player, enemies);
+
+                AnsiConsole.MarkupLine("[dim]DEBUG: Initiative rolled[/]");
+
+                // Display initiative results
+                AnsiConsole.MarkupLine("\nInitiative Order:");
+                foreach (var combatant in turnOrder)
+                {
+                    string name = combatant.IsPlayer ? (combatant.Character == player ? "You" : combatant.Character.Name) : combatant.Name;
+                    AnsiConsole.MarkupLine($"  {name}: {combatant.InitiativeRoll} (Speed: {combatant.Character.Speed})");
+                }
+                AnsiConsole.MarkupLine("");
+
+                AnsiConsole.MarkupLine("[dim]DEBUG: About to process first turn[/]");
+
+                // Start the first turn
+                ProcessNextTurn();
+
+                AnsiConsole.MarkupLine("[dim]DEBUG: ProcessNextTurn completed[/]");
             }
-
-            // Roll initiative
-            turnOrder = RollInitiative(player, enemies);
-
-            // Display initiative results
-            AnsiConsole.MarkupLine("\nInitiative Order:");
-            foreach (var combatant in turnOrder)
+            catch (Exception ex)
             {
-                string name = combatant.IsPlayer ? (combatant.Character == player ? "You" : combatant.Character.Name) : combatant.Name;
-                AnsiConsole.MarkupLine($"  {name}: {combatant.InitiativeRoll} (Speed: {combatant.Character.Speed})");
+                AnsiConsole.MarkupLine($"[#FF0000]FATAL ERROR in StartCombat: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[#808080]{ex.StackTrace}[/]");
+                combatActive = false;
+                currentState = CombatState.CombatEnded;
             }
-            AnsiConsole.MarkupLine("");
-
-            // Start the first turn
-            ProcessNextTurn();
         }
 
         private void ProcessNextTurn()
         {
-            var player = context.Player;
-
-            if (turnOrder == null || activeEnemies == null)
-                return;
-
-            // Check if combat should end
-            if (!combatActive || !player.IsAlive || !activeEnemies.Any(e => e.Health > 0))
+            try
             {
-                HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
-                currentState = CombatState.CombatEnded;
-                return;
-            }
+                AnsiConsole.MarkupLine("[dim]DEBUG: ProcessNextTurn called[/]");
+                var player = context.Player;
 
-            // Move to next valid combatant
-            while (currentTurnIndex < turnOrder.Count)
-            {
-                var combatant = turnOrder[currentTurnIndex];
-
-                // Skip dead combatants
-                if (!combatant.IsAlive)
+                if (turnOrder == null || activeEnemies == null)
                 {
-                    currentTurnIndex++;
-                    continue;
+                    AnsiConsole.MarkupLine("[dim]DEBUG: turnOrder or activeEnemies is null[/]");
+                    return;
                 }
 
-                // Check if combat should continue
-                if (!player.IsAlive || !activeEnemies.Any(e => e.Health > 0) || !combatActive)
+                AnsiConsole.MarkupLine($"[dim]DEBUG: turnOrder.Count={turnOrder.Count}, currentTurnIndex={currentTurnIndex}[/]");
+
+                // Check if combat should end
+                if (!combatActive || !player.IsAlive || !activeEnemies.Any(e => e.Health > 0))
                 {
+                    AnsiConsole.MarkupLine("[dim]DEBUG: Combat should end[/]");
                     HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
                     currentState = CombatState.CombatEnded;
                     return;
                 }
 
-                DisplayCombatStatus(player, activeEnemies, combatant);
+                // Move to next valid combatant
+                while (currentTurnIndex < turnOrder.Count)
+                {
+                    AnsiConsole.MarkupLine($"[dim]DEBUG: Processing turn index {currentTurnIndex}[/]");
+                    var combatant = turnOrder[currentTurnIndex];
 
-                if (combatant.IsPlayer && combatant.Character == player)
+                    // Skip dead combatants
+                    if (!combatant.IsAlive)
+                    {
+                        AnsiConsole.MarkupLine($"[dim]DEBUG: Skipping dead combatant[/]");
+                        currentTurnIndex++;
+                        continue;
+                    }
+
+                    // Check if combat should continue
+                    if (!player.IsAlive || !activeEnemies.Any(e => e.Health > 0) || !combatActive)
+                    {
+                        AnsiConsole.MarkupLine("[dim]DEBUG: Combat should end (mid-turn check)[/]");
+                        HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
+                        currentState = CombatState.CombatEnded;
+                        return;
+                    }
+
+                    AnsiConsole.MarkupLine($"[dim]DEBUG: About to display combat status[/]");
+                    DisplayCombatStatus(player, activeEnemies, combatant);
+                    AnsiConsole.MarkupLine($"[dim]DEBUG: Displayed combat status[/]");
+
+                    if (combatant.IsPlayer && combatant.Character == player)
                 {
                     // Process DOT damage at the start of player turn
                     if (player.ActiveDOTs != null && player.ActiveDOTs.Count > 0)
@@ -250,8 +285,17 @@ namespace GuildMaster.Managers
             // If we've gone through all combatants, reset to the beginning
             if (currentTurnIndex >= turnOrder.Count)
             {
+                AnsiConsole.MarkupLine("[dim]DEBUG: Resetting turn order[/]");
                 currentTurnIndex = 0;
                 _ = ScheduleNextTurnAsync();
+            }
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[#FF0000]FATAL ERROR in ProcessNextTurn: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[#808080]{ex.StackTrace}[/]");
+                combatActive = false;
+                currentState = CombatState.CombatEnded;
             }
         }
 

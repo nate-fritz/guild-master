@@ -151,7 +151,7 @@ namespace GuildMaster.Managers
 
             if (node.Choices.Count == 0)
             {
-                AnsiConsole.MarkupLine("\n[#808080][Conversation ends][/]");
+                AnsiConsole.MarkupLine("\n[#808080](Conversation ends)[/]");
                 EndDialogue();
                 return;
             }
