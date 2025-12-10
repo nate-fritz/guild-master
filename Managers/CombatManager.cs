@@ -448,19 +448,26 @@ namespace GuildMaster.Managers
 
         private void CompleteTurn()
         {
+            AnsiConsole.MarkupLine($"[dim]DEBUG: CompleteTurn called, currentTurnIndex={currentTurnIndex}[/]");
             currentTurnIndex++;
             currentState = CombatState.ProcessingTurn;
+            AnsiConsole.MarkupLine($"[dim]DEBUG: About to schedule next turn async, new index={currentTurnIndex}[/]");
             // Fire and forget with explicit exception handling
             _ = ScheduleNextTurnAsync();
+            AnsiConsole.MarkupLine($"[dim]DEBUG: ScheduleNextTurnAsync started[/]");
         }
 
         private async Task ScheduleNextTurnAsync()
         {
             try
             {
+                AnsiConsole.MarkupLine($"[dim]DEBUG: ScheduleNextTurnAsync executing, about to delay {TURN_DELAY_MS}ms[/]");
                 await Task.Delay(TURN_DELAY_MS);
+                AnsiConsole.MarkupLine($"[dim]DEBUG: Delay complete, calling ProcessNextTurn[/]");
                 ProcessNextTurn();
+                AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessNextTurn returned, invoking onStateChanged[/]");
                 onStateChanged?.Invoke();
+                AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged invoked[/]");
             }
             catch (Exception ex)
             {
@@ -562,6 +569,8 @@ namespace GuildMaster.Managers
 
         private void HandleAbilitySelection(string input)
         {
+            AnsiConsole.MarkupLine($"[dim]DEBUG: HandleAbilitySelection called with input='{input}'[/]");
+
             if (input == "0")
             {
                 ShowPlayerActionMenu();
@@ -580,6 +589,7 @@ namespace GuildMaster.Managers
             if (int.TryParse(input, out int abilityIndex) && abilityIndex > 0 && abilityIndex <= abilities.Count)
             {
                 var ability = abilities[abilityIndex - 1];
+                AnsiConsole.MarkupLine($"[dim]DEBUG: Selected ability '{ability.Name}', energyCost={ability.EnergyCost}[/]");
 
                 // Check energy cost
                 if (player.Energy < ability.EnergyCost)
@@ -594,17 +604,22 @@ namespace GuildMaster.Managers
                 abilityCharacter = player;
 
                 // Check if ability needs target selection
+                AnsiConsole.MarkupLine($"[dim]DEBUG: Checking target requirements, NeedsEnemyTarget={NeedsEnemyTarget(ability)}[/]");
                 if (activeEnemies != null && NeedsEnemyTarget(ability))
                 {
                     var aliveEnemies = activeEnemies.Where(e => e.Health > 0).ToList();
+                    AnsiConsole.MarkupLine($"[dim]DEBUG: aliveEnemies.Count={aliveEnemies.Count}[/]");
+
                     if (aliveEnemies.Count == 1)
                     {
+                        AnsiConsole.MarkupLine($"[dim]DEBUG: Single enemy, auto-targeting[/]");
                         // Auto-target single enemy
                         ExecuteAbilityForCharacter(ability, player, activeEnemies, player);
                         CompleteTurn();
                     }
                     else
                     {
+                        AnsiConsole.MarkupLine($"[dim]DEBUG: Multiple enemies, showing target selection[/]");
                         // Show target selection
                         currentTargetList = aliveEnemies;
                         currentState = CombatState.SelectingAbilityTarget;
@@ -657,6 +672,8 @@ namespace GuildMaster.Managers
 
         private void HandleAbilityTargetSelection(string input)
         {
+            AnsiConsole.MarkupLine($"[dim]DEBUG: HandleAbilityTargetSelection called with input='{input}'[/]");
+
             if (currentTargetList == null || pendingAbility == null || abilityCharacter == null || activeEnemies == null)
             {
                 AnsiConsole.MarkupLine("[#FF0000]Error: Invalid combat state![/]");
@@ -680,9 +697,13 @@ namespace GuildMaster.Managers
                 return;
             }
 
+            AnsiConsole.MarkupLine($"[dim]DEBUG: Valid target selected, executing ability[/]");
+
             // Execute ability with selected target
             preselectedTarget = currentTargetList[targetIndex - 1];
+            AnsiConsole.MarkupLine($"[dim]DEBUG: About to execute ability '{pendingAbility?.Name}' on {preselectedTarget?.Name}[/]");
             ExecuteAbilityForCharacter(pendingAbility, abilityCharacter, activeEnemies, context.Player, preselectedTarget);
+            AnsiConsole.MarkupLine($"[dim]DEBUG: Ability executed, clearing state[/]");
 
             // Clear pending ability state
             pendingAbility = null;
@@ -690,7 +711,9 @@ namespace GuildMaster.Managers
             currentTargetList = null;
             preselectedTarget = null;
 
+            AnsiConsole.MarkupLine($"[dim]DEBUG: Calling CompleteTurn[/]");
             CompleteTurn();
+            AnsiConsole.MarkupLine($"[dim]DEBUG: CompleteTurn returned[/]");
         }
 
         private void ShowItemMenu()
