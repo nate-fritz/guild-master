@@ -451,23 +451,48 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"[dim]DEBUG: CompleteTurn called, currentTurnIndex={currentTurnIndex}[/]");
             currentTurnIndex++;
             currentState = CombatState.ProcessingTurn;
-            AnsiConsole.MarkupLine($"[dim]DEBUG: About to schedule next turn async, new index={currentTurnIndex}[/]");
-            // Fire and forget with explicit exception handling
-            _ = ScheduleNextTurnAsync();
-            AnsiConsole.MarkupLine($"[dim]DEBUG: ScheduleNextTurnAsync started[/]");
+            AnsiConsole.MarkupLine($"[dim]DEBUG: About to call ProcessNextTurn directly (no delay), new index={currentTurnIndex}[/]");
+
+            // TEMPORARY FIX: Call directly without delay to test if async is causing the freeze
+            try
+            {
+                ProcessNextTurn();
+                AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessNextTurn completed, invoking onStateChanged[/]");
+                onStateChanged?.Invoke();
+                AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged invoked[/]");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error in CompleteTurn: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[dim]{ex.StackTrace}[/]");
+                currentState = CombatState.CombatEnded;
+                combatActive = false;
+            }
         }
 
         private async Task ScheduleNextTurnAsync()
         {
             try
             {
-                AnsiConsole.MarkupLine($"[dim]DEBUG: ScheduleNextTurnAsync executing, about to delay {TURN_DELAY_MS}ms[/]");
-                await Task.Delay(TURN_DELAY_MS);
-                AnsiConsole.MarkupLine($"[dim]DEBUG: Delay complete, calling ProcessNextTurn[/]");
+                AnsiConsole.MarkupLine($"[dim]DEBUG: ScheduleNextTurnAsync executing, about to delay {TURN_DELAY_MS}ms, currentState={currentState}[/]");
+
+                // Use ConfigureAwait(false) to avoid deadlocks
+                await Task.Delay(TURN_DELAY_MS).ConfigureAwait(false);
+
+                AnsiConsole.MarkupLine($"[dim]DEBUG: Delay complete, calling ProcessNextTurn, currentState={currentState}, combatActive={combatActive}[/]");
                 ProcessNextTurn();
-                AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessNextTurn returned, invoking onStateChanged[/]");
-                onStateChanged?.Invoke();
-                AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged invoked[/]");
+                AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessNextTurn returned, about to invoke onStateChanged, currentState={currentState}[/]");
+
+                if (onStateChanged != null)
+                {
+                    AnsiConsole.MarkupLine($"[dim]DEBUG: Invoking onStateChanged[/]");
+                    onStateChanged.Invoke();
+                    AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged completed[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged is null, skipping[/]");
+                }
             }
             catch (Exception ex)
             {
@@ -477,6 +502,8 @@ namespace GuildMaster.Managers
                 // Reset combat state to prevent soft-lock
                 currentState = CombatState.CombatEnded;
                 combatActive = false;
+                // Try to trigger UI update even after error
+                onStateChanged?.Invoke();
             }
         }
 
