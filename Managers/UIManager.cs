@@ -90,7 +90,7 @@ namespace GuildMaster.Managers
             int displayHour = hour > 12 ? hour - 12 : hour;
             if (displayHour == 0) displayHour = 12;
 
-            AnsiConsole.MarkupLine($"\n[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]");
+            AnsiConsole.MarkupLine($"\n\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
             Console.ResetColor();
         }
 
