@@ -176,7 +176,11 @@ namespace GuildMaster.Managers
                 {
                     AnsiConsole.MarkupLine("[dim]DEBUG: Combat should end[/]");
                     HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
-                    currentState = CombatState.CombatEnded;
+                    // Only set to CombatEnded if we're not in recruitment or death menu
+                    if (currentState != CombatState.RecruitmentPrompt && currentState != CombatState.DeathMenu)
+                    {
+                        currentState = CombatState.CombatEnded;
+                    }
                     return;
                 }
 
