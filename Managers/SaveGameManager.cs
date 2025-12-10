@@ -638,7 +638,7 @@ namespace GuildMaster.Managers
                 }
                 else
                 {
-                    AnsiConsole.MarkupLine($"[#FFD700]{i}.[/] [dim][Empty Slot][/]");
+                    AnsiConsole.MarkupLine($"[#FFD700]{i}.[/] [dim]Empty Slot[/]");
                 }
                 AnsiConsole.MarkupLine("");
             }
@@ -726,7 +726,7 @@ namespace GuildMaster.Managers
                 }
                 else
                 {
-                    AnsiConsole.MarkupLine($"[#FFD700]{i}.[/] [dim][Empty Slot][/]");
+                    AnsiConsole.MarkupLine($"[#FFD700]{i}.[/] [dim]Empty Slot[/]");
                 }
                 AnsiConsole.MarkupLine("");
             }

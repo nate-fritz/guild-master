@@ -63,7 +63,7 @@ namespace GuildMaster.Services
         public static void MarkupLine(string markup)
         {
             // Filter out debug messages if ShowDebugMessages is false
-            if (!ShowDebugMessages && markup.Contains("[dim]DEBUG:"))
+            if (!ShowDebugMessages && markup.Contains("[dim]DEBUG"))
             {
                 return;
             }
@@ -73,7 +73,7 @@ namespace GuildMaster.Services
         public static void Markup(string markup)
         {
             // Filter out debug messages if ShowDebugMessages is false
-            if (!ShowDebugMessages && markup.Contains("[dim]DEBUG:"))
+            if (!ShowDebugMessages && markup.Contains("[dim]DEBUG"))
             {
                 return;
             }

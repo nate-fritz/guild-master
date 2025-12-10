@@ -1645,6 +1645,7 @@ namespace GuildMaster.Managers
             }
 
             CleanupCombat(player);
+            ShowStatusBar();
         }
 
         private List<Combatant> RollInitiative(Player player, List<NPC> enemies)
