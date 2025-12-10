@@ -221,14 +221,14 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Exploration:");
             AnsiConsole.MarkupLine("Look around:          l or look or look around");
-            AnsiConsole.MarkupLine("Look at something:    look <object or person>");
+            AnsiConsole.MarkupLine("Look at something:    look [object or person]");
             AnsiConsole.MarkupLine("Talk:                 talk or t");
-            AnsiConsole.MarkupLine("Take object:          take <object>");
+            AnsiConsole.MarkupLine("Take object:          take [object]");
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Items:");
             AnsiConsole.MarkupLine("Inventory:            inventory, inv, or i");
-            AnsiConsole.MarkupLine("Use item:             use <item>");
-            AnsiConsole.MarkupLine("Use on ally:          use <item> on <name>");
+            AnsiConsole.MarkupLine("Use item:             use [item]");
+            AnsiConsole.MarkupLine("Use on ally:          use [item] on [name]");
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Other:");
             AnsiConsole.MarkupLine("Character Sheet:      stats");
