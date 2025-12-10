@@ -1169,83 +1169,24 @@ namespace GuildMaster.Managers
 
             if (aliveEnemies.Count > 0)
             {
-                bool validAction = false;
-                while (!validAction)
+                AnsiConsole.MarkupLine($"\n[#FFFF00]{ally.Name}'s turn[/]");
+
+                // AI decision-making for party members
+                // Simple AI: Attack the enemy with the lowest health
+                NPC target = aliveEnemies.OrderBy(e => e.Health).First();
+
+                // Get weapon damage for recruit
+                int damage = GetWeaponDamage(ally);
+                string diceString = GetWeaponDiceString(ally);
+
+                AnsiConsole.MarkupLine($"{ally.Name} attacks {target.Name}!");
+                AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
+                target.Health -= damage;
+
+                if (target.Health <= 0)
                 {
-                    AnsiConsole.MarkupLine($"\n[{ally.Name}'s turn]");
-                    AnsiConsole.MarkupLine("1. Attack");
-                    AnsiConsole.MarkupLine("2. Abilities");
-                    AnsiConsole.MarkupLine("3. Defend");
-
-                    Console.Write("Choose action: ");
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    string choice = Console.ReadLine();
-                    Console.ResetColor();
-
-                    switch (choice)
-                    {
-                        case "1": // Attack
-                            NPC target = null;
-
-                            if (aliveEnemies.Count == 1)
-                            {
-                                target = aliveEnemies[0];
-                            }
-                            else
-                            {
-                                AnsiConsole.MarkupLine("\nChoose target:");
-                                for (int i = 0; i < aliveEnemies.Count; i++)
-                                {
-                                    AnsiConsole.MarkupLine($"{i + 1}. {aliveEnemies[i].Name} (HP: {aliveEnemies[i].Health}/{aliveEnemies[i].MaxHealth})");
-                                }
-                                Console.Write("Target: ");
-
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                string targetChoice = Console.ReadLine();
-                                Console.ResetColor();
-
-                                if (int.TryParse(targetChoice, out int targetIndex) && targetIndex > 0 && targetIndex <= aliveEnemies.Count)
-                                {
-                                    target = aliveEnemies[targetIndex - 1];
-                                }
-                                else
-                                {
-                                    AnsiConsole.MarkupLine("Invalid target!");
-                                    break;
-                                }
-                            }
-
-                            // Get weapon damage for recruit
-                            int damage = GetWeaponDamage(ally);
-                            string diceString = GetWeaponDiceString(ally);
-
-                            AnsiConsole.MarkupLine($"\n{ally.Name} attacks {target.Name}!");
-                            AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
-                            target.Health -= damage;
-
-                            if (target.Health <= 0)
-                            {
-                                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
-                            }
-                            validAction = true;
-                            break;
-
-                        case "2": // Abilities
-                            validAction = HandleCharacterAbilities(ally, aliveEnemies, context.Player);
-                            break;
-
-                        case "3": // Defend
-                            AnsiConsole.MarkupLine($"\n{ally.Name} takes a defensive stance!");
-                            ally.Defense = Math.Max(1, ally.Defense * 2);
-                            validAction = true;
-                            break;
-
-                        default:
-                            AnsiConsole.MarkupLine("\nInvalid choice! Please choose again.");
-                            break;
-                    }
+                    AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
                 }
-                // Note: Thread.Sleep removed for web compatibility
             }
         }
 
