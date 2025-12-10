@@ -141,7 +141,7 @@ namespace GuildMaster.Services
 
             // Initialize managers with loaded context
             uiManager = new UIManager(gameContext);
-            var messageManager = new MessageManager(gameContext);
+            var messageManager = new MessageManager(gameContext, uiManager);
             ProgramStatics.messageManager = messageManager;
             itemManager = new ItemManager(gameContext);
             questManager = new QuestManager(gameContext);
@@ -188,7 +188,7 @@ namespace GuildMaster.Services
 
             // Initialize managers
             uiManager = new UIManager(gameContext);
-            var messageManager = new MessageManager(gameContext);
+            var messageManager = new MessageManager(gameContext, uiManager);
             ProgramStatics.messageManager = messageManager;
             itemManager = new ItemManager(gameContext);
             questManager = new QuestManager(gameContext);
@@ -204,7 +204,6 @@ namespace GuildMaster.Services
             TextHelper.DisplayTextWithPaging(openingText, "#FA935F");
             AnsiConsole.MarkupLine("");
             messageManager.CheckAndShowMessage("game_start_commands");
-            DisplayStats();
         }
 
         public async Task ProcessCommand(string input)
@@ -411,7 +410,7 @@ namespace GuildMaster.Services
             int displayHour = hour > 12 ? hour - 12 : hour;
             if (displayHour == 0) displayHour = 12;
 
-            AnsiConsole.MarkupLine($"\n\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
+            AnsiConsole.MarkupLine($"\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
         }
     }
 }

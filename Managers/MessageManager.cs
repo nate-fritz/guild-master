@@ -11,6 +11,7 @@ namespace GuildMaster.Managers
     public class MessageManager
     {
         private readonly GameContext context;
+        private readonly UIManager uiManager;
         private HashSet<string> shownMessages = new HashSet<string>();
 
         // Different message types for different formatting
@@ -22,9 +23,10 @@ namespace GuildMaster.Managers
             Hint        // Dim text - subtle reminders
         }
 
-        public MessageManager(GameContext gameContext)
+        public MessageManager(GameContext gameContext, UIManager uiManagerInstance)
         {
             context = gameContext;
+            uiManager = uiManagerInstance;
         }
 
         public void CheckAndShowMessage(string triggerId, string customParam = null)
@@ -164,6 +166,12 @@ namespace GuildMaster.Managers
             }
 
             AnsiConsole.MarkupLine("");
+
+            // Display status bar after tutorial messages
+            if (type == MessageType.Tutorial)
+            {
+                uiManager.DisplayStats();
+            }
         }
 
         private void WrapAndDisplay(string text, string color)
