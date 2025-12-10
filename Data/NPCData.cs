@@ -364,6 +364,12 @@ namespace GuildMaster.Data
                 Choices = { }
             });
 
+            fighter.Dialogue.Add("goodbye", new DialogueNode()
+            {
+                Text = "Smart choice. Now leave me be.",
+                Choices = { }
+            });
+
             farmer.Dialogue.Add("greeting", new DialogueNode()
             {
                 Text = "Greetings, friend. I don't recall seeing you come through here before.  ",

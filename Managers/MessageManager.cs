@@ -38,7 +38,7 @@ namespace GuildMaster.Managers
             var message = GetMessage(triggerId, customParam);
             if (message != null)
             {
-                DisplayMessage(message.Value.Item1, message.Value.Item2);
+                DisplayMessage(message.Value.Item1, message.Value.Item2, triggerId);
                 shownMessages.Add(triggerId);
 
                 // Note: Thread.Sleep removed for web compatibility - Blazor WASM runs on UI thread
@@ -132,7 +132,7 @@ namespace GuildMaster.Managers
             };
         }
 
-        private void DisplayMessage(string text, MessageType type)
+        private void DisplayMessage(string text, MessageType type, string triggerId)
         {
             AnsiConsole.MarkupLine("");
 
@@ -165,12 +165,16 @@ namespace GuildMaster.Managers
                     break;
             }
 
-            AnsiConsole.MarkupLine("");
-
-            // Display status bar after tutorial messages
-            if (type == MessageType.Tutorial)
+            // Display status bar after tutorial messages, but only for specific ones
+            // that don't happen within commands (commands show status bar on completion)
+            if (type == MessageType.Tutorial && (triggerId == "game_start_commands" || triggerId == "first_movement_tutorial"))
             {
+                AnsiConsole.MarkupLine("");
                 uiManager.DisplayStats();
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("");
             }
         }
 

@@ -227,8 +227,6 @@ namespace GuildMaster.Services
 
             var player = gameContext.Player;
 
-            AnsiConsole.MarkupLine("");
-
             // Check for pagination "more" command or empty input (if there are more pages)
             if (paginationManager.HasMorePages && (input.ToLower() == "more" || string.IsNullOrWhiteSpace(input)))
             {
@@ -257,15 +255,33 @@ namespace GuildMaster.Services
             // Check if we're in dialogue mode
             if (dialogueManager != null && dialogueManager.IsInDialogue)
             {
-                // Route input to dialogue system
-                dialogueManager.ProcessDialogueChoice(input);
-
-                // Check for combat after dialogue choice
-                var currentRoom = gameContext.Rooms[player.CurrentRoom];
-                var hostileNPCs = currentRoom.NPCs.Where(n => n.IsHostile).ToList();
-                if (hostileNPCs.Count > 0 && !dialogueManager.IsInDialogue)
+                try
                 {
-                    combatManager?.StartCombat(hostileNPCs, currentRoom);
+                    // Route input to dialogue system
+                    dialogueManager.ProcessDialogueChoice(input);
+
+                    // Check for combat after dialogue choice
+                    var currentRoom = gameContext.Rooms[player.CurrentRoom];
+                    var hostileNPCs = currentRoom.NPCs.Where(n => n.IsHostile).ToList();
+                    if (hostileNPCs.Count > 0 && !dialogueManager.IsInDialogue)
+                    {
+                        if (combatManager == null)
+                        {
+                            AnsiConsole.MarkupLine("[#FF0000]ERROR: Combat manager is null![/]");
+                            return;
+                        }
+                        combatManager.StartCombat(hostileNPCs, currentRoom);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLine($"[#FF0000]Error processing dialogue: {ex.Message}[/]");
+                    AnsiConsole.MarkupLine($"[#808080]{ex.StackTrace}[/]");
+                    // Try to recover by ending dialogue
+                    if (dialogueManager.IsInDialogue)
+                    {
+                        AnsiConsole.MarkupLine("[#808080]Conversation forcibly ended due to error.[/]");
+                    }
                 }
                 return;
             }
