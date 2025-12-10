@@ -457,9 +457,10 @@ namespace GuildMaster.Managers
             try
             {
                 ProcessNextTurn();
-                AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessNextTurn completed, invoking onStateChanged[/]");
+                AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessNextTurn completed, currentState={currentState}, IsInCombat={IsInCombat}[/]");
+                AnsiConsole.MarkupLine($"[dim]DEBUG: About to invoke onStateChanged[/]");
                 onStateChanged?.Invoke();
-                AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged invoked[/]");
+                AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged completed, currentState={currentState}, IsInCombat={IsInCombat}[/]");
             }
             catch (Exception ex)
             {
@@ -1445,6 +1446,7 @@ namespace GuildMaster.Managers
 
         private void CleanupCombat(Player player)
         {
+            AnsiConsole.MarkupLine("[dim]DEBUG: CleanupCombat called[/]");
             // Clear DOT effects after combat
             if (player.ActiveDOTs != null)
                 player.ActiveDOTs.Clear();
@@ -1456,6 +1458,7 @@ namespace GuildMaster.Managers
             }
 
             ClearCombatStatusEffects(player);
+            AnsiConsole.MarkupLine($"[dim]DEBUG: CleanupCombat setting currentState to CombatEnded (was {currentState})[/]");
             currentState = CombatState.CombatEnded;
         }
 
@@ -1492,14 +1495,16 @@ namespace GuildMaster.Managers
                 return;
             }
 
+            AnsiConsole.MarkupLine($"[dim]DEBUG: About to set currentState to RecruitmentPrompt (was {currentState})[/]");
             currentState = CombatState.RecruitmentPrompt;
-            AnsiConsole.MarkupLine($"[dim]DEBUG: Set currentState to RecruitmentPrompt, IsInCombat={IsInCombat}[/]");
+            AnsiConsole.MarkupLine($"[dim]DEBUG: Set currentState to RecruitmentPrompt, IsInCombat={IsInCombat}, currentState={currentState}[/]");
             var npc = recruitableNPCs[currentRecruitIndex];
 
             AnsiConsole.MarkupLine($"\n{npc.Name} yields, breathing heavily.");
             AnsiConsole.MarkupLine($"\"{npc.YieldDialogue}\"");
             AnsiConsole.MarkupLine($"\n1. Welcome to the guild, {npc.Name}.");
             AnsiConsole.MarkupLine("\n[dim](Enter 1 to recruit)[/]");
+            AnsiConsole.MarkupLine($"[dim]DEBUG: Exiting ShowRecruitmentPrompt, currentState={currentState}, IsInCombat={IsInCombat}[/]");
         }
 
         private void HandleRecruitmentSelection(string input)

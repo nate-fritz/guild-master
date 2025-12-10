@@ -53,27 +53,38 @@ namespace GuildMaster.Services
     public static class AnsiConsole
     {
         private static GameConsole? _gameConsole;
-        
+        public static bool ShowDebugMessages { get; set; } = false; // Set to true to show debug messages
+
         public static void Initialize(GameConsole console)
         {
             _gameConsole = console;
         }
-        
+
         public static void MarkupLine(string markup)
         {
+            // Filter out debug messages if ShowDebugMessages is false
+            if (!ShowDebugMessages && markup.Contains("[dim]DEBUG:"))
+            {
+                return;
+            }
             _gameConsole?.MarkupLine(markup);
         }
-        
+
         public static void Markup(string markup)
         {
+            // Filter out debug messages if ShowDebugMessages is false
+            if (!ShowDebugMessages && markup.Contains("[dim]DEBUG:"))
+            {
+                return;
+            }
             _gameConsole?.Markup(markup);
         }
-        
+
         public static void WriteLine(string? text = null)
         {
             _gameConsole?.WriteLine(text ?? "");
         }
-        
+
         public static void Clear()
         {
             _gameConsole?.Clear();
