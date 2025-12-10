@@ -342,8 +342,13 @@ namespace GuildMaster.Managers
 
         public bool ProcessCombatInput(string input)
         {
+            AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessCombatInput called with input='{input}', IsInCombat={IsInCombat}, currentState={currentState}[/]");
+
             if (!IsInCombat)
+            {
+                AnsiConsole.MarkupLine("[dim]DEBUG: Not in combat, returning false[/]");
                 return false;
+            }
 
             var player = context.Player;
 
@@ -374,10 +379,12 @@ namespace GuildMaster.Managers
                     break;
 
                 case CombatState.RecruitmentPrompt:
+                    AnsiConsole.MarkupLine("[dim]DEBUG: Handling recruitment selection[/]");
                     HandleRecruitmentSelection(input);
                     break;
 
                 default:
+                    AnsiConsole.MarkupLine($"[dim]DEBUG: Unhandled state: {currentState}[/]");
                     return false;
             }
 
@@ -1426,14 +1433,17 @@ namespace GuildMaster.Managers
 
         private void ShowRecruitmentPrompt()
         {
+            AnsiConsole.MarkupLine("[dim]DEBUG: ShowRecruitmentPrompt called[/]");
             if (recruitableNPCs == null || currentRecruitIndex >= recruitableNPCs.Count)
             {
+                AnsiConsole.MarkupLine("[dim]DEBUG: No recruitable NPCs, finishing victory[/]");
                 var player = context.Player;
                 FinishVictory(player, activeEnemies?.ToList() ?? new List<NPC>(), combatRoom);
                 return;
             }
 
             currentState = CombatState.RecruitmentPrompt;
+            AnsiConsole.MarkupLine($"[dim]DEBUG: Set currentState to RecruitmentPrompt, IsInCombat={IsInCombat}[/]");
             var npc = recruitableNPCs[currentRecruitIndex];
 
             AnsiConsole.MarkupLine($"\n{npc.Name} yields, breathing heavily.");

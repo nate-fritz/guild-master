@@ -245,12 +245,16 @@ namespace GuildMaster.Services
             }
 
             // Check if we're in combat mode first
+            AnsiConsole.MarkupLine($"[dim]DEBUG GameEngine: combatManager != null: {combatManager != null}, IsInCombat: {combatManager?.IsInCombat}[/]");
             if (combatManager != null && combatManager.IsInCombat)
             {
+                AnsiConsole.MarkupLine("[dim]DEBUG GameEngine: Routing to combat manager[/]");
                 // Route input to combat system
                 combatManager.ProcessCombatInput(input);
                 return;
             }
+            AnsiConsole.MarkupLine("[dim]DEBUG GameEngine: Not in combat, continuing to next checks[/]");
+
 
             // Check if we're in dialogue mode
             if (dialogueManager != null && dialogueManager.IsInDialogue)
@@ -260,17 +264,26 @@ namespace GuildMaster.Services
                     // Route input to dialogue system
                     dialogueManager.ProcessDialogueChoice(input);
 
-                    // Check for combat after dialogue choice
-                    var currentRoom = gameContext.Rooms[player.CurrentRoom];
-                    var hostileNPCs = currentRoom.NPCs.Where(n => n.IsHostile).ToList();
-                    if (hostileNPCs.Count > 0 && !dialogueManager.IsInDialogue)
+                    // Check if dialogue has ended after processing
+                    if (!dialogueManager.IsInDialogue)
                     {
-                        if (combatManager == null)
+                        // Check for combat after dialogue choice
+                        var currentRoom = gameContext.Rooms[player.CurrentRoom];
+                        var hostileNPCs = currentRoom.NPCs.Where(n => n.IsHostile).ToList();
+                        if (hostileNPCs.Count > 0)
                         {
-                            AnsiConsole.MarkupLine("[#FF0000]ERROR: Combat manager is null![/]");
-                            return;
+                            if (combatManager == null)
+                            {
+                                AnsiConsole.MarkupLine("[#FF0000]ERROR: Combat manager is null![/]");
+                                return;
+                            }
+                            combatManager.StartCombat(hostileNPCs, currentRoom);
                         }
-                        combatManager.StartCombat(hostileNPCs, currentRoom);
+                        else
+                        {
+                            // Dialogue ended without combat - show status bar
+                            DisplayStats();
+                        }
                     }
                 }
                 catch (Exception ex)
