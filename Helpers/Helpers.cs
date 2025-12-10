@@ -17,6 +17,12 @@ namespace GuildMaster.Helpers
 
         public static string WrapText(string text, int maxLineLength = 90)
         {
+            // If text contains HTML br tags, don't wrap - the browser will handle display
+            if (text.Contains("<br>"))
+            {
+                return text;
+            }
+
             string[] lines = text.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
             List<string> wrappedLines = new List<string>();
 

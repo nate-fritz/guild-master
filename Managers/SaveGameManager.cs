@@ -353,18 +353,15 @@ namespace GuildMaster.Managers
             player.CurrentHour = state.CurrentHour >= 0 ? state.CurrentHour : 8.0f;
 
             // Initialize note text with player name
-            context.NoteText = "\nYou pick up the note, unfold it, and begin reading the letter addressed to you. \n\n\n\"Dear "
-                + player.Name + ", \n\nI'm sorry I couldn't be here when you awoke; I had to leave in a bit of a hurry.  "
-                + "I was terribly worried about leaving the guildhall unattended in my absence, but rather miraculously, "
-                + "you showed up on the road outside at exactly the right time!   You did appear to be slightly unconscious, "
-                + "but by the time I had to leave, you seemed like you were well on the road to recovery. \n\n"
-                + "Hopefully you remember this, but last night, we spoke briefly.  You told me your name, and even mentioned "
-                + "that you were something of an adventurer in your youth.  As such, I've decided to leave you in charge of "
-                + "The (former) Adventurer's Guild. \n\nIt's just you for now, but hopefully you can do a much better job than "
-                + "I was capable of.  Give it a try, if only for a year.  See if you can recruit a few new members (maybe 10?) "
-                + "and replenish the guild's coffers (100 gold would be a good start!)  If you can't manage that, then perhaps "
-                + "I was wrong about you, but I hope I'm not.  I'll reach back out at the end of the year to see how things are going. "
-                + "\n\nTake care, and good luck! \n\nSigned,\n\nAlaron, Ex-Guildmaster.\"";
+            context.NoteText = "<br>You pick up the note, unfold it, and begin reading<br>the letter addressed to you.<br><br><br>" +
+                "\"Dear " + player.Name + ",<br><br>" +
+                "Sorry I couldn't stay to greet you — urgent business<br>pulled me away, and you happened to arrive at the perfect<br>(and slightly unconscious) moment.<br><br>" +
+                "We spoke briefly last night — at least, you spoke, and I<br>assumed you were lucid. You told me your name and hinted<br>at a past life of adventuring, so I'm officially handing<br>you the reins of the *former* Adventurer's Guild.<br><br>" +
+                "It's just you for now. Over the next year, see if you can<br>revive the place: recruit around ten members and scrape<br>together at least 100 gold. If you manage that, wonderful.<br>If not… well, perhaps I put too much faith in the stranger<br>who face-planted outside my door.<br><br>" +
+                "I'll check in at year's end.<br><br>" +
+                "Good luck!<br><br>" +
+                "Signed,<br><br>" +
+                "Alaron, Ex-Guildmaster.\"";
 
             // Restore NPC dialogue states
             if (state.NPCDialogueStates != null)
