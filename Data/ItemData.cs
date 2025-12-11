@@ -49,22 +49,26 @@ namespace GuildMaster.Data
                         }},
                         {"energy potion", new Item {
                             Description = "A small vial filled with an energizing blue liquid that seems to shimmer with inner light.",
+                            ShortName = "potion",
                             IsLootable = true,
                             IsConsumable = true,
                             EffectId = "energy_potion"
                         }},
                         {"restoration scroll", new Item {
                             Description = "An ancient scroll inscribed with mystical runes that glow faintly. It radiates a soothing energy.",
+                            ShortName = "scroll",
                             IsLootable = true,
                             IsConsumable = true,
                             EffectId = "restoration_scroll"
                         }},
                         {"leather armor", new Item {
                             Description = "A set of supple leather armor hanging on the wall.",
+                            ShortName = "armor",
                             IsLootable = true
                         }},
                         {"iron sword", new Item {
                             Description = "An iron sword is propped up in the corner here.  The craftsmanship is unremarkable, but it appears to have a sharp enough blade.",
+                            ShortName = "sword",
                             IsLootable = true
                         }}
                     }
@@ -74,6 +78,7 @@ namespace GuildMaster.Data
                     {
                         {"neglected sign", new Item {
                             Description = "This sign appears as though letters were once painted on it, like the others.  The letters have been worn away by weather and years of neglect.",
+                            ShortName = "sign",
                             IsLootable = false
                         }}
                     }
@@ -88,6 +93,10 @@ namespace GuildMaster.Data
                             IsContainer = true,
                             Contents = new List<string> { "amulet" },
                             DiscoveryMessage = "As you search through the mud and debris, your fingers close around something metallic."
+                        }},
+                        {"amulet", new Item {
+                            Description = "A metallic amulet covered in intricate engravings. It feels warm to the touch.",
+                            IsLootable = true
                         }}
                      }
                  },

@@ -164,12 +164,32 @@
 
         if (awaitingClass)
         {
+            // Validate class selection
+            if (command != "1" && command != "2" && command != "3")
+            {
+                GameConsole.MarkupLine("");
+                GameConsole.MarkupLine("[#FF9999]Invalid choice! Please select 1, 2, or 3.[/]");
+                GameConsole.MarkupLine("");
+                GameConsole.MarkupLine("[#75C8FF]Choose your class:[/]");
+                GameConsole.MarkupLine("");
+                GameConsole.MarkupLine("[#FA935F]1. Legionnaire[/] - Heavily armored tank");
+                GameConsole.MarkupLine("   HP: 25 | EP: 8 | ATK: 2 | DEF: 3 | SPD: 1");
+                GameConsole.MarkupLine("");
+                GameConsole.MarkupLine("[#90FF90]2. Venator[/] - Swift ranger DPS");
+                GameConsole.MarkupLine("   HP: 18 | EP: 12 | ATK: 3 | DEF: 1 | SPD: 3");
+                GameConsole.MarkupLine("");
+                GameConsole.MarkupLine("[#75C8FF]3. Oracle[/] - Mystical support caster");
+                GameConsole.MarkupLine("   HP: 15 | EP: 18 | ATK: 1 | DEF: 0 | SPD: 2");
+                GameConsole.MarkupLine("");
+                return;
+            }
+
             string className = command switch
             {
                 "1" => "Legionnaire",
                 "2" => "Venator",
                 "3" => "Oracle",
-                _ => "Legionnaire"
+                _ => "Legionnaire" // Should never hit this now
             };
 
             awaitingClass = false;

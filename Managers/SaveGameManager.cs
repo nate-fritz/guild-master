@@ -108,6 +108,7 @@ namespace GuildMaster.Managers
                         MaxHealth = recruit.MaxHealth,
                         Energy = recruit.Energy,
                         MaxEnergy = recruit.MaxEnergy,
+                        AttackDamage = recruit.AttackDamage,
                         Defense = recruit.Defense,
                         Speed = recruit.Speed,
                         EquippedWeaponName = recruit.EquippedWeapon?.Name.ToLower(),
@@ -115,6 +116,8 @@ namespace GuildMaster.Managers
                         EquippedHelmName = recruit.EquippedHelm?.Name.ToLower(),
                         EquippedRingName = recruit.EquippedRing?.Name.ToLower(),
                         Level = recruit.Level,
+                        Experience = recruit.Experience,
+                        ExperienceToNextLevel = recruit.ExperienceToNextLevel,
                         IsOnQuest = recruit.IsOnQuest,
                         IsResting = recruit.IsResting,
                         RestUntil = recruit.RestUntil,
@@ -134,6 +137,7 @@ namespace GuildMaster.Managers
                 {
                     var savedQuest = new SavedQuest
                     {
+                        Id = quest.Id,
                         Name = quest.Name,
                         Description = quest.Description,
                         Difficulty = quest.Difficulty,
@@ -144,6 +148,8 @@ namespace GuildMaster.Managers
                         MinGold = quest.MinGold,
                         MaxGold = quest.MaxGold,
                         BaseSuccessChance = quest.BaseSuccessChance,
+                        BaseExperienceReward = quest.BaseExperienceReward,
+                        IsActive = quest.IsActive,
                         IsComplete = quest.IsComplete,
                         WasSuccessful = quest.WasSuccessful,
                         ItemRewards = quest.ItemRewards,
@@ -414,6 +420,7 @@ namespace GuildMaster.Managers
                     recruit.MaxHealth = savedRecruit.MaxHealth;
                     recruit.Energy = savedRecruit.Energy;
                     recruit.MaxEnergy = savedRecruit.MaxEnergy;
+                    recruit.AttackDamage = savedRecruit.AttackDamage > 0 ? savedRecruit.AttackDamage : recruit.AttackDamage;
                     recruit.Defense = savedRecruit.Defense;
                     recruit.Speed = savedRecruit.Speed;
 
@@ -440,7 +447,9 @@ namespace GuildMaster.Managers
                     if (!string.IsNullOrEmpty(savedRecruit.EquippedRingName))
                         recruit.EquippedRing = EquipmentData.GetEquipment(savedRecruit.EquippedRingName);
 
-                    recruit.Level = savedRecruit.Level;
+                    recruit.Level = savedRecruit.Level > 0 ? savedRecruit.Level : 1;
+                    recruit.Experience = savedRecruit.Experience;
+                    recruit.ExperienceToNextLevel = savedRecruit.ExperienceToNextLevel > 0 ? savedRecruit.ExperienceToNextLevel : 100;
                     recruit.IsOnQuest = savedRecruit.IsOnQuest;
                     recruit.IsResting = savedRecruit.IsResting;
                     recruit.RestUntil = savedRecruit.RestUntil;
@@ -472,6 +481,7 @@ namespace GuildMaster.Managers
                 {
                     var quest = new Quest
                     {
+                        Id = savedQuest.Id,
                         Name = savedQuest.Name,
                         Description = savedQuest.Description,
                         Difficulty = savedQuest.Difficulty,
@@ -481,6 +491,8 @@ namespace GuildMaster.Managers
                         MinGold = savedQuest.MinGold,
                         MaxGold = savedQuest.MaxGold,
                         BaseSuccessChance = savedQuest.BaseSuccessChance,
+                        BaseExperienceReward = savedQuest.BaseExperienceReward,
+                        IsActive = savedQuest.IsActive,
                         IsComplete = savedQuest.IsComplete,
                         WasSuccessful = savedQuest.WasSuccessful,
                         ItemRewards = savedQuest.ItemRewards ?? new Dictionary<string, int>(),

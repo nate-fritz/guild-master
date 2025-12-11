@@ -4,6 +4,7 @@
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public string ShortName { get; set; }  // Optional short name for partial matching
         public EquipmentSlot Slot { get; set; }
         public int Value { get; set; }
 
@@ -43,6 +44,7 @@
             {
                 Name = this.Name,
                 Description = this.Description,
+                ShortName = this.ShortName,
                 Slot = this.Slot,
                 Value = this.Value,
                 DiceCount = this.DiceCount,

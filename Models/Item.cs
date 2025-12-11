@@ -10,6 +10,7 @@ namespace GuildMaster.Models
     {
         public string Description { get; set; }
         public string EmptyDescription { get; set; }  // New: description when contents removed
+        public string ShortName { get; set; }  // Optional short name for partial matching (e.g., "sign" for "neglected sign")
         public bool IsLootable { get; set; } = true;
         public bool IsConsumable { get; set; } = false;
         public string EffectId { get; set; }

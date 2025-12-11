@@ -1685,20 +1685,31 @@ namespace GuildMaster.Managers
             int filledSegments = (int)Math.Round(percentage * 10);
             int emptySegments = 10 - filledSegments;
 
+            // Original colors with CSS glow effect
             string color;
+            string cssClass;
             if (percentage >= 0.6f)
+            {
                 color = "#90FF90";
+                cssClass = "hp-bar-high";
+            }
             else if (percentage >= 0.3f)
+            {
                 color = "#FCFC7F";
+                cssClass = "hp-bar-mid";
+            }
             else if (percentage > 0)
+            {
                 color = "#FF9999";
+                cssClass = "hp-bar-low";
+            }
             else
                 return "[#808080][DEAD][/]     ";
 
-            // Build the bar
-            string bar = $"[{color}]";
+            // Build the bar with CSS glow effect
+            string bar = $"<span class='{cssClass}'>[{color}]";
             bar += new string('█', filledSegments);
-            bar += "[/]";
+            bar += "[/]</span>";
             bar += $"[#404040]";
             bar += new string('░', emptySegments);
             bar += "[/]";
@@ -1805,20 +1816,31 @@ namespace GuildMaster.Managers
             int filledSegments = (int)Math.Round(percentage * 10);
             int emptySegments = 10 - filledSegments;
 
+            // Original colors with CSS glow effect
             string color;
+            string cssClass;
             if (percentage >= 0.6f)
-                color = "#B388FF"; // Darker pastel purple  
+            {
+                color = "#B388FF";
+                cssClass = "ep-bar-high";
+            }
             else if (percentage >= 0.3f)
-                color = "#9575CD"; // Medium purple
+            {
+                color = "#9575CD";
+                cssClass = "ep-bar-mid";
+            }
             else if (percentage > 0)
-                color = "#7E57C2"; // Deep purple
+            {
+                color = "#7E57C2";
+                cssClass = "ep-bar-low";
+            }
             else
                 return "[#404040][EMPTY][/]     ";
 
-            // Build the bar
-            string bar = $"[{color}]";
+            // Build the bar with CSS glow effect
+            string bar = $"<span class='{cssClass}'>[{color}]";
             bar += new string('█', filledSegments);
-            bar += "[/]";
+            bar += "[/]</span>";
             bar += $"[#404040]";
             bar += new string('░', emptySegments);
             bar += "[/]";

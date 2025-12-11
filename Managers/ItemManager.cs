@@ -72,34 +72,22 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            // Try exact match first
-            if (currentRoom.Items.Contains(itemToTake))
-            {
-                if (itemDescriptions.ContainsKey(currentRoom.NumericId) &&
-                    itemDescriptions[currentRoom.NumericId].ContainsKey(itemToTake) &&
-                    !itemDescriptions[currentRoom.NumericId][itemToTake].IsLootable)
-                {
-                    AnsiConsole.MarkupLine($"You can't take the {itemToTake}.");
-                    return;
-                }
-
-                player.Inventory.Add(itemToTake);
-                currentRoom.Items.Remove(itemToTake);
-                player.TakenItems.Add($"room{currentRoom.NumericId}_{itemToTake}");
-                AnsiConsole.MarkupLine($"\nYou take the {itemToTake}.");
-
-                if (player.TakenItems.Count == 1)  // First item ever taken
-                {
-                    ProgramStatics.messageManager.CheckAndShowMessage("first_item_pickup");
-                }
-                return;
-            }
-
-            // Try partial match if exact match fails
+            // Try to find item by exact match or short name
             string matchedItem = null;
             foreach (string item in currentRoom.Items)
             {
-                if (item.Contains(itemToTake))
+                // Check exact match
+                if (item.ToLower() == itemToTake)
+                {
+                    matchedItem = item;
+                    break;
+                }
+
+                // Check short name match
+                if (itemDescriptions.ContainsKey(currentRoom.NumericId) &&
+                    itemDescriptions[currentRoom.NumericId].ContainsKey(item) &&
+                    !string.IsNullOrEmpty(itemDescriptions[currentRoom.NumericId][item].ShortName) &&
+                    itemDescriptions[currentRoom.NumericId][item].ShortName.ToLower() == itemToTake)
                 {
                     matchedItem = item;
                     break;
@@ -120,6 +108,11 @@ namespace GuildMaster.Managers
                 currentRoom.Items.Remove(matchedItem);
                 player.TakenItems.Add($"room{currentRoom.NumericId}_{matchedItem}");
                 AnsiConsole.MarkupLine($"\nYou take the {matchedItem}.");
+
+                if (player.TakenItems.Count == 1)  // First item ever taken
+                {
+                    ProgramStatics.messageManager.CheckAndShowMessage("first_item_pickup");
+                }
                 return;
             }
 
@@ -159,37 +152,36 @@ namespace GuildMaster.Managers
             }
             else
             {
-                // Try exact match first
-                if (player.Inventory.Contains(itemInput))
+                // Try to find item by exact match or short name
+                string matchedItem = null;
+                foreach (string item in equipmentItems)
                 {
-                    itemName = itemInput;
+                    // Check exact match
+                    if (item.ToLower() == itemInput)
+                    {
+                        matchedItem = item;
+                        break;
+                    }
+
+                    // Check short name match
+                    var equipmentCheck = EquipmentData.GetEquipment(item);
+                    if (equipmentCheck != null &&
+                        !string.IsNullOrEmpty(equipmentCheck.ShortName) &&
+                        equipmentCheck.ShortName.ToLower() == itemInput)
+                    {
+                        matchedItem = item;
+                        break;
+                    }
+                }
+
+                if (matchedItem != null)
+                {
+                    itemName = matchedItem;
                 }
                 else
                 {
-                    // Try partial match on equipment items only
-                    var matches = equipmentItems.Where(item => item.ToLower().Contains(itemInput)).ToList();
-
-                    if (matches.Count == 0)
-                    {
-                        AnsiConsole.MarkupLine($"You don't have any equipment matching '{itemInput}'.");
-                        return;
-                    }
-                    else if (matches.Count == 1)
-                    {
-                        itemName = matches[0];
-                    }
-                    else
-                    {
-                        // Multiple matches - show options
-                        AnsiConsole.MarkupLine($"Multiple items match '{itemInput}':");
-                        for (int i = 0; i < matches.Count; i++)
-                        {
-                            var eq = EquipmentData.GetEquipment(matches[i]);
-                            AnsiConsole.MarkupLine($"  {i + 1}. {eq.Name} ({eq.Slot})");
-                        }
-                        AnsiConsole.MarkupLine("Please be more specific or use the number.");
-                        return;
-                    }
+                    AnsiConsole.MarkupLine($"You don't have any equipment matching '{itemInput}'.");
+                    return;
                 }
             }
 

@@ -22,6 +22,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("rusty dagger", new Equipment
             {
                 Name = "Rusty Dagger",
+                ShortName = "dagger",
                 Description = "A worn dagger with a rusted blade. Better than nothing.",
                 Slot = EquipmentSlot.Weapon,
                 DiceCount = 1,
@@ -33,6 +34,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("worn gladius", new Equipment
             {
                 Name = "Worn Gladius",
+                ShortName = "gladius",
                 Description = "A legionnaire's short sword, showing signs of many battles.",
                 Slot = EquipmentSlot.Weapon,
                 DiceCount = 1,
@@ -44,6 +46,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("hunter's bow", new Equipment
             {
                 Name = "Hunter's Bow",
+                ShortName = "bow",
                 Description = "A reliable bow used for hunting game in the forest.",
                 Slot = EquipmentSlot.Weapon,
                 DiceCount = 1,
@@ -55,6 +58,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("ash staff", new Equipment
             {
                 Name = "Ash Staff",
+                ShortName = "staff",
                 Description = "A simple wooden staff, humming with latent magical energy.",
                 Slot = EquipmentSlot.Weapon,
                 DiceCount = 1,
@@ -67,6 +71,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("iron sword", new Equipment
             {
                 Name = "Iron Sword",
+                ShortName = "sword",
                 Description = "A well-forged iron sword with a sharp edge.",
                 Slot = EquipmentSlot.Weapon,
                 DiceCount = 1,
@@ -78,6 +83,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("battle axe", new Equipment
             {
                 Name = "Battle Axe",
+                ShortName = "axe",
                 Description = "A heavy two-handed axe that deals devastating blows.",
                 Slot = EquipmentSlot.Weapon,
                 DiceCount = 1,
@@ -92,6 +98,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("leather armor", new Equipment
             {
                 Name = "Leather Armor",
+                ShortName = "armor",
                 Description = "Supple leather armor that provides basic protection.",
                 Slot = EquipmentSlot.Armor,
                 DefenseBonus = 1,
@@ -111,6 +118,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("plate armor", new Equipment
             {
                 Name = "Plate Armor",
+                ShortName = "armor",
                 Description = "Heavy plates of steel offering maximum protection.",
                 Slot = EquipmentSlot.Armor,
                 DefenseBonus = 3,
@@ -124,6 +132,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("leather cap", new Equipment
             {
                 Name = "Leather Cap",
+                ShortName = "cap",
                 Description = "A simple leather cap that protects your head.",
                 Slot = EquipmentSlot.Helm,
                 DefenseBonus = 1,
@@ -133,6 +142,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("iron helm", new Equipment
             {
                 Name = "Iron Helm",
+                ShortName = "helm",
                 Description = "A sturdy iron helmet with good visibility.",
                 Slot = EquipmentSlot.Helm,
                 DefenseBonus = 1,
@@ -143,6 +153,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("crown of focus", new Equipment
             {
                 Name = "Crown of Focus",
+                ShortName = "crown",
                 Description = "A mystical circlet that enhances mental clarity.",
                 Slot = EquipmentSlot.Helm,
                 EnergyBonus = 5,
@@ -155,6 +166,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("ring of vitality", new Equipment
             {
                 Name = "Ring of Vitality",
+                ShortName = "ring",
                 Description = "A simple band that strengthens your life force.",
                 Slot = EquipmentSlot.Ring,
                 HealthBonus = 10,
@@ -164,6 +176,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("ring of swiftness", new Equipment
             {
                 Name = "Ring of Swiftness",
+                ShortName = "ring",
                 Description = "This ring makes your movements feel lighter and faster.",
                 Slot = EquipmentSlot.Ring,
                 SpeedBonus = 1,
@@ -173,6 +186,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("ring of power", new Equipment
             {
                 Name = "Ring of Power",
+                ShortName = "ring",
                 Description = "Ancient runes on this ring amplify your strength.",
                 Slot = EquipmentSlot.Ring,
                 AttackBonus = 2,
@@ -182,6 +196,7 @@ namespace GuildMaster.Data
             AllEquipment.Add("amulet", new Equipment
             {
                 Name = "Weather-worn Amulet",
+                ShortName = "amulet",
                 Description = "A tarnished silver amulet, worn by time and elements.",
                 Slot = EquipmentSlot.Ring,  // Using ring slot for amulets
                 DefenseBonus = 1,

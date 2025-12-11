@@ -208,6 +208,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("[#75C8FF]═══ Available Commands ═══[/]");
             AnsiConsole.MarkupLine("[dim]equip <#/name>  - Equip an item by number or name (e.g., 'equip 1' or 'equip armor')[/]");
+            AnsiConsole.MarkupLine("[dim]unequip <slot>  - Unequip an item (weapon/armor/helm/ring)[/]");
             AnsiConsole.MarkupLine("[dim]use <item>      - Use a consumable item by name[/]");
         }
 
@@ -227,6 +228,8 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Items:");
             AnsiConsole.MarkupLine("Inventory:            inventory, inv, or i");
+            AnsiConsole.MarkupLine("Equip item:           equip [item]");
+            AnsiConsole.MarkupLine("Unequip item:         unequip [slot] or remove [slot]");
             AnsiConsole.MarkupLine("Use item:             use [item]");
             AnsiConsole.MarkupLine("Use on ally:          use [item] on [name]");
             AnsiConsole.MarkupLine("");

@@ -50,7 +50,16 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine("\nYou notice the following items in the room:");
                     foreach (string item in currentRoomObj.Items)
                     {
-                        AnsiConsole.MarkupLine($"- {item}");
+                        // Check if item has a short name
+                        string displayText = item;
+                        if (itemDescriptions.ContainsKey(player.CurrentRoom) &&
+                            itemDescriptions[player.CurrentRoom].ContainsKey(item) &&
+                            !string.IsNullOrEmpty(itemDescriptions[player.CurrentRoom][item].ShortName))
+                        {
+                            string shortName = itemDescriptions[player.CurrentRoom][item].ShortName;
+                            displayText = $"{item} ({shortName})";
+                        }
+                        AnsiConsole.MarkupLine($"- {displayText}");
                     }
                 }
                 else
@@ -80,13 +89,35 @@ namespace GuildMaster.Managers
                 // Specific examination
                 string itemToExamine = parts[1].ToLower();
 
-                if (currentRoomObj.Items.Contains(itemToExamine))
+                // Try to find item by exact match or short name
+                string matchedItem = null;
+                foreach (string item in currentRoomObj.Items)
+                {
+                    // Check exact match
+                    if (item.ToLower() == itemToExamine)
+                    {
+                        matchedItem = item;
+                        break;
+                    }
+
+                    // Check short name match
+                    if (itemDescriptions.ContainsKey(player.CurrentRoom) &&
+                        itemDescriptions[player.CurrentRoom].ContainsKey(item) &&
+                        !string.IsNullOrEmpty(itemDescriptions[player.CurrentRoom][item].ShortName) &&
+                        itemDescriptions[player.CurrentRoom][item].ShortName.ToLower() == itemToExamine)
+                    {
+                        matchedItem = item;
+                        break;
+                    }
+                }
+
+                if (matchedItem != null)
                 {
                     if (itemDescriptions.ContainsKey(player.CurrentRoom) &&
-                        itemDescriptions[player.CurrentRoom].ContainsKey(itemToExamine))
+                        itemDescriptions[player.CurrentRoom].ContainsKey(matchedItem))
                     {
-                        var itemData = itemDescriptions[player.CurrentRoom][itemToExamine];
-                        string containerKey = $"room{player.CurrentRoom}_{itemToExamine}";
+                        var itemData = itemDescriptions[player.CurrentRoom][matchedItem];
+                        string containerKey = $"room{player.CurrentRoom}_{matchedItem}";
                         bool wasExamined = player.ExaminedItems.Contains(containerKey);
 
                         string descriptionToShow = itemData.Description;

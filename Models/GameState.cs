@@ -71,6 +71,7 @@ namespace GuildMaster.Models
         public int MaxHealth { get; set; }
         public int Energy { get; set; }
         public int MaxEnergy { get; set; }
+        public int AttackDamage { get; set; }
         public int Defense { get; set; }
         public int Speed { get; set; }
         public bool IsOnQuest { get; set; }
@@ -85,11 +86,11 @@ namespace GuildMaster.Models
         public int Level { get; set; }
         public int Experience { get; set; }
         public int ExperienceToNextLevel { get; set; }
-
     }
 
     public class SavedQuest
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Difficulty { get; set; }
@@ -100,6 +101,8 @@ namespace GuildMaster.Models
         public int MinGold { get; set; }
         public int MaxGold { get; set; }
         public int BaseSuccessChance { get; set; }
+        public int BaseExperienceReward { get; set; }
+        public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
         public bool WasSuccessful { get; set; }
         public Dictionary<string, int> ItemRewards { get; set; }
