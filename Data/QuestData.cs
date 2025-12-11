@@ -52,7 +52,7 @@ namespace GuildMaster.Data
                     ItemRewards = new Dictionary<string, int>
                     {
                         {"potion", 60},
-                        {"iron sword", 20}
+                        {"iron gladius", 20}
                     },
                     BaseExperienceReward = 100
                 },
@@ -85,7 +85,7 @@ namespace GuildMaster.Data
                     ItemRewards = new Dictionary<string, int>
                     {
                         {"potion", 80},
-                        {"iron sword", 40},
+                        {"iron gladius", 40},
                         {"battle axe", 30}
                     },
                     PotentialRecruit = "Marcus",  // Another potential recruit
