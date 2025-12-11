@@ -276,7 +276,7 @@ namespace GuildMaster.Data
             bandit.LootTable = new Dictionary<string, int>
             {
                 {"potion", 30},      // 30% chance
-                {"iron sword", 5}    // 5% chance  
+                {"iron gladius", 5}    // 5% chance  
             };
 
 
@@ -295,7 +295,7 @@ namespace GuildMaster.Data
             banditThug.LootTable = new Dictionary<string, int>
             {
                 {"potion", 40},      // 40% chance
-                {"iron sword", 10}   // 10% chance
+                {"iron gladius", 10}   // 10% chance
             };
 
             NPC banditLeader = new NPC();
@@ -314,7 +314,7 @@ namespace GuildMaster.Data
             {
                 {"potion", 50},      // 50% chance
                 {"battle axe", 20},  // 20% chance
-                {"iron sword", 15}   // 15% chance
+                {"iron gladius", 15}   // 15% chance
             };
 
             NPC direWolf = new NPC();
@@ -496,7 +496,7 @@ namespace GuildMaster.Data
 {
     {"potion", 70},
     {"energy potion", 50},
-    {"iron sword", 30}
+    {"iron gladius", 30}
 };
 
             // Add all new NPCs to the dictionary

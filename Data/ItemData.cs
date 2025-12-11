@@ -68,7 +68,7 @@ namespace GuildMaster.Data
                         }},
                         {"iron gladius", new Item {
                             Description = "An iron gladius is propped up in the corner here.  The craftsmanship is unremarkable, but it appears to have a sharp enough blade.",
-                            ShortName = "sword",
+                            ShortName = "gladius",
                             IsLootable = true
                         }}
                     }
