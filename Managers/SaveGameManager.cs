@@ -359,11 +359,11 @@ namespace GuildMaster.Managers
             player.CurrentHour = state.CurrentHour >= 0 ? state.CurrentHour : 8.0f;
 
             // Initialize note text with player name
-            context.NoteText = "<br>You pick up the note, unfold it, and begin reading<br>the letter addressed to you.<br><br><br>" +
+            context.NoteText = "You pick up the note, unfold it, and begin reading the letter addressed to you.<br><br>" +
                 "\"Dear " + player.Name + ",<br><br>" +
-                "Sorry I couldn't stay to greet you — urgent business<br>pulled me away, and you happened to arrive at the perfect<br>(and slightly unconscious) moment.<br><br>" +
-                "We spoke briefly last night — at least, you spoke, and I<br>assumed you were lucid. You told me your name and hinted<br>at a past life of adventuring, so I'm officially handing<br>you the reins of the *former* Adventurer's Guild.<br><br>" +
-                "It's just you for now. Over the next year, see if you can<br>revive the place: recruit around ten members and scrape<br>together at least 100 gold. If you manage that, wonderful.<br>If not… well, perhaps I put too much faith in the stranger<br>who face-planted outside my door.<br><br>" +
+                "Sorry I couldn't stay to greet you — urgent business pulled me away, and you happened to arrive at the perfect (and slightly unconscious) moment.<br><br>" +
+                "We spoke briefly last night — at least, you spoke, and I assumed you were lucid. You told me your name and hinted at a past life of adventuring, so I'm officially handing you the reins of the *former* Adventurer's Guild.<br><br>" +
+                "It's just you for now. Over the next year, see if you can revive the place: recruit around ten members and scrape together at least 100 gold. If you manage that, wonderful. If not… well, perhaps I put too much faith in the stranger who face-planted outside my door.<br><br>" +
                 "I'll check in at year's end.<br><br>" +
                 "Good luck!<br><br>" +
                 "Signed,<br><br>" +

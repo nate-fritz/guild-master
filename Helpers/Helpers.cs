@@ -15,49 +15,60 @@ namespace GuildMaster.Helpers
         // Pagination manager for web version
         public static PaginationManager? PaginationManager { get; set; }
 
-        public static string WrapText(string text, int maxLineLength = 90)
+        public static string WrapText(string text, int maxLineLength = 80)
         {
-            // If text contains HTML br tags, don't wrap - the browser will handle display
-            if (text.Contains("<br>"))
-            {
-                return text;
-            }
-
-            string[] lines = text.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
             List<string> wrappedLines = new List<string>();
 
-            foreach (string line in lines)
+            // Split by <br> tags first (these are hard line breaks)
+            var segments = System.Text.RegularExpressions.Regex.Split(
+                text,
+                @"<br\s*/?>",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
+
+            for (int i = 0; i < segments.Length; i++)
             {
-                if (line.Length <= maxLineLength)
+                var segment = segments[i].Trim();
+
+                // Empty segments represent consecutive <br> tags (paragraph breaks)
+                if (string.IsNullOrWhiteSpace(segment))
                 {
-                    wrappedLines.Add(line);
+                    // Add blank line for paragraph breaks if we have content already
+                    if (wrappedLines.Count > 0)
+                        wrappedLines.Add(" ");  // Use space instead of empty string for better rendering
                     continue;
                 }
 
-                string[] words = line.Split(' ');
-                string currentLine = "";
+                // Wrap this segment
+                var words = segment.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var currentLine = "";
 
-                foreach (string word in words)
+                foreach (var word in words)
                 {
-                    if ((currentLine + word).Length > maxLineLength)
+                    var testLine = currentLine.Length == 0 ? word : currentLine + " " + word;
+                    // Remove markup for length calculation
+                    var cleanTest = System.Text.RegularExpressions.Regex.Replace(testLine, @"\[[^\]]*\]", "");
+
+                    if (cleanTest.Length <= maxLineLength)
                     {
-                        wrappedLines.Add(currentLine.Trim());
-                        currentLine = word + " ";
+                        currentLine = testLine;
                     }
                     else
                     {
-                        currentLine += word + " ";
+                        if (currentLine.Length > 0)
+                            wrappedLines.Add(currentLine);
+                        currentLine = word;
                     }
                 }
 
                 if (currentLine.Length > 0)
-                    wrappedLines.Add(currentLine.Trim());
+                    wrappedLines.Add(currentLine);
             }
 
             return string.Join("\n", wrappedLines);
         }
 
-        public static void DisplayTextWithPaging(string text, int maxLineLength = 90, int linesPerPage = 10, string color = null)
+        public static void DisplayTextWithPaging(string text, int maxLineLength = 80, int linesPerPage = 10, string color = null)
         {
             string wrappedText = WrapText(text, maxLineLength);
             string[] lines = wrappedText.Split('\n');
@@ -112,7 +123,7 @@ namespace GuildMaster.Helpers
 
         public static void DisplayTextWithPaging(string text, string color)
         {
-            DisplayTextWithPaging(text, 70, 10, color);
+            DisplayTextWithPaging(text, 80, 10, color);
         }
 
         private static void DisplayLine(string line, string color)
@@ -129,7 +140,7 @@ namespace GuildMaster.Helpers
             }
         }
 
-        public static void DisplayColoredText(string text, string color, int maxLineLength = 90, int linesPerPage = 10)
+        public static void DisplayColoredText(string text, string color, int maxLineLength = 80, int linesPerPage = 10)
         {
             DisplayTextWithPaging(text, maxLineLength, linesPerPage, color);
         }
@@ -156,7 +167,7 @@ namespace GuildMaster.Helpers
             return startsWithVowel ? "an" : "a";
         }
 
-        public static void DisplayTextWithMarkup(string text, int maxLineLength = 90)
+        public static void DisplayTextWithMarkup(string text, int maxLineLength = 80)
         {
             string[] lines = text.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
 

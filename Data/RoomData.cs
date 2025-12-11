@@ -30,7 +30,7 @@ namespace GuildMaster.Data
             study.Items.Add("energy potion");
             study.Items.Add("restoration scroll");
             study.Items.Add("leather armor");
-            study.Items.Add("iron sword");
+            study.Items.Add("iron gladius");
 
             Room commonArea = CreateRoom(4, "guildHallCommonArea", "The Guild Hall - Common Area", "A large common area with tables, chairs, and couches in front of a large fireplace.  You imagine this room was once quite lively, but today it sits unused.  The main door to the guildhall is to the north, and a hallway is to the south.");
             commonArea.Exits.Add("south", 2);
@@ -87,7 +87,7 @@ namespace GuildMaster.Data
                 LootTable = new Dictionary<string, int>
                 {
                     {"potion", 30},
-                    {"iron sword", 5}
+                    {"iron gladius", 5}
                 },
                 Dialogue = new Dictionary<string, DialogueNode>()
             });
@@ -107,7 +107,7 @@ namespace GuildMaster.Data
                 LootTable = new Dictionary<string, int>
                 {
                     {"potion", 40},
-                    {"iron sword", 10}
+                    {"iron gladius", 10}
                 },
                 Dialogue = new Dictionary<string, DialogueNode>()
             });

@@ -57,7 +57,7 @@ namespace GuildMaster.Managers
                      MessageType.Tutorial),
 
                 "first_movement_tutorial" =>
-                    ("To move into another room, type the direction ([cyan]north[/] or [cyan]n[/], [cyan]east[/] or [cyan]e[/], [cyan]south[/] or [cyan]s[/], [cyan]west[/] or [cyan]w[/]).\n\n To look around the room for other items or exits, type [cyan]look around[/], [cyan]look[/], or just [cyan]l[/] \n\nTo see a list of other available commands, type [cyan]/help[/]",
+                    ("To move into another room, type the direction ([cyan]north[/] or [cyan]n[/], [cyan]east[/] or [cyan]e[/], [cyan]south[/] or [cyan]s[/], [cyan]west[/] or [cyan]w[/]).<br><br>To look around the room for other items or exits, type [cyan]look around[/], [cyan]look[/], or just [cyan]l[/] <br><br>To see a list of other available commands, type [cyan]/help[/]",
                      MessageType.Tutorial),
 
                 "first_container" =>
@@ -191,13 +191,28 @@ namespace GuildMaster.Managers
         {
             var lines = new List<string>();
 
-            // Split by paragraph breaks first
-            var paragraphs = text.Split(new[] { "\n\n", "\r\n\r\n" }, StringSplitOptions.None);
+            // Split by <br> tags first (these are hard line breaks)
+            var segments = System.Text.RegularExpressions.Regex.Split(
+                text,
+                @"<br\s*/?>",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
 
-            foreach (var paragraph in paragraphs)
+            for (int i = 0; i < segments.Length; i++)
             {
-                // Handle each paragraph separately
-                var words = paragraph.Split(' ');
+                var segment = segments[i].Trim();
+
+                // Empty segments represent consecutive <br> tags (paragraph breaks)
+                if (string.IsNullOrWhiteSpace(segment))
+                {
+                    // Add blank line for paragraph breaks if we have content already
+                    if (lines.Count > 0)
+                        lines.Add(" ");  // Use space instead of empty string for better rendering
+                    continue;
+                }
+
+                // Wrap this segment
+                var words = segment.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var currentLine = "";
 
                 foreach (var word in words)
@@ -220,10 +235,6 @@ namespace GuildMaster.Managers
 
                 if (currentLine.Length > 0)
                     lines.Add(currentLine);
-
-                // Add blank line between paragraphs (except after last one)
-                if (paragraph != paragraphs[paragraphs.Length - 1])
-                    lines.Add("");
             }
 
             return lines;

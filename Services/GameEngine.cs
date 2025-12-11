@@ -173,11 +173,11 @@ namespace GuildMaster.Services
             var effects = EffectData.InitializeEffects();
 
             // Full note text
-            string noteText = "<br>You pick up the note, unfold it, and begin reading<br>the letter addressed to you.<br><br><br>" +
+            string noteText = "You pick up the note, unfold it, and begin reading the letter addressed to you.<br><br>" +
                 "\"Dear " + player.Name + ",<br><br>" +
-                "Sorry I couldn't stay to greet you — urgent business<br>pulled me away, and you happened to arrive at the perfect<br>(and slightly unconscious) moment.<br><br>" +
-                "We spoke briefly last night — at least, you spoke, and I<br>assumed you were lucid. You told me your name and hinted<br>at a past life of adventuring, so I'm officially handing<br>you the reins of the *former* Adventurer's Guild.<br><br>" +
-                "It's just you for now. Over the next year, see if you can<br>revive the place: recruit around ten members and scrape<br>together at least 100 gold. If you manage that, wonderful.<br>If not… well, perhaps I put too much faith in the stranger<br>who face-planted outside my door.<br><br>" +
+                "Sorry I couldn't stay to greet you — urgent business pulled me away, and you happened to arrive at the perfect (and slightly unconscious) moment.<br><br>" +
+                "We spoke briefly last night — at least, you spoke, and I assumed you were lucid. You told me your name and hinted at a past life of adventuring, so I'm officially handing you the reins of the *former* Adventurer's Guild.<br><br>" +
+                "It's just you for now. Over the next year, see if you can revive the place: recruit around ten members and scrape together at least 100 gold. If you manage that, wonderful. If not… well, perhaps I put too much faith in the stranger who face-planted outside my door.<br><br>" +
                 "I'll check in at year's end.<br><br>" +
                 "Good luck!<br><br>" +
                 "Signed,<br><br>" +
@@ -208,7 +208,7 @@ namespace GuildMaster.Services
             gameController = new GameController(gameContext, combatManager, saveManager);
 
             // Display opening narrative
-            string openingText = $"Good morning, {player.Name}.\n\nYou wake up in a bed that isn't yours, in a small room that you've never seen before..\n\nA folded note sits on the nightstand beside you.";
+            string openingText = $"Good morning, {player.Name}.<br><br>You wake up in a bed that isn't yours, in a small room that you've never seen before..<br><br>A folded note sits on the nightstand beside you.";
             TextHelper.DisplayTextWithPaging(openingText, "#FA935F");
             AnsiConsole.MarkupLine("");
             messageManager.CheckAndShowMessage("game_start_commands");
@@ -244,7 +244,7 @@ namespace GuildMaster.Services
                 if (!paginationManager.HasMorePages && player.CurrentRoom == 1)
                 {
                     // Check if we just finished reading the note (by checking if we're in room 1)
-                    string afterNoteText = "\nAfter you finish reading the letter, you notice a door to the east.";
+                    string afterNoteText = "After you finish reading the letter, you notice a door to the east.";
                     AnsiConsole.MarkupLine("");
                     TextHelper.DisplayTextWithPaging(afterNoteText, "#FA935F");
                     ProgramStatics.messageManager?.CheckAndShowMessage("first_movement_tutorial");
@@ -331,7 +331,7 @@ namespace GuildMaster.Services
                 // Only show the follow-up text if pagination is complete
                 if (!paginationManager.HasMorePages)
                 {
-                    string afterNoteText = "\nAfter you finish reading the letter, you notice a door to the east.";
+                    string afterNoteText = "After you finish reading the letter, you notice a door to the east.";
                     AnsiConsole.MarkupLine("");
                     TextHelper.DisplayTextWithPaging(afterNoteText, "#FA935F");
 

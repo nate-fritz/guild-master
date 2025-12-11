@@ -68,11 +68,11 @@ namespace GuildMaster.Data
             });
 
             // Common Weapons (loot drops)
-            AllEquipment.Add("iron sword", new Equipment
+            AllEquipment.Add("iron gladius", new Equipment
             {
-                Name = "Iron Sword",
-                ShortName = "sword",
-                Description = "A well-forged iron sword with a sharp edge.",
+                Name = "Iron Gladius",
+                ShortName = "gladius",
+                Description = "A well-forged iron gladius with a sharp edge.",
                 Slot = EquipmentSlot.Weapon,
                 DiceCount = 1,
                 DiceSides = 6,
