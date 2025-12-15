@@ -127,6 +127,34 @@ namespace GuildMaster.Services
                     return false;
                 }
             }
+            else if (slot == 4) // Autosave slot
+            {
+                var slotInfo = await tempLoadManager.GetAutosaveSlotInfoAsync();
+                if (slotInfo.Exists)
+                {
+                    if (await tempLoadManager.LoadGameAsync(4))
+                    {
+                        // Load successful - initialize managers
+                        InitializeManagersAfterLoad();
+                        isWaitingForLoadSlot = false;
+                        tempLoadManager = null;
+
+                        AnsiConsole.MarkupLine("\n[#00FF00]Autosave loaded successfully![/]");
+                        DisplayStats();
+                        return true;
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("\n[red]Failed to load autosave.[/]");
+                        return false;
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("\n[red]Autosave slot is empty![/]");
+                    return false;
+                }
+            }
             else
             {
                 AnsiConsole.MarkupLine("\n[red]Invalid slot number.[/]");
@@ -421,6 +449,52 @@ namespace GuildMaster.Services
                 if (menuManager != null)
                     await menuManager.ShowLoadMenuAsync();
             }
+            else if (input == "quit" || input == "qq" || input == "exit")
+            {
+                await HandleQuitCommand();
+                return;
+            }
+            else if (input == "autocombat")
+            {
+                if (gameContext?.Player != null)
+                {
+                    gameContext.Player.AutoCombatEnabled = !gameContext.Player.AutoCombatEnabled;
+                    string status = gameContext.Player.AutoCombatEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
+                    AnsiConsole.MarkupLine($"\nAutocombat {status}.");
+                    if (gameContext.Player.AutoCombatEnabled)
+                    {
+                        AnsiConsole.MarkupLine("[dim]Party members will now use AI to select abilities during combat.[/]");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[dim]You will manually control party members during combat.[/]");
+                    }
+                }
+            }
+            else if (input.StartsWith("tpto "))
+            {
+                string roomArg = input.Substring(5).Trim();
+                if (int.TryParse(roomArg, out int roomId))
+                {
+                    gameController?.TeleportToRoom(roomId);
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[#FF0000]Usage: tpto <room number>[/]");
+                }
+            }
+            else if (input.StartsWith("setlevel "))
+            {
+                string levelArg = input.Substring(9).Trim();
+                if (int.TryParse(levelArg, out int targetLevel))
+                {
+                    gameController?.SetPlayerLevel(targetLevel);
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[#FF0000]Usage: setlevel <level 1-20>[/]");
+                }
+            }
             else
             {
                 AnsiConsole.MarkupLine("\nCommand not recognized. Type [cyan]/help[/] to see available commands.");
@@ -434,6 +508,63 @@ namespace GuildMaster.Services
             {
                 DisplayStats();
             }
+        }
+
+        private async Task HandleQuitCommand()
+        {
+            // Autosave before quitting
+            if (saveManager != null && gameContext?.Player != null)
+            {
+                await saveManager.AutoSaveAsync();
+            }
+
+            // Reset game state
+            if (gameContext != null)
+            {
+                gameContext.Player = null;
+            }
+
+            // Clear the console
+            console.Clear();
+
+            // Show title screen via Home.razor's ShowTitle method by calling ShowStartMenu
+            ShowStartMenu();
+
+            // Trigger state change to update UI
+            stateChangedCallback?.Invoke();
+        }
+
+        public void ShowStartMenu()
+        {
+            console.MarkupLine("");
+            console.MarkupLine("[#FA935F]██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗[/]");
+            console.MarkupLine("[#FA8448]██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝[/]");
+            console.MarkupLine("[#FC7938]██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗  [/]");
+            console.MarkupLine("[#FA6419]██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝  [/]");
+            console.MarkupLine("[#FA5A0A]╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗[/]");
+            console.MarkupLine("[#BA3E00] ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝[/]");
+            console.MarkupLine("");
+            console.MarkupLine("[#FA935F]                    ████████╗ ██████╗ [/]");
+            console.MarkupLine("[#FA8448]                    ╚══██╔══╝██╔═══██╗[/]");
+            console.MarkupLine("[#FC7938]                       ██║   ██║   ██║[/]");
+            console.MarkupLine("[#FA6419]                       ██║   ██║   ██║[/]");
+            console.MarkupLine("[#FA5A0A]                       ██║   ╚██████╔╝[/]");
+            console.MarkupLine("[#BA3E00]                       ╚═╝    ╚═════╝ [/]");
+            console.MarkupLine("");
+            console.MarkupLine("[#FA935F] ██████╗ ██╗   ██╗██╗██╗     ██████╗     ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗ [/]");
+            console.MarkupLine("[#FA8448]██╔════╝ ██║   ██║██║██║     ██╔══██╗    ████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗[/]");
+            console.MarkupLine("[#FC7938]██║  ███╗██║   ██║██║██║     ██║  ██║    ██╔████╔██║███████║███████╗   ██║   █████╗  ██████╔╝[/]");
+            console.MarkupLine("[#FA6419]██║   ██║██║   ██║██║██║     ██║  ██║    ██║╚██╔╝██║██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗[/]");
+            console.MarkupLine("[#FA5A0A]╚██████╔╝╚██████╔╝██║███████╗██████╔╝    ██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║[/]");
+            console.MarkupLine("[#BA3E00] ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝     ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝[/]");
+            console.MarkupLine("");
+            console.MarkupLine("[dim]                                                             Type '/help' for command list[/]");
+            console.MarkupLine("");
+            console.MarkupLine("");
+            console.MarkupLine("[#FFD700]1. New Game[/]");
+            console.MarkupLine("[#90FF90]2. Load Game[/]");
+            console.MarkupLine("");
+            console.MarkupLine("[dim](Enter a number to choose)[/]");
         }
 
         public void DisplayStats()

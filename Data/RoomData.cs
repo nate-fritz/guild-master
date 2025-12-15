@@ -48,6 +48,7 @@ namespace GuildMaster.Data
             theCrossRoads.Exits.Add("south", 6);
             theCrossRoads.Exits.Add("west", 8);
             theCrossRoads.Exits.Add("east", 40);
+            theCrossRoads.Exits.Add("north", 68);
             theCrossRoads.Items.Add("neglected sign");
             theCrossRoads.NPCs.Add(npcs["Gaius"]);  // Gaius is unique, no clone needed
 
@@ -155,6 +156,7 @@ namespace GuildMaster.Data
             Room forestBend = CreateRoom(46, "forestBend", "A bend in the forest path", "The path through the forest curves from the north to the east.  The path is looking less worn here, and the canopy overhead is so thick that only a few thin beams of light shine through.  You hear rustling leaves all around you, as though the creatures of this forest are constantly on the move.  To the north you can hear a stream, and to the east the path continues into the deeper parts of the woods.");
             forestBend.Exits.Add("north", 45);
             forestBend.Exits.Add("east", 47);
+            forestBend.Exits.Add("south", 53);
             forestBend.NPCs.Add(npcs["Dire Wolf"].Clone());  // Clone dire wolf
             forestBend.NPCs.Add(npcs["Bandit"].Clone());  // Clone bandit  
             forestBend.NPCs.Add(npcs["Bandit Thug"].Clone());  // Clone bandit thug
@@ -165,6 +167,8 @@ namespace GuildMaster.Data
             forestBend.OriginalNPCs.Add(npcs["Bandit Thug"].Clone());
 
             // NEW MOUNTAIN PATH ROOMS
+
+            // ALL OF THIS NEEDS UPDATED UNLESS MARKED OTHERWISE
             Room mountainPath = CreateRoom(13, "mountainPath", "Mountain Path", "A narrow path winds up the mountainside. The air grows thinner and colder as you climb. Loose rocks make footing treacherous. To the east you can see Gaius' farm far below. The path continues west, climbing higher.");
             mountainPath.Exits.Add("east", 12);
             mountainPath.Exits.Add("west", 14);
@@ -228,25 +232,273 @@ namespace GuildMaster.Data
 
             Room abandonedCampsite = CreateRoom(47, "abandonedCampsite", "An abandoned campsite", "You come across the charred remains of a long abandoned campsite.  You notice a charred wooden chest sticking out of one of the several ash piles.  The west leads out of the forest, while to the east the forest grows wildly.");
             abandonedCampsite.Exits.Add("west", 46);
+            abandonedCampsite.Exits.Add("east", 48);
             abandonedCampsite.Items.Add("chest");
 
+
+            // ============================================
+            // FOREST EXTENSION (Rooms 48-62)
+            // The "maze-like" 6x3 forest grid
+            // ============================================
+
+            // ALL OF THIS NEEDS UPDATED UNLESS MARKED OTHERWISE
+
+            // Continue east from abandonedCampsite (47)
+            Room darkHollow = CreateRoom(48, "darkHollow", "A dark hollow", "The forest floor dips into a shadowy hollow here. Thick roots twist across the ground, and the air feels damp and still. Paths lead west and south, though both look equally uninviting.");
+            darkHollow.Exits.Add("west", 47);
+            darkHollow.Exits.Add("south", 54);
+
+            Room tangledThicket = CreateRoom(49, "tangledThicket", "A tangled thicket", "Dense briars and thorny bushes crowd the path here. You can see faint trails leading in multiple directions, though none look well-traveled.");
+            tangledThicket.Exits.Add("west", 48);
+            tangledThicket.Exits.Add("south", 55);
+
+            Room mossyClearingNorth = CreateRoom(50, "mossyClearingNorth", "A mossy clearing", "Soft green moss carpets this small clearing. Shafts of light filter through gaps in the canopy above. The forest feels slightly less oppressive here.");
+            mossyClearingNorth.Exits.Add("west", 49);
+            mossyClearingNorth.Exits.Add("south", 56);
+
+            Room ancientOak = CreateRoom(51, "ancientOak", "An ancient oak", "A massive oak tree dominates this area, its trunk wider than three men standing together. Strange symbols are carved into its bark, worn smooth by time.");
+            ancientOak.Exits.Add("west", 50);
+            ancientOak.Exits.Add("south", 57);
+
+            Room overgrownRuins = CreateRoom(52, "overgrownRuins", "Overgrown ruins", "Crumbling stone walls peek through the undergrowth here - the remains of some long-forgotten structure. Vines have reclaimed most of it.");
+            overgrownRuins.Exits.Add("west", 51);
+            overgrownRuins.Exits.Add("south", 58);
+
+            // Middle row of forest (connects north and south)
+            Room foggyPath = CreateRoom(53, "foggyPath", "A foggy path", "A low fog clings to the ground here, obscuring your feet. The mist seems to swirl and shift of its own accord. You can barely make out paths to the north and east.");
+            foggyPath.Exits.Add("north", 46);  // Connects back to forestBend!
+            foggyPath.Exits.Add("east", 54);
+
+            Room wildernessTrail = CreateRoom(54, "wildernessTrail", "A wilderness trail", "A narrow trail winds through dense underbrush. Animal tracks crisscross the path - some disturbingly large.");
+            wildernessTrail.Exits.Add("north", 48);
+            wildernessTrail.Exits.Add("west", 53);
+            wildernessTrail.Exits.Add("east", 55);
+            wildernessTrail.Exits.Add("south", 59);
+
+            Room fungalGrove = CreateRoom(55, "fungalGrove", "A fungal grove", "Enormous mushrooms grow in clusters here, some taller than a man. Their caps glow faintly with an eerie bioluminescence. The air smells earthy and strange.");
+            fungalGrove.Exits.Add("north", 49);
+            fungalGrove.Exits.Add("west", 54);
+            fungalGrove.Exits.Add("east", 56);
+
+            Room mossyClearingSouth = CreateRoom(56, "mossyClearingSouth", "A mossy clearing", "Another mossy clearing, similar to the one you may have seen to the north. Are you going in circles? The forest all looks the same here.");
+            mossyClearingSouth.Exits.Add("north", 50);
+            mossyClearingSouth.Exits.Add("west", 55);
+            mossyClearingSouth.Exits.Add("east", 57);
+            mossyClearingSouth.Exits.Add("south", 60);
+
+
+
+            Room twistingPath = CreateRoom(57, "twistingPath", "A twisting path", "The path twists and turns here, making it difficult to maintain your bearings. You're not entirely sure which direction you came from.");
+            twistingPath.Exits.Add("north", 51);
+            twistingPath.Exits.Add("west", 56);
+            twistingPath.Exits.Add("east", 58);
+
+
+            // Needs update
+            Room forestEdge = CreateRoom(58, "forestEdge", "The forest's edge", "The trees thin here and you can see open sky to the east. The forest seems reluctant to let you go, branches reaching out like grasping fingers. But the exit is clear.");
+            forestEdge.Exits.Add("north", 52);
+            forestEdge.Exits.Add("west", 57);
+            forestEdge.Exits.Add("south", 61);
+
+            // Southern row of forest
+            // Needs update
+            Room rottenLog = CreateRoom(59, "rottenLog", "A rotten log crossing", "A massive fallen log bridges a muddy depression here. The wood is soft and rotten - crossing it requires careful footing.");
+            rottenLog.Exits.Add("north", 54);
+            rottenLog.Exits.Add("east", 60);
+            // Needs update
+            Room wolfDen = CreateRoom(60, "wolfDen", "Near a wolf den", "You spot the dark entrance of a den dug into a hillside. Bones are scattered around the entrance. Something lives here - something hungry.");
+            wolfDen.Exits.Add("north", 56);
+            wolfDen.Exits.Add("west", 59);
+            wolfDen.Exits.Add("east", 61);
+            wolfDen.NPCs.Add(npcs["Dire Wolf"].Clone());
+            wolfDen.NPCs.Add(npcs["Dire Wolf"].Clone());
+            wolfDen.CanRespawn = true;
+            wolfDen.RespawnTimeHours = 12f;
+            wolfDen.OriginalNPCs.Add(npcs["Dire Wolf"].Clone());
+            wolfDen.OriginalNPCs.Add(npcs["Dire Wolf"].Clone());
+
+
+            // Needs update
+            Room forestExit = CreateRoom(61, "forestExit", "Eastern forest exit", "The trees finally give way to open grassland. The dark forest looms behind you to the west. A worn path leads south toward... somewhere. Fresh air has never felt so good.");
+            forestExit.Exits.Add("north", 58);
+            forestExit.Exits.Add("west", 60);
+            // Could add south exit to connect to something later
+
+            // Add 47's east exit to connect to new rooms
+            // UPDATE abandonedCampsite: abandonedCampsite.Exits.Add("east", 48);
+            // UPDATE forestBend (46): forestBend.Exits.Add("south", 53);
+
+
+            // ============================================
+            // NORTH ROAD TO BELUM (Rooms 68-69)
+            // ============================================
+
+            // Needs update
+            Room northRoad = CreateRoom(68, "northRoad", "The North Road", "The road north from the crossroads is well-maintained and shows signs of regular traffic. Wagon ruts line either side, and you can see the walls of a town in the distance. The crossroads lies to the south.");
+            northRoad.Exits.Add("south", 7);
+            northRoad.Exits.Add("north", 69);
+
+            // Needs update
+            Room belumApproach = CreateRoom(69, "belumApproach", "Approach to Belum", "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands closed. A signpost reads: 'GATE CLOSED'.");
+            belumApproach.Exits.Add("south", 68);
+            // belumApproach.Exits.Add("north", 70);
+
+            // BELUM - THE TOWN (Rooms 70-89)
+
+            // Needs update
+            Room belumSouthGate = CreateRoom(70, "belumSouthGate", "Belum - South Gate", "You pass through the southern gate of Belum. Guards in bronze armor eye travelers but make no move to stop you. The cobblestone streets are busy with merchants, locals, and fellow travelers. The main road continues north into the town center.");
+            belumSouthGate.Exits.Add("south", 69);
+            belumSouthGate.Exits.Add("north", 79);
+            belumSouthGate.Exits.Add("east", 71);
+            belumSouthGate.Exits.Add("west", 83);
+            belumSouthGate.NPCs.Add(npcs["Town Guard"].Clone());
+
+            // Needs update
+            Room southMarket = CreateRoom(71, "southMarket", "Belum - South Market", "Stalls and carts line this section of the street, merchants hawking their wares. The smell of spices, leather, and fresh bread fills the air. The noise of commerce is constant.");
+            southMarket.Exits.Add("west", 70);
+            southMarket.Exits.Add("north", 78);
+            southMarket.Exits.Add("east", 72);
+            
+            // Needs update
+            Room stablesDistrict = CreateRoom(72, "stablesDistrict", "Belum - Stables District", "The smell of hay and horses is strong here. Several stables and paddocks house animals for travelers and merchants. A weathered sign advertises boarding rates.");
+            stablesDistrict.Exits.Add("west", 71);
+            stablesDistrict.Exits.Add("north", 73);
+
+            // Needs update
+            Room poorQuarter = CreateRoom(73, "poorQuarter", "Belum - Poor Quarter", "The buildings here are older and less maintained than elsewhere in town. Laundry hangs from windows, and children play in the narrow streets. The locals eye you with a mix of curiosity and wariness.");
+            poorQuarter.Exits.Add("south", 72);
+            poorQuarter.Exits.Add("north", 74);
+            poorQuarter.Exits.Add("west", 78);
+
+            // Needs update
+            Room theGoldenGrape = CreateRoom(74, "theGoldenGrape", "Belum - The Golden Grape Tavern", "A large and welcoming tavern. The sign shows a golden bunch of grapes. Laughter and music spill out through the open door. This seems like the place to hear local news and rumors.");
+            theGoldenGrape.Exits.Add("west", 77);
+            theGoldenGrape.Exits.Add("south", 73);
+            theGoldenGrape.Exits.Add("north", 75);
+            theGoldenGrape.NPCs.Add(npcs["Barkeep"].Clone());
+
+            // Needs update
+            Room merchantRow = CreateRoom(75, "merchantRow", "Belum - Merchant Row", "Prosperous shops display their goods through glass windows - a luxury in these parts. Tailors, jewelers, and specialty craftsmen ply their trades here.");
+            merchantRow.Exits.Add("west", 74);
+            merchantRow.Exits.Add("south", 71);
+            merchantRow.Exits.Add("north", 79);
+            merchantRow.Exits.Add("east", 76);
+
+            // Needs update
+            Room craftsmansWay = CreateRoom(76, "craftsmansWay", "Belum - Craftsman's Way", "The ring of hammers on anvils echoes here. Blacksmiths, coopers, and carpenters work their trades. The air is warm from forge fires.");
+            craftsmansWay.Exits.Add("west", 81);
+            craftsmansWay.Exits.Add("south", 77);
+            craftsmansWay.Exits.Add("east", 75);
+
+            // Needs update
+            Room backAlleys = CreateRoom(77, "backAlleys", "Belum - Back Alleys", "Narrow alleyways wind between cramped buildings. It's darker here, and the main bustle of the town feels far away. Not the safest part of town after dark.");
+            backAlleys.Exits.Add("east", 74);
+            backAlleys.Exits.Add("south", 78);
+            backAlleys.Exits.Add("north", 76);
+            backAlleys.Exits.Add("west", 80);
+
+            // Needs update
+            Room blacksmithForge = CreateRoom(78, "blacksmithForge", "Belum - The Iron Anvil", "A large smithy with multiple forges burning hot. Weapons, tools, and armor line the walls. The smith is a mountain of a man with arms like tree trunks.");
+            blacksmithForge.Exits.Add("west", 79);
+            blacksmithForge.Exits.Add("south", 76);
+            blacksmithForge.Exits.Add("north", 84);
+            blacksmithForge.NPCs.Add(npcs["Blacksmith"].Clone());
+
+            // Needs update
+            Room mainStreetSouth = CreateRoom(79, "mainStreetSouth", "Belum - Main Street (South)", "The main thoroughfare of Belum stretches north and south. Shops and taverns line both sides. A public fountain provides a gathering spot for locals.");
+            mainStreetSouth.Exits.Add("south", 70);
+            mainStreetSouth.Exits.Add("north", 80);
+            mainStreetSouth.Exits.Add("east", 78);
+            mainStreetSouth.Exits.Add("west", 84);
+            mainStreetSouth.NPCs.Add(npcs["Villager"].Clone());
+
+            // Needs update
+            Room townSquare = CreateRoom(80, "townSquare", "Belum - Town Square", "The heart of Belum opens into a grand square. A large stone fountain depicting Neptune dominates the center. Important-looking buildings surround the square - the town hall, a temple, and what appears to be a guild house of some kind.");
+            townSquare.Exits.Add("south", 79);
+            townSquare.Exits.Add("north", 81);
+            townSquare.Exits.Add("east", 77);
+            townSquare.Exits.Add("west", 83);
+            townSquare.NPCs.Add(npcs["Town Guard"].Clone());
+            townSquare.NPCs.Add(npcs["Villager"].Clone());
+            townSquare.NPCs.Add(npcs["Merchant"].Clone());
+
+            // Needs update
+            Room residentialNorth = CreateRoom(81, "residentialNorth", "Belum - North Residential", "Well-appointed homes belonging to Belum's more prosperous citizens line this quiet street. Gardens and small courtyards provide greenery.");
+            residentialNorth.Exits.Add("south", 82);
+            residentialNorth.Exits.Add("east", 87);
+
+
+            // --- ROW 4 ---
+            Room templeDistrict = CreateRoom(82, "templeDistrict", "Belum - Temple District", "Massive temples of white stone surround an open plaza.  The largest of all of these, to the north, is devoted to Keius - father of the gods.  If you look straight up, you can barely see the tops of the colossal columns that line the temple's facade.  Temples to major and minor gods of Keius' pantheon fill the rest of the square.  To the east is a residential district on the main street through Belum.  To the south are several inns, and more residences to the west.");
+            templeDistrict.Exits.Add("south", 83);
+            templeDistrict.Exits.Add("east", 81);
+            templeDistrict.Exits.Add("west", 89);
+
+            Room innDistrict = CreateRoom(83, "innDistrict", "Belum - Inn District", "Several inns compete for business here, their signs creaking in the breeze. 'The Wanderer's Rest', 'The Sleeping Lion', and 'Beds & Breakfast' all promise comfortable lodging.");
+            innDistrict.Exits.Add("west", 82);
+            innDistrict.Exits.Add("south", 79);
+            innDistrict.Exits.Add("north", 87);
+            innDistrict.Exits.Add("east", 84);
+
+            Room armorersRow = CreateRoom(84, "armorersRow", "Belum - Armorer's Row", "Shops specializing in armor and protective gear line this street. Mannequins display everything from leather jerkins to full plate mail. A testing dummy stands outside one shop, heavily dented.");
+            armorersRow.Exits.Add("west", 83);
+            armorersRow.Exits.Add("south", 80);
+            armorersRow.Exits.Add("north", 88);
+
+            Room thievesGuild = CreateRoom(85, "thievesGuild", "Belum - Unmarked Alley", "A dead-end alley with a single unmarked door. Those who know, know. Those who don't, shouldn't be here.");
+            thievesGuild.Exits.Add("east", 82);
+            thievesGuild.Exits.Add("south", 81);
+
+            Room shadowyCorner = CreateRoom(86, "shadowyCorner", "Belum - A Shadowy Corner", "This corner of town sees less traffic. A nondescript door leads to what might be a less-than-legitimate establishment. The locals here don't meet your eyes.");
+            shadowyCorner.Exits.Add("east", 78);
+            shadowyCorner.Exits.Add("south", 77);
+            shadowyCorner.Exits.Add("north", 85);
+
+            Room townHall = CreateRoom(87, "townHall", "Belum - Town Hall", "The administrative center of Belum. An imposing building with marble columns and bronze doors. Guards stand at attention. A notice board displays official proclamations.");
+            townHall.Exits.Add("west", 86);
+            townHall.Exits.Add("south", 83);
+            townHall.Exits.Add("east", 88);
+            townHall.NPCs.Add(npcs["Town Guard"].Clone());
+
+            Room barracks = CreateRoom(88, "barracks", "Belum - Guard Barracks", "The town guard's headquarters. Soldiers drill in a courtyard while others sharpen weapons or play dice. The captain's office is visible through an open door.");
+            barracks.Exits.Add("west", 87);
+            barracks.Exits.Add("south", 84);
+            barracks.Exits.Add("north", 89);
+            barracks.NPCs.Add(npcs["Town Guard"].Clone());
+            barracks.NPCs.Add(npcs["Town Guard"].Clone());
+
+            Room room89 = CreateRoom(89, "room89", "Room 89", "This is room 89.  Inexplicably, there's nothing here.  Literally.  Just empty void as far as the eyes can see to the north and west.  To the south, you see the town guard's barracks.  To the east, you see an open plaza surrounded by majestic temples of polished white stone.");
+            room89.Exits.Add("south", 88);
+            room89.Exits.Add("east", 82);
+
+            
+
+            // Guild Hall
             rooms.Add(1, bedroom);
             rooms.Add(2, hallway);
             rooms.Add(3, study);
             rooms.Add(4, commonArea);
             rooms.Add(5, frontDoor);
+
+            // Crossroads Area
             rooms.Add(6, guildPath);
             rooms.Add(7, theCrossRoads);
             rooms.Add(8, westPath);
             rooms.Add(9, westernBend);
+
+            // Gaius' Farm
             rooms.Add(10, gaiusFarmFields);
             rooms.Add(11, gaiusFarmHouse);
+
+            // Mountains
             rooms.Add(12, lowerSlopes);
             rooms.Add(13, mountainPath);
             rooms.Add(14, rockyOutcrop);
             rooms.Add(15, iceCavern);
             rooms.Add(16, mountainPeak);
             rooms.Add(17, ancientAltar);
+
+            // Forest
             rooms.Add(40, eastPath);
             rooms.Add(41, woodedPath);
             rooms.Add(42, pathWithCart);
@@ -255,6 +507,45 @@ namespace GuildMaster.Data
             rooms.Add(45, forestStream);
             rooms.Add(46, forestBend);
             rooms.Add(47, abandonedCampsite);
+            rooms.Add(48, darkHollow);
+            rooms.Add(49, tangledThicket);
+            rooms.Add(50, mossyClearingNorth);
+            rooms.Add(51, ancientOak);
+            rooms.Add(52, overgrownRuins);
+            rooms.Add(53, foggyPath);
+            rooms.Add(54, wildernessTrail);
+            rooms.Add(55, fungalGrove);
+            rooms.Add(56, mossyClearingSouth);
+            rooms.Add(57, twistingPath);
+            rooms.Add(58, forestEdge);
+            rooms.Add(59, rottenLog);
+            rooms.Add(60, wolfDen);
+            rooms.Add(61, forestExit);
+
+            // Crossroads to Belum
+            rooms.Add(68, northRoad);
+            rooms.Add(69, belumApproach);
+
+            // Belum
+            rooms.Add(70, belumSouthGate);
+            rooms.Add(71, southMarket);
+            rooms.Add(72, stablesDistrict);
+            rooms.Add(73, poorQuarter);
+            rooms.Add(74, theGoldenGrape);
+            rooms.Add(75, merchantRow);
+            rooms.Add(76, craftsmansWay);
+            rooms.Add(77, backAlleys);
+            rooms.Add(78, blacksmithForge);
+            rooms.Add(79, mainStreetSouth);
+            rooms.Add(80, townSquare);
+            rooms.Add(81, residentialNorth);
+            rooms.Add(82, templeDistrict);
+            rooms.Add(83, innDistrict);
+            rooms.Add(84, armorersRow);
+            rooms.Add(85, thievesGuild);
+            rooms.Add(86, shadowyCorner);
+            rooms.Add(87, townHall);
+            rooms.Add(88, barracks);
 
             return rooms;
         }

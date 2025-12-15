@@ -19,6 +19,7 @@ namespace GuildMaster.Models
         public int CurrentDay { get; set; }
         public int CurrentRoom { get; set; }
         public List<Quest> ActiveQuests { get; set; }
+        public bool AutoCombatEnabled { get; set; } = false;
 
         public Player(string name = "Adventurer", CharacterClass characterClass = null)
         {

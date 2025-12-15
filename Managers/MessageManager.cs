@@ -98,6 +98,10 @@ namespace GuildMaster.Managers
                     ("With recruits not in your active party, you can now send them on quests! Use the guild menu to assign quests and earn passive rewards.",
                      MessageType.Tutorial),
 
+                "autocombat_tutorial" =>
+                    ("Managing multiple party members in combat can be complex! Type [cyan]autocombat[/] to toggle AI control for your party members. When enabled, they'll automatically select abilities during combat. When disabled (default), you manually control each party member.",
+                     MessageType.Tutorial),
+
                 // Narrative beats
                 "halfway_to_goal" =>
                     ("Five brave souls have joined your cause. The guild hall no longer feels so empty. Word of your growing guild spreads through the land...",

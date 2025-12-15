@@ -267,6 +267,77 @@ namespace GuildMaster.Managers
             }
         }
 
+        public void TeleportToRoom(int roomId)
+        {
+            var player = context.Player;
+            var rooms = context.Rooms;
+
+            if (!rooms.ContainsKey(roomId))
+            {
+                AnsiConsole.MarkupLine($"\n[#FF0000]Room {roomId} does not exist.[/]");
+                return;
+            }
+
+            player.CurrentRoom = roomId;
+            Room newRoom = rooms[roomId];
+
+            AnsiConsole.MarkupLine($"\n[#00FFFF]You teleport to {newRoom.Title}.[/]");
+            AnsiConsole.MarkupLine("\n");
+            AnsiConsole.MarkupLine($"\n<span class='room-title'>[{newRoom.Title}]</span>");
+            TextHelper.DisplayTextWithPaging(newRoom.Description, "#FA935F");
+
+            if (newRoom.Exits.Count > 0)
+            {
+                string[] directionOrder = { "north", "east", "south", "west" };
+                var orderedExits = directionOrder.Where(dir => newRoom.Exits.ContainsKey(dir));
+                string exitList = string.Join(", ", orderedExits);
+                AnsiConsole.MarkupLine($"\n[Exits: {exitList}]");
+            }
+
+            // Note: Skipping combat trigger for debug teleport - add if you want it
+        }
+
+        public void SetPlayerLevel(int targetLevel)
+        {
+            var player = context.Player;
+
+            if (targetLevel < 1 || targetLevel > 20)
+            {
+                AnsiConsole.MarkupLine("\n[#FF0000]Level must be between 1 and 20.[/]");
+                return;
+            }
+
+            if (player.Class == null)
+            {
+                AnsiConsole.MarkupLine("\n[#FF0000]Error: Player has no class![/]");
+                return;
+            }
+
+            // Reset to level 1 base stats
+            player.Class.ApplyClassBonuses(player);
+            player.Level = 1;
+            player.Experience = 0;
+            player.ExperienceToNextLevel = player.GetXPForNextLevel(1);
+
+            // Apply level-up bonuses for each level from 2 to target
+            for (int i = 2; i <= targetLevel; i++)
+            {
+                player.Level = i;
+                player.ApplyLevelUpBonuses();
+                player.ExperienceToNextLevel = player.GetXPForNextLevel(i);
+            }
+
+            // Set experience to 0 for the target level
+            player.Experience = 0;
+
+            // Ensure health and energy are full
+            player.Health = player.MaxHealth;
+            player.Energy = player.MaxEnergy;
+
+            AnsiConsole.MarkupLine($"\n[#00FF00]Level set to {targetLevel}![/]");
+            AnsiConsole.MarkupLine($"[#FFFF00]Stats:[/] HP: {player.MaxHealth} | EP: {player.MaxEnergy} | ATK: {player.AttackDamage} | DEF: {player.Defense} | SPD: {player.Speed}");
+        }
+
         public void HandleRest()
         {
             var player = context.Player;

@@ -57,6 +57,7 @@ namespace GuildMaster.Managers
         private Ability? pendingAbility;
         private Character? abilityCharacter;
         private NPC? preselectedTarget;  // For passing target to ability executors
+        private Recruit? currentActingPartyMember;  // Track which party member is currently taking their turn
 
         private GameContext context;
         private Random random = new Random();
@@ -254,6 +255,7 @@ namespace GuildMaster.Managers
                 else if (combatant.IsPlayer && combatant.Character is Recruit)
                 {
                     HandlePartyMemberTurn(combatant.Character as Recruit, activeEnemies);
+                    return; // Wait for player input, don't advance turn automatically
                 }
                 else
                 {
@@ -332,6 +334,23 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("[dim](Enter a number to choose your action)[/]");
         }
 
+        private void ShowPartyMemberActionMenu()
+        {
+            if (currentActingPartyMember == null)
+                return;
+
+            currentState = CombatState.SelectingAction;
+
+            AnsiConsole.MarkupLine($"\n[#FFFF00]== {currentActingPartyMember.Name}'s Turn ==[/]");
+            AnsiConsole.MarkupLine("1. Attack");
+            AnsiConsole.MarkupLine("2. Abilities");
+            AnsiConsole.MarkupLine("3. Defend");
+
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine($"[HP: {currentActingPartyMember.Health}/{currentActingPartyMember.MaxHealth} | EP: {currentActingPartyMember.Energy}/{currentActingPartyMember.MaxEnergy}]");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose action)[/]");
+        }
+
         private void ShowStatusBar()
         {
             var player = context.Player;
@@ -397,6 +416,13 @@ namespace GuildMaster.Managers
 
         private void HandleActionSelection(string input)
         {
+            // Check if we're controlling a party member or the player
+            if (currentActingPartyMember != null)
+            {
+                HandlePartyMemberActionSelection(input);
+                return;
+            }
+
             var player = context.Player;
 
             switch (input)
@@ -448,6 +474,119 @@ namespace GuildMaster.Managers
                     ShowPlayerActionMenu();
                     break;
             }
+        }
+
+        private void HandlePartyMemberActionSelection(string input)
+        {
+            if (currentActingPartyMember == null || activeEnemies == null)
+                return;
+
+            switch (input)
+            {
+                case "1": // Attack
+                    StartPartyMemberAttack();
+                    break;
+
+                case "2": // Abilities
+                    ShowPartyMemberAbilityMenu();
+                    break;
+
+                case "3": // Defend
+                    // Increase defense for this party member
+                    int baseDefense = currentActingPartyMember.Defense;
+                    if (baseDefense == 0)
+                    {
+                        currentActingPartyMember.Defense = 1;
+                    }
+                    else
+                    {
+                        currentActingPartyMember.Defense = baseDefense * 2;
+                    }
+                    AnsiConsole.MarkupLine($"\n{currentActingPartyMember.Name} braces for impact! Defense increased to [#03A1FC]{currentActingPartyMember.Defense}[/]");
+                    CompleteTurn();
+                    break;
+
+                default:
+                    AnsiConsole.MarkupLine("\nInvalid choice! Please choose again.");
+                    ShowPartyMemberActionMenu();
+                    break;
+            }
+        }
+
+        private void StartPartyMemberAttack()
+        {
+            if (currentActingPartyMember == null || activeEnemies == null)
+                return;
+
+            var aliveEnemies = activeEnemies.Where(e => e.Health > 0).ToList();
+
+            if (aliveEnemies.Count == 1)
+            {
+                // Auto-target single enemy
+                ExecutePartyMemberAttack(aliveEnemies[0]);
+            }
+            else
+            {
+                // Show target selection
+                currentTargetList = aliveEnemies;
+                currentState = CombatState.SelectingAttackTarget;
+
+                AnsiConsole.MarkupLine("\nChoose target:");
+                for (int i = 0; i < aliveEnemies.Count; i++)
+                {
+                    AnsiConsole.MarkupLine($"{i + 1}. {aliveEnemies[i].Name} (HP: {aliveEnemies[i].Health}/{aliveEnemies[i].MaxHealth})");
+                }
+                AnsiConsole.MarkupLine("\n[dim](Enter target number)[/]");
+            }
+        }
+
+        private void ExecutePartyMemberAttack(NPC target)
+        {
+            if (currentActingPartyMember == null)
+                return;
+
+            int damage = GetWeaponDamage(currentActingPartyMember);
+            string diceString = GetWeaponDiceString(currentActingPartyMember);
+
+            AnsiConsole.MarkupLine($"\n{currentActingPartyMember.Name} attacks {target.Name}!");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
+            target.Health -= damage;
+
+            if (target.Health <= 0)
+            {
+                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+            }
+
+            // Clear the current acting party member and complete turn
+            currentActingPartyMember = null;
+            CompleteTurn();
+        }
+
+        private void ShowPartyMemberAbilityMenu()
+        {
+            if (currentActingPartyMember == null)
+                return;
+
+            currentState = CombatState.SelectingAbility;
+
+            AnsiConsole.MarkupLine($"\n[#FFD700]== {currentActingPartyMember.Name}'s Abilities ==[/]");
+
+            var abilities = currentActingPartyMember.Class?.GetClassAbilities() ?? new List<Ability>();
+            if (abilities.Count == 0)
+            {
+                AnsiConsole.MarkupLine($"\n{currentActingPartyMember.Name} has no abilities available.");
+                AnsiConsole.MarkupLine("[dim](Press 0 to go back)[/]");
+                return;
+            }
+
+            for (int i = 0; i < abilities.Count; i++)
+            {
+                var ability = abilities[i];
+                string energyColor = currentActingPartyMember.Energy >= ability.EnergyCost ? "#FFFF00" : "#808080";
+                AnsiConsole.MarkupLine($"{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description}");
+            }
+            AnsiConsole.MarkupLine("0. Back");
+            AnsiConsole.MarkupLine("\n[dim](Enter ability number)[/]");
         }
 
         private void CompleteTurn()
@@ -546,12 +685,27 @@ namespace GuildMaster.Managers
 
             if (int.TryParse(input, out int targetIndex) && targetIndex > 0 && targetIndex <= currentTargetList.Count)
             {
-                ExecutePlayerAttack(currentTargetList[targetIndex - 1]);
+                // Check if we're controlling a party member or the player
+                if (currentActingPartyMember != null)
+                {
+                    ExecutePartyMemberAttack(currentTargetList[targetIndex - 1]);
+                }
+                else
+                {
+                    ExecutePlayerAttack(currentTargetList[targetIndex - 1]);
+                }
             }
             else
             {
                 AnsiConsole.MarkupLine("Invalid target! Please choose again.");
-                StartPlayerAttack();
+                if (currentActingPartyMember != null)
+                {
+                    StartPartyMemberAttack();
+                }
+                else
+                {
+                    StartPlayerAttack();
+                }
             }
         }
 
@@ -593,7 +747,8 @@ namespace GuildMaster.Managers
             for (int i = 0; i < abilities.Count; i++)
             {
                 var ability = abilities[i];
-                AnsiConsole.MarkupLine($"{i + 1}. {ability.Name} (EP: {ability.EnergyCost})");
+                string energyColor = player.Energy >= ability.EnergyCost ? "#FFFF00" : "#808080";
+                AnsiConsole.MarkupLine($"{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description}");
             }
             AnsiConsole.MarkupLine("0. Back");
             AnsiConsole.MarkupLine("\n[dim](Enter ability number)[/]");
@@ -605,16 +760,31 @@ namespace GuildMaster.Managers
 
             if (input == "0")
             {
-                ShowPlayerActionMenu();
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberActionMenu();
+                }
+                else
+                {
+                    ShowPlayerActionMenu();
+                }
                 return;
             }
 
-            var player = context.Player;
-            var abilities = player.Class.GetClassAbilities();
+            // Determine which character is using abilities
+            Character actingCharacter = currentActingPartyMember != null ? (Character)currentActingPartyMember : context.Player;
+            var abilities = actingCharacter.Class?.GetClassAbilities() ?? new List<Ability>();
 
-            if (abilities == null || abilities.Count == 0)
+            if (abilities.Count == 0)
             {
-                ShowPlayerActionMenu();
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberActionMenu();
+                }
+                else
+                {
+                    ShowPlayerActionMenu();
+                }
                 return;
             }
 
@@ -624,16 +794,23 @@ namespace GuildMaster.Managers
                 AnsiConsole.MarkupLine($"[dim]DEBUG: Selected ability '{ability.Name}', energyCost={ability.EnergyCost}[/]");
 
                 // Check energy cost
-                if (player.Energy < ability.EnergyCost)
+                if (actingCharacter.Energy < ability.EnergyCost)
                 {
-                    AnsiConsole.MarkupLine($"\nNot enough energy! You have {player.Energy} EP but need {ability.EnergyCost} EP.");
-                    ShowAbilityMenu();
+                    AnsiConsole.MarkupLine($"\nNot enough energy! {actingCharacter.Name} has {actingCharacter.Energy} EP but needs {ability.EnergyCost} EP.");
+                    if (currentActingPartyMember != null)
+                    {
+                        ShowPartyMemberAbilityMenu();
+                    }
+                    else
+                    {
+                        ShowAbilityMenu();
+                    }
                     return;
                 }
 
                 // Store ability and character for target selection
                 pendingAbility = ability;
-                abilityCharacter = player;
+                abilityCharacter = actingCharacter;
 
                 // Check if ability needs target selection
                 AnsiConsole.MarkupLine($"[dim]DEBUG: Checking target requirements, NeedsEnemyTarget={NeedsEnemyTarget(ability)}[/]");
@@ -646,7 +823,9 @@ namespace GuildMaster.Managers
                     {
                         AnsiConsole.MarkupLine($"[dim]DEBUG: Single enemy, auto-targeting[/]");
                         // Auto-target single enemy
-                        ExecuteAbilityForCharacter(ability, player, activeEnemies, player);
+                        ExecuteAbilityForCharacter(ability, actingCharacter, activeEnemies, context.Player);
+                        // Clear party member after ability execution
+                        currentActingPartyMember = null;
                         CompleteTurn();
                     }
                     else
@@ -669,15 +848,24 @@ namespace GuildMaster.Managers
                     // No target needed, execute directly
                     if (activeEnemies != null)
                     {
-                        ExecuteAbilityForCharacter(ability, player, activeEnemies, player);
+                        ExecuteAbilityForCharacter(ability, actingCharacter, activeEnemies, context.Player);
                     }
+                    // Clear party member after ability execution
+                    currentActingPartyMember = null;
                     CompleteTurn();
                 }
             }
             else
             {
                 AnsiConsole.MarkupLine("Invalid ability! Please choose again.");
-                ShowAbilityMenu();
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberAbilityMenu();
+                }
+                else
+                {
+                    ShowAbilityMenu();
+                }
             }
         }
 
@@ -709,7 +897,14 @@ namespace GuildMaster.Managers
             if (currentTargetList == null || pendingAbility == null || abilityCharacter == null || activeEnemies == null)
             {
                 AnsiConsole.MarkupLine("[#FF0000]Error: Invalid combat state![/]");
-                ShowPlayerActionMenu();
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberActionMenu();
+                }
+                else
+                {
+                    ShowPlayerActionMenu();
+                }
                 return;
             }
 
@@ -742,6 +937,7 @@ namespace GuildMaster.Managers
             abilityCharacter = null;
             currentTargetList = null;
             preselectedTarget = null;
+            currentActingPartyMember = null;
 
             AnsiConsole.MarkupLine($"[dim]DEBUG: Calling CompleteTurn[/]");
             CompleteTurn();
@@ -1165,29 +1361,94 @@ namespace GuildMaster.Managers
                 return;
             }
 
+            // Check if autocombat is enabled
+            var player = context.Player;
+            if (player.AutoCombatEnabled)
+            {
+                // Use AI to select action
+                ExecuteAIAction(ally, enemies);
+            }
+            else
+            {
+                // Set current acting party member and show action menu
+                currentActingPartyMember = ally;
+                ShowPartyMemberActionMenu();
+            }
+        }
+
+        private void ExecuteAIAction(Recruit ally, List<NPC> enemies)
+        {
+            AnsiConsole.MarkupLine($"\n[#FFFF00]{ally.Name}'s turn[/]");
+
+            var abilities = ally.Class?.GetClassAbilities() ?? new List<Ability>();
             var aliveEnemies = enemies.Where(e => e.Health > 0).ToList();
 
-            if (aliveEnemies.Count > 0)
+            if (aliveEnemies.Count == 0)
             {
-                AnsiConsole.MarkupLine($"\n[#FFFF00]{ally.Name}'s turn[/]");
+                CompleteTurn();
+                return;
+            }
 
-                // AI decision-making for party members
-                // Simple AI: Attack the enemy with the lowest health
-                NPC target = aliveEnemies.OrderBy(e => e.Health).First();
+            // AI Decision Making
+            // 1. If low on health (< 40%), try to use healing ability
+            if (ally.Health < ally.MaxHealth * 0.4)
+            {
+                var healingAbility = abilities.FirstOrDefault(a =>
+                    a.Name.ToLower().Contains("heal") &&
+                    ally.Energy >= a.EnergyCost);
 
-                // Get weapon damage for recruit
-                int damage = GetWeaponDamage(ally);
-                string diceString = GetWeaponDiceString(ally);
-
-                AnsiConsole.MarkupLine($"{ally.Name} attacks {target.Name}!");
-                AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
-                target.Health -= damage;
-
-                if (target.Health <= 0)
+                if (healingAbility != null)
                 {
-                    AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                    AnsiConsole.MarkupLine($"[dim]{ally.Name} uses {healingAbility.Name}![/]");
+                    ExecuteAbilityForCharacter(healingAbility, ally, activeEnemies, context.Player);
+                    CompleteTurn();
+                    return;
                 }
             }
+
+            // 2. Try to use a damaging ability if we have enough energy
+            var affordableAbilities = abilities.Where(a =>
+                ally.Energy >= a.EnergyCost &&
+                !a.Name.ToLower().Contains("heal") &&
+                !a.Name.ToLower().Contains("barrier") &&
+                !a.Name.ToLower().Contains("blessing")).ToList();
+
+            if (affordableAbilities.Count > 0)
+            {
+                // Prefer abilities that cost more energy (usually more powerful)
+                var bestAbility = affordableAbilities.OrderByDescending(a => a.EnergyCost).First();
+
+                // Select target - prioritize enemies with lower health
+                NPC target = aliveEnemies.OrderBy(e => e.Health).First();
+
+                AnsiConsole.MarkupLine($"[dim]{ally.Name} uses {bestAbility.Name} on {target.Name}![/]");
+
+                // Set target for single-target abilities
+                if (bestAbility.Type == AbilityType.SingleTarget)
+                {
+                    preselectedTarget = target;
+                }
+
+                ExecuteAbilityForCharacter(bestAbility, ally, activeEnemies, context.Player);
+                CompleteTurn();
+                return;
+            }
+
+            // 3. Fall back to basic attack
+            NPC attackTarget = aliveEnemies.OrderBy(e => e.Health).First();
+            int damage = GetWeaponDamage(ally);
+            string diceString = GetWeaponDiceString(ally);
+
+            AnsiConsole.MarkupLine($"[dim]{ally.Name} attacks {attackTarget.Name}![/]");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
+            attackTarget.Health -= damage;
+
+            if (attackTarget.Health <= 0)
+            {
+                AnsiConsole.MarkupLine($"[#90FF90]{attackTarget.Name} is defeated![/]");
+            }
+
+            CompleteTurn();
         }
 
         private void HandleEnemyTurn(NPC attackingEnemy, Player player)
@@ -1583,6 +1844,12 @@ namespace GuildMaster.Managers
             if (currentRoom != null)
             {
                 currentRoom.MarkCleared(player.CurrentDay, player.CurrentHour);
+            }
+
+            // Show autocombat tutorial after first combat with full party (player + 2 recruits)
+            if (player.ActiveParty.Count >= 2 && ProgramStatics.messageManager != null)
+            {
+                ProgramStatics.messageManager.CheckAndShowMessage("autocombat_tutorial");
             }
 
             CleanupCombat(player);

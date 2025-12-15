@@ -32,6 +32,9 @@
     private bool awaitingName = false;
     private bool awaitingClass = false;
     private string pendingPlayerName = "";
+    private List<string> commandHistory = new();
+    private int historyIndex = -1;
+    private const int MAX_HISTORY_SIZE = 25;
 
     protected override void OnInitialized()
     {
@@ -118,6 +121,19 @@
             string input = currentInput?.Trim() ?? "";
             currentInput = "";
 
+            // Add non-empty commands to history
+            if (!string.IsNullOrEmpty(input))
+            {
+                commandHistory.Add(input);
+                // Limit history size
+                if (commandHistory.Count > MAX_HISTORY_SIZE)
+                {
+                    commandHistory.RemoveAt(0);
+                }
+                // Reset history index
+                historyIndex = -1;
+            }
+
             // Always process if there's input, or if it's empty but the game wants it (for pagination)
             if (!string.IsNullOrEmpty(input) || GameEngine.IsGameStarted)
             {
@@ -126,6 +142,48 @@
                     outputLines.Add($"<span style=\"color:#44ff44\">&gt; {System.Web.HttpUtility.HtmlEncode(input)}</span>");
                 }
                 await ProcessCommand(input);
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        else if (e.Key == "ArrowUp")
+        {
+            // Navigate to previous command (older)
+            if (commandHistory.Count > 0)
+            {
+                if (historyIndex == -1)
+                {
+                    // Start from the most recent command
+                    historyIndex = commandHistory.Count - 1;
+                }
+                else if (historyIndex > 0)
+                {
+                    // Move to older command
+                    historyIndex--;
+                }
+
+                if (historyIndex >= 0 && historyIndex < commandHistory.Count)
+                {
+                    currentInput = commandHistory[historyIndex];
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+        }
+        else if (e.Key == "ArrowDown")
+        {
+            // Navigate to next command (newer) or clear input
+            if (historyIndex != -1)
+            {
+                historyIndex++;
+                if (historyIndex >= commandHistory.Count)
+                {
+                    // Clear input when reaching the end
+                    currentInput = "";
+                    historyIndex = -1;
+                }
+                else
+                {
+                    currentInput = commandHistory[historyIndex];
+                }
                 await InvokeAsync(StateHasChanged);
             }
         }

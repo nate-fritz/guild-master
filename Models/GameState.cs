@@ -30,6 +30,7 @@ namespace GuildMaster.Models
         public int Level { get; set; } = 1;
         public int Experience { get; set; } = 0;
         public int ExperienceToNextLevel { get; set; } = 100;
+        public bool AutoCombatEnabled { get; set; } = false;
 
         // Time
         public int CurrentDay { get; set; }

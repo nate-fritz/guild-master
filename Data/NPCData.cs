@@ -14,7 +14,68 @@ namespace GuildMaster.Data
         public static Dictionary<string, NPC> InitializeNPCs()
         {
             var npcs = new Dictionary<string, NPC>();
+       
+            NPC townGuard = new NPC();
+            townGuard.Name = "Town Guard";
+            townGuard.Description = "A guard in bronze armor keeps watch over the area.";
+            townGuard.ShortDescription = "A town guard";
+            townGuard.IsHostile = false;
+            townGuard.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Move along, citizen. Keep your nose clean and we won't have any problems.",
+                Choices = { }
+            });
+            npcs.Add(townGuard.Name, townGuard);
 
+            NPC villager = new NPC();
+            villager.Name = "Villager";
+            villager.Description = "A local going about their daily business.";
+            villager.ShortDescription = "A villager";
+            villager.IsHostile = false;
+            villager.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Good day to you, traveler. Welcome to Belum!",
+                Choices = { }
+            });
+            npcs.Add(villager.Name, villager);
+
+            NPC merchant = new NPC();
+            merchant.Name = "Merchant";
+            merchant.Description = "A trader with goods from distant lands.";
+            merchant.ShortDescription = "A merchant";
+            merchant.IsHostile = false;
+            merchant.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Looking to buy? Looking to sell? Either way, you've come to the right place!",
+                Choices = { }
+            });
+            npcs.Add(merchant.Name, merchant);
+
+            NPC barkeep = new NPC();
+            barkeep.Name = "Barkeep";
+            barkeep.Description = "A jovial man with a towel over his shoulder wipes down the bar.";
+            barkeep.ShortDescription = "The barkeep";
+            barkeep.IsHostile = false;
+            barkeep.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Welcome to the Golden Grape! What'll it be? Ale? Wine? Or perhaps you're looking for information?",
+                Choices = { }
+            });
+            npcs.Add(barkeep.Name, barkeep);
+
+            NPC blacksmith = new NPC();
+            blacksmith.Name = "Blacksmith";
+            blacksmith.Description = "A massive man with bulging arms works the forge, sweat glistening on his brow.";
+            blacksmith.ShortDescription = "The blacksmith";
+            blacksmith.IsHostile = false;
+            blacksmith.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Need something forged? Repaired? I'm the best smith in Belum - ask anyone.",
+                Choices = { }
+            });
+            npcs.Add(blacksmith.Name, blacksmith);
+            
+            
             NPC farmer = new NPC();
             farmer.Name = "Gaius";
             farmer.Description = "A burly man of over two meters leans against against one of the four posts of his small stall. As he notices you, he regards you with a mixture of kindness and mild surprise.";

@@ -32,6 +32,11 @@ namespace GuildMaster.Managers
             return $"{SAVE_FILE_PREFIX}{slot}{SAVE_FILE_EXT}";
         }
 
+        private string GetAutosaveFileName()
+        {
+            return "autosave.json";
+        }
+
         public async Task SaveGameAsync(int? slot = null)
         {
             if (slot.HasValue)
@@ -69,6 +74,7 @@ namespace GuildMaster.Managers
                 gameState.Level = player.Level;
                 gameState.Experience = player.Experience;
                 gameState.ExperienceToNextLevel = player.ExperienceToNextLevel;
+                gameState.AutoCombatEnabled = player.AutoCombatEnabled;
 
                 // Time
                 gameState.CurrentDay = player.CurrentDay;
@@ -192,10 +198,162 @@ namespace GuildMaster.Managers
             }
         }
 
+        public async Task AutoSaveAsync()
+        {
+            string saveFile = GetAutosaveFileName();
+
+            try
+            {
+                var gameState = new GameState();
+                gameState.SaveVersion = CURRENT_SAVE_VERSION;
+                var player = context.Player;
+
+                // Player basics
+                gameState.PlayerName = player.Name;
+                gameState.CurrentRoom = player.CurrentRoom;
+                gameState.PlayerInventory = player.Inventory;
+                gameState.TakenItems = player.TakenItems;
+                gameState.ExaminedItems = player.ExaminedItems;
+
+                // Player stats
+                gameState.Health = player.Health;
+                gameState.MaxHealth = player.MaxHealth;
+                gameState.Energy = player.Energy;
+                gameState.MaxEnergy = player.MaxEnergy;
+                gameState.Gold = player.Gold;
+                gameState.AttackDamage = player.AttackDamage;
+                gameState.Defense = player.Defense;
+                gameState.Speed = player.Speed;
+                gameState.EquippedWeaponName = player.EquippedWeapon?.Name.ToLower();
+                gameState.EquippedArmorName = player.EquippedArmor?.Name.ToLower();
+                gameState.EquippedHelmName = player.EquippedHelm?.Name.ToLower();
+                gameState.EquippedRingName = player.EquippedRing?.Name.ToLower();
+                gameState.PlayerClass = player.Class?.Name ?? "Fighter";
+                gameState.Level = player.Level;
+                gameState.Experience = player.Experience;
+                gameState.ExperienceToNextLevel = player.ExperienceToNextLevel;
+                gameState.AutoCombatEnabled = player.AutoCombatEnabled;
+
+                // Time
+                gameState.CurrentDay = player.CurrentDay;
+                gameState.CurrentHour = player.CurrentHour;
+
+                // NPCs
+                foreach (var npc in context.NPCs.Values)
+                {
+                    gameState.NPCDialogueStates[npc.Name] = npc.CurrentDialogueNode;
+                }
+
+                // Track which NPCs are still in rooms (not defeated)
+                foreach (var room in context.Rooms.Values)
+                {
+                    if (room.NPCs.Count > 0)
+                    {
+                        if (!gameState.RemovedNPCs.ContainsKey(room.NumericId))
+                        {
+                            gameState.RemovedNPCs[room.NumericId] = new List<string>();
+                        }
+                        foreach (var npc in room.NPCs)
+                        {
+                            gameState.RemovedNPCs[room.NumericId].Add(npc.Name);
+                        }
+                    }
+                }
+
+                // Recruits
+                foreach (var recruit in player.Recruits)
+                {
+                    var savedRecruit = new SavedRecruit
+                    {
+                        Name = recruit.Name,
+                        Class = recruit.Class?.Name ?? "Fighter",
+                        RecruitedDay = recruit.RecruitedDay,
+                        Health = recruit.Health,
+                        MaxHealth = recruit.MaxHealth,
+                        Energy = recruit.Energy,
+                        MaxEnergy = recruit.MaxEnergy,
+                        AttackDamage = recruit.AttackDamage,
+                        Defense = recruit.Defense,
+                        Speed = recruit.Speed,
+                        EquippedWeaponName = recruit.EquippedWeapon?.Name.ToLower(),
+                        EquippedArmorName = recruit.EquippedArmor?.Name.ToLower(),
+                        EquippedHelmName = recruit.EquippedHelm?.Name.ToLower(),
+                        EquippedRingName = recruit.EquippedRing?.Name.ToLower(),
+                        Level = recruit.Level,
+                        Experience = recruit.Experience,
+                        ExperienceToNextLevel = recruit.ExperienceToNextLevel,
+                        IsOnQuest = recruit.IsOnQuest,
+                        IsResting = recruit.IsResting,
+                        RestUntil = recruit.RestUntil,
+                        RestUntilDay = recruit.RestUntilDay
+                    };
+                    gameState.Recruits.Add(savedRecruit);
+                }
+
+                // Active party
+                foreach (var member in player.ActiveParty)
+                {
+                    gameState.ActivePartyNames.Add(member.Name);
+                }
+
+                // Quests
+                foreach (var quest in player.ActiveQuests)
+                {
+                    var savedQuest = new SavedQuest
+                    {
+                        Id = quest.Id,
+                        Name = quest.Name,
+                        Description = quest.Description,
+                        Difficulty = quest.Difficulty,
+                        AssignedRecruitName = quest.AssignedRecruit?.Name,
+                        StartDay = quest.StartDay,
+                        StartTime = quest.StartTime,
+                        Duration = quest.Duration,
+                        MinGold = quest.MinGold,
+                        MaxGold = quest.MaxGold,
+                        BaseSuccessChance = quest.BaseSuccessChance,
+                        BaseExperienceReward = quest.BaseExperienceReward,
+                        IsActive = quest.IsActive,
+                        IsComplete = quest.IsComplete,
+                        WasSuccessful = quest.WasSuccessful,
+                        ItemRewards = quest.ItemRewards,
+                        PotentialRecruit = quest.PotentialRecruit
+                    };
+                    gameState.ActiveQuests.Add(savedQuest);
+                }
+
+                // Save shown messages
+                if (ProgramStatics.messageManager != null)
+                {
+                    gameState.ShownMessages = ProgramStatics.messageManager.GetShownMessages();
+                }
+
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNameCaseInsensitive = true
+                };
+
+                string json = JsonSerializer.Serialize(gameState, options);
+                await storageService.WriteTextAsync(saveFile, json);
+
+                // Store metadata for last write time
+                var metadata = new { LastWriteTime = DateTime.Now };
+                await storageService.WriteTextAsync($"{saveFile}_metadata", JsonSerializer.Serialize(metadata));
+
+                AnsiConsole.MarkupLine("Game autosaved!");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error autosaving game: {ex.Message}[/]");
+            }
+        }
+
         public async Task<bool> LoadGameAsync(int slot = 1)
         {
             currentSlot = slot;
-            string saveFile = GetSaveFileName(slot);
+            // Handle autosave slot (slot 4)
+            string saveFile = slot == 4 ? GetAutosaveFileName() : GetSaveFileName(slot);
 
             try
             {
@@ -311,6 +469,7 @@ namespace GuildMaster.Managers
             player.Level = state.Level > 0 ? state.Level : 1;
             player.Experience = state.Experience >= 0 ? state.Experience : 0;
             player.ExperienceToNextLevel = state.ExperienceToNextLevel > 0 ? state.ExperienceToNextLevel : 100;
+            player.AutoCombatEnabled = state.AutoCombatEnabled;
 
             // Load equipment - try new format first, fall back to old format
             if (!string.IsNullOrEmpty(state.EquippedWeaponName))
@@ -627,6 +786,49 @@ namespace GuildMaster.Managers
 
             return info;
         }
+
+        public async Task<SaveSlotInfo> GetAutosaveSlotInfoAsync()
+        {
+            var info = new SaveSlotInfo();
+            string saveFile = GetAutosaveFileName();
+
+            if (!await storageService.ExistsAsync(saveFile))
+            {
+                info.Exists = false;
+                return info;
+            }
+
+            try
+            {
+                info.Exists = true;
+                var saveTime = await storageService.GetLastWriteTimeAsync(saveFile);
+                info.SaveTime = saveTime ?? DateTime.MinValue;
+
+                // Quick read just the info we need
+                string? json = await storageService.ReadTextAsync(saveFile);
+                if (json != null)
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var state = JsonSerializer.Deserialize<GameState>(json, options);
+
+                    if (state != null)
+                    {
+                        info.CharacterName = state.PlayerName ?? "Unknown";
+                        info.Day = state.CurrentDay;
+                        info.Recruits = state.Recruits?.Count ?? 0;
+                        info.Gold = state.Gold;
+                    }
+                }
+            }
+            catch
+            {
+                // If we can't read it, just mark it as corrupted
+                info.CharacterName = "Corrupted Save";
+            }
+
+            return info;
+        }
+
         public async Task DisplaySaveMenuAsync()
         {
             AnsiConsole.MarkupLine("");
@@ -740,6 +942,25 @@ namespace GuildMaster.Managers
                 AnsiConsole.MarkupLine("");
             }
 
+            // Show autosave slot with separator
+            AnsiConsole.MarkupLine("[dim]─────────────────────────────────────────────────────────────────[/]");
+            AnsiConsole.MarkupLine("");
+
+            var autosaveInfo = await GetAutosaveSlotInfoAsync();
+            if (autosaveInfo.Exists)
+            {
+                anySaves = true;
+                AnsiConsole.MarkupLine($"[#FFD700]4.[/] [#00FF00]Autosave[/]");
+                AnsiConsole.MarkupLine($"   {autosaveInfo.CharacterName}");
+                AnsiConsole.MarkupLine($"   Day {autosaveInfo.Day} | Recruits: {autosaveInfo.Recruits}/10 | Gold: {autosaveInfo.Gold}");
+                AnsiConsole.MarkupLine($"   [dim]Saved: {autosaveInfo.SaveTime:yyyy-MM-dd HH:mm}[/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[#FFD700]4.[/] [dim]Autosave (Empty)[/]");
+            }
+            AnsiConsole.MarkupLine("");
+
             if (!anySaves)
             {
                 AnsiConsole.MarkupLine("[yellow]No saved games found.[/]");
@@ -785,6 +1006,28 @@ namespace GuildMaster.Managers
                 else
                 {
                     AnsiConsole.MarkupLine("\n[red]That slot is empty![/]");
+                    return false;
+                }
+            }
+            else if (slot == 4) // Autosave slot
+            {
+                var slotInfo = await GetAutosaveSlotInfoAsync();
+                if (slotInfo.Exists)
+                {
+                    if (await LoadGameAsync(4))
+                    {
+                        AnsiConsole.MarkupLine("\n[#00FF00]Autosave loaded successfully![/]");
+                        return true;
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("\n[red]Failed to load autosave.[/]");
+                        return false;
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("\n[red]Autosave slot is empty![/]");
                     return false;
                 }
             }
