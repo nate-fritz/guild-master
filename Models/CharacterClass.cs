@@ -13,6 +13,7 @@ namespace GuildMaster.Models
         public int BaseAttack { get; set; }
         public int BaseDefense { get; set; }
         public int BaseSpeed { get; set; }
+        public bool PreferBackRow { get; set; }
 
         public abstract List<Ability> GetClassAbilities();
         public abstract void ApplyClassBonuses(Character character);
@@ -29,18 +30,22 @@ namespace GuildMaster.Models
             BaseAttack = 2;
             BaseDefense = 3;
             BaseSpeed = 1;
+            PreferBackRow = false; // Front row tank
         }
 
         public override List<Ability> GetClassAbilities()
         {
             return new List<Ability>
             {
-                AbilityData.ShieldBash,
-                AbilityData.Taunt,
-                AbilityData.Cleave,
-                AbilityData.RendingStrike,
-                AbilityData.SunderArmor,
-                AbilityData.DevastatingSlam
+                AbilityData.ShieldBash,           // Level 1
+                AbilityData.Cleave,               // Level 2
+                AbilityData.BattleCryLegionnaire, // Level 3 (replaced by War Cry at level 20)
+                AbilityData.RendingStrike,        // Level 5
+                AbilityData.SunderArmor,          // Level 10
+                AbilityData.ShieldWall,           // Level 10
+                AbilityData.DevastatingSlam,      // Level 15
+                AbilityData.Whirlwind,            // Level 20
+                AbilityData.WarCry                // Level 20 (replaces Battle Cry)
             };
         }
 
@@ -49,10 +54,11 @@ namespace GuildMaster.Models
             character.MaxHealth = BaseHealth;
             character.Health = BaseHealth;
             character.MaxEnergy = BaseEnergy;
-            character.Energy = BaseEnergy;
+            character.Energy = 0; // Legionnaires start combat at 0 EP, generate EP from attacks
             character.AttackDamage = BaseAttack;
             character.Defense = BaseDefense;
             character.Speed = BaseSpeed;
+            character.IsBackRow = PreferBackRow;
             character.EquippedWeapon = EquipmentData.GetEquipment("worn gladius");
         }
     }
@@ -68,6 +74,7 @@ namespace GuildMaster.Models
             BaseAttack = 3;
             BaseDefense = 1;
             BaseSpeed = 3;
+            PreferBackRow = true; // Ranged DPS
         }
 
         public override List<Ability> GetClassAbilities()
@@ -93,6 +100,7 @@ namespace GuildMaster.Models
             character.AttackDamage = BaseAttack;
             character.Defense = BaseDefense;
             character.Speed = BaseSpeed;
+            character.IsBackRow = PreferBackRow;
             character.EquippedWeapon = EquipmentData.GetEquipment("hunter's bow");
         }
     }
@@ -108,6 +116,7 @@ namespace GuildMaster.Models
             BaseAttack = 1;
             BaseDefense = 0;
             BaseSpeed = 2;
+            PreferBackRow = true; // Caster/support
         }
 
         public override List<Ability> GetClassAbilities()
@@ -134,6 +143,7 @@ namespace GuildMaster.Models
             character.AttackDamage = BaseAttack;
             character.Defense = BaseDefense;
             character.Speed = BaseSpeed;
+            character.IsBackRow = PreferBackRow;
             character.EquippedWeapon = EquipmentData.GetEquipment("ash staff");
         }
     }

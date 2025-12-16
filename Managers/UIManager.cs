@@ -158,7 +158,14 @@ namespace GuildMaster.Managers
             // Show available abilities
             if (player.Class != null)
             {
-                var abilities = player.Class.GetClassAbilities();
+                var allAbilities = player.Class.GetClassAbilities();
+                // Filter by unlock level and hide Battle Cry if War Cry is available
+                var abilities = allAbilities.Where(a => player.Level >= a.UnlockLevel).ToList();
+                if (abilities.Any(a => a.Name == "War Cry"))
+                {
+                    abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+                }
+
                 AnsiConsole.MarkupLine($"\nClass Abilities:");
                 foreach (var ability in abilities)
                 {

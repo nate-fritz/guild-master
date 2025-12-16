@@ -18,8 +18,10 @@ namespace GuildMaster.Models
         public float CurrentHour { get; set; }
         public int CurrentDay { get; set; }
         public int CurrentRoom { get; set; }
+        public int PreviousRoom { get; set; }
         public List<Quest> ActiveQuests { get; set; }
         public bool AutoCombatEnabled { get; set; } = false;
+        public bool TutorialsEnabled { get; set; } = true;
 
         public Player(string name = "Adventurer", CharacterClass characterClass = null)
         {
@@ -75,6 +77,7 @@ namespace GuildMaster.Models
             CurrentHour = 8.0f;
             CurrentDay = 1;
             CurrentRoom = 1;
+            PreviousRoom = 1; // Start in same room
 
             ActiveQuests = new List<Quest>();
         }

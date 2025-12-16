@@ -10,6 +10,9 @@
         public int Bonus { get; set; }
         public string DiceString => $"{DiceCount}d{DiceSides}+{Bonus}";
         public AbilityType Type { get; set; }
+        public bool IsRanged { get; set; } = false; // Melee by default
+        public bool CanTargetBackRow { get; set; } = true; // Can target back row by default (most abilities can)
+        public int UnlockLevel { get; set; } = 1; // Level at which this ability is unlocked (default: 1)
     }
 
     public enum AbilityType
@@ -22,6 +25,20 @@
 
     public static class AbilityData
     {
+        public static Ability Whirlwind = new Ability
+        {
+            Name = "Whirlwind",
+            Description = "Devastating AOE attack that hits all enemies, ignoring row positioning",
+            EnergyCost = 24,  // ~90% of level 20 Legionnaire's max EP (27)
+            DiceCount = 2,
+            DiceSides = 10,
+            Bonus = 0,
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = false,
+            UnlockLevel = 20
+        };
+
+        // Keep old WhirlwindAttack for backwards compatibility with non-Legionnaire uses
         public static Ability WhirlwindAttack = new Ability
         {
             Name = "Whirlwind Attack",
@@ -61,15 +78,30 @@
             DiceCount = 1,
             DiceSides = 4,
             Bonus = 2,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = false,
+            UnlockLevel = 1
         };
 
-        public static Ability Taunt = new Ability
+        public static Ability BattleCryLegionnaire = new Ability
         {
-            Name = "Taunt",
-            Description = "Force all enemies to attack you for 2 turns",
+            Name = "Battle Cry",
+            Description = "Taunt all enemies for 2 turns and generate EP equal to 50% of max EP (5 turn cooldown)",
             EnergyCost = 2,
-            Type = AbilityType.Buff
+            Type = AbilityType.Buff,
+            UnlockLevel = 3
+        };
+
+        // Keep old Taunt for backward compatibility
+        public static Ability Taunt => BattleCryLegionnaire;
+
+        public static Ability WarCry = new Ability
+        {
+            Name = "War Cry",
+            Description = "Ultimate battle cry that taunts all enemies, generates 75% max EP, and increases all party members' damage by 20% for 3 turns (5 turn cooldown)",
+            EnergyCost = 0,  // Free ability
+            Type = AbilityType.Buff,
+            UnlockLevel = 20
         };
 
         public static Ability Cleave = new Ability
@@ -80,7 +112,9 @@
             DiceCount = 1,
             DiceSides = 4,
             Bonus = 1,
-            Type = AbilityType.AreaOfEffect
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = false,
+            UnlockLevel = 2
         };
 
         public static Ability ShieldWall = new Ability
@@ -88,7 +122,8 @@
             Name = "Shield Wall",
             Description = "Boost party defense for 3 turns, can't attack during effect (10 turn cooldown)",
             EnergyCost = 0,
-            Type = AbilityType.Buff
+            Type = AbilityType.Buff,
+            UnlockLevel = 10
         };
 
         public static Ability RendingStrike = new Ability
@@ -99,7 +134,9 @@
             DiceCount = 1,
             DiceSides = 6,
             Bonus = 2,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = false,
+            UnlockLevel = 5
         };
 
         // Venator Abilities
@@ -111,7 +148,8 @@
             DiceCount = 1,
             DiceSides = 3,
             Bonus = 1,
-            Type = AbilityType.AreaOfEffect
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = true
         };
 
         public static Ability PiercingArrow = new Ability
@@ -122,7 +160,8 @@
             DiceCount = 1,
             DiceSides = 6,
             Bonus = 2,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true
         };
 
         public static Ability CoveringShot = new Ability
@@ -133,7 +172,8 @@
             DiceCount = 1,
             DiceSides = 3,  // Reduced damage (d3 instead of normal d4+)
             Bonus = 0,      // 50-75% of normal damage
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true
         };
 
         public static Ability EvasiveFire = new Ability
@@ -144,7 +184,8 @@
             DiceCount = 1,  // For the counter-attack damage
             DiceSides = 6,
             Bonus = 1,
-            Type = AbilityType.Buff
+            Type = AbilityType.Buff,
+            IsRanged = true
         };
 
         // Oracle Abilities
@@ -156,7 +197,8 @@
             DiceCount = 2,
             DiceSides = 4,
             Bonus = 2,
-            Type = AbilityType.Heal
+            Type = AbilityType.Heal,
+            IsRanged = true
         };
 
         public static Ability Lightning = new Ability
@@ -167,7 +209,8 @@
             DiceCount = 1,
             DiceSides = 8,
             Bonus = 1,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true
         };
 
         public static Ability Blessing = new Ability
@@ -175,7 +218,8 @@
             Name = "Blessing",
             Description = "Boost all party members' attack for 4 turns",
             EnergyCost = 5,
-            Type = AbilityType.Buff
+            Type = AbilityType.Buff,
+            IsRanged = true
         };
 
         public static Ability Barrier = new Ability
@@ -186,7 +230,8 @@
             DiceCount = 15,  // Using DiceCount to store absorption amount for now
             DiceSides = 1,   // Will just be 15 * 1 = 15 absorption
             Bonus = 0,
-            Type = AbilityType.Buff
+            Type = AbilityType.Buff,
+            IsRanged = true
         };
 
         public static Ability FlameStrike = new Ability
@@ -197,7 +242,8 @@
             DiceCount = 1,
             DiceSides = 6,
             Bonus = 2,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true
         };
 
         public static Ability TestStatus = new Ability
@@ -235,7 +281,8 @@
             DiceCount = 1,
             DiceSides = 6,
             Bonus = 3,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true
         };
 
         // ============================================
@@ -251,7 +298,9 @@
             DiceCount = 1,
             DiceSides = 8,
             Bonus = 2,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = false,
+            UnlockLevel = 10
         };
 
         // Venator Level 10
@@ -263,7 +312,8 @@
             DiceCount = 1,
             DiceSides = 6,
             Bonus = 3,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true
         };
 
         // Oracle Level 10
@@ -275,7 +325,8 @@
             DiceCount = 0,  // No upfront damage
             DiceSides = 0,
             Bonus = 0,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true
         };
 
         // ============================================
@@ -291,7 +342,9 @@
             DiceCount = 1,
             DiceSides = 6,
             Bonus = 3,
-            Type = AbilityType.AreaOfEffect
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = false,
+            UnlockLevel = 15
         };
 
         // Venator Level 15
@@ -303,7 +356,8 @@
             DiceCount = 1,
             DiceSides = 8,
             Bonus = 2,
-            Type = AbilityType.AreaOfEffect
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = true
         };
 
         // Oracle Level 15
@@ -315,8 +369,53 @@
             DiceCount = 2,
             DiceSides = 6,
             Bonus = 4,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true
         };
+
+        // Helper method to get an ability by name
+        public static Ability GetAbilityByName(string name)
+        {
+            return name switch
+            {
+                // Legionnaire Abilities
+                "Shield Bash" => ShieldBash,
+                "Taunt" => Taunt,
+                "Battle Cry" => BattleCryLegionnaire,
+                "Cleave" => Cleave,
+                "Shield Wall" => ShieldWall,
+                "Rending Strike" => RendingStrike,
+                "Sunder Armor" => SunderArmor,
+                "Devastating Slam" => DevastatingSlam,
+                "Whirlwind" => Whirlwind,
+                "War Cry" => WarCry,
+
+                // Venator Abilities
+                "Multi-Shot" => MultiShot,
+                "Piercing Arrow" => PiercingArrow,
+                "Covering Shot" => CoveringShot,
+                "Evasive Fire" => EvasiveFire,
+                "Barbed Arrow" => BarbedArrow,
+                "Frost Arrow" => FrostArrow,
+                "Thunder Volley" => ThunderVolley,
+
+                // Oracle Abilities
+                "Heal" => Heal,
+                "Lightning Bolt" => Lightning,
+                "Blessing" => Blessing,
+                "Barrier" => Barrier,
+                "Flame Strike" => FlameStrike,
+                "Frostbolt" => Frostbolt,
+                "Venom" => Venom,
+                "Divine Wrath" => DivineWrath,
+
+                // Other
+                "Whirlwind Attack" => WhirlwindAttack,
+                "Power Attack" => PowerAttack,
+
+                _ => null
+            };
+        }
 
     }
 }

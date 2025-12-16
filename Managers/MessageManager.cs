@@ -38,6 +38,14 @@ namespace GuildMaster.Managers
             var message = GetMessage(triggerId, customParam);
             if (message != null)
             {
+                // Check if this is a tutorial message and tutorials are disabled
+                if (message.Value.Item2 == MessageType.Tutorial && !context.Player.TutorialsEnabled)
+                {
+                    // Still mark as shown so it won't show if tutorials are re-enabled
+                    shownMessages.Add(triggerId);
+                    return;
+                }
+
                 DisplayMessage(message.Value.Item1, message.Value.Item2, triggerId);
                 shownMessages.Add(triggerId);
 
@@ -58,6 +66,10 @@ namespace GuildMaster.Managers
 
                 "first_movement_tutorial" =>
                     ("To move into another room, type the direction ([cyan]north[/] or [cyan]n[/], [cyan]east[/] or [cyan]e[/], [cyan]south[/] or [cyan]s[/], [cyan]west[/] or [cyan]w[/]).<br><br>To look around the room for other items or exits, type [cyan]look around[/], [cyan]look[/], or just [cyan]l[/] <br><br>To see a list of other available commands, type [cyan]/help[/]",
+                     MessageType.Tutorial),
+
+                "talk_tutorial" =>
+                    ("You see someone here! To speak with NPCs, use the [cyan]TALK[/] command<br>followed by their name. For example: [cyan]talk Gaius[/]<br><br>Talking to NPCs can reveal quests, lore, and opportunities to<br>recruit new guild members.",
                      MessageType.Tutorial),
 
                 "first_container" =>

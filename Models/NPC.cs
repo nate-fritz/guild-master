@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace GuildMaster.Models
 {
+    public enum EnemyRole
+    {
+        Melee,
+        Ranged,
+        Support
+    }
+
     public class NPC : Character
     {
         public string ShortDescription { get; set; }
@@ -17,6 +24,8 @@ namespace GuildMaster.Models
         public int MaxGold { get; set; } = 5;
         public Dictionary<string, int> LootTable { get; set; } = new Dictionary<string, int>();
         public int ExperienceReward { get; set; } = 25; // Default 25 XP
+        public EnemyRole Role { get; set; } = EnemyRole.Melee; // Default to melee
+        public List<string> AbilityNames { get; set; } = new List<string>(); // List of ability names this enemy can use
 
         public NPC()
         {
@@ -40,6 +49,8 @@ namespace GuildMaster.Models
                 DamageDie = this.DamageDie,
                 DamageBonus = this.DamageBonus,
                 Speed = this.Speed,
+                IsBackRow = this.IsBackRow,
+                EnergyRegenPerTurn = this.EnergyRegenPerTurn,
 
                 // NPC specific properties
                 ShortDescription = this.ShortDescription,
@@ -48,6 +59,8 @@ namespace GuildMaster.Models
                 IsHostile = this.IsHostile,
                 MinGold = this.MinGold,
                 MaxGold = this.MaxGold,
+                Role = this.Role,
+                AbilityNames = new List<string>(this.AbilityNames),
 
                 // Recruitment properties
                 RecruitableAfterDefeat = this.RecruitableAfterDefeat,

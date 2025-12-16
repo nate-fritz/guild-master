@@ -25,6 +25,8 @@ namespace GuildMaster.Models
         public int DamageDie { get; set; } = 4;
         public int DamageBonus { get; set; } = 0;
         public int Speed { get; set; } = 2;
+        public bool IsBackRow { get; set; } = false;
+        public int EnergyRegenPerTurn { get; set; } = 1;
 
         // Statuses
         public bool IsAlive => Health > 0;

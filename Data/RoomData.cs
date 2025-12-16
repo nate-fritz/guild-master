@@ -44,7 +44,7 @@ namespace GuildMaster.Data
             guildPath.Exits.Add("south", 5);
             guildPath.Exits.Add("north", 7);
 
-            Room theCrossRoads = CreateRoom(7, "theCrossRoads", "A crossroads", "You enter a crossroads that extends in the four cardinal directions.  A wooden sign post has four signs pointing towards each. \n\nNorth:   The Town of Belum\nEast:    Hircinian Forest\nSouth:   [this sign looks long neglected, and can't be read]\nWest:    Avinten Foothills");
+            Room theCrossRoads = CreateRoom(7, "theCrossRoads", "A crossroads", "You enter a crossroads that extends in the four cardinal directions.  A wooden sign post has four signs pointing towards each. <br><br>North:   The Town of Belum<br>East:    Hircinian Forest<br>South:   [this sign looks long neglected, and can't be read]<br>West:    Avinten Foothills");
             theCrossRoads.Exits.Add("south", 6);
             theCrossRoads.Exits.Add("west", 8);
             theCrossRoads.Exits.Add("east", 40);

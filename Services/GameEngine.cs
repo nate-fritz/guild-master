@@ -471,6 +471,32 @@ namespace GuildMaster.Services
                     }
                 }
             }
+            else if (input == "tutorials" || input == "tutorials on" || input == "tutorials off")
+            {
+                if (gameContext?.Player != null)
+                {
+                    if (input == "tutorials")
+                    {
+                        // Toggle
+                        gameContext.Player.TutorialsEnabled = !gameContext.Player.TutorialsEnabled;
+                    }
+                    else if (input == "tutorials on")
+                    {
+                        gameContext.Player.TutorialsEnabled = true;
+                    }
+                    else if (input == "tutorials off")
+                    {
+                        gameContext.Player.TutorialsEnabled = false;
+                    }
+
+                    string status = gameContext.Player.TutorialsEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
+                    AnsiConsole.MarkupLine($"\nTutorials are now {status}.");
+                }
+            }
+            else if (input == "settings")
+            {
+                ShowSettingsMenu();
+            }
             else if (input.StartsWith("tpto "))
             {
                 string roomArg = input.Substring(5).Trim();
@@ -532,6 +558,70 @@ namespace GuildMaster.Services
 
             // Trigger state change to update UI
             stateChangedCallback?.Invoke();
+        }
+
+        private void ShowSettingsMenu()
+        {
+            if (gameContext?.Player == null)
+                return;
+
+            while (true)
+            {
+                // Display settings menu
+                AnsiConsole.MarkupLine("\n═══════════════════════════════════════════════════════════════════");
+                AnsiConsole.MarkupLine("                           [#FFFF00]SETTINGS[/]");
+                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+                AnsiConsole.MarkupLine("");
+
+                string tutorialsStatus = gameContext.Player.TutorialsEnabled ? "[#00FF00]ON[/]" : "[#FF0000]OFF[/]";
+                string autoCombatStatus = gameContext.Player.AutoCombatEnabled ? "[#00FF00]ON[/]" : "[#FF0000]OFF[/]";
+
+                AnsiConsole.MarkupLine($"1. Tutorials ................ [{tutorialsStatus}]");
+                AnsiConsole.MarkupLine($"2. Auto-Combat .............. [{autoCombatStatus}]");
+                AnsiConsole.MarkupLine("");
+                AnsiConsole.MarkupLine("Enter a number to toggle, or press Enter to return.");
+                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+                AnsiConsole.MarkupLine("");
+
+                // Get user input
+                string input = Console.ReadLine()?.Trim() ?? "";
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    // Exit settings menu
+                    AnsiConsole.MarkupLine("\nReturning to game...\n");
+                    DisplayStats();
+                    break;
+                }
+                else if (input == "1")
+                {
+                    // Toggle tutorials
+                    gameContext.Player.TutorialsEnabled = !gameContext.Player.TutorialsEnabled;
+                    string newStatus = gameContext.Player.TutorialsEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
+                    AnsiConsole.MarkupLine($"\nTutorials {newStatus}.");
+                }
+                else if (input == "2")
+                {
+                    // Toggle auto-combat
+                    gameContext.Player.AutoCombatEnabled = !gameContext.Player.AutoCombatEnabled;
+                    string newStatus = gameContext.Player.AutoCombatEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
+                    AnsiConsole.MarkupLine($"\nAuto-Combat {newStatus}.");
+                    if (gameContext.Player.AutoCombatEnabled)
+                    {
+                        AnsiConsole.MarkupLine("[dim]Party members will now use AI to select abilities during combat.[/]");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[dim]You will manually control party members during combat.[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice. Please enter 1, 2, or press Enter to exit.[/]");
+                }
+
+                AnsiConsole.MarkupLine("");
+            }
         }
 
         public void ShowStartMenu()

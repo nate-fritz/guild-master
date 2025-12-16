@@ -206,6 +206,7 @@ namespace GuildMaster.Managers
 
             if (currentRoomObj.Exits.ContainsKey(direction))
             {
+                player.PreviousRoom = player.CurrentRoom; // Track previous room for flee
                 player.CurrentRoom = currentRoomObj.Exits[direction];
                 Room newRoom = rooms[player.CurrentRoom];
 
@@ -258,6 +259,12 @@ namespace GuildMaster.Managers
                     if (nonHostileNPCs.Count > 0)
                     {
                         AnsiConsole.MarkupLine($"\n{nonHostileNPCs[0].ShortDescription} is here.");
+
+                        // Show talk tutorial when entering the Crossroads (room 7) for the first time
+                        if (player.CurrentRoom == 7)
+                        {
+                            ProgramStatics.messageManager?.CheckAndShowMessage("talk_tutorial");
+                        }
                     }
                 }
             }

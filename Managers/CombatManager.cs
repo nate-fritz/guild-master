@@ -31,6 +31,7 @@ namespace GuildMaster.Managers
             SelectingAbility,
             SelectingAbilityTarget,
             SelectingItem,
+            ChangingRow,
             ProcessingTurn,
             DeathMenu,
             RecruitmentPrompt,
@@ -73,6 +74,7 @@ namespace GuildMaster.Managers
         private Dictionary<Character, int> battleCryTurns = new Dictionary<Character, int>();
         private Dictionary<Character, int> buffedAttack = new Dictionary<Character, int>();
         private Dictionary<Character, int> buffedDefense = new Dictionary<Character, int>();
+        private Dictionary<Character, int> warCryDamageBoost = new Dictionary<Character, int>(); // Stores turns remaining for 20% damage boost
         private Dictionary<Character, Dictionary<string, int>> abilityCooldowns = new Dictionary<Character, Dictionary<string, int>>();
         private Dictionary<Character, bool> evasiveFireActive = new Dictionary<Character, bool>();
         private Dictionary<Character, int> barrierAbsorption = new Dictionary<Character, int>();
@@ -140,6 +142,9 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine($"  {name}: {combatant.InitiativeRoll} (Speed: {combatant.Character.Speed})");
                 }
                 AnsiConsole.MarkupLine("");
+
+                // Display positioning
+                DisplayCombatPositioning(player, enemies);
 
                 AnsiConsole.MarkupLine("[dim]DEBUG: About to process first turn[/]");
 
@@ -314,8 +319,10 @@ namespace GuildMaster.Managers
 
             AnsiConsole.MarkupLine("\n1. Attack");
             AnsiConsole.MarkupLine("2. Abilities");
-            AnsiConsole.MarkupLine("3. Defend");
-            AnsiConsole.MarkupLine("4. Flee");
+
+            // Change Row option (now option 3)
+            string rowAction = player.IsBackRow ? "Engage" : "Disengage";
+            AnsiConsole.MarkupLine($"3. {rowAction}");
 
             // Check if player has any consumable items
             var consumables = player.Inventory.Where(item =>
@@ -324,10 +331,15 @@ namespace GuildMaster.Managers
 
             currentConsumables = consumables;
 
+            // Items option (now option 4)
             if (consumables.Count > 0)
             {
-                AnsiConsole.MarkupLine("5. Items");
+                AnsiConsole.MarkupLine("4. Items");
             }
+
+            // Flee option (now option 5 or 4 depending on items)
+            int fleeOption = consumables.Count > 0 ? 5 : 4;
+            AnsiConsole.MarkupLine($"{fleeOption}. Flee");
 
             AnsiConsole.MarkupLine("");
             ShowStatusBar();
@@ -344,7 +356,10 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"\n[#FFFF00]== {currentActingPartyMember.Name}'s Turn ==[/]");
             AnsiConsole.MarkupLine("1. Attack");
             AnsiConsole.MarkupLine("2. Abilities");
-            AnsiConsole.MarkupLine("3. Defend");
+
+            // Change Row option
+            string rowAction = currentActingPartyMember.IsBackRow ? "Engage" : "Disengage";
+            AnsiConsole.MarkupLine($"3. {rowAction}");
 
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine($"[HP: {currentActingPartyMember.Health}/{currentActingPartyMember.MaxHealth} | EP: {currentActingPartyMember.Energy}/{currentActingPartyMember.MaxEnergy}]");
@@ -361,6 +376,43 @@ namespace GuildMaster.Managers
             if (displayHour == 0) displayHour = 12;
 
             AnsiConsole.MarkupLine($"\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
+        }
+
+        private void DisplayCombatPositioning(Player player, List<NPC> enemies)
+        {
+            // Build ally positioning strings
+            var allyFrontRow = new List<string>();
+            var allyBackRow = new List<string>();
+
+            // Add player
+            if (!player.IsBackRow)
+                allyFrontRow.Add("You");
+            else
+                allyBackRow.Add("You");
+
+            // Add recruits
+            foreach (var recruit in player.Recruits.Where(r => r.IsAlive))
+            {
+                if (!recruit.IsBackRow)
+                    allyFrontRow.Add(recruit.Name);
+                else
+                    allyBackRow.Add(recruit.Name);
+            }
+
+            // Build enemy positioning strings
+            var enemyFrontRow = new List<string>();
+            var enemyBackRow = new List<string>();
+
+            foreach (var enemy in enemies.Where(e => e.Health > 0))
+            {
+                if (!enemy.IsBackRow)
+                    enemyFrontRow.Add(enemy.Name);
+                else
+                    enemyBackRow.Add(enemy.Name);
+            }
+
+            // Positioning is now displayed inline with character stats in DisplayCombatStatus
+            // Old positioning display removed
         }
 
         public bool ProcessCombatInput(string input)
@@ -435,32 +487,38 @@ namespace GuildMaster.Managers
                     ShowAbilityMenu();
                     break;
 
-                case "3": // Defend
-                    isDefending = true;
-                    if (player.Defense == 0)
-                    {
-                        player.Defense = 1;
-                    }
-                    else
-                    {
-                        player.Defense = baseDefense * 2;
-                    }
-                    AnsiConsole.MarkupLine($"\nYou brace for impact! Defense increased to [#03A1FC]{player.Defense}[/]");
-                    CompleteTurn();
+                case "3": // Engage/Disengage (Change Row)
+                    HandleRowChange(player);
                     break;
 
-                case "4": // Flee
-                    AnsiConsole.MarkupLine("\nYou flee from combat!");
-                    combatActive = false;
-                    if (activeEnemies != null)
-                        HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
-                    currentState = CombatState.CombatEnded;
-                    break;
-
-                case "5": // Items
+                case "4": // Items or Flee (depending on if items exist)
                     if (currentConsumables != null && currentConsumables.Count > 0)
                     {
                         ShowItemMenu();
+                    }
+                    else
+                    {
+                        // No items, so option 4 is Flee
+                        AnsiConsole.MarkupLine("\nYou flee from combat!");
+                        player.CurrentRoom = player.PreviousRoom; // Return to previous room
+                        combatActive = false;
+                        if (activeEnemies != null)
+                            HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
+                        currentState = CombatState.CombatEnded;
+                        ShowStatusBar(); // Display player status after fleeing
+                    }
+                    break;
+
+                case "5": // Flee (when items exist)
+                    if (currentConsumables != null && currentConsumables.Count > 0)
+                    {
+                        AnsiConsole.MarkupLine("\nYou flee from combat!");
+                        player.CurrentRoom = player.PreviousRoom; // Return to previous room
+                        combatActive = false;
+                        if (activeEnemies != null)
+                            HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
+                        currentState = CombatState.CombatEnded;
+                        ShowStatusBar(); // Display player status after fleeing
                     }
                     else
                     {
@@ -491,19 +549,8 @@ namespace GuildMaster.Managers
                     ShowPartyMemberAbilityMenu();
                     break;
 
-                case "3": // Defend
-                    // Increase defense for this party member
-                    int baseDefense = currentActingPartyMember.Defense;
-                    if (baseDefense == 0)
-                    {
-                        currentActingPartyMember.Defense = 1;
-                    }
-                    else
-                    {
-                        currentActingPartyMember.Defense = baseDefense * 2;
-                    }
-                    AnsiConsole.MarkupLine($"\n{currentActingPartyMember.Name} braces for impact! Defense increased to [#03A1FC]{currentActingPartyMember.Defense}[/]");
-                    CompleteTurn();
+                case "3": // Engage/Disengage (Change Row)
+                    HandleRowChange(currentActingPartyMember);
                     break;
 
                 default:
@@ -545,12 +592,29 @@ namespace GuildMaster.Managers
             if (currentActingPartyMember == null)
                 return;
 
+            // Check if party member is in back row and trying to use melee attack
+            bool isBasicAttackMelee = currentActingPartyMember.Class is Legionnaire; // Legionnaire = melee, Venator/Oracle = ranged
+            if (currentActingPartyMember.IsBackRow && isBasicAttackMelee)
+            {
+                AnsiConsole.MarkupLine($"\n[#FF0000]{currentActingPartyMember.Name} cannot use melee attacks from the back row![/]");
+                ShowPartyMemberActionMenu();
+                return;
+            }
+
             int damage = GetWeaponDamage(currentActingPartyMember);
             string diceString = GetWeaponDiceString(currentActingPartyMember);
 
             AnsiConsole.MarkupLine($"\n{currentActingPartyMember.Name} attacks {target.Name}!");
             AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
             target.Health -= damage;
+
+            // Legionnaires generate EP from basic attacks (25% of max EP)
+            if (currentActingPartyMember.Class is Legionnaire)
+            {
+                int epGain = Math.Max(1, currentActingPartyMember.MaxEnergy / 4); // 25% of max EP, minimum 1
+                currentActingPartyMember.Energy = Math.Min(currentActingPartyMember.MaxEnergy, currentActingPartyMember.Energy + epGain);
+                AnsiConsole.MarkupLine($"<span style='color:#00FFFF'>{currentActingPartyMember.Name} gains {epGain} EP! (EP: {currentActingPartyMember.Energy}/{currentActingPartyMember.MaxEnergy})</span>");
+            }
 
             if (target.Health <= 0)
             {
@@ -571,7 +635,15 @@ namespace GuildMaster.Managers
 
             AnsiConsole.MarkupLine($"\n[#FFD700]== {currentActingPartyMember.Name}'s Abilities ==[/]");
 
-            var abilities = currentActingPartyMember.Class?.GetClassAbilities() ?? new List<Ability>();
+            var allAbilities = currentActingPartyMember.Class?.GetClassAbilities() ?? new List<Ability>();
+            // Filter abilities by unlock level
+            var abilities = allAbilities.Where(a => currentActingPartyMember.Level >= a.UnlockLevel).ToList();
+            // War Cry replaces Battle Cry at level 20 - hide Battle Cry if War Cry is available
+            if (abilities.Any(a => a.Name == "War Cry"))
+            {
+                abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+            }
+
             if (abilities.Count == 0)
             {
                 AnsiConsole.MarkupLine($"\n{currentActingPartyMember.Name} has no abilities available.");
@@ -612,6 +684,17 @@ namespace GuildMaster.Managers
                 currentState = CombatState.CombatEnded;
                 combatActive = false;
             }
+        }
+
+        private void HandleRowChange(Character character)
+        {
+            // Toggle row position
+            character.IsBackRow = !character.IsBackRow;
+            string newRow = character.IsBackRow ? "back row" : "front row";
+            AnsiConsole.MarkupLine($"\n[#FFFF00]{character.Name} moves to the {newRow}.[/]");
+
+            // Complete the turn
+            CompleteTurn();
         }
 
         private async Task ScheduleNextTurnAsync()
@@ -713,6 +796,15 @@ namespace GuildMaster.Managers
         {
             var player = context.Player;
 
+            // Check if player is in back row and trying to use melee attack
+            bool isBasicAttackMelee = player.Class is Legionnaire; // Legionnaire = melee, Venator/Oracle = ranged
+            if (player.IsBackRow && isBasicAttackMelee)
+            {
+                AnsiConsole.MarkupLine("\n[#FF0000]You cannot use melee attacks from the back row![/]");
+                ShowPlayerActionMenu();
+                return;
+            }
+
             int damageRoll = GetWeaponDamage(player);
             string diceString = GetWeaponDiceString(player);
 
@@ -720,6 +812,14 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damageRoll} damage[/]!)");
 
             target.Health -= damageRoll;
+
+            // Legionnaires generate EP from basic attacks (25% of max EP)
+            if (player.Class is Legionnaire)
+            {
+                int epGain = Math.Max(1, player.MaxEnergy / 4); // 25% of max EP, minimum 1
+                player.Energy = Math.Min(player.MaxEnergy, player.Energy + epGain);
+                AnsiConsole.MarkupLine($"<span style='color:#00FFFF'>You gain {epGain} EP from your attack! (EP: {player.Energy}/{player.MaxEnergy})</span>");
+            }
 
             if (target.Health <= 0)
             {
@@ -736,8 +836,16 @@ namespace GuildMaster.Managers
 
             AnsiConsole.MarkupLine("\n[#FFD700]== Your Abilities ==[/]");
 
-            var abilities = player.Class.GetClassAbilities();
-            if (abilities == null || abilities.Count == 0)
+            var allAbilities = player.Class.GetClassAbilities();
+            // Filter abilities by unlock level
+            var abilities = allAbilities?.Where(a => player.Level >= a.UnlockLevel).ToList() ?? new List<Ability>();
+            // War Cry replaces Battle Cry at level 20 - hide Battle Cry if War Cry is available
+            if (abilities.Any(a => a.Name == "War Cry"))
+            {
+                abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+            }
+
+            if (abilities.Count == 0)
             {
                 AnsiConsole.MarkupLine("\nYou have no abilities available.");
                 AnsiConsole.MarkupLine("[dim](Press 0 to go back)[/]");
@@ -773,7 +881,14 @@ namespace GuildMaster.Managers
 
             // Determine which character is using abilities
             Character actingCharacter = currentActingPartyMember != null ? (Character)currentActingPartyMember : context.Player;
-            var abilities = actingCharacter.Class?.GetClassAbilities() ?? new List<Ability>();
+            var allAbilities = actingCharacter.Class?.GetClassAbilities() ?? new List<Ability>();
+            // Filter abilities by unlock level
+            var abilities = allAbilities.Where(a => actingCharacter.Level >= a.UnlockLevel).ToList();
+            // War Cry replaces Battle Cry at level 20 - hide Battle Cry if War Cry is available
+            if (abilities.Any(a => a.Name == "War Cry"))
+            {
+                abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+            }
 
             if (abilities.Count == 0)
             {
@@ -885,6 +1000,7 @@ namespace GuildMaster.Managers
                 "Blessing" => false,
                 "Heal" => false,
                 "Battle Cry" => false,
+                "War Cry" => false,
                 "Barrier" => false,
                 _ => true  // Single-target abilities need target selection
             };
@@ -1451,6 +1567,101 @@ namespace GuildMaster.Managers
             CompleteTurn();
         }
 
+        private bool ExecuteEnemyAbility(Ability ability, NPC enemy, Character target, List<Character> possibleTargets, Player player)
+        {
+            // Deduct energy cost
+            enemy.Energy -= ability.EnergyCost;
+
+            string enemyName = enemy.Name;
+            string targetName = target == player ? "you" : target.Name;
+
+            // Handle different ability types
+            switch (ability.Type)
+            {
+                case AbilityType.SingleTarget:
+                    // Single target damage ability
+                    int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+                    AnsiConsole.MarkupLine($"\n[#FF0000]{enemyName} uses {ability.Name} on {targetName}![/]");
+                    AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for [#FA8A8A]{damage} damage[/]!)");
+
+                    // Apply damage reduction for back row if applicable
+                    int actualDamage = Math.Max(1, damage - target.Defense);
+                    if (target.IsBackRow && !ability.IsRanged)
+                    {
+                        int reducedDamage = actualDamage / 2;
+                        AnsiConsole.MarkupLine($"(Reduced to [#FA8A8A]{reducedDamage}[/] due to back row positioning!)");
+                        actualDamage = Math.Max(1, reducedDamage);
+                    }
+
+                    target.TakeDamage(actualDamage);
+
+                    if (target.Health <= 0)
+                    {
+                        AnsiConsole.MarkupLine($"[#90FF90]{targetName} is defeated![/]");
+                    }
+                    return true;
+
+                case AbilityType.AreaOfEffect:
+                    // AOE damage ability - hits all possible targets
+                    AnsiConsole.MarkupLine($"\n[#FF0000]{enemyName} uses {ability.Name}![/]");
+
+                    foreach (var aoeTarget in possibleTargets.Where(t => t.Health > 0))
+                    {
+                        int aoeDamage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+                        int aoeActualDamage = Math.Max(1, aoeDamage - aoeTarget.Defense);
+
+                        // Apply back row protection for melee AOE
+                        if (aoeTarget.IsBackRow && !ability.IsRanged)
+                        {
+                            aoeActualDamage = Math.Max(1, aoeActualDamage / 2);
+                        }
+
+                        aoeTarget.TakeDamage(aoeActualDamage);
+                        string aoeTargetName = aoeTarget == player ? "You" : aoeTarget.Name;
+                        AnsiConsole.MarkupLine($"  {aoeTargetName} take{(aoeTarget == player ? "" : "s")} [#FA8A8A]{aoeActualDamage} damage[/]!");
+
+                        if (aoeTarget.Health <= 0)
+                        {
+                            AnsiConsole.MarkupLine($"  [#90FF90]{aoeTargetName} {(aoeTarget == player ? "are" : "is")} defeated![/]");
+                        }
+                    }
+                    return true;
+
+                default:
+                    // For other ability types (buffs, heals, etc.), just use basic attack for now
+                    AnsiConsole.MarkupLine($"[dim]{enemyName} attempted to use {ability.Name}, but that ability type isn't implemented for enemies yet.[/]");
+                    return false;
+            }
+        }
+
+        private Character SelectBestTarget(NPC enemy, List<Character> possibleTargets)
+        {
+            if (possibleTargets.Count == 0)
+                return null;
+
+            if (possibleTargets.Count == 1)
+                return possibleTargets[0];
+
+            // Melee enemies prioritize front row targets first
+            if (enemy.Role == EnemyRole.Melee)
+            {
+                var frontRowTargets = possibleTargets.Where(t => !t.IsBackRow).ToList();
+
+                // If there are front row targets, select the lowest health one
+                if (frontRowTargets.Count > 0)
+                {
+                    return frontRowTargets.OrderBy(t => t.Health).First();
+                }
+                // Otherwise fall back to back row targets (lowest health)
+                return possibleTargets.OrderBy(t => t.Health).First();
+            }
+            else
+            {
+                // Ranged and support enemies just target lowest health
+                return possibleTargets.OrderBy(t => t.Health).First();
+            }
+        }
+
         private void HandleEnemyTurn(NPC attackingEnemy, Player player)
         {
             if (attackingEnemy != null && attackingEnemy.Health > 0)
@@ -1503,7 +1714,45 @@ namespace GuildMaster.Managers
                     }
                     else
                     {
-                        target = possibleTargets[random.Next(possibleTargets.Count)];
+                        // Use improved AI target selection
+                        target = SelectBestTarget(attackingEnemy, possibleTargets);
+                    }
+
+                    // Check if enemy should use an ability instead of basic attack
+                    if (attackingEnemy.AbilityNames != null && attackingEnemy.AbilityNames.Count > 0)
+                    {
+                        // Get list of usable abilities (those the enemy has enough energy for)
+                        var usableAbilities = new List<Ability>();
+                        foreach (var abilityName in attackingEnemy.AbilityNames)
+                        {
+                            var ability = AbilityData.GetAbilityByName(abilityName);
+                            if (ability != null && attackingEnemy.Energy >= ability.EnergyCost)
+                            {
+                                usableAbilities.Add(ability);
+                            }
+                        }
+
+                        // 40% chance to use an ability if available
+                        if (usableAbilities.Count > 0 && random.Next(100) < 40)
+                        {
+                            // For now, just pick a random usable ability
+                            // TODO: Implement smarter ability selection (AOE when multiple targets, heals when ally hurt, etc.)
+                            var selectedAbility = usableAbilities[random.Next(usableAbilities.Count)];
+
+                            // Execute the ability
+                            // Note: We need to convert possibleTargets to List<NPC> for enemy abilities
+                            // For now, enemies will only use offensive abilities
+                            var enemyTargets = new List<NPC>(); // Empty for now, enemies attack player/party
+                            bool abilityExecuted = ExecuteEnemyAbility(selectedAbility, attackingEnemy, target, possibleTargets, player);
+
+                            if (abilityExecuted)
+                            {
+                                // Regenerate energy at end of turn
+                                attackingEnemy.Energy = Math.Min(attackingEnemy.MaxEnergy, attackingEnemy.Energy + attackingEnemy.EnergyRegenPerTurn);
+                                return; // Ability was used, turn is over
+                            }
+                            // If ability execution failed, fall through to basic attack
+                        }
                     }
 
                     int enemyDamage = attackingEnemy.AttackDamage;
@@ -1531,7 +1780,20 @@ namespace GuildMaster.Managers
 
                     // Calculate base damage
                     int actualDamage = Math.Max(1, enemyDamage - target.Defense);
-                    AnsiConsole.MarkupLine($"(Attack: {enemyDamage} - Defense: {target.Defense} = [#FA8A8A]{actualDamage} potential damage[/]!)");
+
+                    // Check for back row protection (50% damage reduction from melee attacks)
+                    // Ranged enemies' basic attacks are considered ranged
+                    bool isRangedAttack = attackingEnemy.Role == EnemyRole.Ranged;
+                    if (target.IsBackRow && !isRangedAttack)
+                    {
+                        int reducedDamage = actualDamage / 2;
+                        AnsiConsole.MarkupLine($"(Attack: {enemyDamage} - Defense: {target.Defense} = {actualDamage}, reduced to [#FA8A8A]{reducedDamage}[/] due to back row positioning!)");
+                        actualDamage = Math.Max(1, reducedDamage); // Ensure at least 1 damage
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine($"(Attack: {enemyDamage} - Defense: {target.Defense} = [#FA8A8A]{actualDamage} potential damage[/]!)");
+                    }
 
                     // Check for barrier absorption
                     if (barrierAbsorption.ContainsKey(target) && barrierAbsorption[target] > 0)
@@ -1567,6 +1829,9 @@ namespace GuildMaster.Managers
                         target.TakeDamage(actualDamage);
                     }
 
+                    // Regenerate energy at end of turn
+                    attackingEnemy.Energy = Math.Min(attackingEnemy.MaxEnergy, attackingEnemy.Energy + attackingEnemy.EnergyRegenPerTurn);
+
                     // Note: Thread.Sleep removed for web compatibility
                 }
             }
@@ -1585,9 +1850,9 @@ namespace GuildMaster.Managers
             else
             {
                 AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine($"[#FCFC7F]╔══════════════════╗[/]");
-                AnsiConsole.MarkupLine($"[#FCFC7F]║    FLED COMBAT   ║[/]");
-                AnsiConsole.MarkupLine($"[#FCFC7F]╚══════════════════╝[/]");
+       
+                AnsiConsole.MarkupLine($"   FLED COMBAT   ");
+
                 CleanupCombat(player);
             }
         }
@@ -1918,20 +2183,71 @@ namespace GuildMaster.Managers
         {
             if (character.EquippedWeapon != null)
             {
-                return character.EquippedWeapon.DiceString;
+                // Show weapon dice + level bonus
+                return $"{character.EquippedWeapon.DiceCount}d{character.EquippedWeapon.DiceSides}+{character.Level}";
             }
-            return "1d4+1"; // Fallback for unarmed
+            return $"1d4+{character.Level}"; // Fallback for unarmed
         }
 
         private int GetWeaponDamage(Character character)
         {
             if (character.EquippedWeapon != null)
             {
-                return RollDice(character.EquippedWeapon.DiceCount,
-                               character.EquippedWeapon.DiceSides,
-                               character.EquippedWeapon.Bonus);
+                // New formula: (Weapon Dice) + Level
+                int weaponRoll = RollDice(character.EquippedWeapon.DiceCount,
+                                         character.EquippedWeapon.DiceSides,
+                                         0); // Don't use weapon bonus, just dice
+                return weaponRoll + character.Level;
             }
-            return RollDice(1, 4, 1); // Fallback for unarmed
+            // Fallback for unarmed: 1d4 + Level
+            return RollDice(1, 4, 0) + character.Level;
+        }
+
+        private int CalculateAbilityDamage(Character character, Ability ability)
+        {
+            // New formula: (Weapon Dice + Level) + (Ability Dice + Level)
+            // This applies only to damaging abilities (abilities with DiceCount > 0)
+
+            // Weapon portion: Weapon Dice + Level
+            int weaponPortion = 0;
+            if (character.EquippedWeapon != null)
+            {
+                int weaponRoll = RollDice(character.EquippedWeapon.DiceCount,
+                                         character.EquippedWeapon.DiceSides,
+                                         0);
+                weaponPortion = weaponRoll + character.Level;
+            }
+            else
+            {
+                // Unarmed fallback
+                weaponPortion = RollDice(1, 4, 0) + character.Level;
+            }
+
+            // Ability portion: Ability Dice + Level (ignore old Bonus property)
+            int abilityPortion = 0;
+            if (ability.DiceCount > 0)
+            {
+                int abilityRoll = RollDice(ability.DiceCount, ability.DiceSides, 0);
+                abilityPortion = abilityRoll + character.Level;
+            }
+
+            return weaponPortion + abilityPortion;
+        }
+
+        private string GetAbilityDiceString(Character character, Ability ability)
+        {
+            // Show the formula: (WeaponDice+Level) + (AbilityDice+Level)
+            string weaponPart = character.EquippedWeapon != null
+                ? $"({character.EquippedWeapon.DiceCount}d{character.EquippedWeapon.DiceSides}+{character.Level})"
+                : $"(1d4+{character.Level})";
+
+            if (ability.DiceCount > 0)
+            {
+                string abilityPart = $"({ability.DiceCount}d{ability.DiceSides}+{character.Level})";
+                return $"{weaponPart} + {abilityPart}";
+            }
+
+            return weaponPart;
         }
 
         private int RollDice(int count, int sides, int modifier = 0)
@@ -2004,7 +2320,8 @@ namespace GuildMaster.Managers
             string playerEnergyBar = GenerateEnergyBar(player.Energy, player.MaxEnergy);
             string playerHP = $"{player.Health}/{player.MaxHealth}".PadLeft(9);  // "9999/9999" = 9 chars max
             string playerEP = $"{player.Energy}/{player.MaxEnergy}".PadLeft(9);
-            AnsiConsole.MarkupLine($" {"You",-12} HP:{playerHealthBar} {playerHP}  EP:{playerEnergyBar} {playerEP}");
+            string playerRow = player.IsBackRow ? "<span style='color:#00FF00'>[Back]</span>" : "<span style='color:#00FF00'>[Front]</span>";
+            AnsiConsole.MarkupLine($" {"You",-12} HP:{playerHealthBar} {playerHP}  EP:{playerEnergyBar} {playerEP}  {playerRow}");
 
             // Party members
             foreach (var ally in player.ActiveParty.Where(a => a.Health > 0))
@@ -2014,7 +2331,8 @@ namespace GuildMaster.Managers
                 string allyName = ally.Name.Length > 12 ? ally.Name.Substring(0, 12) : ally.Name;
                 string allyHP = $"{ally.Health}/{ally.MaxHealth}".PadLeft(9);
                 string allyEP = $"{ally.Energy}/{ally.MaxEnergy}".PadLeft(9);
-                AnsiConsole.MarkupLine($" {allyName,-12} HP:{allyHealthBar} {allyHP}  EP:{allyEnergyBar} {allyEP}");
+                string allyRow = ally.IsBackRow ? "<span style='color:#00FF00'>[Back]</span>" : "<span style='color:#00FF00'>[Front]</span>";
+                AnsiConsole.MarkupLine($" {allyName,-12} HP:{allyHealthBar} {allyHP}  EP:{allyEnergyBar} {allyEP}  {allyRow}");
             }
 
             // Spacing
@@ -2030,7 +2348,9 @@ namespace GuildMaster.Managers
                     string enemyBar = GenerateHealthBar(enemy.Health, enemy.MaxHealth);
                     string enemyName = enemy.Name.Length > 12 ? enemy.Name.Substring(0, 12) : enemy.Name;
                     string enemyHP = $"{enemy.Health}/{enemy.MaxHealth}".PadLeft(9);
-                    AnsiConsole.MarkupLine($" {enemyName,-12} HP:{enemyBar} {enemyHP}");
+                    string enemyRow = enemy.IsBackRow ? "<span style='color:#FF0000'>[Back]</span>" : "<span style='color:#FF0000'>[Front]</span>";
+                    // 27 spaces to align row indicator with party members above (total line = 71 chars to fit border)
+                    AnsiConsole.MarkupLine($" {enemyName,-12} HP:{enemyBar} {enemyHP}                           {enemyRow}");
                 }
             }
 
@@ -2083,6 +2403,15 @@ namespace GuildMaster.Managers
             int filledSegments = (int)Math.Round(percentage * 10);
             int emptySegments = 10 - filledSegments;
 
+            // When EP is 0, show all empty segments
+            if (percentage == 0)
+            {
+                string bar = "[#404040]";
+                bar += new string('░', 10);
+                bar += "[/]";
+                return bar;
+            }
+
             // Original colors with CSS glow effect
             string color;
             string cssClass;
@@ -2102,17 +2431,23 @@ namespace GuildMaster.Managers
                 cssClass = "ep-bar-low";
             }
             else
-                return "[#404040][EMPTY][/]     ";
+            {
+                // Fallback - should never hit this due to check above
+                string bar = "[#404040]";
+                bar += new string('░', 10);
+                bar += "[/]";
+                return bar;
+            }
 
             // Build the bar with CSS glow effect
-            string bar = $"<span class='{cssClass}'>[{color}]";
-            bar += new string('█', filledSegments);
-            bar += "[/]</span>";
-            bar += $"[#404040]";
-            bar += new string('░', emptySegments);
-            bar += "[/]";
+            string bar2 = $"<span class='{cssClass}'>[{color}]";
+            bar2 += new string('█', filledSegments);
+            bar2 += "[/]</span>";
+            bar2 += $"[#404040]";
+            bar2 += new string('░', emptySegments);
+            bar2 += "[/]";
 
-            return bar;
+            return bar2;
         }
 
         private bool ExecuteAbility(Ability ability, Player player, List<NPC> enemies)
@@ -2125,6 +2460,7 @@ namespace GuildMaster.Managers
                 case "Shield Bash":
                     return ExecuteShieldBashGeneric(ability, player, enemies);
                 case "Taunt":
+                case "Battle Cry":
                     return ExecuteTauntGeneric(ability, player, enemies);
                 case "Shield Wall":
                     return ExecuteShieldWallGeneric(ability, player, player);
@@ -2156,8 +2492,6 @@ namespace GuildMaster.Managers
                     return ExecuteWhirlwind(player, enemies);
                 case "Power Attack":
                     return ExecutePowerAttack(player, enemies);
-                case "Battle Cry":
-                    return ExecuteBattleCry(player);
 
                 default:
                     AnsiConsole.MarkupLine($"[#FF0000]Ability '{ability.Name}' not yet implemented![/]");
@@ -2167,6 +2501,26 @@ namespace GuildMaster.Managers
 
         private bool ExecuteAbilityForCharacter(Ability ability, Character character, List<NPC> enemies, Player player, NPC preselectedTarget = null)
         {
+            // Check if character is in back row and trying to use melee ability
+            if (character.IsBackRow && !ability.IsRanged)
+            {
+                string characterName = character == player ? "You" : character.Name;
+                string verb = character == player ? "cannot use" : "cannot use";
+                AnsiConsole.MarkupLine($"\n[#FF0000]{characterName} {verb} melee abilities from the back row![/]");
+
+                // Show appropriate menu based on who is acting
+                if (character == player)
+                {
+                    ShowAbilityMenu();
+                }
+                else if (currentActingPartyMember != null && currentActingPartyMember == character)
+                {
+                    ShowPartyMemberAbilityMenu();
+                }
+
+                return false;
+            }
+
             character.Energy -= ability.EnergyCost;
 
             switch (ability.Name)
@@ -2175,6 +2529,7 @@ namespace GuildMaster.Managers
                 case "Shield Bash":
                     return ExecuteShieldBashGeneric(ability, character, enemies);
                 case "Taunt":
+                case "Battle Cry":
                     return ExecuteTauntGeneric(ability, character, enemies);
                 case "Shield Wall":
                     return ExecuteShieldWallGeneric(ability, character, player);
@@ -2224,6 +2579,12 @@ namespace GuildMaster.Managers
                     return ExecuteThunderVolleyGeneric(ability, character, enemies);
                 case "Divine Wrath":
                     return ExecuteDivineWrathGeneric(ability, character, enemies);
+
+                // Level 20 Abilities
+                case "Whirlwind":
+                    return ExecuteWhirlwindGeneric(ability, character, enemies);
+                case "War Cry":
+                    return ExecuteWarCryGeneric(ability, character, enemies, player);
 
                 default:
                     AnsiConsole.MarkupLine($"[#FF0000]Ability '{ability.Name}' not yet implemented for {character.Name}![/]");
@@ -2466,10 +2827,11 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#FF0000]{character.Name} bashes {target.Name} with their shield![/]");
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for [#FA8A8A]{damage} damage[/]!)");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
 
             target.Health -= damage;
 
@@ -2485,7 +2847,15 @@ namespace GuildMaster.Managers
 
         private bool ExecuteTauntGeneric(Ability ability, Character character, List<NPC> enemies)
         {
-            AnsiConsole.MarkupLine($"\n[#FFFF00]{character.Name} shouts a challenge, drawing all enemies' attention![/]");
+            // Check cooldown (5 turns)
+            if (IsAbilityOnCooldown(character, "Battle Cry"))
+            {
+                int cooldownRemaining = GetAbilityCooldown(character, "Battle Cry");
+                AnsiConsole.MarkupLine($"\nBattle Cry is on cooldown for {cooldownRemaining} more turns!");
+                return false;
+            }
+
+            AnsiConsole.MarkupLine($"\n[#FFFF00]{character.Name} shouts a battle cry, drawing all enemies' attention![/]");
 
             var aliveEnemies = enemies.Where(e => e.Health > 0).ToList();
             foreach (var enemy in aliveEnemies)
@@ -2494,6 +2864,15 @@ namespace GuildMaster.Managers
             }
 
             AnsiConsole.MarkupLine($"[#00FFFF]All enemies will target {character.Name} for the next 2 turns![/]");
+
+            // Generate EP equal to 50% of max EP
+            int epGain = character.MaxEnergy / 2; // 50% of max EP, rounded down
+            character.Energy = Math.Min(character.MaxEnergy, character.Energy + epGain);
+            AnsiConsole.MarkupLine($"<span style='color:#00FFFF'>{character.Name} gains {epGain} EP from Battle Cry! (EP: {character.Energy}/{character.MaxEnergy})</span>");
+
+            // Set cooldown (5 turns)
+            SetAbilityCooldown(character, "Battle Cry", 5);
+
             return true;
         }
 
@@ -2539,11 +2918,12 @@ namespace GuildMaster.Managers
 
             foreach (var enemy in aliveEnemies)
             {
-                int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+                int damage = CalculateAbilityDamage(character, ability);
                 int actualDamage = Math.Max(1, damage - enemy.Defense);
                 enemy.Health -= actualDamage;
 
-                AnsiConsole.MarkupLine($"{character.Name} cleaves {enemy.Name}! (Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for [#FA8A8A]{actualDamage} damage[/]!)");
+                string diceString = GetAbilityDiceString(character, ability);
+                AnsiConsole.MarkupLine($"{character.Name} cleaves {enemy.Name}! (Rolled {diceString} for [#FA8A8A]{actualDamage} damage[/]!)");
 
                 if (enemy.Health <= 0)
                 {
@@ -2566,9 +2946,10 @@ namespace GuildMaster.Managers
 
             foreach (var enemy in aliveEnemies)
             {
-                int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+                int damage = CalculateAbilityDamage(character, ability);
                 enemy.Health -= damage;
-                AnsiConsole.MarkupLine($"{character.Name} hits {enemy.Name}! (Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for [#FA8A8A]{damage} damage[/]!)");
+                string diceString = GetAbilityDiceString(character, ability);
+                AnsiConsole.MarkupLine($"{character.Name} hits {enemy.Name}! (Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
 
                 if (enemy.Health <= 0)
                 {
@@ -2583,10 +2964,11 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#90FF90]{character.Name} fires a piercing arrow at {target.Name}![/]");
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for [#FA8A8A]{damage} damage[/]!)");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
             AnsiConsole.MarkupLine($"[#FFFF00]The arrow ignores all armor![/]");
 
             target.Health -= damage;
@@ -2621,12 +3003,11 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            var weapon = character.EquippedWeapon ?? EquipmentData.GetEquipment("rusty dagger");
-            int coveringDice = Math.Max(3, weapon.DiceSides - 2);
-            int damage = RollDice(weapon.DiceCount, coveringDice, weapon.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#90FF90]{character.Name} fires a quick covering shot at {target.Name}![/]");
-            AnsiConsole.MarkupLine($"(Rolled {weapon.DiceCount}d{coveringDice}+{weapon.Bonus} for [#FA8A8A]{damage} damage[/]!)");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
 
             target.Health -= damage;
 
@@ -2679,10 +3060,11 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#FFFF00]{character.Name} calls down a lightning bolt on {target.Name}![/]");
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for {GetTypedDamageMarkup(damage, DamageType.Lightning)})");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Lightning)})");
 
             // Apply lightning damage (has chance to stun)
             ApplyDamageWithType(character, target, damage, DamageType.Lightning);
@@ -2715,10 +3097,11 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#FF4500]{character.Name} strikes {target.Name} with holy flames![/]");
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for {GetTypedDamageMarkup(damage, DamageType.Fire)})");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Fire)})");
 
             // Apply fire damage (creates burn DOT)
             ApplyDamageWithType(character, target, damage, DamageType.Fire);
@@ -2735,11 +3118,12 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
             string color = GetDamageTypeColor(DamageType.Bleed);
 
             AnsiConsole.MarkupLine($"\n[#8B0000]{character.Name} delivers a vicious rending strike to {target.Name}![/]");
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for [{color}]{damage} Bleed damage[/]!)");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for [{color}]{damage} Bleed damage[/]!)");
 
             // Apply bleed damage (creates DOT)
             ApplyDamageWithType(character, target, damage, DamageType.Bleed);
@@ -2962,11 +3346,12 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#FF0000]{character.Name} fires a barbed arrow at {target.Name}![/]");
             string damageText = GetTypedDamageMarkup(damage, DamageType.Physical);
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for {damageText})");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {damageText})");
 
             // Apply physical damage with bleed DOT (higher than normal physical)
             target.TakeDamage(damage);
@@ -2990,11 +3375,12 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#87CEEB]{character.Name} launches a frostbolt at {target.Name}![/]");
             string damageText = GetTypedDamageMarkup(damage, DamageType.Ice);
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for {damageText})");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {damageText})");
 
             // Apply ice damage (full damage + defense reduction)
             ApplyDamageWithType(character, target, damage, DamageType.Ice);
@@ -3018,11 +3404,12 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#FF4500]{character.Name} delivers a crushing blow to {target.Name}'s armor![/]");
             string damageText = GetTypedDamageMarkup(damage, DamageType.Physical);
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for {damageText})");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {damageText})");
 
             target.TakeDamage(damage);
 
@@ -3043,11 +3430,12 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#87CEEB]{character.Name} fires a frost-covered arrow at {target.Name}![/]");
             string damageText = GetTypedDamageMarkup(damage, DamageType.Ice);
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for {damageText})");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {damageText})");
 
             // Apply ice damage (full damage + defense reduction)
             ApplyDamageWithType(character, target, damage, DamageType.Ice);
@@ -3101,11 +3489,12 @@ namespace GuildMaster.Managers
 
             foreach (var enemy in aliveEnemies)
             {
-                int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+                int damage = CalculateAbilityDamage(character, ability);
                 int actualDamage = Math.Max(1, damage - enemy.Defense);
                 enemy.Health -= actualDamage;
 
-                AnsiConsole.MarkupLine($"{character.Name} strikes {enemy.Name}! (Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for [#FA8A8A]{actualDamage} damage[/]!)");
+                string diceString = GetAbilityDiceString(character, ability);
+                AnsiConsole.MarkupLine($"{character.Name} strikes {enemy.Name}! (Rolled {diceString} for [#FA8A8A]{actualDamage} damage[/]!)");
 
                 // 50% chance to stun each enemy
                 if (random.Next(100) < 50)
@@ -3136,10 +3525,11 @@ namespace GuildMaster.Managers
 
             foreach (var enemy in aliveEnemies)
             {
-                int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+                int damage = CalculateAbilityDamage(character, ability);
+                string diceString = GetAbilityDiceString(character, ability);
 
                 string damageText = GetTypedDamageMarkup(damage, DamageType.Lightning);
-                AnsiConsole.MarkupLine($"{character.Name} strikes {enemy.Name}! (Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for {damageText})");
+                AnsiConsole.MarkupLine($"{character.Name} strikes {enemy.Name}! (Rolled {diceString} for {damageText})");
 
                 // Apply lightning damage (has stun chance built into ApplyDamageWithType)
                 ApplyDamageWithType(character, enemy, damage, DamageType.Lightning);
@@ -3157,11 +3547,12 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
 
             AnsiConsole.MarkupLine($"\n[#FFD700]{character.Name} calls down divine wrath upon {target.Name}![/]");
             string damageText = GetTypedDamageMarkup(damage, DamageType.Fire);
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for {damageText})");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {damageText})");
 
             // Apply fire damage (full damage + strong burn DOT)
             ApplyDamageWithType(character, target, damage, DamageType.Fire);
@@ -3172,6 +3563,79 @@ namespace GuildMaster.Managers
             {
                 AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
             }
+            return true;
+        }
+
+        // ============================================
+        // LEVEL 20 ABILITIES
+        // ============================================
+
+        private bool ExecuteWhirlwindGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            var aliveEnemies = enemies.Where(e => e.Health > 0).ToList();
+
+            if (aliveEnemies.Count == 0)
+            {
+                AnsiConsole.MarkupLine("No enemies to strike!");
+                return false;
+            }
+
+            AnsiConsole.MarkupLine($"\n<span style='color:#FF0000; font-weight:bold;'>{character.Name} spins in a devastating whirlwind, striking all enemies!</span>");
+
+            foreach (var enemy in aliveEnemies)
+            {
+                int damage = CalculateAbilityDamage(character, ability);
+                // Whirlwind ignores row positioning and armor partially
+                int actualDamage = Math.Max(1, damage - (enemy.Defense / 2));
+                enemy.Health -= actualDamage;
+
+                string diceString = GetAbilityDiceString(character, ability);
+                AnsiConsole.MarkupLine($"{character.Name} strikes {enemy.Name}! (Rolled {diceString} for [#FA8A8A]{actualDamage} damage[/]!)");
+
+                if (enemy.Health <= 0)
+                {
+                    AnsiConsole.MarkupLine($"[#90FF90]{enemy.Name} is defeated![/]");
+                }
+            }
+            return true;
+        }
+
+        private bool ExecuteWarCryGeneric(Ability ability, Character character, List<NPC> enemies, Player player)
+        {
+            // Check cooldown (5 turns)
+            if (IsAbilityOnCooldown(character, "War Cry"))
+            {
+                int cooldownRemaining = GetAbilityCooldown(character, "War Cry");
+                AnsiConsole.MarkupLine($"\nWar Cry is on cooldown for {cooldownRemaining} more turns!");
+                return false;
+            }
+
+            AnsiConsole.MarkupLine($"\n<span style='color:#FFD700; font-weight:bold;'>{character.Name} unleashes a devastating war cry![/]</span>");
+
+            // Taunt all enemies for 2 turns
+            var aliveEnemies = enemies.Where(e => e.Health > 0).ToList();
+            foreach (var enemy in aliveEnemies)
+            {
+                ApplyStatusEffect(enemy, StatusEffect.Taunted, 2, character);
+            }
+            AnsiConsole.MarkupLine($"[#00FFFF]All enemies will target {character.Name} for the next 2 turns![/]");
+
+            // Generate EP equal to 75% of max EP
+            int epGain = (character.MaxEnergy * 3) / 4; // 75% of max EP, rounded down
+            character.Energy = Math.Min(character.MaxEnergy, character.Energy + epGain);
+            AnsiConsole.MarkupLine($"<span style='color:#00FFFF'>{character.Name} gains {epGain} EP from War Cry! (EP: {character.Energy}/{character.MaxEnergy})</span>");
+
+            // Increase all party members' damage by 20% for 3 turns
+            warCryDamageBoost[player] = 3;
+            foreach (var ally in player.ActiveParty.Where(a => a.Health > 0))
+            {
+                warCryDamageBoost[ally] = 3;
+            }
+            AnsiConsole.MarkupLine($"<span style='color:#FFD700'>The entire party's damage is increased by 20% for 3 turns!</span>");
+
+            // Set cooldown (5 turns)
+            SetAbilityCooldown(character, "War Cry", 5);
+
             return true;
         }
 
