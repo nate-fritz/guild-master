@@ -1,5 +1,4 @@
 using GuildMaster.Services;
-using GuildMaster.Services;
 using Console = GuildMaster.Services.Console;
 using AnsiConsole = GuildMaster.Services.AnsiConsole;
 ﻿using System;
@@ -618,7 +617,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(currentActingPartyMember.Name, target.Name, currentActingPartyMember.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
 
             // Clear the current acting party member and complete turn
@@ -823,7 +823,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"\n[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText("You", target.Name, player.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine($"\n{flavorText}");
             }
 
             CompleteTurn();
@@ -1141,7 +1142,14 @@ namespace GuildMaster.Managers
 
         private bool HandleCharacterAbilities(Character character, List<NPC> enemies, Player player)
         {
-            var abilities = character.Class?.GetClassAbilities() ?? new List<Ability>();
+            var allAbilities = character.Class?.GetClassAbilities() ?? new List<Ability>();
+            var abilities = allAbilities.Where(a => character.Level >= a.UnlockLevel).ToList();
+
+            // War Cry replaces Battle Cry at level 20
+            if (abilities.Any(a => a.Name == "War Cry"))
+            {
+                abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+            }
 
             if (abilities.Count == 0)
             {
@@ -1211,7 +1219,8 @@ namespace GuildMaster.Managers
 
                 if (enemy.Health <= 0)
                 {
-                    AnsiConsole.MarkupLine($"[#90FF90]{enemy.Name} is defeated![/]");
+                    string flavorText = GetKillFlavorText("You", enemy.Name, player.EquippedWeapon, context.Player.GoreEnabled);
+                    AnsiConsole.MarkupLine(flavorText);
                 }
             }
             return true;
@@ -1272,7 +1281,8 @@ namespace GuildMaster.Managers
 
             if (powerTarget.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{powerTarget.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText("You", powerTarget.Name, player.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -1496,7 +1506,15 @@ namespace GuildMaster.Managers
         {
             AnsiConsole.MarkupLine($"\n[#FFFF00]{ally.Name}'s turn[/]");
 
-            var abilities = ally.Class?.GetClassAbilities() ?? new List<Ability>();
+            var allAbilities = ally.Class?.GetClassAbilities() ?? new List<Ability>();
+            var abilities = allAbilities.Where(a => ally.Level >= a.UnlockLevel).ToList();
+
+            // War Cry replaces Battle Cry at level 20
+            if (abilities.Any(a => a.Name == "War Cry"))
+            {
+                abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+            }
+
             var aliveEnemies = enemies.Where(e => e.Health > 0).ToList();
 
             if (aliveEnemies.Count == 0)
@@ -1561,7 +1579,8 @@ namespace GuildMaster.Managers
 
             if (attackTarget.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{attackTarget.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(ally.Name, attackTarget.Name, ally.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
 
             CompleteTurn();
@@ -1589,8 +1608,9 @@ namespace GuildMaster.Managers
                     if (target.IsBackRow && !ability.IsRanged)
                     {
                         int reducedDamage = actualDamage / 2;
-                        AnsiConsole.MarkupLine($"(Reduced to [#FA8A8A]{reducedDamage}[/] due to back row positioning!)");
-                        actualDamage = Math.Max(1, reducedDamage);
+                        int finalDamage = Math.Max(1, reducedDamage);
+                        AnsiConsole.MarkupLine($"(Reduced to [#FA8A8A]{finalDamage}[/] due to back row positioning!)");
+                        actualDamage = finalDamage;
                     }
 
                     target.TakeDamage(actualDamage);
@@ -1787,8 +1807,9 @@ namespace GuildMaster.Managers
                     if (target.IsBackRow && !isRangedAttack)
                     {
                         int reducedDamage = actualDamage / 2;
-                        AnsiConsole.MarkupLine($"(Attack: {enemyDamage} - Defense: {target.Defense} = {actualDamage}, reduced to [#FA8A8A]{reducedDamage}[/] due to back row positioning!)");
-                        actualDamage = Math.Max(1, reducedDamage); // Ensure at least 1 damage
+                        int finalDamage = Math.Max(1, reducedDamage); // Ensure at least 1 damage
+                        AnsiConsole.MarkupLine($"(Attack: {enemyDamage} - Defense: {target.Defense} = {actualDamage}, reduced to [#FA8A8A]{finalDamage}[/] due to back row positioning!)");
+                        actualDamage = finalDamage;
                     }
                     else
                     {
@@ -2111,10 +2132,16 @@ namespace GuildMaster.Managers
                 currentRoom.MarkCleared(player.CurrentDay, player.CurrentHour);
             }
 
-            // Show autocombat tutorial after first combat with full party (player + 2 recruits)
-            if (player.ActiveParty.Count >= 2 && ProgramStatics.messageManager != null)
+            // Show autocombat tutorial after SECOND combat with 3+ party members (player + 3 recruits)
+            if (player.ActiveParty.Count >= 3 && ProgramStatics.messageManager != null)
             {
-                ProgramStatics.messageManager.CheckAndShowMessage("autocombat_tutorial");
+                player.ThreeMemberCombatCount++;
+
+                // Show tutorial on the SECOND combat with 3+ members
+                if (player.ThreeMemberCombatCount == 2)
+                {
+                    ProgramStatics.messageManager.CheckAndShowMessage("autocombat_tutorial");
+                }
             }
 
             CleanupCombat(player);
@@ -2840,7 +2867,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -2927,7 +2955,8 @@ namespace GuildMaster.Managers
 
                 if (enemy.Health <= 0)
                 {
-                    AnsiConsole.MarkupLine($"[#90FF90]{enemy.Name} is defeated![/]");
+                    string flavorText = GetKillFlavorText(character.Name, enemy.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                    AnsiConsole.MarkupLine(flavorText);
                 }
             }
             return true;
@@ -2953,7 +2982,8 @@ namespace GuildMaster.Managers
 
                 if (enemy.Health <= 0)
                 {
-                    AnsiConsole.MarkupLine($"[#90FF90]{enemy.Name} is defeated![/]");
+                    string flavorText = GetKillFlavorText(character.Name, enemy.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                    AnsiConsole.MarkupLine(flavorText);
                 }
             }
             return true;
@@ -2975,7 +3005,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3016,7 +3047,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3071,7 +3103,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3108,7 +3141,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3130,7 +3164,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3365,7 +3400,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3390,7 +3426,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3420,7 +3457,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3449,7 +3487,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3505,7 +3544,8 @@ namespace GuildMaster.Managers
 
                 if (enemy.Health <= 0)
                 {
-                    AnsiConsole.MarkupLine($"[#90FF90]{enemy.Name} is defeated![/]");
+                    string flavorText = GetKillFlavorText(character.Name, enemy.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                    AnsiConsole.MarkupLine(flavorText);
                 }
             }
             return true;
@@ -3536,7 +3576,8 @@ namespace GuildMaster.Managers
 
                 if (enemy.Health <= 0)
                 {
-                    AnsiConsole.MarkupLine($"[#90FF90]{enemy.Name} is defeated![/]");
+                    string flavorText = GetKillFlavorText(character.Name, enemy.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                    AnsiConsole.MarkupLine(flavorText);
                 }
             }
             return true;
@@ -3561,7 +3602,8 @@ namespace GuildMaster.Managers
 
             if (target.Health <= 0)
             {
-                AnsiConsole.MarkupLine($"[#90FF90]{target.Name} is defeated![/]");
+                string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
             }
             return true;
         }
@@ -3594,7 +3636,8 @@ namespace GuildMaster.Managers
 
                 if (enemy.Health <= 0)
                 {
-                    AnsiConsole.MarkupLine($"[#90FF90]{enemy.Name} is defeated![/]");
+                    string flavorText = GetKillFlavorText(character.Name, enemy.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                    AnsiConsole.MarkupLine(flavorText);
                 }
             }
             return true;
@@ -3637,6 +3680,279 @@ namespace GuildMaster.Managers
             SetAbilityCooldown(character, "War Cry", 5);
 
             return true;
+        }
+
+        // ============================================
+        // KILL FLAVOR TEXT SYSTEM
+        // ============================================
+
+        private string GetWeaponType(Equipment weapon)
+        {
+            if (weapon == null) return "unarmed";
+
+            string weaponName = weapon.ShortName.ToLower();
+
+            // Categorize weapons by type
+            if (weaponName.Contains("sword") || weaponName.Contains("gladius") || weaponName.Contains("blade"))
+                return "sword";
+            if (weaponName.Contains("bow"))
+                return "bow";
+            if (weaponName.Contains("staff") || weaponName.Contains("wand"))
+                return "staff";
+            if (weaponName.Contains("dagger") || weaponName.Contains("knife"))
+                return "dagger";
+            if (weaponName.Contains("axe"))
+                return "axe";
+            if (weaponName.Contains("hammer") || weaponName.Contains("mace") || weaponName.Contains("club"))
+                return "hammer";
+            if (weaponName.Contains("spear") || weaponName.Contains("lance") || weaponName.Contains("pike"))
+                return "spear";
+
+            return "unarmed";
+        }
+
+        private string GetKillFlavorText(string killerName, string victimName, Equipment weapon, bool goreEnabled)
+        {
+            string weaponType = GetWeaponType(weapon);
+            Random rng = new Random();
+
+            // Define flavor text collections by weapon type
+            var flavorTexts = new Dictionary<string, (List<string> clean, List<string> gore)>
+            {
+                ["sword"] = (
+                    new List<string>
+                    {
+                        $"[#90FF90]{victimName} falls to {killerName}'s blade![/]",
+                        $"[#90FF90]{killerName}'s sword finds its mark. {victimName} collapses![/]",
+                        $"[#90FF90]With a swift strike, {killerName} defeats {victimName}![/]",
+                        $"[#90FF90]{victimName} crumples under {killerName}'s assault![/]",
+                        $"[#90FF90]{killerName}'s blade cuts through {victimName}'s defenses![/]",
+                        $"[#90FF90]A decisive blow from {killerName} ends the fight![/]",
+                        $"[#90FF90]{victimName} staggers and falls, defeated![/]",
+                        $"[#90FF90]{killerName} strikes true! {victimName} is vanquished![/]",
+                        $"[#90FF90]The clash of steel ends with {victimName} on the ground![/]",
+                        $"[#90FF90]{victimName} falls before {killerName}'s superior swordplay![/]"
+                    },
+                    new List<string>
+                    {
+                        $"[#FA8A8A]{killerName}'s blade cleaves through {victimName}, spraying crimson![/]",
+                        $"[#FA8A8A]{victimName}'s head flies from their shoulders![/]",
+                        $"[#FA8A8A]{killerName} runs {victimName} through! Blood pools on the ground![/]",
+                        $"[#FA8A8A]With a vicious slash, {killerName} disembowels {victimName}![/]",
+                        $"[#FA8A8A]{victimName}'s blood paints the battlefield as they fall![/]",
+                        $"[#FA8A8A]{killerName}'s blade cuts deep! {victimName} dies choking on blood![/]",
+                        $"[#FA8A8A]A arterial spray erupts as {killerName} cuts down {victimName}![/]",
+                        $"[#FA8A8A]{victimName}'s entrails spill out from the mortal wound![/]",
+                        $"[#FA8A8A]{killerName} hacks {victimName} apart in a gory display![/]",
+                        $"[#FA8A8A]{victimName}'s body crumples, soaked in their own blood![/]"
+                    }
+                ),
+                ["bow"] = (
+                    new List<string>
+                    {
+                        $"[#90FF90]{killerName}'s arrow strikes true! {victimName} falls![/]",
+                        $"[#90FF90]An arrow pierces {victimName}'s heart. They collapse![/]",
+                        $"[#90FF90]{killerName}'s shot finds its mark. {victimName} is defeated![/]",
+                        $"[#90FF90]A perfect shot from {killerName} ends {victimName}![/]",
+                        $"[#90FF90]{victimName} crumples with an arrow in their chest![/]",
+                        $"[#90FF90]{killerName}'s arrow flies swift and deadly![/]",
+                        $"[#90FF90]The arrow finds a gap in {victimName}'s armor![/]",
+                        $"[#90FF90]{victimName} falls with a strangled gasp![/]",
+                        $"[#90FF90]{killerName}'s marksmanship proves superior![/]",
+                        $"[#90FF90]A fatal shot brings {victimName} down![/]"
+                    },
+                    new List<string>
+                    {
+                        $"[#FA8A8A]{killerName}'s arrow punches through {victimName}'s throat in a spray of blood![/]",
+                        $"[#FA8A8A]The arrow pins {victimName} to the ground, blood gurgling from the wound![/]",
+                        $"[#FA8A8A]{victimName}'s eye socket becomes a bloody crater![/]",
+                        $"[#FA8A8A]{killerName}'s arrow severs {victimName}'s spine! They drop like a puppet![/]",
+                        $"[#FA8A8A]Blood erupts from {victimName}'s chest as the arrow pierces clean through![/]",
+                        $"[#FA8A8A]The arrow shatters {victimName}'s skull in a crimson explosion![/]",
+                        $"[#FA8A8A]{victimName} convulses violently as the arrow finds their heart![/]",
+                        $"[#FA8A8A]{killerName}'s shot rips through {victimName}'s neck, nearly decapitating them![/]",
+                        $"[#FA8A8A]Blood pours from {victimName}'s mouth as they collapse, arrow-riddled![/]",
+                        $"[#FA8A8A]The arrow punches through ribs and organs! {victimName} dies screaming![/]"
+                    }
+                ),
+                ["staff"] = (
+                    new List<string>
+                    {
+                        $"[#90FF90]{killerName}'s magic overwhelms {victimName}![/]",
+                        $"[#90FF90]Arcane energy consumes {victimName}![/]",
+                        $"[#90FF90]{victimName} falls to {killerName}'s sorcery![/]",
+                        $"[#90FF90]Mystical forces end {victimName}'s life![/]",
+                        $"[#90FF90]{killerName}'s spell proves fatal![/]",
+                        $"[#90FF90]Magic energy crackles as {victimName} collapses![/]",
+                        $"[#90FF90]The staff's power strikes down {victimName}![/]",
+                        $"[#90FF90]Ethereal flames engulf {victimName}![/]",
+                        $"[#90FF90]{victimName} succumbs to {killerName}'s magic![/]",
+                        $"[#90FF90]A surge of power ends {victimName}'s resistance![/]"
+                    },
+                    new List<string>
+                    {
+                        $"[#FA8A8A]{victimName}'s flesh melts from their bones under {killerName}'s spell![/]",
+                        $"[#FA8A8A]Arcane fire immolates {victimName}! They scream as they burn![/]",
+                        $"[#FA8A8A]{killerName}'s magic tears {victimName} apart from the inside![/]",
+                        $"[#FA8A8A]Blood boils and skin peels as magic consumes {victimName}![/]",
+                        $"[#FA8A8A]{victimName}'s body explodes in a shower of gore![/]",
+                        $"[#FA8A8A]Dark magic withers {victimName} into a husk![/]",
+                        $"[#FA8A8A]Lightning chars {victimName}'s corpse black![/]",
+                        $"[#FA8A8A]{victimName}'s organs liquefy from the magical assault![/]",
+                        $"[#FA8A8A]Frost shatters {victimName}'s frozen body into bloody chunks![/]",
+                        $"[#FA8A8A]{killerName}'s spell rips {victimName} apart at the seams![/]"
+                    }
+                ),
+                ["dagger"] = (
+                    new List<string>
+                    {
+                        $"[#90FF90]{killerName} strikes a vital point! {victimName} falls![/]",
+                        $"[#90FF90]A swift stab ends {victimName}![/]",
+                        $"[#90FF90]{killerName}'s blade finds the gap in {victimName}'s armor![/]",
+                        $"[#90FF90]{victimName} collapses from {killerName}'s precise strike![/]",
+                        $"[#90FF90]Quick and deadly, {killerName} defeats {victimName}![/]",
+                        $"[#90FF90]The dagger's edge proves lethal![/]",
+                        $"[#90FF90]{killerName} delivers the killing blow![/]",
+                        $"[#90FF90]{victimName} staggers back and falls![/]",
+                        $"[#90FF90]A flash of steel ends the fight![/]",
+                        $"[#90FF90]{killerName}'s speed overwhelms {victimName}![/]"
+                    },
+                    new List<string>
+                    {
+                        $"[#FA8A8A]{killerName} slits {victimName}'s throat! Blood sprays everywhere![/]",
+                        $"[#FA8A8A]The dagger plunges into {victimName}'s kidney! They scream and fall![/]",
+                        $"[#FA8A8A]{killerName} stabs repeatedly! {victimName} dies in a pool of blood![/]",
+                        $"[#FA8A8A]{victimName}'s guts spill out from the vicious stab![/]",
+                        $"[#FA8A8A]Blood gushes from {victimName}'s punctured lung![/]",
+                        $"[#FA8A8A]{killerName} drives the blade through {victimName}'s eye![/]",
+                        $"[#FA8A8A]The dagger twists in {victimName}'s ribcage, blood pouring out![/]",
+                        $"[#FA8A8A]{victimName} chokes on their own blood as the dagger finds home![/]",
+                        $"[#FA8A8A]{killerName} carves {victimName} up like a butcher![/]",
+                        $"[#FA8A8A]Arterial spray paints the ground as {victimName} bleeds out![/]"
+                    }
+                ),
+                ["axe"] = (
+                    new List<string>
+                    {
+                        $"[#90FF90]{killerName}'s axe brings {victimName} down![/]",
+                        $"[#90FF90]A crushing blow defeats {victimName}![/]",
+                        $"[#90FF90]{killerName} cleaves through {victimName}![/]",
+                        $"[#90FF90]The axe splits {victimName}'s defenses![/]",
+                        $"[#90FF90]{victimName} falls to the mighty axe![/]",
+                        $"[#90FF90]With brutal force, {killerName} ends {victimName}![/]",
+                        $"[#90FF90]The heavy blade finds its mark![/]",
+                        $"[#90FF90]{victimName} crumples under the axe's weight![/]",
+                        $"[#90FF90]{killerName}'s savage strike is decisive![/]",
+                        $"[#90FF90]A powerful chop ends the battle![/]"
+                    },
+                    new List<string>
+                    {
+                        $"[#FA8A8A]{killerName}'s axe splits {victimName}'s skull like firewood![/]",
+                        $"[#FA8A8A]The axe blade buries itself in {victimName}'s chest, spraying blood![/]",
+                        $"[#FA8A8A]{killerName} cleaves {victimName} nearly in two![/]",
+                        $"[#FA8A8A]Bone and flesh yield to the brutal axe blow![/]",
+                        $"[#FA8A8A]{victimName}'s torso erupts in gore as the axe connects![/]",
+                        $"[#FA8A8A]The axe shears through {victimName}'s neck, severing the head![/]",
+                        $"[#FA8A8A]{killerName} hacks {victimName} apart with savage chops![/]",
+                        $"[#FA8A8A]Ribs shatter and organs burst from the axe's impact![/]",
+                        $"[#FA8A8A]{victimName}'s body splits open, innards spilling out![/]",
+                        $"[#FA8A8A]Blood and viscera fly as {killerName}'s axe strikes home![/]"
+                    }
+                ),
+                ["hammer"] = (
+                    new List<string>
+                    {
+                        $"[#90FF90]{killerName}'s hammer strikes true! {victimName} falls![/]",
+                        $"[#90FF90]A crushing blow ends {victimName}![/]",
+                        $"[#90FF90]{victimName} crumples under the hammer's weight![/]",
+                        $"[#90FF90]The mighty hammer brings {victimName} down![/]",
+                        $"[#90FF90]{killerName} smashes through {victimName}'s defense![/]",
+                        $"[#90FF90]With overwhelming force, {killerName} defeats {victimName}![/]",
+                        $"[#90FF90]The hammer blow proves fatal![/]",
+                        $"[#90FF90]{victimName} staggers and collapses![/]",
+                        $"[#90FF90]Brutal strength wins the day![/]",
+                        $"[#90FF90]{killerName}'s mace shatters {victimName}![/]"
+                    },
+                    new List<string>
+                    {
+                        $"[#FA8A8A]{killerName}'s hammer caves in {victimName}'s skull![/]",
+                        $"[#FA8A8A]Bones shatter as the hammer pulverizes {victimName}![/]",
+                        $"[#FA8A8A]{victimName}'s ribcage collapses inward, puncturing organs![/]",
+                        $"[#FA8A8A]The hammer crushes {victimName} into a bloody pulp![/]",
+                        $"[#FA8A8A]{victimName}'s head explodes like an overripe melon![/]",
+                        $"[#FA8A8A]Blood and brain matter spray as the hammer connects![/]",
+                        $"[#FA8A8A]{killerName} bashes {victimName} into a broken heap![/]",
+                        $"[#FA8A8A]Vertebrae shatter under the hammer's brutal impact![/]",
+                        $"[#FA8A8A]{victimName}'s chest caves in with a sickening crunch![/]",
+                        $"[#FA8A8A]The hammer turns {victimName}'s body into a mangled mess![/]"
+                    }
+                ),
+                ["spear"] = (
+                    new List<string>
+                    {
+                        $"[#90FF90]{killerName}'s spear pierces through {victimName}![/]",
+                        $"[#90FF90]A thrust ends {victimName}'s resistance![/]",
+                        $"[#90FF90]{victimName} falls to the spear's reach![/]",
+                        $"[#90FF90]The spear finds its mark! {victimName} is defeated![/]",
+                        $"[#90FF90]{killerName} strikes from range, downing {victimName}![/]",
+                        $"[#90FF90]With precision, {killerName} defeats {victimName}![/]",
+                        $"[#90FF90]The spear's point proves deadly![/]",
+                        $"[#90FF90]{victimName} collapses, impaled![/]",
+                        $"[#90FF90]A calculated thrust ends the fight![/]",
+                        $"[#90FF90]{killerName}'s reach advantage wins the day![/]"
+                    },
+                    new List<string>
+                    {
+                        $"[#FA8A8A]{killerName}'s spear bursts through {victimName}'s back![/]",
+                        $"[#FA8A8A]The spear skewers {victimName}, blood running down the shaft![/]",
+                        $"[#FA8A8A]{victimName} writhes on the spear, choking on blood![/]",
+                        $"[#FA8A8A]{killerName} impales {victimName}, lifting them off the ground![/]",
+                        $"[#FA8A8A]The spear pierces {victimName}'s heart, blood fountaining out![/]",
+                        $"[#FA8A8A]{victimName}'s guts spill out around the spear shaft![/]",
+                        $"[#FA8A8A]{killerName} drives the spear through {victimName}'s throat![/]",
+                        $"[#FA8A8A]Blood gushes from the puncture wound as {victimName} dies![/]",
+                        $"[#FA8A8A]The spear's blade tears through organs and bone![/]",
+                        $"[#FA8A8A]{victimName} slides off the spear, leaving a trail of blood![/]"
+                    }
+                ),
+                ["unarmed"] = (
+                    new List<string>
+                    {
+                        $"[#90FF90]{killerName} strikes down {victimName} with bare hands![/]",
+                        $"[#90FF90]A powerful blow defeats {victimName}![/]",
+                        $"[#90FF90]{victimName} falls to {killerName}'s martial prowess![/]",
+                        $"[#90FF90]{killerName} overpowers {victimName}![/]",
+                        $"[#90FF90]Superior technique wins the day![/]",
+                        $"[#90FF90]{victimName} crumples under the assault![/]",
+                        $"[#90FF90]{killerName}'s fists prove deadly![/]",
+                        $"[#90FF90]A decisive strike ends {victimName}![/]",
+                        $"[#90FF90]{victimName} falls, overwhelmed![/]",
+                        $"[#90FF90]{killerName}'s raw strength prevails![/]"
+                    },
+                    new List<string>
+                    {
+                        $"[#FA8A8A]{killerName} snaps {victimName}'s neck with a brutal twist![/]",
+                        $"[#FA8A8A]Ribs crack and splinter under {killerName}'s assault![/]",
+                        $"[#FA8A8A]{killerName} crushes {victimName}'s windpipe with bare hands![/]",
+                        $"[#FA8A8A]{victimName} chokes on blood as their jaw is shattered![/]",
+                        $"[#FA8A8A]{killerName} pounds {victimName}'s face into pulp![/]",
+                        $"[#FA8A8A]Teeth and blood fly as {killerName} beats {victimName} senseless![/]",
+                        $"[#FA8A8A]{victimName}'s skull fractures under the brutal blows![/]",
+                        $"[#FA8A8A]{killerName} tears {victimName} apart with savage violence![/]",
+                        $"[#FA8A8A]Blood sprays from {victimName}'s ruptured organs![/]",
+                        $"[#FA8A8A]{victimName}'s spine snaps like a twig in {killerName}'s grip![/]"
+                    }
+                )
+            };
+
+            // Get appropriate message list
+            var (cleanMessages, goreMessages) = flavorTexts.ContainsKey(weaponType)
+                ? flavorTexts[weaponType]
+                : flavorTexts["unarmed"];
+
+            // Select random message from appropriate list
+            var messageList = goreEnabled ? goreMessages : cleanMessages;
+            return messageList[rng.Next(messageList.Count)];
         }
 
     }

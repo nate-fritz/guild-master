@@ -388,6 +388,14 @@ namespace GuildMaster.Services
             {
                 gameController?.MovePlayer("west");
             }
+            else if (input == "up" || input == "u")
+            {
+                gameController?.MovePlayer("up");
+            }
+            else if (input == "down" || input == "d")
+            {
+                gameController?.MovePlayer("down");
+            }
             else if (input.StartsWith("talk") || input == "t")
             {
                 dialogueManager?.HandleTalkCommand(input);
@@ -497,6 +505,11 @@ namespace GuildMaster.Services
             {
                 ShowSettingsMenu();
             }
+            else if (input.StartsWith("shop ") || input.StartsWith("trade "))
+            {
+                string npcName = input.Contains("shop ") ? input.Substring(5).Trim() : input.Substring(6).Trim();
+                HandleShopCommand(npcName);
+            }
             else if (input.StartsWith("tpto "))
             {
                 string roomArg = input.Substring(5).Trim();
@@ -575,9 +588,11 @@ namespace GuildMaster.Services
 
                 string tutorialsStatus = gameContext.Player.TutorialsEnabled ? "[#00FF00]ON[/]" : "[#FF0000]OFF[/]";
                 string autoCombatStatus = gameContext.Player.AutoCombatEnabled ? "[#00FF00]ON[/]" : "[#FF0000]OFF[/]";
+                string goreStatus = gameContext.Player.GoreEnabled ? "[#00FF00]ON[/]" : "[#FF0000]OFF[/]";
 
-                AnsiConsole.MarkupLine($"1. Tutorials ................ [{tutorialsStatus}]");
-                AnsiConsole.MarkupLine($"2. Auto-Combat .............. [{autoCombatStatus}]");
+                AnsiConsole.MarkupLine($"1. Tutorials ................ {tutorialsStatus}");
+                AnsiConsole.MarkupLine($"2. Auto-Combat .............. {autoCombatStatus}");
+                AnsiConsole.MarkupLine($"3. Gore Mode ................ {goreStatus}");
                 AnsiConsole.MarkupLine("");
                 AnsiConsole.MarkupLine("Enter a number to toggle, or press Enter to return.");
                 AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
@@ -589,8 +604,7 @@ namespace GuildMaster.Services
                 if (string.IsNullOrEmpty(input))
                 {
                     // Exit settings menu
-                    AnsiConsole.MarkupLine("\nReturning to game...\n");
-                    DisplayStats();
+                    AnsiConsole.MarkupLine("\nReturning to game...");
                     break;
                 }
                 else if (input == "1")
@@ -615,13 +629,68 @@ namespace GuildMaster.Services
                         AnsiConsole.MarkupLine("[dim]You will manually control party members during combat.[/]");
                     }
                 }
+                else if (input == "3")
+                {
+                    // Toggle gore mode
+                    gameContext.Player.GoreEnabled = !gameContext.Player.GoreEnabled;
+                    string newStatus = gameContext.Player.GoreEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
+                    AnsiConsole.MarkupLine($"\nGore Mode {newStatus}.");
+                    if (gameContext.Player.GoreEnabled)
+                    {
+                        AnsiConsole.MarkupLine("[dim]Combat kill messages will now display graphic descriptions.[/]");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[dim]Combat kill messages will use standard descriptions.[/]");
+                    }
+                }
                 else
                 {
-                    AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice. Please enter 1, 2, or press Enter to exit.[/]");
+                    AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice. Please enter 1, 2, 3, or press Enter to exit.[/]");
                 }
 
                 AnsiConsole.MarkupLine("");
             }
+        }
+
+        private void HandleShopCommand(string npcName)
+        {
+            if (gameContext?.Player == null || gameContext?.Rooms == null || gameController == null)
+                return;
+
+            // Get the current room
+            if (!gameContext.Rooms.ContainsKey(gameContext.Player.CurrentRoom))
+                return;
+
+            Room currentRoom = gameContext.Rooms[gameContext.Player.CurrentRoom];
+
+            // Find the NPC in the current room
+            var npc = currentRoom.NPCs.FirstOrDefault(n =>
+                n.Name.Equals(npcName, System.StringComparison.OrdinalIgnoreCase));
+
+            if (npc == null)
+            {
+                AnsiConsole.MarkupLine($"\n[#FF0000]There is no one named '{npcName}' here.[/]");
+                return;
+            }
+
+            if (!npc.IsVendor)
+            {
+                AnsiConsole.MarkupLine($"\n[#FF0000]{npc.Name} is not a vendor.[/]");
+                return;
+            }
+
+            // Create shop manager if it doesn't exist
+            if (gameController.shopManager == null)
+            {
+                gameController.shopManager = new ShopManager(gameContext, uiManager);
+            }
+
+            // Open the shop
+            gameController.shopManager.ShowShop(npc);
+
+            // Show status after exiting shop
+            uiManager.DisplayStats();
         }
 
         public void ShowStartMenu()

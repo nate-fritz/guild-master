@@ -325,45 +325,39 @@ html, body {
 /* HP Bar glows - subtle pulsing */
 .hp-bar-high {
     text-shadow:
-        0 0 3px #90FF90,
-        0 0 6px #90FF90,
-        0 0 9px #00FF00;
+        0 0 2px #90FF90,
+        0 0 4px #00FF00;
 }
 
 .hp-bar-mid {
     text-shadow:
-        0 0 3px #FCFC7F,
-        0 0 6px #FCFC7F,
-        0 0 9px #FFFF00;
+        0 0 2px #FCFC7F,
+        0 0 4px #FFFF00;
 }
 
 .hp-bar-low {
     text-shadow:
-        0 0 3px #FF9999,
-        0 0 6px #FF9999,
-        0 0 9px #FF0000;
+        0 0 2px #FF9999,
+        0 0 4px #FF0000;
 }
 
 /* EP Bar glows - subtle pulsing */
 .ep-bar-high {
     text-shadow:
-        0 0 3px #B388FF,
-        0 0 6px #B388FF,
-        0 0 9px #9575CD;
+        0 0 2px #B388FF,
+        0 0 4px #9575CD;
 }
 
 .ep-bar-mid {
     text-shadow:
-        0 0 3px #9575CD,
-        0 0 6px #9575CD,
-        0 0 9px #7E57C2;
+        0 0 2px #9575CD,
+        0 0 4px #7E57C2;
 }
 
 .ep-bar-low {
     text-shadow:
-        0 0 3px #7E57C2,
-        0 0 6px #7E57C2,
-        0 0 9px #673AB7;
+        0 0 2px #7E57C2,
+        0 0 4px #673AB7;
 }
 
 #blazor-error-ui {

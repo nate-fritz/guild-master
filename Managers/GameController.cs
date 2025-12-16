@@ -1,10 +1,8 @@
 using GuildMaster.Services;
-using GuildMaster.Services;
 using Console = GuildMaster.Services.Console;
 using AnsiConsole = GuildMaster.Services.AnsiConsole;
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using GuildMaster.Models;
 using GuildMaster.Helpers;
 using GuildMaster.Data;
@@ -16,6 +14,7 @@ namespace GuildMaster.Managers
         private readonly GameContext context;
         private readonly CombatManager combatManager;
         private readonly SaveGameManager saveManager;
+        public ShopManager shopManager;
 
         public GameController(GameContext gameContext, CombatManager combatMgr, SaveGameManager saveMgr)
         {
@@ -74,9 +73,25 @@ namespace GuildMaster.Managers
                 else if (currentRoomObj.Exits.Count > 1)
                 {
                     AnsiConsole.MarkupLine("\nYou see exits in the following directions:");
-                    foreach (string direction in currentRoomObj.Exits.Keys)
+
+                    // Show cardinal directions first in standard order
+                    string[] cardinalOrder = { "north", "east", "south", "west" };
+                    foreach (string direction in cardinalOrder)
                     {
-                        AnsiConsole.MarkupLine($"- {direction}");
+                        if (currentRoomObj.Exits.ContainsKey(direction))
+                        {
+                            AnsiConsole.MarkupLine($"- {direction}");
+                        }
+                    }
+
+                    // Show vertical directions
+                    if (currentRoomObj.Exits.ContainsKey("up"))
+                    {
+                        AnsiConsole.MarkupLine("- up");
+                    }
+                    if (currentRoomObj.Exits.ContainsKey("down"))
+                    {
+                        AnsiConsole.MarkupLine("- down");
                     }
                 }
                 else
@@ -232,7 +247,14 @@ namespace GuildMaster.Managers
                 if (newRoom.Exits.Count > 0)
                 {
                     string[] directionOrder = { "north", "east", "south", "west" };
-                    var orderedExits = directionOrder.Where(dir => newRoom.Exits.ContainsKey(dir));
+                    var orderedExits = directionOrder.Where(dir => newRoom.Exits.ContainsKey(dir)).ToList();
+
+                    // Add vertical directions
+                    if (newRoom.Exits.ContainsKey("up"))
+                        orderedExits.Add("up");
+                    if (newRoom.Exits.ContainsKey("down"))
+                        orderedExits.Add("down");
+
                     string exitList = string.Join(", ", orderedExits);
                     AnsiConsole.MarkupLine($"\n[Exits: {exitList}]");
                 }
@@ -296,7 +318,14 @@ namespace GuildMaster.Managers
             if (newRoom.Exits.Count > 0)
             {
                 string[] directionOrder = { "north", "east", "south", "west" };
-                var orderedExits = directionOrder.Where(dir => newRoom.Exits.ContainsKey(dir));
+                var orderedExits = directionOrder.Where(dir => newRoom.Exits.ContainsKey(dir)).ToList();
+
+                // Add vertical directions
+                if (newRoom.Exits.ContainsKey("up"))
+                    orderedExits.Add("up");
+                if (newRoom.Exits.ContainsKey("down"))
+                    orderedExits.Add("down");
+
                 string exitList = string.Join(", ", orderedExits);
                 AnsiConsole.MarkupLine($"\n[Exits: {exitList}]");
             }
@@ -370,40 +399,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("");
         }
 
-        public bool HandleQuit()
-        {
-            bool validResponse = false;
-            while (!validResponse)
-            {
-                Console.Write("\nWould you like to save your game before quitting? (y/n): ");
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                string saveChoice = Console.ReadLine()?.ToLower().Trim();
-                Console.ResetColor();
-
-                if (saveChoice == "y" || saveChoice == "yes")
-                {
-                    AnsiConsole.MarkupLine("\nSaving game...");
-                    // NOTE: This HandleQuit method is for console app only - not used in web version
-                    // await saveManager.SaveGameAsync();
-                    validResponse = true;
-                }
-                else if (saveChoice == "n" || saveChoice == "no")
-                {
-                    AnsiConsole.MarkupLine("Game not saved.");
-                    validResponse = true;
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("Please enter 'y' for yes or 'n' for no.");
-                }
-            }
-
-            AnsiConsole.MarkupLine("\nGiving up?  You'll be back!  Thanks for playing.");
-            Console.Write("Press Enter to exit the game...");
-            Console.ReadLine();
-
-            AnsiConsole.MarkupLine("Exiting the game...");
-            return true;
-        }
+        // NOTE: HandleQuit removed - console-specific code not used in Blazor version
+        // Quit functionality is handled by GameEngine.HandleQuitCommand() with autosave
     }
 }

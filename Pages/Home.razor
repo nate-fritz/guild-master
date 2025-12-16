@@ -65,7 +65,10 @@
         {
             await JS.InvokeVoidAsync("eval", "document.getElementById('consoleOutput').scrollTop = document.getElementById('consoleOutput').scrollHeight");
         }
-        catch { }
+        catch
+        {
+            // Silently ignore scroll errors (element may not exist yet during initialization)
+        }
     }
     
     private void ShowTitle()

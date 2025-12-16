@@ -2,7 +2,6 @@ using GuildMaster.Services;
 using Console = GuildMaster.Services.Console;
 using AnsiConsole = GuildMaster.Services.AnsiConsole;
 ﻿using GuildMaster.Data;
-using GuildMaster.Data;
 using GuildMaster.Helpers;
 using GuildMaster.Models;
 using System;

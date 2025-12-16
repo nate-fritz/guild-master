@@ -149,7 +149,8 @@
             DiceSides = 3,
             Bonus = 1,
             Type = AbilityType.AreaOfEffect,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 1
         };
 
         public static Ability PiercingArrow = new Ability
@@ -161,7 +162,8 @@
             DiceSides = 6,
             Bonus = 2,
             Type = AbilityType.SingleTarget,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 2
         };
 
         public static Ability CoveringShot = new Ability
@@ -173,7 +175,8 @@
             DiceSides = 3,  // Reduced damage (d3 instead of normal d4+)
             Bonus = 0,      // 50-75% of normal damage
             Type = AbilityType.SingleTarget,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 3
         };
 
         public static Ability EvasiveFire = new Ability
@@ -198,7 +201,8 @@
             DiceSides = 4,
             Bonus = 2,
             Type = AbilityType.Heal,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 1
         };
 
         public static Ability Lightning = new Ability
@@ -210,7 +214,8 @@
             DiceSides = 8,
             Bonus = 1,
             Type = AbilityType.SingleTarget,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 2
         };
 
         public static Ability Blessing = new Ability
@@ -219,7 +224,8 @@
             Description = "Boost all party members' attack for 4 turns",
             EnergyCost = 5,
             Type = AbilityType.Buff,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 3
         };
 
         public static Ability Barrier = new Ability
@@ -231,7 +237,8 @@
             DiceSides = 1,   // Will just be 15 * 1 = 15 absorption
             Bonus = 0,
             Type = AbilityType.Buff,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 10
         };
 
         public static Ability FlameStrike = new Ability
@@ -243,7 +250,8 @@
             DiceSides = 6,
             Bonus = 2,
             Type = AbilityType.SingleTarget,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 5
         };
 
         public static Ability TestStatus = new Ability
@@ -269,10 +277,12 @@
             DiceCount = 1,
             DiceSides = 4,
             Bonus = 2,
-            Type = AbilityType.SingleTarget
+            Type = AbilityType.SingleTarget,
+            IsRanged = true,
+            UnlockLevel = 5
         };
 
-        // Oracle Level 5
+        // Oracle Level 15
         public static Ability Frostbolt = new Ability
         {
             Name = "Frostbolt",
@@ -282,7 +292,8 @@
             DiceSides = 6,
             Bonus = 3,
             Type = AbilityType.SingleTarget,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 15
         };
 
         // ============================================
@@ -313,10 +324,11 @@
             DiceSides = 6,
             Bonus = 3,
             Type = AbilityType.SingleTarget,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 15
         };
 
-        // Oracle Level 10
+        // Oracle Level 20
         public static Ability Venom = new Ability
         {
             Name = "Venom",
@@ -326,7 +338,8 @@
             DiceSides = 0,
             Bonus = 0,
             Type = AbilityType.SingleTarget,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 20
         };
 
         // ============================================
@@ -357,7 +370,8 @@
             DiceSides = 8,
             Bonus = 2,
             Type = AbilityType.AreaOfEffect,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 20
         };
 
         // Oracle Level 15
@@ -370,7 +384,8 @@
             DiceSides = 6,
             Bonus = 4,
             Type = AbilityType.SingleTarget,
-            IsRanged = true
+            IsRanged = true,
+            UnlockLevel = 15
         };
 
         // Helper method to get an ability by name

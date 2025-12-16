@@ -73,12 +73,26 @@ namespace GuildMaster.Data
                 Text = "Need something forged? Repaired? I'm the best smith in Belum - ask anyone.",
                 Choices = { }
             });
+
+            // Set up as vendor
+            blacksmith.IsVendor = true;
+            blacksmith.BuybackMultiplier = 0.5f; // Buys items at 50% value
+
+            // Shop inventory (item name -> price)
+            blacksmith.ShopInventory.Add("iron gladius", 50);
+            blacksmith.ShopInventory.Add("iron axe", 60);
+            blacksmith.ShopInventory.Add("hunter's bow", 55);
+            blacksmith.ShopInventory.Add("steel gladius", 120);
+            blacksmith.ShopInventory.Add("leather armor", 40);
+            blacksmith.ShopInventory.Add("chainmail", 80);
+            blacksmith.ShopInventory.Add("iron helm", 35);
+
             npcs.Add(blacksmith.Name, blacksmith);
             
             
             NPC farmer = new NPC();
             farmer.Name = "Gaius";
-            farmer.Description = "A burly man of over two meters leans against against one of the four posts of his small stall. As he notices you, he regards you with a mixture of kindness and mild surprise.";
+            farmer.Description = "A burly man of over two meters leans against one of the four posts of his small stall. As he notices you, he regards you with a mixture of kindness and mild surprise.";
             farmer.ShortDescription = "A farmer";
 
             farmer.Dialogue.Add("main_hub", new DialogueNode()

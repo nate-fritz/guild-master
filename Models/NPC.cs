@@ -27,6 +27,12 @@ namespace GuildMaster.Models
         public EnemyRole Role { get; set; } = EnemyRole.Melee; // Default to melee
         public List<string> AbilityNames { get; set; } = new List<string>(); // List of ability names this enemy can use
 
+        // Vendor properties
+        public bool IsVendor { get; set; } = false;
+        public Dictionary<string, int> ShopInventory { get; set; } = new Dictionary<string, int>(); // Item name -> Price
+        public Dictionary<string, int> ShopPrices { get; set; } = new Dictionary<string, int>(); // Sell-back prices (player sells to vendor)
+        public float BuybackMultiplier { get; set; } = 0.5f; // Vendor buys items at 50% of sell price
+
         public NPC()
         {
             Dialogue = new Dictionary<string, DialogueNode>();
@@ -72,7 +78,13 @@ namespace GuildMaster.Models
                 LootTable = new Dictionary<string, int>(this.LootTable),
 
                 // Clone the dialogue (create new dictionary with same references - dialogue nodes can be shared)
-                Dialogue = new Dictionary<string, DialogueNode>(this.Dialogue)
+                Dialogue = new Dictionary<string, DialogueNode>(this.Dialogue),
+
+                // Clone vendor properties
+                IsVendor = this.IsVendor,
+                ShopInventory = new Dictionary<string, int>(this.ShopInventory),
+                ShopPrices = new Dictionary<string, int>(this.ShopPrices),
+                BuybackMultiplier = this.BuybackMultiplier
             };
 
             return cloned;

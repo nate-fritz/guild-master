@@ -1,5 +1,4 @@
 using GuildMaster.Services;
-using GuildMaster.Services;
 using Console = GuildMaster.Services.Console;
 using AnsiConsole = GuildMaster.Services.AnsiConsole;
 using System;

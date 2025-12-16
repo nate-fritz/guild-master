@@ -22,6 +22,8 @@ namespace GuildMaster.Models
         public List<Quest> ActiveQuests { get; set; }
         public bool AutoCombatEnabled { get; set; } = false;
         public bool TutorialsEnabled { get; set; } = true;
+        public bool GoreEnabled { get; set; } = false;
+        public int ThreeMemberCombatCount { get; set; } = 0;
 
         public Player(string name = "Adventurer", CharacterClass characterClass = null)
         {

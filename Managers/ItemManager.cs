@@ -1,5 +1,4 @@
 using GuildMaster.Services;
-using GuildMaster.Services;
 using Console = GuildMaster.Services.Console;
 using AnsiConsole = GuildMaster.Services.AnsiConsole;
 ﻿using System;
@@ -14,7 +13,6 @@ namespace GuildMaster.Managers
     public class ItemManager
     {
         private readonly GameContext context;
-        private readonly MessageManager messageManager;
         private Random random = new Random();
 
         public ItemManager(GameContext gameContext)
