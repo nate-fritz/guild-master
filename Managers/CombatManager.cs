@@ -3952,7 +3952,21 @@ namespace GuildMaster.Managers
 
             // Select random message from appropriate list
             var messageList = goreEnabled ? goreMessages : cleanMessages;
-            return messageList[rng.Next(messageList.Count)];
+            string message = messageList[rng.Next(messageList.Count)];
+
+            // Fix grammar when the player is the killer
+            if (killerName == "You")
+            {
+                // Fix possessives: "You's" -> "your"
+                message = message.Replace("You's", "your");
+
+                // Fix subject case in certain contexts
+                message = message.Replace("from You ends", "from you ends");
+                message = message.Replace("with You", "with you");
+                message = message.Replace("before You's", "before your");
+            }
+
+            return message;
         }
 
     }

@@ -193,16 +193,8 @@ namespace GuildMaster.Data
                 Value = 80
             });
 
-            AllEquipment.Add("amulet", new Equipment
-            {
-                Name = "Weather-worn Amulet",
-                ShortName = "amulet",
-                Description = "A tarnished silver amulet, worn by time and elements.",
-                Slot = EquipmentSlot.Ring,  // Using ring slot for amulets
-                DefenseBonus = 1,
-                HealthBonus = 5,
-                Value = 30
-            });
+            // Note: The "amulet" from the Silvacis quest is NOT equipment - it's a quest item only
+            // It should remain in ItemData.cs but not here, so it cannot be equipped
         }
 
         // Helper method to get equipment by name (case-insensitive)

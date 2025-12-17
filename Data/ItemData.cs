@@ -22,13 +22,15 @@ namespace GuildMaster.Data
                             IsContainer = true,
                             Contents = new List<string> { "potion" },
                             DiscoveryMessage = "As you open the chest fully, you spot a [cyan]potion[/] nestled in the velvet lining."
-}},
-                        {"potion", new Item {  // <-- This still needs to be defined!
-                        Description = "A small vial filled with red liquid. It glows faintly.",
-                        IsLootable = true,
-                        IsConsumable = true,
-                        EffectId = "lesser_healing"
-        }}
+                        }},
+                        // IMPORTANT: Items inside containers MUST also be defined in the room's item dictionary
+                        // This ensures they work properly with commands like "take all" and can be interacted with normally
+                        {"potion", new Item {
+                            Description = "A small vial filled with red liquid. It glows faintly.",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "lesser_healing"
+                        }}
                     }
                 },
 
@@ -94,6 +96,9 @@ namespace GuildMaster.Data
                             Contents = new List<string> { "amulet" },
                             DiscoveryMessage = "As you search through the mud and debris, your fingers close around something metallic."
                         }},
+                        // IMPORTANT: Items inside containers MUST also be defined in the room's item dictionary
+                        // This ensures they work properly with commands like "take all" and can be interacted with normally
+                        // NOTE: This amulet is a quest item for Silvacis - it should NOT be in EquipmentData.cs
                         {"amulet", new Item {
                             Description = "A metallic amulet covered in intricate engravings. It feels warm to the touch.",
                             IsLootable = true
@@ -110,6 +115,97 @@ namespace GuildMaster.Data
                             IsContainer = true,
                             Contents = new List<string> { "potion" },
                             DiscoveryMessage = "As you look closely at the stump, you notice that the top is hollowed out.  A small vial with red liquid rests within."
+                        }},
+                        // IMPORTANT: Items inside containers MUST also be defined in the room's item dictionary
+                        // This ensures they work properly with commands like "take all" and can be interacted with normally
+                        {"potion", new Item {
+                            Description = "A small vial filled with red liquid. It glows faintly.",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "lesser_healing"
+                        }}
+                    }
+                },
+
+                {71, new Dictionary<string, Item>()  // southMarket - Apothecary items
+                    {
+                        {"greater potion", new Item {
+                            Description = "A larger vial filled with vibrant red liquid that glows with magical energy.",
+                            ShortName = "potion",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "greater_healing"
+                        }},
+                        {"greater energy potion", new Item {
+                            Description = "A larger vial filled with brilliant blue liquid that crackles with arcane power.",
+                            ShortName = "potion",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "greater_energy"
+                        }},
+                        {"elixir of vigor", new Item {
+                            Description = "A ornate crystal flask containing swirling purple and gold liquids. The elixir radiates vitality.",
+                            ShortName = "elixir",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "elixir_of_vigor"
+                        }},
+                        {"antidote", new Item {
+                            Description = "A small green vial with a pungent herbal smell. Effective against most common poisons.",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "antidote"
+                        }}
+                    }
+                },
+
+                {75, new Dictionary<string, Item>()  // merchantRow - Scribe items
+                    {
+                        {"scroll of fireball", new Item {
+                            Description = "A scroll inscribed with fiery runes that seem to flicker and dance. Unleashes a devastating ball of flame.",
+                            ShortName = "scroll",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "scroll_fireball"
+                        }},
+                        {"scroll of healing", new Item {
+                            Description = "A scroll covered in gentle, glowing runes. Channels powerful restorative magic.",
+                            ShortName = "scroll",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "scroll_healing"
+                        }},
+                        {"scroll of protection", new Item {
+                            Description = "A scroll etched with defensive wards and protective symbols. Grants temporary magical shielding.",
+                            ShortName = "scroll",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "scroll_protection"
+                        }},
+                        {"scroll of haste", new Item {
+                            Description = "A scroll marked with swift, flowing runes that seem to blur. Temporarily enhances speed and reflexes.",
+                            ShortName = "scroll",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "scroll_haste"
+                        }},
+                        {"teleport scroll", new Item {
+                            Description = "An ancient scroll inscribed with spatial runes. Can transport the user across great distances.",
+                            ShortName = "scroll",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "teleport_scroll"
+                        }}
+                    }
+                },
+
+                {97, new Dictionary<string, Item>()  // warlordChamber - Quest item
+                    {
+                        {"warlord's head", new Item {
+                            Description = "The severed head of the Bandit Warlord, his face frozen in a final expression of surprise and rage. This should serve as proof of your victory. Marcus the gate guard will want to see this.",
+                            ShortName = "head",
+                            IsLootable = true,
+                            IsConsumable = false
                         }}
                     }
                 }

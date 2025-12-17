@@ -114,14 +114,16 @@ namespace GuildMaster.Managers
             isInDialogue = true;
 
             // Determine starting node
-            if (npc.CurrentDialogueNode == "greeting")
+            if (!string.IsNullOrEmpty(npc.CurrentDialogueNode) &&
+                npc.Dialogue.ContainsKey(npc.CurrentDialogueNode))
             {
-                currentNode = "greeting";
+                currentNode = npc.CurrentDialogueNode;
             }
             else
             {
-                currentNode = "main_hub";
+                currentNode = "greeting";
             }
+
 
             AnsiConsole.MarkupLine($"\nYou approach {npc.Name}.\n");
 
@@ -229,7 +231,10 @@ namespace GuildMaster.Managers
             // Handle special cases after dialogue ends
             HandlePostDialogueEffects(currentNode, currentNPC, currentRoom);
 
-            currentNPC.CurrentDialogueNode = currentNode;
+            if (currentNode != "end")
+            {
+                currentNPC.CurrentDialogueNode = currentNode;
+            }
 
             // Clear state
             isInDialogue = false;
@@ -317,6 +322,22 @@ namespace GuildMaster.Managers
                     npc.IsHostile = true;
                     AnsiConsole.MarkupLine($"\n[#FF0000]{npc.Name} attacks![/]");
                     // Combat will be triggered when conversation ends
+                    break;
+
+                case "open_gate":
+                    // Open the gate from Room 69 (Belum Approach) to Room 70 (Belum Town Square)
+                    if (context.Rooms.ContainsKey(69))
+                    {
+                        if (!context.Rooms[69].Exits.ContainsKey("north"))
+                        {
+                            context.Rooms[69].Exits.Add("north", 70);
+                            // Update room description to reflect the open gate
+                            context.Rooms[69].Description = "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands open, its heavy iron portcullis raised. A veteran guard named Marcus stands watch, nodding respectfully as you approach.";
+                            AnsiConsole.MarkupLine($"\n[#00FF00]You hear the sound of the great gate creaking open...[/]");
+                        }
+                    }
+                    // Update Marcus to use "after_quest" dialogue from now on
+                    npc.CurrentDialogueNode = "after_quest";
                     break;
             }
         }

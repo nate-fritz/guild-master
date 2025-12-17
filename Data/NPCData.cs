@@ -88,8 +88,158 @@ namespace GuildMaster.Data
             blacksmith.ShopInventory.Add("iron helm", 35);
 
             npcs.Add(blacksmith.Name, blacksmith);
-            
-            
+
+            // Apothecary - Sells potions and remedies
+            NPC apothecary = new NPC();
+            apothecary.Name = "Apothecary";
+            apothecary.Description = "A thin, scholarly woman with ink-stained fingers carefully organizes vials and jars. The scent of herbs and alchemical reagents fills the air around her shop.";
+            apothecary.ShortDescription = "The apothecary";
+            apothecary.IsHostile = false;
+            apothecary.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Welcome to my apothecary. I stock the finest potions and remedies in all of Belum. What can I prepare for you today?",
+                Choices = { }
+            });
+
+            // Set up as vendor
+            apothecary.IsVendor = true;
+            apothecary.BuybackMultiplier = 0.4f; // Buys items at 40% value (potions are more specialized)
+
+            // Shop inventory (item name -> price)
+            apothecary.ShopInventory.Add("potion", 25);
+            apothecary.ShopInventory.Add("energy potion", 30);
+            apothecary.ShopInventory.Add("greater potion", 60);
+            apothecary.ShopInventory.Add("greater energy potion", 70);
+            apothecary.ShopInventory.Add("elixir of vigor", 100);
+            apothecary.ShopInventory.Add("antidote", 20);
+
+            npcs.Add(apothecary.Name, apothecary);
+
+            // Scribe - Sells scrolls and written goods
+            NPC scribe = new NPC();
+            scribe.Name = "Scribe";
+            scribe.Description = "An elderly man with careful hands and keen eyes sits among stacks of scrolls and parchments. His workspace is meticulously organized, with quills and inks arranged by color.";
+            scribe.ShortDescription = "The scribe";
+            scribe.IsHostile = false;
+            scribe.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Greetings, traveler. I deal in scrolls, both mundane and mystical. Are you in need of knowledge... or power?",
+                Choices = { }
+            });
+
+            // Set up as vendor
+            scribe.IsVendor = true;
+            scribe.BuybackMultiplier = 0.3f; // Buys items at 30% value (scrolls are one-use, specialized)
+
+            // Shop inventory (item name -> price)
+            scribe.ShopInventory.Add("restoration scroll", 50);
+            scribe.ShopInventory.Add("scroll of fireball", 80);
+            scribe.ShopInventory.Add("scroll of healing", 70);
+            scribe.ShopInventory.Add("scroll of protection", 90);
+            scribe.ShopInventory.Add("scroll of haste", 100);
+            scribe.ShopInventory.Add("teleport scroll", 150);
+
+            npcs.Add(scribe.Name, scribe);
+
+            // Gate Guard - Quest giver for bandit cave quest
+            NPC gateGuard = new NPC();
+            gateGuard.Name = "Marcus";
+            gateGuard.Description = "A weathered veteran guard in bronze armor stands at attention. His scarred face and alert eyes suggest many years of service. The crest of Belum is emblazoned on his breastplate.";
+            gateGuard.ShortDescription = "Gate Guard Marcus";
+            gateGuard.IsHostile = false;
+
+            // Initial dialogue - explains closed gate
+            gateGuard.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Halt, traveler. The gate to Belum is closed by order of the town council. None may enter.",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "I have the Bandit Warlord's head. (Show proof)",
+                        nextNodeID = "quest_complete",
+                        IsAvailable = (inventory) => inventory.Contains("warlord's head"),
+                        Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "warlord's head"} } }
+                    },
+                    new DialogueNode.Choice { choiceText = "Why is the gate closed?", nextNodeID = "explain_bandits" },
+                    new DialogueNode.Choice { choiceText = "I understand. I'll move along.", nextNodeID = "end" }
+                }
+            });
+
+            gateGuard.Dialogue.Add("explain_bandits", new DialogueNode()
+            {
+                Text = "Bandits. A large group has made camp in caves to the southwest - west of Gaius' farm, south of the mountains. They've been raiding travelers and farms. Until they're dealt with, the council won't allow the southern gate to open. Too dangerous.",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "Actually, I already killed the Warlord. Here's his head.",
+                        nextNodeID = "quest_complete",
+                        IsAvailable = (inventory) => inventory.Contains("warlord's head"),
+                        Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "warlord's head"} } }
+                    },
+                    new DialogueNode.Choice { choiceText = "I could deal with these bandits.", nextNodeID = "offer_help" },
+                    new DialogueNode.Choice { choiceText = "That sounds dangerous. I'll stay away.", nextNodeID = "end" }
+                }
+            });
+
+            gateGuard.Dialogue.Add("offer_help", new DialogueNode()
+            {
+                Text = "You? [He sizes you up] ...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I'll convince the council to open the gate. The caves are south of the lower mountain slopes, room 12 if you're keeping track.",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "I'll do it. The Warlord will fall.", nextNodeID = "quest_accepted" },
+                    new DialogueNode.Choice { choiceText = "Let me think about it.", nextNodeID = "end" }
+                }
+            });
+
+            gateGuard.Dialogue.Add("quest_accepted", new DialogueNode()
+            {
+                Text = "Good luck. You'll need it. Be careful down there - the bandits fight dirty and they outnumber you. Return with the Warlord's head and your reward will be access to Belum.",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "I have the Bandit Warlord's head. (Show proof)",
+                        nextNodeID = "quest_complete",
+                        IsAvailable = (inventory) => inventory.Contains("warlord's head"),
+                        Action = new DialogueAction {
+                            Type = "give_item",
+                            Parameters = { { "item", "warlord's head" } }
+                        }
+                    },
+                    new DialogueNode.Choice {
+                        choiceText = "I'm still working on it.",
+                        nextNodeID = "end"
+                    }
+                }
+            });
+
+            // Quest completion dialogue - player has the warlord's head
+            gateGuard.Dialogue.Add("quest_complete", new DialogueNode()
+            {
+                Text = "By the gods... you actually did it! The Warlord's head! [He examines it grimly] This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I'll inform the council immediately - the southern gate is now open to you.",
+                Action = new DialogueAction { Type = "open_gate" },
+                Choices = { }
+            });
+
+            // After quest is complete
+            gateGuard.Dialogue.Add("after_quest", new DialogueNode()
+            {
+                Text = "Marcus nods at you respectfully. 'Thank you again for taking care of those bandits. The roads are safer now because of you.'",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "Just doing my part.", nextNodeID = "end" },
+                    new DialogueNode.Choice { choiceText = "Happy to help. Take care, Marcus.", nextNodeID = "end" }
+                }
+            });
+
+            gateGuard.Dialogue.Add("end", new DialogueNode()
+            {
+                Text = "Stay safe out there.",
+                Choices = { }
+            });
+
+            npcs.Add(gateGuard.Name, gateGuard);
+
+
             NPC farmer = new NPC();
             farmer.Name = "Gaius";
             farmer.Description = "A burly man of over two meters leans against one of the four posts of his small stall. As he notices you, he regards you with a mixture of kindness and mild surprise.";
@@ -450,7 +600,7 @@ namespace GuildMaster.Data
                 Text = "Greetings, friend. I don't recall seeing you come through here before.  ",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Introduce yourself", nextNodeID = "main_hub"}
+                    new DialogueNode.Choice { choiceText = "Hello, I'm new to the area.", nextNodeID = "main_hub"}
                 }
             });
 
@@ -589,6 +739,135 @@ namespace GuildMaster.Data
             npcs.Add(banditLeader.Name, banditLeader);
             npcs.Add(fighter.Name, fighter);
             npcs.Add(direWolf.Name, direWolf);
+
+            // ===== BANDIT CAVE NPCS =====
+
+            // Bandit Scout - Early cave enemy (Level 4)
+            NPC banditScout = new NPC();
+            banditScout.Name = "Bandit Scout";
+            banditScout.Description = "A wiry bandit in leather armor, alert and quick on their feet. They carry a short bow and dagger.";
+            banditScout.ShortDescription = "A bandit scout";
+            banditScout.IsHostile = true;
+            banditScout.Health = 35;
+            banditScout.MaxHealth = 35;
+            banditScout.Energy = 20;
+            banditScout.MaxEnergy = 20;
+            banditScout.AttackDamage = 6;
+            banditScout.Defense = 3;
+            banditScout.Speed = 12;
+            banditScout.DamageCount = 1;
+            banditScout.DamageDie = 6;
+            banditScout.DamageBonus = 4;
+            banditScout.MinGold = 5;
+            banditScout.MaxGold = 12;
+            banditScout.ExperienceReward = 40;
+            banditScout.Role = EnemyRole.Ranged;
+            banditScout.LootTable = new Dictionary<string, int> { {"potion", 30} };
+
+            // Bandit Cutthroat - Mid cave enemy (Level 5)
+            NPC banditCutthroat = new NPC();
+            banditCutthroat.Name = "Bandit Cutthroat";
+            banditCutthroat.Description = "A dangerous-looking bandit with multiple scars and a cruel sneer. Dual daggers hang at their belt.";
+            banditCutthroat.ShortDescription = "A bandit cutthroat";
+            banditCutthroat.IsHostile = true;
+            banditCutthroat.Health = 45;
+            banditCutthroat.MaxHealth = 45;
+            banditCutthroat.Energy = 25;
+            banditCutthroat.MaxEnergy = 25;
+            banditCutthroat.AttackDamage = 8;
+            banditCutthroat.Defense = 4;
+            banditCutthroat.Speed = 14;
+            banditCutthroat.DamageCount = 1;
+            banditCutthroat.DamageDie = 8;
+            banditCutthroat.DamageBonus = 6;
+            banditCutthroat.MinGold = 8;
+            banditCutthroat.MaxGold = 18;
+            banditCutthroat.ExperienceReward = 55;
+            banditCutthroat.Role = EnemyRole.Melee;
+            banditCutthroat.LootTable = new Dictionary<string, int> { {"potion", 40}, {"energy potion", 20} };
+
+            // Bandit Enforcer - Late cave enemy (Level 6)
+            NPC banditEnforcer = new NPC();
+            banditEnforcer.Name = "Bandit Enforcer";
+            banditEnforcer.Description = "A heavily armored bandit wielding a large axe. This one looks like they've seen many battles and won most of them.";
+            banditEnforcer.ShortDescription = "A bandit enforcer";
+            banditEnforcer.IsHostile = true;
+            banditEnforcer.Health = 60;
+            banditEnforcer.MaxHealth = 60;
+            banditEnforcer.Energy = 30;
+            banditEnforcer.MaxEnergy = 30;
+            banditEnforcer.AttackDamage = 10;
+            banditEnforcer.Defense = 6;
+            banditEnforcer.Speed = 10;
+            banditEnforcer.DamageCount = 1;
+            banditEnforcer.DamageDie = 10;
+            banditEnforcer.DamageBonus = 8;
+            banditEnforcer.MinGold = 12;
+            banditEnforcer.MaxGold = 25;
+            banditEnforcer.ExperienceReward = 75;
+            banditEnforcer.Role = EnemyRole.Melee;
+            banditEnforcer.LootTable = new Dictionary<string, int> { {"potion", 50}, {"energy potion", 30}, {"iron axe", 15} };
+
+            // Bandit Warlord - Boss (Level 7)
+            NPC banditWarlord = new NPC();
+            banditWarlord.Name = "Bandit Warlord";
+            banditWarlord.Description = "The bandit leader stands before you, clad in stolen armor and wielding a wicked-looking blade. His eyes gleam with malice and greed. This is the Warlord who has terrorized the region.";
+            banditWarlord.ShortDescription = "The Bandit Warlord";
+            banditWarlord.IsHostile = true;
+            banditWarlord.Health = 85;
+            banditWarlord.MaxHealth = 85;
+            banditWarlord.Energy = 40;
+            banditWarlord.MaxEnergy = 40;
+            banditWarlord.AttackDamage = 12;
+            banditWarlord.Defense = 8;
+            banditWarlord.Speed = 12;
+            banditWarlord.DamageCount = 2;
+            banditWarlord.DamageDie = 8;
+            banditWarlord.DamageBonus = 10;
+            banditWarlord.MinGold = 50;
+            banditWarlord.MaxGold = 100;
+            banditWarlord.ExperienceReward = 150;
+            banditWarlord.Role = EnemyRole.Melee;
+            banditWarlord.LootTable = new Dictionary<string, int>
+            {
+                {"warlord's head", 100},  // Quest item - always drops
+                {"steel gladius", 30},
+                {"chainmail", 25},
+                {"potion", 60},
+                {"greater potion", 40}
+            };
+
+            // Lydia - Recruitable Venator (Hunter/Archer class)
+            NPC lydia = new NPC();
+            lydia.Name = "Lydia";
+            lydia.Description = "A skilled hunter with a hunter's bow slung across her back. She eyes you warily, hand near her quiver. Her stance suggests she's been fighting for survival in these caves.";
+            lydia.ShortDescription = "A woman with a bow";
+            lydia.IsHostile = true;  // Initially hostile
+            lydia.Health = 50;
+            lydia.MaxHealth = 50;
+            lydia.Energy = 30;
+            lydia.MaxEnergy = 30;
+            lydia.AttackDamage = 9;
+            lydia.Defense = 4;
+            lydia.Speed = 13;
+            lydia.DamageCount = 1;
+            lydia.DamageDie = 8;
+            lydia.DamageBonus = 7;
+            lydia.MinGold = 10;
+            lydia.MaxGold = 20;
+            lydia.ExperienceReward = 60;
+            lydia.Role = EnemyRole.Ranged;
+            lydia.RecruitableAfterDefeat = true;
+            lydia.RecruitClass = "Venator";
+            lydia.YieldDialogue = "Wait! [She lowers her bow] I surrender. I'm not one of these bandits - they captured me weeks ago and forced me to stand guard. Please, let me join you. I'm a skilled hunter and I know how to survive.";
+            lydia.AcceptDialogue = "Thank the gods. I won't let you down. These bandits will pay for what they've done.";
+
+            // Add bandit cave NPCs (gateGuard/Marcus already added earlier)
+            npcs.Add(banditScout.Name, banditScout);
+            npcs.Add(banditCutthroat.Name, banditCutthroat);
+            npcs.Add(banditEnforcer.Name, banditEnforcer);
+            npcs.Add(banditWarlord.Name, banditWarlord);
+            npcs.Add(lydia.Name, lydia);
 
             return npcs;
         }
