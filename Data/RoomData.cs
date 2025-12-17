@@ -123,8 +123,134 @@ namespace GuildMaster.Data
 
             Room lowerSlopes = CreateRoom(12, "lowerSlopes", "The Lower Slopes", "Here the rolling fields of the foothills meet the base of the mountain, which begins to slope sharply upward to the west.  The mountain's snow-touched peaks are nearly hidden by wispy clouds above.  The steep incline and high winds make a trek up the mountain seem ill advised.  To the south you see a cave mouth, and to the east is Gaius' farm.");
             lowerSlopes.Exits.Add("east", 11);
-            lowerSlopes.Exits.Add("west", 13);
-            lowerSlopes.Exits.Add("south", 90);  // Bandit cave entrance
+            lowerSlopes.Exits.Add("west", 22);
+            lowerSlopes.Exits.Add("south", 13);  // Bandit cave entrance
+
+                        // ===== BANDIT CAVE SYSTEM =====
+
+            // Room 13 - Cave Entrance
+            Room caveEntrance = CreateRoom(13, "caveEntrance", "Bandit Cave - Entrance", "You step into a dark cave mouth carved into the mountainside. Torches line the walls, their flickering light revealing boot prints in the dirt leading deeper into the cave. The air is damp and smells of smoke and unwashed bodies. This is clearly the bandit hideout.");
+            caveEntrance.Exits.Add("north", 12);  // Back to lower slopes
+            caveEntrance.Exits.Add("south", 14);
+            caveEntrance.NPCs.Add(npcs["Bandit Scout"].Clone());
+            caveEntrance.NPCs.Add(npcs["Bandit Scout"].Clone());
+
+            // Room 14 - Cave Tunnel
+            Room caveTunnel = CreateRoom(14, "caveTunnel", "Bandit Cave - Tunnel", "The tunnel slopes downward, the ceiling dripping with moisture. Crude wooden supports brace the walls. You hear voices echoing from deeper in the cave. The passage splits here - continuing south or branching west.");
+            caveTunnel.Exits.Add("north", 13);
+            caveTunnel.Exits.Add("south", 19);
+            caveTunnel.Exits.Add("west", 15);
+            caveTunnel.NPCs.Add(npcs["Bandit Scout"].Clone());
+            caveTunnel.NPCs.Add(npcs["Bandit Cutthroat"].Clone());
+
+            // Room 15 - Western Branch
+            Room westernBranch = CreateRoom(15, "westernBranch", "Bandit Cave - Western Branch", "This narrower passage winds westward. Makeshift sleeping areas line the walls - dirty bedrolls and stolen goods scattered about. Someone has been living here. The passage continues west and opens into a larger chamber.");
+            westernBranch.Exits.Add("east", 14);
+            westernBranch.Exits.Add("west", 16);
+            westernBranch.NPCs.Add(npcs["Bandit Cutthroat"].Clone());
+            westernBranch.NPCs.Add(npcs["Bandit Cutthroat"].Clone());
+
+            // Room 16 - Western Chamber
+            Room westernChamber = CreateRoom(16, "westernChamber", "Bandit Cave - Western Chamber", "A natural chamber opens up here, its high ceiling lost in darkness. Crates of stolen supplies are stacked against the walls - food, weapons, and trade goods taken from travelers. The bandits have made this their storage room. The tunnel continues west into deeper darkness.");
+            westernChamber.Exits.Add("east", 15);
+            westernChamber.Exits.Add("south", 17);
+            westernChamber.NPCs.Add(npcs["Bandit Enforcer"].Clone());
+            westernChamber.NPCs.Add(npcs["Bandit Cutthroat"].Clone());
+
+            // Room 17 - Dark Passage
+            Room darkPassage = CreateRoom(17, "darkPassage", "Bandit Cave - Dark Passage", "The torches are fewer here, leaving long stretches of shadow. Your footsteps echo ominously. Blood stains mark the floor - evidence of past violence. The passage slopes further downward to the south, while a faint light glows from the west.");
+            darkPassage.Exits.Add("north", 16);
+            darkPassage.Exits.Add("south", 18);
+            darkPassage.NPCs.Add(npcs["Bandit Enforcer"].Clone());
+
+            // Room 18 - Deep Cave
+            Room deepCave = CreateRoom(18, "deepCave", "Bandit Cave - Deep Cavern", "You've descended deep into the mountain. The air here is cold and still. Strange rock formations create eerie shapes in the torchlight. Water drips steadily somewhere in the darkness. The cave continues east toward the sound of loud voices and running water.");
+            deepCave.Exits.Add("north", 17);
+            deepCave.Exits.Add("east", 21);
+            deepCave.NPCs.Add(npcs["Bandit Enforcer"].Clone());
+            deepCave.NPCs.Add(npcs["Bandit Enforcer"].Clone());
+
+            
+            Room floodedChamber = CreateRoom(19, "floodedChamber", "Bandit Cave - Flooded Chamber", "An underground stream flows through this chamber, the water black and swift. A narrow ledge runs along the eastern wall. Someone is standing guard here - a woman with a bow. She doesn't look like the other bandits. The only way forward is west, across a rickety wooden bridge.");
+            floodedChamber.Exits.Add("north", 14);
+            floodedChamber.Exits.Add("south", 20);
+            floodedChamber.NPCs.Add(npcs["Lydia"].Clone());  // Recruitable Venator
+
+            // Updated
+            Room undergroundRiver = CreateRoom(20, "undergroundRiver", "Bandit Cave - Underground River", "A narrow chasm opens up in the middle of this cavern, with a rickety looking wood and rope bridge spanning across it.  It's too dark to see the bottom of the chasm, but you can faintly hear the flowing water of an underground river far below you.  You hear loud voices to the west, and to the distant north is the cave's entrance.");
+            undergroundRiver.Exits.Add("north", 19);
+            undergroundRiver.Exits.Add("west", 21);
+
+            Room warlordChamber = CreateRoom(21, "warlordChamber", "Bandit Cave - Warlord's Lair", "The passage opens into a large natural cavern that has been converted into a throne room of sorts. Stolen tapestries hang on the walls, and a crude throne of piled crates sits at the far end. The Bandit Warlord himself stands before you, flanked by his most loyal enforcers. His eyes narrow as you enter. 'So... someone's come to challenge me. How unfortunate for you.'");
+            warlordChamber.Exits.Add("east", 20);
+            warlordChamber.Exits.Add("west", 18);
+            warlordChamber.NPCs.Add(npcs["Bandit Warlord"].Clone());  // Boss
+            warlordChamber.NPCs.Add(npcs["Bandit Enforcer"].Clone());  // Guards
+            warlordChamber.NPCs.Add(npcs["Bandit Enforcer"].Clone());
+
+            // NEW MOUNTAIN PATH ROOMS
+
+            // ALL OF THIS NEEDS UPDATED UNLESS MARKED OTHERWISE
+            Room mountainPath = CreateRoom(22, "mountainPath", "Mountain Path", "A narrow path winds up the mountainside. The air grows thinner and colder as you climb. Loose rocks make footing treacherous. To the east you can see Gaius' farm far below. The path continues west, climbing higher.");
+            mountainPath.Exits.Add("east", 12);
+            mountainPath.Exits.Add("west", 23);
+            mountainPath.NPCs.Add(npcs["Mountain Bandit"].Clone());
+            mountainPath.NPCs.Add(npcs["Mountain Bandit"].Clone());
+            mountainPath.NPCs.Add(npcs["Mountain Bandit"].Clone());
+            mountainPath.CanRespawn = true;
+            mountainPath.RespawnTimeHours = 12f;
+            mountainPath.OriginalNPCs.Add(npcs["Mountain Bandit"].Clone());
+            mountainPath.OriginalNPCs.Add(npcs["Mountain Bandit"].Clone());
+            mountainPath.OriginalNPCs.Add(npcs["Mountain Bandit"].Clone());
+
+            Room rockyOutcrop = CreateRoom(23, "rockyOutcrop", "Rocky Outcrop", "The path opens onto a wide rocky ledge. Ice and snow cover the ground here, and the temperature has dropped noticeably. The howling wind carries the sound of distant wolves. To the east the path descends, while to the west a dark cave entrance beckons.");
+            rockyOutcrop.Exits.Add("east", 22);
+            rockyOutcrop.Exits.Add("west", 24);
+            rockyOutcrop.NPCs.Add(npcs["Frost Wolf"].Clone());
+            rockyOutcrop.NPCs.Add(npcs["Frost Wolf"].Clone());
+            rockyOutcrop.NPCs.Add(npcs["Frost Wolf"].Clone());
+            rockyOutcrop.CanRespawn = true;
+            rockyOutcrop.RespawnTimeHours = 12f;
+            rockyOutcrop.OriginalNPCs.Add(npcs["Frost Wolf"].Clone());
+            rockyOutcrop.OriginalNPCs.Add(npcs["Frost Wolf"].Clone());
+            rockyOutcrop.OriginalNPCs.Add(npcs["Frost Wolf"].Clone());
+
+            Room iceCavern = CreateRoom(24, "iceCavern", "Ice Cavern", "You enter a cavern entirely encased in ice. Frozen waterfalls create pillars of crystalline beauty. Strange shapes move within the ice walls - elementals of pure winter. The cave continues deeper to the west, while the entrance lies to the east.");
+            iceCavern.Exits.Add("north", 25);
+            iceCavern.Exits.Add("east", 23);
+            iceCavern.NPCs.Add(npcs["Ice Elemental"].Clone());
+            iceCavern.NPCs.Add(npcs["Ice Elemental"].Clone());
+            iceCavern.NPCs.Add(npcs["Ice Elemental"].Clone());
+            iceCavern.NPCs.Add(npcs["Ice Elemental"].Clone());
+            iceCavern.CanRespawn = true;
+            iceCavern.RespawnTimeHours = 12f;
+            iceCavern.OriginalNPCs.Add(npcs["Ice Elemental"].Clone());
+            iceCavern.OriginalNPCs.Add(npcs["Ice Elemental"].Clone());
+            iceCavern.OriginalNPCs.Add(npcs["Ice Elemental"].Clone());
+            iceCavern.OriginalNPCs.Add(npcs["Ice Elemental"].Clone());
+
+            Room mountainPeak = CreateRoom(25, "mountainPeak", "Mountain Peak", "You emerge from the cave onto the mountain peak. Clouds swirl around you at this altitude, and lightning crackles in the distance. Massive eagles circle overhead, their cries echoing across the peaks. To the east is the ice cavern. To the west, ancient stone steps lead to what appears to be ruins.");
+            mountainPeak.Exits.Add("north", 26);
+            mountainPeak.Exits.Add("south", 24);
+            mountainPeak.NPCs.Add(npcs["Thunder Eagle"].Clone());
+            mountainPeak.NPCs.Add(npcs["Thunder Eagle"].Clone());
+            mountainPeak.NPCs.Add(npcs["Thunder Eagle"].Clone());
+            mountainPeak.CanRespawn = true;
+            mountainPeak.RespawnTimeHours = 12f;
+            mountainPeak.OriginalNPCs.Add(npcs["Thunder Eagle"].Clone());
+            mountainPeak.OriginalNPCs.Add(npcs["Thunder Eagle"].Clone());
+            mountainPeak.OriginalNPCs.Add(npcs["Thunder Eagle"].Clone());
+
+            Room ancientAltar = CreateRoom(26, "ancientAltar", "Ancient Altar", "At the summit stands an ancient altar, carved from a single piece of black stone. Runes glow with an eerie light. A massive warrior in ancient armor stands before the altar, flanked by two elite guards. They turn to face you as you approach. The only exit is back to the east.");
+            ancientAltar.Exits.Add("south", 25);
+            ancientAltar.NPCs.Add(npcs["Mountain Warlord"].Clone());
+            ancientAltar.NPCs.Add(npcs["Elite Guard"].Clone());
+            ancientAltar.NPCs.Add(npcs["Elite Guard"].Clone());
+            ancientAltar.CanRespawn = true;
+            ancientAltar.RespawnTimeHours = 24f; // Boss takes longer to respawn
+            ancientAltar.OriginalNPCs.Add(npcs["Mountain Warlord"].Clone());
+            ancientAltar.OriginalNPCs.Add(npcs["Elite Guard"].Clone());
+            ancientAltar.OriginalNPCs.Add(npcs["Elite Guard"].Clone());
 
             Room eastPath = CreateRoom(40, "eastPath", "A path east of the crossroads", "You are east of the crossroads on a wide dirt path. In some areas, where the road is deeply pitted from use and weather, one might notice ancient cobblestone.  Further east you see a dark and gnarled forest.");
             eastPath.Exits.Add("west", 7);
@@ -167,75 +293,10 @@ namespace GuildMaster.Data
             forestBend.OriginalNPCs.Add(npcs["Bandit"].Clone());
             forestBend.OriginalNPCs.Add(npcs["Bandit Thug"].Clone());
 
-            // NEW MOUNTAIN PATH ROOMS
-
-            // ALL OF THIS NEEDS UPDATED UNLESS MARKED OTHERWISE
-            Room mountainPath = CreateRoom(13, "mountainPath", "Mountain Path", "A narrow path winds up the mountainside. The air grows thinner and colder as you climb. Loose rocks make footing treacherous. To the east you can see Gaius' farm far below. The path continues west, climbing higher.");
-            mountainPath.Exits.Add("east", 12);
-            mountainPath.Exits.Add("west", 14);
-            mountainPath.NPCs.Add(npcs["Mountain Bandit"].Clone());
-            mountainPath.NPCs.Add(npcs["Mountain Bandit"].Clone());
-            mountainPath.NPCs.Add(npcs["Mountain Bandit"].Clone());
-            mountainPath.CanRespawn = true;
-            mountainPath.RespawnTimeHours = 12f;
-            mountainPath.OriginalNPCs.Add(npcs["Mountain Bandit"].Clone());
-            mountainPath.OriginalNPCs.Add(npcs["Mountain Bandit"].Clone());
-            mountainPath.OriginalNPCs.Add(npcs["Mountain Bandit"].Clone());
-
-            Room rockyOutcrop = CreateRoom(14, "rockyOutcrop", "Rocky Outcrop", "The path opens onto a wide rocky ledge. Ice and snow cover the ground here, and the temperature has dropped noticeably. The howling wind carries the sound of distant wolves. To the east the path descends, while to the west a dark cave entrance beckons.");
-            rockyOutcrop.Exits.Add("east", 13);
-            rockyOutcrop.Exits.Add("west", 15);
-            rockyOutcrop.NPCs.Add(npcs["Frost Wolf"].Clone());
-            rockyOutcrop.NPCs.Add(npcs["Frost Wolf"].Clone());
-            rockyOutcrop.NPCs.Add(npcs["Frost Wolf"].Clone());
-            rockyOutcrop.CanRespawn = true;
-            rockyOutcrop.RespawnTimeHours = 12f;
-            rockyOutcrop.OriginalNPCs.Add(npcs["Frost Wolf"].Clone());
-            rockyOutcrop.OriginalNPCs.Add(npcs["Frost Wolf"].Clone());
-            rockyOutcrop.OriginalNPCs.Add(npcs["Frost Wolf"].Clone());
-
-            Room iceCavern = CreateRoom(15, "iceCavern", "Ice Cavern", "You enter a cavern entirely encased in ice. Frozen waterfalls create pillars of crystalline beauty. Strange shapes move within the ice walls - elementals of pure winter. The cave continues deeper to the west, while the entrance lies to the east.");
-            iceCavern.Exits.Add("east", 14);
-            iceCavern.Exits.Add("west", 16);
-            iceCavern.NPCs.Add(npcs["Ice Elemental"].Clone());
-            iceCavern.NPCs.Add(npcs["Ice Elemental"].Clone());
-            iceCavern.NPCs.Add(npcs["Ice Elemental"].Clone());
-            iceCavern.NPCs.Add(npcs["Ice Elemental"].Clone());
-            iceCavern.CanRespawn = true;
-            iceCavern.RespawnTimeHours = 12f;
-            iceCavern.OriginalNPCs.Add(npcs["Ice Elemental"].Clone());
-            iceCavern.OriginalNPCs.Add(npcs["Ice Elemental"].Clone());
-            iceCavern.OriginalNPCs.Add(npcs["Ice Elemental"].Clone());
-            iceCavern.OriginalNPCs.Add(npcs["Ice Elemental"].Clone());
-
-            Room mountainPeak = CreateRoom(16, "mountainPeak", "Mountain Peak", "You emerge from the cave onto the mountain peak. Clouds swirl around you at this altitude, and lightning crackles in the distance. Massive eagles circle overhead, their cries echoing across the peaks. To the east is the ice cavern. To the west, ancient stone steps lead to what appears to be ruins.");
-            mountainPeak.Exits.Add("east", 15);
-            mountainPeak.Exits.Add("west", 17);
-            mountainPeak.NPCs.Add(npcs["Thunder Eagle"].Clone());
-            mountainPeak.NPCs.Add(npcs["Thunder Eagle"].Clone());
-            mountainPeak.NPCs.Add(npcs["Thunder Eagle"].Clone());
-            mountainPeak.CanRespawn = true;
-            mountainPeak.RespawnTimeHours = 12f;
-            mountainPeak.OriginalNPCs.Add(npcs["Thunder Eagle"].Clone());
-            mountainPeak.OriginalNPCs.Add(npcs["Thunder Eagle"].Clone());
-            mountainPeak.OriginalNPCs.Add(npcs["Thunder Eagle"].Clone());
-
-            Room ancientAltar = CreateRoom(17, "ancientAltar", "Ancient Altar", "At the summit stands an ancient altar, carved from a single piece of black stone. Runes glow with an eerie light. A massive warrior in ancient armor stands before the altar, flanked by two elite guards. They turn to face you as you approach. The only exit is back to the east.");
-            ancientAltar.Exits.Add("east", 16);
-            ancientAltar.NPCs.Add(npcs["Mountain Warlord"].Clone());
-            ancientAltar.NPCs.Add(npcs["Elite Guard"].Clone());
-            ancientAltar.NPCs.Add(npcs["Elite Guard"].Clone());
-            ancientAltar.CanRespawn = true;
-            ancientAltar.RespawnTimeHours = 24f; // Boss takes longer to respawn
-            ancientAltar.OriginalNPCs.Add(npcs["Mountain Warlord"].Clone());
-            ancientAltar.OriginalNPCs.Add(npcs["Elite Guard"].Clone());
-            ancientAltar.OriginalNPCs.Add(npcs["Elite Guard"].Clone());
-
             Room abandonedCampsite = CreateRoom(47, "abandonedCampsite", "An abandoned campsite", "You come across the charred remains of a long abandoned campsite.  You notice a charred wooden chest sticking out of one of the several ash piles.  The west leads out of the forest, while to the east the forest grows wildly.");
             abandonedCampsite.Exits.Add("west", 46);
             abandonedCampsite.Exits.Add("east", 48);
             abandonedCampsite.Items.Add("chest");
-
 
             // ============================================
             // FOREST EXTENSION (Rooms 48-62)
@@ -245,72 +306,59 @@ namespace GuildMaster.Data
             // ALL OF THIS NEEDS UPDATED UNLESS MARKED OTHERWISE
 
             // Continue east from abandonedCampsite (47)
-            Room darkHollow = CreateRoom(48, "darkHollow", "A dark hollow", "The forest floor dips into a shadowy hollow here. Thick roots twist across the ground, and the air feels damp and still. Paths lead west and south, though both look equally uninviting.");
+            Room darkHollow = CreateRoom(48, "darkHollow", "A dark hollow", "The forest floor dips into a shadowy hollow here. Thick roots twist across the ground, and the air feels damp and still. The path bends here, leading both west and north.");
+            darkHollow.Exits.Add("north", 49);
             darkHollow.Exits.Add("west", 47);
-            darkHollow.Exits.Add("south", 54);
 
-            Room tangledThicket = CreateRoom(49, "tangledThicket", "A tangled thicket", "Dense briars and thorny bushes crowd the path here. You can see faint trails leading in multiple directions, though none look well-traveled.");
-            tangledThicket.Exits.Add("west", 48);
-            tangledThicket.Exits.Add("south", 55);
+            Room tangledThicket = CreateRoom(49, "tangledThicket", "A tangled thicket", "Dense briars and thorny bushes crowd the path here. You thought you heard something to the north, but it was probably nothing.  Wait, there it was again! It's not too late to turn back.");
+            tangledThicket.Exits.Add("north", 50);
+            tangledThicket.Exits.Add("south", 48);
 
             Room mossyClearingNorth = CreateRoom(50, "mossyClearingNorth", "A mossy clearing", "Soft green moss carpets this small clearing. Shafts of light filter through gaps in the canopy above. The forest feels slightly less oppressive here.");
-            mossyClearingNorth.Exits.Add("west", 49);
-            mossyClearingNorth.Exits.Add("south", 56);
+            mossyClearingNorth.Exits.Add("east", 51);
+            mossyClearingNorth.Exits.Add("south", 49);
 
             Room ancientOak = CreateRoom(51, "ancientOak", "An ancient oak", "A massive oak tree dominates this area, its trunk wider than three men standing together. Strange symbols are carved into its bark, worn smooth by time.");
+            ancientOak.Exits.Add("east", 52);
             ancientOak.Exits.Add("west", 50);
-            ancientOak.Exits.Add("south", 57);
+            
 
             Room overgrownRuins = CreateRoom(52, "overgrownRuins", "Overgrown ruins", "Crumbling stone walls peek through the undergrowth here - the remains of some long-forgotten structure. Vines have reclaimed most of it.");
             overgrownRuins.Exits.Add("west", 51);
-            overgrownRuins.Exits.Add("south", 58);
+            overgrownRuins.Exits.Add("south", 53);
 
-            // Middle row of forest (connects north and south)
             Room foggyPath = CreateRoom(53, "foggyPath", "A foggy path", "A low fog clings to the ground here, obscuring your feet. The mist seems to swirl and shift of its own accord. You can barely make out paths to the north and east.");
-            foggyPath.Exits.Add("north", 46);  // Connects back to forestBend!
-            foggyPath.Exits.Add("east", 54);
+            foggyPath.Exits.Add("south", 54);
 
             Room wildernessTrail = CreateRoom(54, "wildernessTrail", "A wilderness trail", "A narrow trail winds through dense underbrush. Animal tracks crisscross the path - some disturbingly large.");
-            wildernessTrail.Exits.Add("north", 48);
-            wildernessTrail.Exits.Add("west", 53);
-            wildernessTrail.Exits.Add("east", 55);
-            wildernessTrail.Exits.Add("south", 59);
+            wildernessTrail.Exits.Add("north", 55);
 
             Room fungalGrove = CreateRoom(55, "fungalGrove", "A fungal grove", "Enormous mushrooms grow in clusters here, some taller than a man. Their caps glow faintly with an eerie bioluminescence. The air smells earthy and strange.");
-            fungalGrove.Exits.Add("north", 49);
-            fungalGrove.Exits.Add("west", 54);
-            fungalGrove.Exits.Add("east", 56);
+            fungalGrove.Exits.Add("west", 56);
+            fungalGrove.Exits.Add("east", 54);
 
             Room mossyClearingSouth = CreateRoom(56, "mossyClearingSouth", "A mossy clearing", "Another mossy clearing, similar to the one you may have seen to the north. Are you going in circles? The forest all looks the same here.");
-            mossyClearingSouth.Exits.Add("north", 50);
-            mossyClearingSouth.Exits.Add("west", 55);
-            mossyClearingSouth.Exits.Add("east", 57);
-            mossyClearingSouth.Exits.Add("south", 60);
-
-
+            mossyClearingSouth.Exits.Add("north", 55);
+            mossyClearingSouth.Exits.Add("south", 57);
 
             Room twistingPath = CreateRoom(57, "twistingPath", "A twisting path", "The path twists and turns here, making it difficult to maintain your bearings. You're not entirely sure which direction you came from.");
-            twistingPath.Exits.Add("north", 51);
-            twistingPath.Exits.Add("west", 56);
-            twistingPath.Exits.Add("east", 58);
-
+            twistingPath.Exits.Add("north", 56);
+            twistingPath.Exits.Add("west", 58);
 
             // Needs update
             Room forestEdge = CreateRoom(58, "forestEdge", "The forest's edge", "The trees thin here and you can see open sky to the east. The forest seems reluctant to let you go, branches reaching out like grasping fingers. But the exit is clear.");
-            forestEdge.Exits.Add("north", 52);
-            forestEdge.Exits.Add("west", 57);
-            forestEdge.Exits.Add("south", 61);
+            forestEdge.Exits.Add("east", 57);
+            forestEdge.Exits.Add("west", 59);
 
-            // Southern row of forest
             // Needs update
             Room rottenLog = CreateRoom(59, "rottenLog", "A rotten log crossing", "A massive fallen log bridges a muddy depression here. The wood is soft and rotten - crossing it requires careful footing.");
-            rottenLog.Exits.Add("north", 54);
-            rottenLog.Exits.Add("east", 60);
+            rottenLog.Exits.Add("north", 60);
+            rottenLog.Exits.Add("east", 58);
+
             // Needs update
             Room wolfDen = CreateRoom(60, "wolfDen", "Near a wolf den", "You spot the dark entrance of a den dug into a hillside. Bones are scattered around the entrance. Something lives here - something hungry.");
-            wolfDen.Exits.Add("north", 56);
-            wolfDen.Exits.Add("west", 59);
-            wolfDen.Exits.Add("east", 61);
+            wolfDen.Exits.Add("north", 61);
+            wolfDen.Exits.Add("south", 59);
             wolfDen.NPCs.Add(npcs["Dire Wolf"].Clone());
             wolfDen.NPCs.Add(npcs["Dire Wolf"].Clone());
             wolfDen.CanRespawn = true;
@@ -321,23 +369,18 @@ namespace GuildMaster.Data
 
             // Needs update
             Room forestExit = CreateRoom(61, "forestExit", "Eastern forest exit", "The trees finally give way to open grassland. The dark forest looms behind you to the west. A worn path leads south toward... somewhere. Fresh air has never felt so good.");
-            forestExit.Exits.Add("north", 58);
-            forestExit.Exits.Add("west", 60);
-            // Could add south exit to connect to something later
-
-            // Add 47's east exit to connect to new rooms
-            // UPDATE abandonedCampsite: abandonedCampsite.Exits.Add("east", 48);
-            // UPDATE forestBend (46): forestBend.Exits.Add("south", 53);
-
-
+            forestExit.Exits.Add("north", 48);
+            forestExit.Exits.Add("south", 60);
+    
             // ============================================
             // NORTH ROAD TO BELUM (Rooms 68-69)
             // ============================================
 
             // Needs update
             Room northRoad = CreateRoom(68, "northRoad", "The North Road", "The road north from the crossroads is well-maintained and shows signs of regular traffic. Wagon ruts line either side, and you can see the walls of a town in the distance. The crossroads lies to the south.");
-            northRoad.Exits.Add("south", 7);
             northRoad.Exits.Add("north", 69);
+            northRoad.Exits.Add("south", 7);
+            
 
             // Needs update
             Room belumApproach = CreateRoom(69, "belumApproach", "Approach to Belum", "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands closed. A veteran guard named Marcus stands watch. A signpost reads: 'GATE CLOSED'.");
@@ -349,43 +392,42 @@ namespace GuildMaster.Data
 
             // Needs update
             Room belumSouthGate = CreateRoom(70, "belumSouthGate", "Belum - South Gate", "You pass through the southern gate of Belum. Guards in bronze armor eye travelers but make no move to stop you. The cobblestone streets are busy with merchants, locals, and fellow travelers. The main road continues north into the town center.");
-            belumSouthGate.Exits.Add("south", 69);
             belumSouthGate.Exits.Add("north", 79);
             belumSouthGate.Exits.Add("east", 71);
-            belumSouthGate.Exits.Add("west", 83);
+            belumSouthGate.Exits.Add("south", 69);
+            belumSouthGate.Exits.Add("west", 85);
             belumSouthGate.NPCs.Add(npcs["Town Guard"].Clone());
 
             // Needs update
             Room southMarket = CreateRoom(71, "southMarket", "Belum - South Market", "Stalls and carts line this section of the street, merchants hawking their wares. The smell of spices, leather, and fresh bread fills the air. The noise of commerce is constant.");
-            southMarket.Exits.Add("west", 70);
             southMarket.Exits.Add("north", 78);
             southMarket.Exits.Add("east", 72);
+            southMarket.Exits.Add("west", 70);
             southMarket.NPCs.Add(npcs["Apothecary"].Clone());
 
             // Needs update
             Room stablesDistrict = CreateRoom(72, "stablesDistrict", "Belum - Stables District", "The smell of hay and horses is strong here. Several stables and paddocks house animals for travelers and merchants. A weathered sign advertises boarding rates.");
-            stablesDistrict.Exits.Add("west", 71);
             stablesDistrict.Exits.Add("north", 73);
+            stablesDistrict.Exits.Add("west", 71);
+            
 
             // Needs update
             Room poorQuarter = CreateRoom(73, "poorQuarter", "Belum - Poor Quarter", "The buildings here are older and less maintained than elsewhere in town. Laundry hangs from windows, and children play in the narrow streets. The locals eye you with a mix of curiosity and wariness.");
-            poorQuarter.Exits.Add("south", 72);
             poorQuarter.Exits.Add("north", 74);
+            poorQuarter.Exits.Add("south", 72);
             poorQuarter.Exits.Add("west", 78);
 
             // Needs update
             Room theGoldenGrape = CreateRoom(74, "theGoldenGrape", "Belum - The Golden Grape Tavern", "A large and welcoming tavern. The sign shows a golden bunch of grapes. Laughter and music spill out through the open door. This seems like the place to hear local news and rumors.");
-            theGoldenGrape.Exits.Add("west", 77);
-            theGoldenGrape.Exits.Add("south", 73);
             theGoldenGrape.Exits.Add("north", 75);
+            theGoldenGrape.Exits.Add("south", 73);
+            theGoldenGrape.Exits.Add("west", 77);
             theGoldenGrape.NPCs.Add(npcs["Barkeep"].Clone());
 
             // Needs update
             Room merchantRow = CreateRoom(75, "merchantRow", "Belum - Merchant Row", "Prosperous shops display their goods through glass windows - a luxury in these parts. Tailors, jewelers, and specialty craftsmen ply their trades here.");
-            merchantRow.Exits.Add("west", 74);
-            merchantRow.Exits.Add("south", 71);
-            merchantRow.Exits.Add("north", 79);
-            merchantRow.Exits.Add("east", 76);
+            merchantRow.Exits.Add("west", 76);
+            merchantRow.Exits.Add("south", 74);
             merchantRow.NPCs.Add(npcs["Scribe"].Clone());
 
             // Needs update
@@ -396,31 +438,31 @@ namespace GuildMaster.Data
 
             // Needs update
             Room backAlleys = CreateRoom(77, "backAlleys", "Belum - Back Alleys", "Narrow alleyways wind between cramped buildings. It's darker here, and the main bustle of the town feels far away. Not the safest part of town after dark.");
+            backAlleys.Exits.Add("north", 76);
             backAlleys.Exits.Add("east", 74);
             backAlleys.Exits.Add("south", 78);
-            backAlleys.Exits.Add("north", 76);
             backAlleys.Exits.Add("west", 80);
 
             // Needs update
             Room blacksmithForge = CreateRoom(78, "blacksmithForge", "Belum - The Iron Anvil", "A large smithy with multiple forges burning hot. Weapons, tools, and armor line the walls. The smith is a mountain of a man with arms like tree trunks.");
+            blacksmithForge.Exits.Add("north", 77);
+            blacksmithForge.Exits.Add("south", 71);
             blacksmithForge.Exits.Add("west", 79);
-            blacksmithForge.Exits.Add("south", 76);
-            blacksmithForge.Exits.Add("north", 84);
             blacksmithForge.NPCs.Add(npcs["Blacksmith"].Clone());
 
             // Needs update
             Room mainStreetSouth = CreateRoom(79, "mainStreetSouth", "Belum - Main Street (South)", "The main thoroughfare of Belum stretches north and south. Shops and taverns line both sides. A public fountain provides a gathering spot for locals.");
-            mainStreetSouth.Exits.Add("south", 70);
             mainStreetSouth.Exits.Add("north", 80);
             mainStreetSouth.Exits.Add("east", 78);
+            mainStreetSouth.Exits.Add("south", 70);
             mainStreetSouth.Exits.Add("west", 84);
             mainStreetSouth.NPCs.Add(npcs["Villager"].Clone());
 
             // Needs update
             Room townSquare = CreateRoom(80, "townSquare", "Belum - Town Square", "The heart of Belum opens into a grand square. A large stone fountain depicting Neptune dominates the center. Important-looking buildings surround the square - the town hall, a temple, and what appears to be a guild house of some kind.");
-            townSquare.Exits.Add("south", 79);
             townSquare.Exits.Add("north", 81);
             townSquare.Exits.Add("east", 77);
+            townSquare.Exits.Add("south", 79);
             townSquare.Exits.Add("west", 83);
             townSquare.NPCs.Add(npcs["Town Guard"].Clone());
             townSquare.NPCs.Add(npcs["Villager"].Clone());
@@ -428,112 +470,53 @@ namespace GuildMaster.Data
 
             // Needs update
             Room residentialNorth = CreateRoom(81, "residentialNorth", "Belum - North Residential", "Well-appointed homes belonging to Belum's more prosperous citizens line this quiet street. Gardens and small courtyards provide greenery.");
-            residentialNorth.Exits.Add("south", 82);
-            residentialNorth.Exits.Add("east", 87);
+            residentialNorth.Exits.Add("north",90);
+            residentialNorth.Exits.Add("east", 76);
+            residentialNorth.Exits.Add("south", 80);
+            residentialNorth.Exits.Add("West", 82);
 
-
-            // --- ROW 4 ---
             Room templeDistrict = CreateRoom(82, "templeDistrict", "Belum - Temple District", "Massive temples of white stone surround an open plaza.  The largest of all of these, to the north, is devoted to Keius - father of the gods.  If you look straight up, you can barely see the tops of the colossal columns that line the temple's facade.  Temples to major and minor gods of Keius' pantheon fill the rest of the square.  To the east is a residential district on the main street through Belum.  To the south are several inns, and more residences to the west.");
-            templeDistrict.Exits.Add("south", 83);
             templeDistrict.Exits.Add("east", 81);
+            templeDistrict.Exits.Add("south", 83);
             templeDistrict.Exits.Add("west", 89);
 
             Room innDistrict = CreateRoom(83, "innDistrict", "Belum - Inn District", "Several inns compete for business here, their signs creaking in the breeze. 'The Wanderer's Rest', 'The Sleeping Lion', and 'Beds & Breakfast' all promise comfortable lodging.");
-            innDistrict.Exits.Add("west", 82);
-            innDistrict.Exits.Add("south", 79);
-            innDistrict.Exits.Add("north", 87);
-            innDistrict.Exits.Add("east", 84);
+            innDistrict.Exits.Add("north", 82);
+            innDistrict.Exits.Add("east", 80);
+            innDistrict.Exits.Add("south", 84);
+            innDistrict.Exits.Add("west", 88);
 
             Room armorersRow = CreateRoom(84, "armorersRow", "Belum - Armorer's Row", "Shops specializing in armor and protective gear line this street. Mannequins display everything from leather jerkins to full plate mail. A testing dummy stands outside one shop, heavily dented.");
-            armorersRow.Exits.Add("west", 83);
-            armorersRow.Exits.Add("south", 80);
-            armorersRow.Exits.Add("north", 88);
+            armorersRow.Exits.Add("north", 83);
+            armorersRow.Exits.Add("east", 79);
+            armorersRow.Exits.Add("south", 85);
+            armorersRow.Exits.Add("west", 87);
 
             Room thievesGuild = CreateRoom(85, "thievesGuild", "Belum - Unmarked Alley", "A dead-end alley with a single unmarked door. Those who know, know. Those who don't, shouldn't be here.");
-            thievesGuild.Exits.Add("east", 82);
-            thievesGuild.Exits.Add("south", 81);
+            thievesGuild.Exits.Add("north", 84);
+            thievesGuild.Exits.Add("east", 70);
+            thievesGuild.Exits.Add("west", 86);
 
             Room shadowyCorner = CreateRoom(86, "shadowyCorner", "Belum - A Shadowy Corner", "This corner of town sees less traffic. A nondescript door leads to what might be a less-than-legitimate establishment. The locals here don't meet your eyes.");
-            shadowyCorner.Exits.Add("east", 78);
-            shadowyCorner.Exits.Add("south", 77);
-            shadowyCorner.Exits.Add("north", 85);
+            shadowyCorner.Exits.Add("north", 87);
+            shadowyCorner.Exits.Add("east", 85);
 
             Room townHall = CreateRoom(87, "townHall", "Belum - Town Hall", "The administrative center of Belum. An imposing building with marble columns and bronze doors. Guards stand at attention. A notice board displays official proclamations.");
-            townHall.Exits.Add("west", 86);
-            townHall.Exits.Add("south", 83);
-            townHall.Exits.Add("east", 88);
+            townHall.Exits.Add("north", 88);
+            townHall.Exits.Add("south", 86);
+            townHall.Exits.Add("east", 84);
             townHall.NPCs.Add(npcs["Town Guard"].Clone());
 
             Room barracks = CreateRoom(88, "barracks", "Belum - Guard Barracks", "The town guard's headquarters. Soldiers drill in a courtyard while others sharpen weapons or play dice. The captain's office is visible through an open door.");
-            barracks.Exits.Add("west", 87);
-            barracks.Exits.Add("south", 84);
             barracks.Exits.Add("north", 89);
+            barracks.Exits.Add("east", 83);
+            barracks.Exits.Add("south", 87);
             barracks.NPCs.Add(npcs["Town Guard"].Clone());
             barracks.NPCs.Add(npcs["Town Guard"].Clone());
 
             Room room89 = CreateRoom(89, "room89", "Room 89", "This is room 89.  Inexplicably, there's nothing here.  Literally.  Just empty void as far as the eyes can see to the north and west.  To the south, you see the town guard's barracks.  To the east, you see an open plaza surrounded by majestic temples of polished white stone.");
             room89.Exits.Add("south", 88);
             room89.Exits.Add("east", 82);
-
-            // ===== BANDIT CAVE SYSTEM =====
-
-            // Room 90 - Cave Entrance
-            Room caveEntrance = CreateRoom(90, "caveEntrance", "Bandit Cave - Entrance", "You step into a dark cave mouth carved into the mountainside. Torches line the walls, their flickering light revealing boot prints in the dirt leading deeper into the cave. The air is damp and smells of smoke and unwashed bodies. This is clearly the bandit hideout.");
-            caveEntrance.Exits.Add("north", 12);  // Back to lower slopes
-            caveEntrance.Exits.Add("south", 91);
-            caveEntrance.NPCs.Add(npcs["Bandit Scout"].Clone());
-            caveEntrance.NPCs.Add(npcs["Bandit Scout"].Clone());
-
-            // Room 91 - Cave Tunnel
-            Room caveTunnel = CreateRoom(91, "caveTunnel", "Bandit Cave - Tunnel", "The tunnel slopes downward, the ceiling dripping with moisture. Crude wooden supports brace the walls. You hear voices echoing from deeper in the cave. The passage splits here - continuing south or branching west.");
-            caveTunnel.Exits.Add("north", 90);
-            caveTunnel.Exits.Add("south", 96);
-            caveTunnel.Exits.Add("west", 92);
-            caveTunnel.NPCs.Add(npcs["Bandit Scout"].Clone());
-            caveTunnel.NPCs.Add(npcs["Bandit Cutthroat"].Clone());
-
-            // Room 92 - Western Branch
-            Room westernBranch = CreateRoom(92, "westernBranch", "Bandit Cave - Western Branch", "This narrower passage winds westward. Makeshift sleeping areas line the walls - dirty bedrolls and stolen goods scattered about. Someone has been living here. The passage continues west and opens into a larger chamber.");
-            westernBranch.Exits.Add("east", 91);
-            westernBranch.Exits.Add("west", 93);
-            westernBranch.NPCs.Add(npcs["Bandit Cutthroat"].Clone());
-            westernBranch.NPCs.Add(npcs["Bandit Cutthroat"].Clone());
-
-            // Room 93 - Western Chamber
-            Room westernChamber = CreateRoom(93, "westernChamber", "Bandit Cave - Western Chamber", "A natural chamber opens up here, its high ceiling lost in darkness. Crates of stolen supplies are stacked against the walls - food, weapons, and trade goods taken from travelers. The bandits have made this their storage room. The tunnel continues west into deeper darkness.");
-            westernChamber.Exits.Add("east", 92);
-            westernChamber.Exits.Add("west", 94);
-            westernChamber.NPCs.Add(npcs["Bandit Enforcer"].Clone());
-            westernChamber.NPCs.Add(npcs["Bandit Cutthroat"].Clone());
-
-            // Room 94 - Dark Passage
-            Room darkPassage = CreateRoom(94, "darkPassage", "Bandit Cave - Dark Passage", "The torches are fewer here, leaving long stretches of shadow. Your footsteps echo ominously. Blood stains mark the floor - evidence of past violence. The passage slopes further downward to the south, while a faint light glows from the west.");
-            darkPassage.Exits.Add("east", 93);
-            darkPassage.Exits.Add("south", 95);
-            darkPassage.NPCs.Add(npcs["Bandit Enforcer"].Clone());
-
-            // Room 95 - Deep Cave
-            Room deepCave = CreateRoom(95, "deepCave", "Bandit Cave - Deep Cavern", "You've descended deep into the mountain. The air here is cold and still. Strange rock formations create eerie shapes in the torchlight. Water drips steadily somewhere in the darkness. The cave continues south toward what sounds like rushing water.");
-            deepCave.Exits.Add("north", 94);
-            deepCave.Exits.Add("south", 96);
-            deepCave.NPCs.Add(npcs["Bandit Enforcer"].Clone());
-            deepCave.NPCs.Add(npcs["Bandit Enforcer"].Clone());
-
-            // Room 96 - Flooded Chamber (Lydia's location)
-            Room floodedChamber = CreateRoom(96, "floodedChamber", "Bandit Cave - Flooded Chamber", "An underground stream flows through this chamber, the water black and swift. A narrow ledge runs along the eastern wall. Someone is standing guard here - a woman with a bow. She doesn't look like the other bandits. The only way forward is west, across a rickety wooden bridge.");
-            floodedChamber.Exits.Add("north", 91);
-            floodedChamber.Exits.Add("south", 95);
-            floodedChamber.Exits.Add("west", 97);
-            floodedChamber.NPCs.Add(npcs["Lydia"].Clone());  // Recruitable Venator
-
-            // Room 97 - Warlord's Chamber (Boss room)
-            Room warlordChamber = CreateRoom(97, "warlordChamber", "Bandit Cave - Warlord's Lair", "The passage opens into a large natural cavern that has been converted into a throne room of sorts. Stolen tapestries hang on the walls, and a crude throne of piled crates sits at the far end. The Bandit Warlord himself stands before you, flanked by his most loyal enforcers. His eyes narrow as you enter. 'So... someone's come to challenge me. How unfortunate for you.'");
-            warlordChamber.Exits.Add("east", 96);
-            warlordChamber.NPCs.Add(npcs["Bandit Warlord"].Clone());  // Boss
-            warlordChamber.NPCs.Add(npcs["Bandit Enforcer"].Clone());  // Guards
-            warlordChamber.NPCs.Add(npcs["Bandit Enforcer"].Clone());
-
-
 
             // Guild Hall
             rooms.Add(1, bedroom);
@@ -552,13 +535,26 @@ namespace GuildMaster.Data
             rooms.Add(10, gaiusFarmFields);
             rooms.Add(11, gaiusFarmHouse);
 
-            // Mountains
+            // Mountain Lower Slopes
             rooms.Add(12, lowerSlopes);
-            rooms.Add(13, mountainPath);
-            rooms.Add(14, rockyOutcrop);
-            rooms.Add(15, iceCavern);
-            rooms.Add(16, mountainPeak);
-            rooms.Add(17, ancientAltar);
+
+            // Bandit Caves
+            rooms.Add(13, caveEntrance);
+            rooms.Add(14, caveTunnel);
+            rooms.Add(15, westernBranch);
+            rooms.Add(16, westernChamber);
+            rooms.Add(17, darkPassage);
+            rooms.Add(18, deepCave);
+            rooms.Add(19, floodedChamber);
+            rooms.Add(20, undergroundRiver);
+            rooms.Add(21, warlordChamber);
+
+
+            rooms.Add(22, mountainPath);
+            rooms.Add(23, rockyOutcrop);
+            rooms.Add(24, iceCavern);
+            rooms.Add(25, mountainPeak);
+            rooms.Add(26, ancientAltar);
 
             // Forest
             rooms.Add(40, eastPath);
@@ -609,16 +605,6 @@ namespace GuildMaster.Data
             rooms.Add(87, townHall);
             rooms.Add(88, barracks);
             rooms.Add(89, room89);
-
-            // Bandit Caves
-            rooms.Add(90, caveEntrance);
-            rooms.Add(91, caveTunnel);
-            rooms.Add(92, westernBranch);
-            rooms.Add(93, westernChamber);
-            rooms.Add(94, darkPassage);
-            rooms.Add(95, deepCave);
-            rooms.Add(96, floodedChamber);
-            rooms.Add(97, warlordChamber);
 
             return rooms;
         }
