@@ -74,6 +74,8 @@ namespace GuildMaster.Managers
                 gameState.Experience = player.Experience;
                 gameState.ExperienceToNextLevel = player.ExperienceToNextLevel;
                 gameState.AutoCombatEnabled = player.AutoCombatEnabled;
+                gameState.TutorialsEnabled = player.TutorialsEnabled;
+                gameState.GoreEnabled = player.GoreEnabled;
 
                 // Time
                 gameState.CurrentDay = player.CurrentDay;
@@ -232,6 +234,8 @@ namespace GuildMaster.Managers
                 gameState.Experience = player.Experience;
                 gameState.ExperienceToNextLevel = player.ExperienceToNextLevel;
                 gameState.AutoCombatEnabled = player.AutoCombatEnabled;
+                gameState.TutorialsEnabled = player.TutorialsEnabled;
+                gameState.GoreEnabled = player.GoreEnabled;
 
                 // Time
                 gameState.CurrentDay = player.CurrentDay;
@@ -469,6 +473,8 @@ namespace GuildMaster.Managers
             player.Experience = state.Experience >= 0 ? state.Experience : 0;
             player.ExperienceToNextLevel = state.ExperienceToNextLevel > 0 ? state.ExperienceToNextLevel : 100;
             player.AutoCombatEnabled = state.AutoCombatEnabled;
+            player.TutorialsEnabled = state.TutorialsEnabled;
+            player.GoreEnabled = state.GoreEnabled;
 
             // Load equipment - try new format first, fall back to old format
             if (!string.IsNullOrEmpty(state.EquippedWeaponName))

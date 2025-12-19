@@ -76,7 +76,7 @@ namespace GuildMaster.Managers
                         status = $"[RESTING - {restRemaining:F1}h]";
                     }
 
-                    AnsiConsole.MarkupLine($"{i + 1}. {recruit.Name} - {recruit.Class} - {health} - Joined Day {recruit.RecruitedDay} {status}");
+                    AnsiConsole.MarkupLine($"{i + 1}. {recruit.Name} - {recruit.Class?.Name ?? "Unknown"} - {health} - Joined Day {recruit.RecruitedDay} {status}");
                 }
             }
 
@@ -89,7 +89,7 @@ namespace GuildMaster.Managers
             {
                 foreach (var member in player.ActiveParty)
                 {
-                    AnsiConsole.MarkupLine($"- {member.Name} ({member.Class})");
+                    AnsiConsole.MarkupLine($"- {member.Name} ({member.Class?.Name ?? "Unknown"})");
                 }
             }
 
@@ -133,7 +133,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("\nWho would you like to add?");
             for (int i = 0; i < available.Count; i++)
             {
-                AnsiConsole.MarkupLine($"{i + 1}. {available[i].Name} ({available[i].Class}) - HP: {available[i].Health}/{available[i].MaxHealth}");
+                AnsiConsole.MarkupLine($"{i + 1}. {available[i].Name} ({available[i].Class?.Name ?? "Unknown"}) - HP: {available[i].Health}/{available[i].MaxHealth}");
             }
             AnsiConsole.MarkupLine("0. Back");
             AnsiConsole.MarkupLine("");
@@ -235,7 +235,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"║         CHARACTER SHEET               ║");
             AnsiConsole.MarkupLine($"╠═══════════════════════════════════════╣");
             AnsiConsole.MarkupLine($"║ Name:    {recruit.Name,-28} ║");
-            AnsiConsole.MarkupLine($"║ Class:   {recruit.Class,-28} ║");
+            AnsiConsole.MarkupLine($"║ Class:   {recruit.Class?.Name ?? "Unknown",-28} ║");
             AnsiConsole.MarkupLine($"║ Status:  {GetRecruitStatus(recruit),-28} ║");
             AnsiConsole.MarkupLine($"╠═══════════════════════════════════════╣");
             AnsiConsole.MarkupLine($"║ Health:  {recruit.Health,3}/{recruit.MaxHealth,-28} ║");

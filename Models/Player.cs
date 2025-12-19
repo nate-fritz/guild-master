@@ -23,6 +23,7 @@ namespace GuildMaster.Models
         public bool AutoCombatEnabled { get; set; } = false;
         public bool TutorialsEnabled { get; set; } = true;
         public bool GoreEnabled { get; set; } = false;
+        public bool RoomNumbersEnabled { get; set; } = false;
         public int ThreeMemberCombatCount { get; set; } = 0;
 
         public Player(string name = "Adventurer", CharacterClass characterClass = null)

@@ -15,12 +15,47 @@ namespace GuildMaster.Managers
         private readonly GameContext context;
         private Random random = new Random();
 
+        // State machine fields
+        private bool isInQuestMenu = false;
+        private string currentQuestState = "main"; // "main", "select_recruit", "select_quest", "collect_rewards"
+        private List<Recruit>? currentAvailableRecruits;
+        private Recruit? selectedRecruit;
+        private List<Quest>? currentQuests;
+
+        public bool IsInQuestMenu => isInQuestMenu;
+
         public QuestManager(GameContext gameContext)
         {
             context = gameContext;
         }
 
-        public void ManageQuests()
+        // Start quest menu (non-blocking)
+        public void StartQuestMenu()
+        {
+            isInQuestMenu = true;
+            currentQuestState = "main";
+            DisplayMainMenu();
+        }
+
+        // Process input based on current state
+        public bool ProcessQuestInput(string input)
+        {
+            switch (currentQuestState)
+            {
+                case "main":
+                    return ProcessMainMenuInput(input);
+                case "select_recruit":
+                    return ProcessSelectRecruitInput(input);
+                case "select_quest":
+                    return ProcessSelectQuestInput(input);
+                case "collect_rewards":
+                    return ProcessCollectRewardsInput(input);
+                default:
+                    return true;
+            }
+        }
+
+        private void DisplayMainMenu()
         {
             var player = context.Player;
 
@@ -53,13 +88,13 @@ namespace GuildMaster.Managers
                 }
             }
 
-            var availableRecruits = player.Recruits.Where(r =>
+            currentAvailableRecruits = player.Recruits.Where(r =>
                 !player.ActiveParty.Contains(r) &&
                 !r.IsOnQuest &&
                 !r.IsResting).ToList();
 
-            AnsiConsole.MarkupLine($"\n=== Available Recruits ({availableRecruits.Count}) ===");
-            if (availableRecruits.Count == 0)
+            AnsiConsole.MarkupLine($"\n=== Available Recruits ({currentAvailableRecruits.Count}) ===");
+            if (currentAvailableRecruits.Count == 0)
             {
                 AnsiConsole.MarkupLine("No recruits available for quests.");
                 if (player.Recruits.Any(r => r.IsResting))
@@ -74,14 +109,14 @@ namespace GuildMaster.Managers
             }
             else
             {
-                foreach (var recruit in availableRecruits)
+                foreach (var recruit in currentAvailableRecruits)
                 {
-                    AnsiConsole.MarkupLine($"- {recruit.Name} ({recruit.Class})");
+                    AnsiConsole.MarkupLine($"- {recruit.Name} ({recruit.Class?.Name ?? "Unknown"})");
                 }
             }
 
             AnsiConsole.MarkupLine("\n=== Options ===");
-            if (availableRecruits.Count > 0)
+            if (currentAvailableRecruits.Count > 0)
             {
                 AnsiConsole.MarkupLine("1. Send Recruit on Quest");
             }
@@ -90,72 +125,144 @@ namespace GuildMaster.Managers
                 AnsiConsole.MarkupLine("2. Collect Quest Rewards");
             }
             AnsiConsole.MarkupLine("0. Back");
-
-            Console.Write("\nChoice: ");
-            string choice = Console.ReadLine();
-
-            switch (choice)
-            {
-                case "1":
-                    if (availableRecruits.Count > 0)
-                        SendRecruitOnQuest(availableRecruits);
-                    break;
-                case "2":
-                    if (player.ActiveQuests.Any(q => q.IsComplete))
-                        CollectQuestRewards();
-                    break;
-                case "0":
-                    return;  // Return to guild menu
-            }
-
-            ManageQuests();  // Loop back to quest menu
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
         }
 
-        private void SendRecruitOnQuest(List<Recruit> availableRecruits)
+        private bool ProcessMainMenuInput(string input)
         {
             var player = context.Player;
 
-            AnsiConsole.MarkupLine("\nSelect recruit to send:");
-            for (int i = 0; i < availableRecruits.Count; i++)
+            switch (input)
             {
-                AnsiConsole.MarkupLine($"{i + 1}. {availableRecruits[i].Name} ({availableRecruits[i].Class})");
+                case "1":
+                    if (currentAvailableRecruits != null && currentAvailableRecruits.Count > 0)
+                    {
+                        currentQuestState = "select_recruit";
+                        DisplaySelectRecruitMenu();
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("\n[dim]No recruits available.[/]");
+                        DisplayMainMenu();
+                    }
+                    break;
+                case "2":
+                    if (player.ActiveQuests.Any(q => q.IsComplete))
+                    {
+                        currentQuestState = "collect_rewards";
+                        CollectQuestRewards();
+                        // After collecting, return to main menu
+                        currentQuestState = "main";
+                        DisplayMainMenu();
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("\n[dim]No completed quests to collect.[/]");
+                        DisplayMainMenu();
+                    }
+                    break;
+                case "0":
+                    isInQuestMenu = false;
+                    return false; // Exit quest menu
+                default:
+                    AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
+                    DisplayMainMenu();
+                    break;
             }
-            AnsiConsole.MarkupLine("0. Cancel");
 
-            Console.Write("Choice: ");
-            if (!int.TryParse(Console.ReadLine(), out int recruitChoice) ||
-                recruitChoice < 0 || recruitChoice > availableRecruits.Count)
+            return true;
+        }
+
+        private void DisplaySelectRecruitMenu()
+        {
+            if (currentAvailableRecruits == null || currentAvailableRecruits.Count == 0)
             {
+                AnsiConsole.MarkupLine("\n[dim]No recruits available.[/]");
+                currentQuestState = "main";
+                DisplayMainMenu();
                 return;
             }
 
-            if (recruitChoice == 0) return;
+            AnsiConsole.MarkupLine("\nSelect recruit to send:");
+            for (int i = 0; i < currentAvailableRecruits.Count; i++)
+            {
+                AnsiConsole.MarkupLine($"{i + 1}. {currentAvailableRecruits[i].Name} ({currentAvailableRecruits[i].Class?.Name ?? "Unknown"})");
+            }
+            AnsiConsole.MarkupLine("0. Cancel");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+        }
 
-            var selectedRecruit = availableRecruits[recruitChoice - 1];
+        private bool ProcessSelectRecruitInput(string input)
+        {
+            if (input == "0")
+            {
+                currentQuestState = "main";
+                DisplayMainMenu();
+                return true;
+            }
 
-            var quests = QuestData.GetAvailableQuests();
+            if (currentAvailableRecruits == null || !int.TryParse(input, out int recruitChoice) ||
+                recruitChoice < 1 || recruitChoice > currentAvailableRecruits.Count)
+            {
+                AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
+                DisplaySelectRecruitMenu();
+                return true;
+            }
+
+            selectedRecruit = currentAvailableRecruits[recruitChoice - 1];
+            currentQuestState = "select_quest";
+            DisplaySelectQuestMenu();
+            return true;
+        }
+
+        private void DisplaySelectQuestMenu()
+        {
+            if (selectedRecruit == null)
+            {
+                currentQuestState = "main";
+                DisplayMainMenu();
+                return;
+            }
+
+            currentQuests = QuestData.GetAvailableQuests();
             AnsiConsole.MarkupLine($"\n=== Available Quests for {selectedRecruit.Name} ===");
 
-            for (int i = 0; i < quests.Count; i++)
+            for (int i = 0; i < currentQuests.Count; i++)
             {
-                var q = quests[i];
+                var q = currentQuests[i];
                 AnsiConsole.MarkupLine($"\n{i + 1}. {q.Name} [{q.Difficulty}]");
                 AnsiConsole.MarkupLine($"   {q.Description}");
                 AnsiConsole.MarkupLine($"   Duration: {q.Duration} hours | Gold: {q.MinGold}-{q.MaxGold}");
                 AnsiConsole.MarkupLine($"   Success Chance: ~{q.BaseSuccessChance}%");
             }
             AnsiConsole.MarkupLine("\n0. Cancel");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+        }
 
-            Console.Write("\nSelect quest: ");
-            if (!int.TryParse(Console.ReadLine(), out int questChoice) ||
-                questChoice < 0 || questChoice > quests.Count)
+        private bool ProcessSelectQuestInput(string input)
+        {
+            var player = context.Player;
+
+            if (input == "0")
             {
-                return;
+                currentQuestState = "main";
+                DisplayMainMenu();
+                return true;
             }
 
-            if (questChoice == 0) return;
+            if (currentQuests == null || selectedRecruit == null ||
+                !int.TryParse(input, out int questChoice) ||
+                questChoice < 1 || questChoice > currentQuests.Count)
+            {
+                AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
+                DisplaySelectQuestMenu();
+                return true;
+            }
 
-            var selectedQuest = quests[questChoice - 1];
+            var selectedQuest = currentQuests[questChoice - 1];
 
             selectedQuest.AssignedRecruit = selectedRecruit;
             selectedQuest.StartDay = player.CurrentDay;
@@ -165,10 +272,21 @@ namespace GuildMaster.Managers
             selectedRecruit.IsOnQuest = true;
             player.ActiveQuests.Add(selectedQuest);
 
-            AnsiConsole.MarkupLine($"\n{selectedRecruit.Name} has embarked on: {selectedQuest.Name}!");
+            AnsiConsole.MarkupLine($"\n[#90FF90]{selectedRecruit.Name} has embarked on: {selectedQuest.Name}![/]");
             AnsiConsole.MarkupLine($"They will return in {selectedQuest.Duration} hours.");
-            AnsiConsole.MarkupLine("\nPress Enter to continue...");
-            Console.ReadLine();
+
+            // Return to main menu
+            currentQuestState = "main";
+            DisplayMainMenu();
+            return true;
+        }
+
+        private bool ProcessCollectRewardsInput(string input)
+        {
+            // This state is auto-processed, just return to main
+            currentQuestState = "main";
+            DisplayMainMenu();
+            return true;
         }
 
         public void CheckCompletedQuests()
@@ -287,9 +405,6 @@ namespace GuildMaster.Managers
                 quest.AssignedRecruit.IsOnQuest = false;
                 player.ActiveQuests.Remove(quest);
             }
-
-            AnsiConsole.MarkupLine("\nPress Enter to continue...");
-            Console.ReadLine();
         }
     }
 }

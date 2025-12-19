@@ -178,7 +178,16 @@ namespace GuildMaster.Services
             menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager);
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
-            gameController = new GameController(gameContext, combatManager, saveManager);
+            gameController = new GameController(gameContext, combatManager, saveManager, questManager);
+
+            // Set up dialogue->shop callback (shop manager will be created on first use)
+            dialogueManager.SetOpenShopCallback((vendor) =>
+            {
+                // Lazy initialization of shop manager
+                if (gameController.shopManager == null)
+                    gameController.shopManager = new ShopManager(gameContext, uiManager);
+                gameController.shopManager.StartShop(vendor);
+            });
         }
 
         public void StartNewGame(string playerName, string className)
@@ -233,7 +242,16 @@ namespace GuildMaster.Services
             menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager);
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
-            gameController = new GameController(gameContext, combatManager, saveManager);
+            gameController = new GameController(gameContext, combatManager, saveManager, questManager);
+
+            // Set up dialogue->shop callback (shop manager will be created on first use)
+            dialogueManager.SetOpenShopCallback((vendor) =>
+            {
+                // Lazy initialization of shop manager
+                if (gameController.shopManager == null)
+                    gameController.shopManager = new ShopManager(gameContext, uiManager);
+                gameController.shopManager.StartShop(vendor);
+            });
 
             // Display opening narrative
             string openingText = $"Good morning, {player.Name}.<br><br>You wake up in a bed that isn't yours, in a small room that you've never seen before..<br><br>A folded note sits on the nightstand beside you.";
@@ -343,6 +361,34 @@ namespace GuildMaster.Services
 
                 // Show status bar after menu action (unless still in menu)
                 if (!menuManager.IsInMenu)
+                {
+                    DisplayStats();
+                }
+                return;
+            }
+
+            // Check if we're in a shop
+            if (gameController?.shopManager != null && gameController.shopManager.IsInShop)
+            {
+                // Route input to shop system
+                gameController.shopManager.ProcessShopInput(input);
+
+                // Show status bar after shop action (unless still in shop)
+                if (!gameController.shopManager.IsInShop)
+                {
+                    DisplayStats();
+                }
+                return;
+            }
+
+            // Check if we're in a quest menu
+            if (gameController?.questManager != null && gameController.questManager.IsInQuestMenu)
+            {
+                // Route input to quest system
+                gameController.questManager.ProcessQuestInput(input);
+
+                // Show status bar after quest action (unless still in quest menu)
+                if (!gameController.questManager.IsInQuestMenu)
                 {
                     DisplayStats();
                 }
@@ -534,16 +580,53 @@ namespace GuildMaster.Services
                     AnsiConsole.MarkupLine("[#FF0000]Usage: setlevel <level 1-20>[/]");
                 }
             }
+            else if (input.StartsWith("giveitem "))
+            {
+                string itemName = input.Substring(9).Trim();
+                if (!string.IsNullOrEmpty(itemName))
+                {
+                    gameContext.Player.Inventory.Add(itemName);
+                    AnsiConsole.MarkupLine($"\n[#00FF00]Added '{itemName}' to inventory.[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[#FF0000]Usage: giveitem <item name>[/]");
+                }
+            }
+            else if (input.StartsWith("givegold "))
+            {
+                string amountArg = input.Substring(9).Trim();
+                if (int.TryParse(amountArg, out int amount) && amount > 0)
+                {
+                    gameContext.Player.Gold += amount;
+                    AnsiConsole.MarkupLine($"\n[#00FF00]Added {amount} gold. New total: {gameContext.Player.Gold}g[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[#FF0000]Usage: givegold <amount>[/]");
+                }
+            }
+            else if (input == "roomnumbers")
+            {
+                gameContext.Player.RoomNumbersEnabled = !gameContext.Player.RoomNumbersEnabled;
+                string status = gameContext.Player.RoomNumbersEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
+                AnsiConsole.MarkupLine($"\nRoom numbers {status}.");
+            }
+            else if (input == "/adminhelp" || input == "adminhelp")
+            {
+                uiManager?.ShowAdminHelp();
+            }
             else
             {
                 AnsiConsole.MarkupLine("\nCommand not recognized. Type [cyan]/help[/] to see available commands.");
             }
 
             // Show status bar after command completes, ready for next input
-            // (Combat, dialogue, and menus have their own status displays)
+            // (Combat, dialogue, menus, and shops have their own status displays)
             if ((combatManager == null || !combatManager.IsInCombat) &&
                 (dialogueManager == null || !dialogueManager.IsInDialogue) &&
-                (menuManager == null || !menuManager.IsInMenu))
+                (menuManager == null || !menuManager.IsInMenu) &&
+                (gameController?.shopManager == null || !gameController.shopManager.IsInShop))
             {
                 DisplayStats();
             }
@@ -680,17 +763,14 @@ namespace GuildMaster.Services
                 return;
             }
 
-            // Create shop manager if it doesn't exist
+            // Lazy initialization of shop manager on first use
             if (gameController.shopManager == null)
             {
                 gameController.shopManager = new ShopManager(gameContext, uiManager);
             }
 
-            // Open the shop
-            gameController.shopManager.ShowShop(npc);
-
-            // Show status after exiting shop
-            uiManager.DisplayStats();
+            // Open the shop (non-blocking, will wait for next input)
+            gameController.shopManager.StartShop(npc);
         }
 
         public void ShowStartMenu()

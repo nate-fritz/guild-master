@@ -239,16 +239,47 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("Use item:             use [item]");
             AnsiConsole.MarkupLine("Use on ally:          use [item] on [name]");
             AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Trading:");
+            AnsiConsole.MarkupLine("Open vendor shop:     shop [vendor] or trade [vendor]");
+            AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Other:");
             AnsiConsole.MarkupLine("Character Sheet:      stats");
             AnsiConsole.MarkupLine("Party Status:         party or p");
             AnsiConsole.MarkupLine("Guild Management:     guild or g");
             AnsiConsole.MarkupLine("Rest:                 rest");
             AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Settings:");
+            AnsiConsole.MarkupLine("Settings menu:        settings");
+            AnsiConsole.MarkupLine("Toggle tutorials:     tutorials [on/off]");
+            AnsiConsole.MarkupLine("Toggle autocombat:    autocombat [on/off]");
+            AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("System:");
             AnsiConsole.MarkupLine("Save game:            save");
             AnsiConsole.MarkupLine("Load game:            load");
             AnsiConsole.MarkupLine("Quit the game:        qq or quit");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim]Type '/adminhelp' for debug and admin commands[/]");
+        }
+
+        public void ShowAdminHelp()
+        {
+            AnsiConsole.MarkupLine("\n[#FFD700]═══════════════════════════════════════════════════════════════════[/]");
+            AnsiConsole.MarkupLine("[#FFD700]                        ADMIN / DEBUG COMMANDS                        [/]");
+            AnsiConsole.MarkupLine("[#FFD700]═══════════════════════════════════════════════════════════════════[/]");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Teleportation:");
+            AnsiConsole.MarkupLine("Teleport to room:     tpto [room number]");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Item & Gold:");
+            AnsiConsole.MarkupLine("Give item:            giveitem [item name]");
+            AnsiConsole.MarkupLine("Give gold:            givegold [amount]");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Character:");
+            AnsiConsole.MarkupLine("Set level:            setlevel [level 1-20]");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Display:");
+            AnsiConsole.MarkupLine("Toggle room numbers:  roomnumbers");
+            AnsiConsole.MarkupLine("");
         }
 
         public void ShowMainMenu()

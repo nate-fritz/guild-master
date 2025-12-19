@@ -15,12 +15,14 @@ namespace GuildMaster.Managers
         private readonly CombatManager combatManager;
         private readonly SaveGameManager saveManager;
         public ShopManager shopManager;
+        public QuestManager questManager;
 
-        public GameController(GameContext gameContext, CombatManager combatMgr, SaveGameManager saveMgr)
+        public GameController(GameContext gameContext, CombatManager combatMgr, SaveGameManager saveMgr, QuestManager questMgr)
         {
             context = gameContext;
             combatManager = combatMgr;
             saveManager = saveMgr;
+            questManager = questMgr;
         }
 
         public void HandleLookCommand(string input)
@@ -36,7 +38,15 @@ namespace GuildMaster.Managers
             {
                 // General room look
                 AnsiConsole.MarkupLine("\n");
-                AnsiConsole.MarkupLine($"\n<span class='room-title'>[{currentRoomObj.Title}]</span>");
+
+                // Display room title with optional room number
+                string roomTitle = currentRoomObj.Title;
+                if (player.RoomNumbersEnabled)
+                {
+                    roomTitle = $"{currentRoomObj.Title} [RoomID: {player.CurrentRoom}]";
+                }
+                AnsiConsole.MarkupLine($"\n<span class='room-title'>[{roomTitle}]</span>");
+
                 TextHelper.DisplayTextWithPaging(currentRoomObj.Description, "#FA935F");
 
                 if (currentRoomObj.NPCs.Count > 0)
@@ -241,7 +251,15 @@ namespace GuildMaster.Managers
 
                 AnsiConsole.MarkupLine($"\nYou move {direction} to {newRoom.Title}.");
                 AnsiConsole.MarkupLine("\n");
-                AnsiConsole.MarkupLine($"\n<span class='room-title'>[{newRoom.Title}]</span>");
+
+                // Display room title with optional room number
+                string roomTitle = newRoom.Title;
+                if (player.RoomNumbersEnabled)
+                {
+                    roomTitle = $"{newRoom.Title} [RoomID: {player.CurrentRoom}]";
+                }
+                AnsiConsole.MarkupLine($"\n<span class='room-title'>[{roomTitle}]</span>");
+
                 TextHelper.DisplayTextWithPaging(newRoom.Description, "#FA935F");
 
                 if (newRoom.Exits.Count > 0)

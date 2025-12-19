@@ -1910,9 +1910,14 @@ namespace GuildMaster.Managers
             switch (input)
             {
                 case "1":
-                    // NOTE: Death screen load is for console app only - not used in web version
-                    // Entire case 1 is commented out - web version doesn't have death screen reload
-                    ShowDeathMenu(); // Just show menu again
+                    // Load a saved game - exit combat and trigger load
+                    AnsiConsole.MarkupLine("\n[#00FF00]Exiting to load menu...[/]");
+                    currentState = CombatState.CombatEnded;
+                    CleanupCombat(player);
+                    // Restore player to living state temporarily so menus work (IsAlive is calculated from Health > 0)
+                    player.Health = 1;
+                    // Trigger load through callback or show load menu
+                    onPlayerDeath?.Invoke();  // This will go to ShowMainMenu where they can load
                     break;
 
                 case "2":
@@ -1920,6 +1925,7 @@ namespace GuildMaster.Managers
                     player.Health = player.MaxHealth;
                     player.Energy = player.MaxEnergy;
                     currentState = CombatState.CombatEnded;
+                    CleanupCombat(player);
                     onPlayerDeath?.Invoke();  // This will go to ShowMainMenu
                     break;
 

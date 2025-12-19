@@ -245,7 +245,7 @@ namespace GuildMaster.Data
             farmer.Description = "A burly man of over two meters leans against one of the four posts of his small stall. As he notices you, he regards you with a mixture of kindness and mild surprise.";
             farmer.ShortDescription = "A farmer";
 
-            farmer.Dialogue.Add("main_hub", new DialogueNode()
+            farmer.Dialogue.Add("greeting", new DialogueNode()
             {
                 Text = "Is there anything I can help you with? ",
                 Choices =
@@ -253,7 +253,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice { choiceText = "What can you tell me about the area?", nextNodeID = "ask_about_area" },
                     new DialogueNode.Choice { choiceText = "Actually, I'm taking over that old guildhouse.", nextNodeID = "explain_guild" },
                     new DialogueNode.Choice { choiceText = "Tell me more about this dangerous forest.", nextNodeID = "ask_about_forest" },
-                    new DialogueNode.Choice { choiceText = "Thanks for the warning. I should get going.", nextNodeID = "goodbye" }
+                    new DialogueNode.Choice { choiceText = "Thanks for the warning. I should get going.", nextNodeID = "end" }
                 }
             });
 
@@ -264,8 +264,8 @@ namespace GuildMaster.Data
                 {
                     new DialogueNode.Choice { choiceText = "Actually, I'm taking over that old guildhouse.", nextNodeID = "explain_guild" },
                     new DialogueNode.Choice { choiceText = "Tell me more about this dangerous forest.", nextNodeID = "ask_about_forest" },
-                    new DialogueNode.Choice { choiceText = "Thanks for the warning. I should get going.", nextNodeID = "goodbye" },
-                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "main_hub"}
+                    new DialogueNode.Choice { choiceText = "Thanks for the warning. I should get going.", nextNodeID = "end" },
+                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "greeting"}
                 }
             });
 
@@ -274,19 +274,17 @@ namespace GuildMaster.Data
                 Text = "A guild? Here? Ha! That old place has been empty for years. But... I suppose someone with ambition could make something of it. You seem determined enough.",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "main_hub"}
+                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "greeting"}
                 }
             });
 
             farmer.Dialogue.Add("recruit", new DialogueNode()
             {
-                Text = "Recuits?  For that old guildhall?  Hah-" +
-                "\n\n  [the farmer coughs mid-laughter, and enters a brief fit of wheezing] " +
-                "\nSorry about that..  you might find someone in there - I saw a ranger go that way earlier.",
+                Text = "Recuits?  For that old guildhall?  Hah-\n\n(The farmer coughs mid-laughter and enters a brief fit of wheezing)\n\nSorry about that... you might find someone in there - I saw a ranger go that way earlier.",
 
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "main_hub"}
+                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "greeting"}
                 }
             });
 
@@ -296,12 +294,12 @@ namespace GuildMaster.Data
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "Maybe that's where I'll find my first recruits.", nextNodeID = "recruit" },
-                    new DialogueNode.Choice { choiceText = "I'll stay clear of it then.", nextNodeID = "goodbye" },
-                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "main_hub"}
+                    new DialogueNode.Choice { choiceText = "I'll stay clear of it then.", nextNodeID = "end" },
+                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "greeting"}
                 }
             });
 
-            farmer.Dialogue.Add("goodbye", new DialogueNode()
+            farmer.Dialogue.Add("end", new DialogueNode()
             {
                 Text = "Safe travels, friend. Stop by my farm sometime if you're heading west.",
                 Choices = { } // empty = conversation ends
@@ -535,6 +533,11 @@ namespace GuildMaster.Data
             banditLeader.MinGold = 3;
             banditLeader.MaxGold = 5;
             banditLeader.ExperienceReward = 60;
+            banditLeader.Energy = 10;
+            banditLeader.MaxEnergy = 10;
+            banditLeader.EnergyRegenPerTurn = 2;
+            banditLeader.Role = EnemyRole.Melee;
+            banditLeader.AbilityNames.Add("Power Attack");
             banditLeader.LootTable = new Dictionary<string, int>
             {
                 {"potion", 50},      // 50% chance
@@ -593,15 +596,6 @@ namespace GuildMaster.Data
             {
                 Text = "Smart choice. Now leave me be.",
                 Choices = { }
-            });
-
-            farmer.Dialogue.Add("greeting", new DialogueNode()
-            {
-                Text = "Greetings, friend. I don't recall seeing you come through here before.  ",
-                Choices =
-                {
-                    new DialogueNode.Choice { choiceText = "Hello, I'm new to the area.", nextNodeID = "main_hub"}
-                }
             });
 
             // Mountain Path NPCs - High XP for testing
@@ -762,6 +756,9 @@ namespace GuildMaster.Data
             banditScout.MaxGold = 12;
             banditScout.ExperienceReward = 40;
             banditScout.Role = EnemyRole.Ranged;
+            banditScout.IsBackRow = true;
+            banditScout.EnergyRegenPerTurn = 2;
+            banditScout.AbilityNames.Add("Piercing Arrow");
             banditScout.LootTable = new Dictionary<string, int> { {"potion", 30} };
 
             // Bandit Cutthroat - Mid cave enemy (Level 5)
@@ -828,6 +825,9 @@ namespace GuildMaster.Data
             banditWarlord.MaxGold = 100;
             banditWarlord.ExperienceReward = 150;
             banditWarlord.Role = EnemyRole.Melee;
+            banditWarlord.EnergyRegenPerTurn = 2;
+            banditWarlord.AbilityNames.Add("Power Attack");
+            banditWarlord.AbilityNames.Add("Cleave");
             banditWarlord.LootTable = new Dictionary<string, int>
             {
                 {"warlord's head", 100},  // Quest item - always drops
@@ -857,6 +857,10 @@ namespace GuildMaster.Data
             lydia.MaxGold = 20;
             lydia.ExperienceReward = 60;
             lydia.Role = EnemyRole.Ranged;
+            lydia.IsBackRow = true;
+            lydia.EnergyRegenPerTurn = 2;
+            lydia.AbilityNames.Add("Piercing Arrow");
+            lydia.AbilityNames.Add("Covering Shot");
             lydia.RecruitableAfterDefeat = true;
             lydia.RecruitClass = "Venator";
             lydia.YieldDialogue = "Wait! [She lowers her bow] I surrender. I'm not one of these bandits - they captured me weeks ago and forced me to stand guard. Please, let me join you. I'm a skilled hunter and I know how to survive.";

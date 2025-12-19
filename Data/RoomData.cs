@@ -518,6 +518,10 @@ namespace GuildMaster.Data
             room89.Exits.Add("south", 88);
             room89.Exits.Add("east", 82);
 
+            Room room90 = CreateRoom(90, "room90", "Room 90", "This is room 90.  Inexplicably, there's nothing here.  Literally.  Just empty void as far as the eyes can see to the north, east, and west.  To the south, you see the residential district.");
+            room90.Exits.Add("south", 81);
+            
+
             // Guild Hall
             rooms.Add(1, bedroom);
             rooms.Add(2, hallway);
@@ -605,6 +609,7 @@ namespace GuildMaster.Data
             rooms.Add(87, townHall);
             rooms.Add(88, barracks);
             rooms.Add(89, room89);
+            rooms.Add(90, room90);
 
             return rooms;
         }

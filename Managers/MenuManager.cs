@@ -132,8 +132,8 @@ namespace GuildMaster.Managers
                 case "3":
                     if (player.Recruits.Count > 0)
                     {
-                        currentMenu = MenuState.None;
-                        questManager.ManageQuests();
+                        currentMenu = MenuState.None; // Exit guild menu state
+                        questManager.StartQuestMenu();
                     }
                     break;
                 case "0":

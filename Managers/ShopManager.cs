@@ -13,11 +13,20 @@ namespace GuildMaster.Managers
         private readonly GameContext context;
         private readonly UIManager uiManager;
 
+        // State for non-blocking shop
+        private NPC? currentVendor;
+        private string currentShopState = "main"; // "main", "buy", "sell"
+        private bool isInShop = false;
+        private List<KeyValuePair<string, int>>? currentBuyList;
+        private List<string>? currentSellList;
+
         public ShopManager(GameContext gameContext, UIManager uiManagerInstance)
         {
             context = gameContext;
             uiManager = uiManagerInstance;
         }
+
+        public bool IsInShop => isInShop;
 
         private string GetDottedLine(string itemName, string price, int totalWidth = 67)
         {
@@ -28,7 +37,7 @@ namespace GuildMaster.Managers
             return $"{itemName} {dots} {price}";
         }
 
-        public void ShowShop(NPC vendor)
+        public void StartShop(NPC vendor)
         {
             if (vendor == null || !vendor.IsVendor)
             {
@@ -36,105 +45,172 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            while (true)
-            {
-                // Main shop menu
-                AnsiConsole.MarkupLine("\n═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine($"                     Trading with {vendor.Name}");
-                AnsiConsole.MarkupLine($"                          Your Gold: {context.Player.Gold}");
-                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine(" 1. Buy Items");
-                AnsiConsole.MarkupLine(" 2. Sell Items");
-                AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine(" Enter a number to choose, or press Enter to exit.");
-                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
+            currentVendor = vendor;
+            isInShop = true;
+            currentShopState = "main";
 
-                string input = Console.ReadLine()?.Trim() ?? "";
-
-                if (string.IsNullOrEmpty(input))
-                {
-                    AnsiConsole.MarkupLine($"\n[dim]You leave {vendor.Name}'s shop.[/]");
-                    break;
-                }
-                else if (input == "1")
-                {
-                    ShowBuyMenu(vendor);
-                }
-                else if (input == "2")
-                {
-                    ShowSellMenu(vendor);
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice. Please enter 1, 2, or press Enter to leave.[/]");
-                }
-            }
+            ShowMainMenu();
         }
 
-        private void ShowBuyMenu(NPC vendor)
+        private void ShowMainMenu()
         {
-            while (true)
+            // Main shop menu
+            AnsiConsole.MarkupLine("\n═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine($"                     Trading with {currentVendor.Name}");
+            AnsiConsole.MarkupLine($"                          Your Gold: {context.Player.Gold}");
+            AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine(" 1. Buy Items");
+            AnsiConsole.MarkupLine(" 2. Sell Items");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine(" Enter a number to choose, or press Enter to exit.");
+            AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine("");
+            ShowStatusBar();
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+        }
+
+        public bool ProcessShopInput(string input)
+        {
+            if (!isInShop)
+                return false;
+
+            input = input?.Trim() ?? "";
+
+            if (currentShopState == "main")
             {
-                AnsiConsole.MarkupLine("\n═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine($"                     {vendor.Name} - Buy Items");
-                AnsiConsole.MarkupLine($"                          Your Gold: {context.Player.Gold}");
-                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
+                return ProcessMainMenuInput(input);
+            }
+            else if (currentShopState == "buy")
+            {
+                return ProcessBuyMenuInput(input);
+            }
+            else if (currentShopState == "sell")
+            {
+                return ProcessSellMenuInput(input);
+            }
 
-                if (vendor.ShopInventory.Count == 0)
-                {
-                    AnsiConsole.MarkupLine(" [dim]The vendor has nothing for sale right now.[/]");
-                    AnsiConsole.MarkupLine("");
-                    AnsiConsole.MarkupLine(" Press Enter to return.");
-                    AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                    Console.ReadLine();
-                    return;
-                }
+            return true;
+        }
 
-                // Display items for sale
-                int index = 1;
-                var itemList = vendor.ShopInventory.ToList();
-                foreach (var kvp in itemList)
-                {
-                    string itemName = kvp.Key;
-                    int price = kvp.Value;
-                    var equipment = EquipmentData.GetEquipment(itemName);
-
-                    string displayName = equipment != null ? equipment.Name : itemName;
-                    string priceText = $"{price} gold";
-                    string dottedLine = GetDottedLine(displayName, priceText);
-
-                    AnsiConsole.MarkupLine($" {index}. {dottedLine}");
-                    index++;
-                }
-
-                AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine(" Enter number to buy, or press Enter to return.");
-                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
-
-                string input = Console.ReadLine()?.Trim() ?? "";
-
-                if (string.IsNullOrEmpty(input))
-                {
-                    return;
-                }
-
-                if (int.TryParse(input, out int choice) && choice >= 1 && choice <= itemList.Count)
-                {
-                    var selectedItem = itemList[choice - 1];
-                    BuyItem(vendor, selectedItem.Key, selectedItem.Value);
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice.[/]");
-                }
+        private bool ProcessMainMenuInput(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                AnsiConsole.MarkupLine($"\n[dim]You leave {currentVendor.Name}'s shop.[/]");
+                EndShop();
+                return true;
+            }
+            else if (input == "1")
+            {
+                currentShopState = "buy";
+                ShowBuyMenuInternal();
+                return true;
+            }
+            else if (input == "2")
+            {
+                currentShopState = "sell";
+                ShowSellMenuInternal();
+                return true;
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice. Please enter 1, 2, or press Enter to leave.[/]");
+                return true;
             }
         }
 
-        private void BuyItem(NPC vendor, string itemName, int price)
+        private void EndShop()
+        {
+            isInShop = false;
+            currentVendor = null;
+            currentShopState = "main";
+            currentBuyList = null;
+            currentSellList = null;
+        }
+
+        private void ShowStatusBar()
+        {
+            var player = context.Player;
+            int hour = (int)player.CurrentHour;
+            int minutes = (int)((player.CurrentHour - hour) * 60);
+            string timeOfDay = hour < 12 ? "AM" : "PM";
+            int displayHour = hour > 12 ? hour - 12 : hour;
+            if (displayHour == 0) displayHour = 12;
+
+            AnsiConsole.MarkupLine($"\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
+        }
+
+        private void ShowBuyMenuInternal()
+        {
+            AnsiConsole.MarkupLine("\n═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine($"                     {currentVendor.Name} - Buy Items");
+            AnsiConsole.MarkupLine($"                          Your Gold: {context.Player.Gold}");
+            AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine("");
+
+            if (currentVendor.ShopInventory.Count == 0)
+            {
+                AnsiConsole.MarkupLine(" [dim]The vendor has nothing for sale right now.[/]");
+                AnsiConsole.MarkupLine("");
+                AnsiConsole.MarkupLine(" Press Enter to return.");
+                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+                AnsiConsole.MarkupLine("");
+                ShowStatusBar();
+                AnsiConsole.MarkupLine("[dim](Press Enter to return)[/]");
+                currentBuyList = new List<KeyValuePair<string, int>>();
+                return;
+            }
+
+            // Display items for sale
+            int index = 1;
+            currentBuyList = currentVendor.ShopInventory.ToList();
+            foreach (var kvp in currentBuyList)
+            {
+                string itemName = kvp.Key;
+                int price = kvp.Value;
+                var equipment = EquipmentData.GetEquipment(itemName);
+
+                string displayName = equipment != null ? equipment.Name : itemName;
+                string priceText = $"{price} gold";
+                string dottedLine = GetDottedLine(displayName, priceText);
+
+                AnsiConsole.MarkupLine($" {index}. {dottedLine}");
+                index++;
+            }
+
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine(" Enter number to buy, or press Enter to return.");
+            AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine("");
+            ShowStatusBar();
+            AnsiConsole.MarkupLine("[dim](Enter a number to buy)[/]");
+        }
+
+        private bool ProcessBuyMenuInput(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                currentShopState = "main";
+                ShowMainMenu();
+                return true;
+            }
+
+            if (int.TryParse(input, out int choice) && choice >= 1 && choice <= currentBuyList.Count)
+            {
+                var selectedItem = currentBuyList[choice - 1];
+                BuyItem(selectedItem.Key, selectedItem.Value);
+                ShowBuyMenuInternal(); // Redisplay the buy menu
+                return true;
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice.[/]");
+                return true;
+            }
+        }
+
+        private void BuyItem(string itemName, int price)
         {
             if (context.Player.Gold < price)
             {
@@ -149,68 +225,92 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"[dim]Gold remaining: {context.Player.Gold}g[/]");
         }
 
-        private void ShowSellMenu(NPC vendor)
+        private void ShowSellMenuInternal()
         {
-            while (true)
+            AnsiConsole.MarkupLine("\n═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine($"                     {currentVendor.Name} - Sell Items");
+            AnsiConsole.MarkupLine($"                          Your Gold: {context.Player.Gold}");
+            AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine("");
+
+            // Get unique items and filter to only equipment (items that exist in EquipmentData)
+            var allUniqueItems = context.Player.Inventory.Distinct().ToList();
+            var equipmentItems = allUniqueItems
+                .Where(item => EquipmentData.AllEquipment.ContainsKey(item.ToLower()))
+                .ToList();
+
+            if (equipmentItems.Count == 0)
             {
-                AnsiConsole.MarkupLine("\n═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine($"                     {vendor.Name} - Sell Items");
-                AnsiConsole.MarkupLine($"                          Your Gold: {context.Player.Gold}");
+                AnsiConsole.MarkupLine(" [dim]You have no equipment to sell.[/]");
+                AnsiConsole.MarkupLine("");
+                AnsiConsole.MarkupLine(" Press Enter to return.");
                 AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
                 AnsiConsole.MarkupLine("");
+                ShowStatusBar();
+                AnsiConsole.MarkupLine("[dim](Press Enter to return)[/]");
+                currentSellList = new List<string>();
+                return;
+            }
 
-                if (context.Player.Inventory.Count == 0)
+            // Build the sell list with unique items grouped properly
+            var itemGroups = new Dictionary<string, int>();
+            foreach (var item in equipmentItems)
+            {
+                if (!itemGroups.ContainsKey(item))
                 {
-                    AnsiConsole.MarkupLine(" [dim]You have nothing to sell.[/]");
-                    AnsiConsole.MarkupLine("");
-                    AnsiConsole.MarkupLine(" Press Enter to return.");
-                    AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                    Console.ReadLine();
-                    return;
+                    itemGroups[item] = context.Player.Inventory.Count(i => i == item);
                 }
+            }
 
-                // Display player's inventory
-                int index = 1;
-                var uniqueItems = context.Player.Inventory.Distinct().ToList();
-                foreach (var itemName in uniqueItems)
-                {
-                    int count = context.Player.Inventory.Count(i => i == itemName);
-                    var equipment = EquipmentData.GetEquipment(itemName);
+            // Display equipment items
+            int index = 1;
+            currentSellList = itemGroups.Keys.ToList();
+            foreach (var itemName in currentSellList)
+            {
+                int count = itemGroups[itemName];
+                var equipment = EquipmentData.GetEquipment(itemName);
 
-                    string displayName = equipment != null ? equipment.Name : itemName;
-                    int sellPrice = CalculateSellPrice(vendor, equipment);
-                    string priceText = $"{sellPrice} gold (you have: {count})";
-                    string dottedLine = GetDottedLine(displayName, priceText);
+                string displayName = equipment != null ? equipment.Name : itemName;
+                int sellPrice = CalculateSellPrice(equipment);
+                string priceText = $"{sellPrice} gold (you have: {count})";
+                string dottedLine = GetDottedLine(displayName, priceText);
 
-                    AnsiConsole.MarkupLine($" {index}. {dottedLine}");
-                    index++;
-                }
+                AnsiConsole.MarkupLine($" {index}. {dottedLine}");
+                index++;
+            }
 
-                AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine(" Enter number to sell, or press Enter to return.");
-                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine(" Enter number to sell, or press Enter to return.");
+            AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
+            AnsiConsole.MarkupLine("");
+            ShowStatusBar();
+            AnsiConsole.MarkupLine("[dim](Enter a number to sell)[/]");
+        }
 
-                string input = Console.ReadLine()?.Trim() ?? "";
+        private bool ProcessSellMenuInput(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                currentShopState = "main";
+                ShowMainMenu();
+                return true;
+            }
 
-                if (string.IsNullOrEmpty(input))
-                {
-                    return;
-                }
-
-                if (int.TryParse(input, out int choice) && choice >= 1 && choice <= uniqueItems.Count)
-                {
-                    string selectedItem = uniqueItems[choice - 1];
-                    SellItem(vendor, selectedItem);
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice.[/]");
-                }
+            if (int.TryParse(input, out int choice) && choice >= 1 && choice <= currentSellList.Count)
+            {
+                string selectedItem = currentSellList[choice - 1];
+                SellItem(selectedItem);
+                ShowSellMenuInternal(); // Redisplay the sell menu
+                return true;
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice.[/]");
+                return true;
             }
         }
 
-        private void SellItem(NPC vendor, string itemName)
+        private void SellItem(string itemName)
         {
             if (!context.Player.Inventory.Contains(itemName))
             {
@@ -219,7 +319,7 @@ namespace GuildMaster.Managers
             }
 
             var equipment = EquipmentData.GetEquipment(itemName);
-            int sellPrice = CalculateSellPrice(vendor, equipment);
+            int sellPrice = CalculateSellPrice(equipment);
 
             context.Player.Inventory.Remove(itemName);
             context.Player.Gold += sellPrice;
@@ -228,7 +328,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"[dim]Gold: {context.Player.Gold}g[/]");
         }
 
-        private int CalculateSellPrice(NPC vendor, Equipment equipment)
+        private int CalculateSellPrice(Equipment equipment)
         {
             if (equipment == null)
                 return 1;
@@ -242,7 +342,7 @@ namespace GuildMaster.Managers
             baseValue += equipment.EnergyBonus * 2;
 
             // Apply vendor's buyback multiplier
-            return (int)(baseValue * vendor.BuybackMultiplier);
+            return (int)(baseValue * currentVendor.BuybackMultiplier);
         }
     }
 }

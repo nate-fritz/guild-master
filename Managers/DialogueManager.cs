@@ -13,6 +13,7 @@ namespace GuildMaster.Managers
     {
         private readonly GameContext context;
         private readonly Action recruitmentCallback;  // To refresh guild after recruitment
+        private Action<NPC>? openShopCallback;  // Callback to open shop for a vendor
 
         // State for non-blocking dialogue
         private NPC? currentNPC;
@@ -25,6 +26,11 @@ namespace GuildMaster.Managers
         {
             context = gameContext;
             recruitmentCallback = onRecruitmentCallback;
+        }
+
+        public void SetOpenShopCallback(Action<NPC> callback)
+        {
+            openShopCallback = callback;
         }
 
         public bool IsInDialogue => isInDialogue;
@@ -151,7 +157,22 @@ namespace GuildMaster.Managers
                 ExecuteDialogueAction(node.Action, currentNPC, currentRoom);
             }
 
-            if (node.Choices.Count == 0)
+            // Build choices list first
+            currentChoices = node.Choices.Where(choice => choice.IsAvailable(player.Inventory)).ToList();
+
+            // Auto-inject shop option for vendors
+            if (currentNPC.IsVendor)
+            {
+                var shopChoice = new DialogueNode.Choice
+                {
+                    choiceText = "I'd like to see your wares.",
+                    nextNodeID = "open_shop" // Special marker for shop
+                };
+                currentChoices.Add(shopChoice);
+            }
+
+            // NOW check if there are any choices (after vendor shop injection)
+            if (currentChoices.Count == 0)
             {
                 AnsiConsole.MarkupLine("\n[#808080](Conversation ends)[/]");
                 EndDialogue();
@@ -159,7 +180,6 @@ namespace GuildMaster.Managers
             }
 
             AnsiConsole.MarkupLine("");
-            currentChoices = node.Choices.Where(choice => choice.IsAvailable(player.Inventory)).ToList();
 
             for (int i = 0; i < currentChoices.Count; i++)
             {
@@ -208,6 +228,25 @@ namespace GuildMaster.Managers
             }
 
             var selectedChoice = currentChoices[choice - 1];
+
+            // Handle special "open_shop" choice for vendors
+            if (selectedChoice.nextNodeID == "open_shop")
+            {
+                // End dialogue and open shop
+                var vendorNPC = currentNPC;
+                EndDialogue();
+
+                // Open the shop via callback
+                if (openShopCallback != null)
+                {
+                    openShopCallback(vendorNPC);
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[#FF0000]Shop system is not available.[/]");
+                }
+                return true;
+            }
 
             // Handle choice actions (like giving items)
             if (selectedChoice.Action != null)
