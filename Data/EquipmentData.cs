@@ -91,6 +91,18 @@ namespace GuildMaster.Data
                 Bonus = 1,
                 Value = 25
             });
+
+            AllEquipment.Add("steel gladius", new Equipment
+            {
+                Name = "Steel Gladius",
+                ShortName = "gladius",
+                Description = "A superior gladius forged from high-quality steel.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 1,
+                DiceSides = 8,
+                Bonus = 2,
+                Value = 30
+            });
         }
 
         private static void InitializeArmor()

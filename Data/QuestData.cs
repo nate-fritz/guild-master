@@ -88,7 +88,7 @@ namespace GuildMaster.Data
                         {"iron gladius", 40},
                         {"battle axe", 30}
                     },
-                    PotentialRecruit = "Marcus",  // Another potential recruit
+                    PotentialRecruit = "Lucius",  // Potential recruit
                     BaseExperienceReward = 200
                 },
                 new Quest
@@ -106,6 +106,42 @@ namespace GuildMaster.Data
                         {"potion", 70},
                         {"amulet", 25}  // Rare item
                     },
+                    BaseExperienceReward = 200
+                },
+                new Quest
+                {
+                    Id = "cultist_investigation",
+                    Name = "Investigate the Cult",
+                    Description = "Track down a dangerous cult performing dark rituals in the caves",
+                    Duration = 22.0f,
+                    Difficulty = "Hard",
+                    BaseSuccessChance = 48,
+                    MinGold = 45,
+                    MaxGold = 70,
+                    ItemRewards = new Dictionary<string, int>
+                    {
+                        {"potion", 75},
+                        {"battle axe", 35}
+                    },
+                    PotentialRecruit = "Cassia",
+                    BaseExperienceReward = 200
+                },
+                new Quest
+                {
+                    Id = "goblin_siege",
+                    Name = "Break the Goblin Siege",
+                    Description = "Defend a village under siege by a goblin warband",
+                    Duration = 18.0f,
+                    Difficulty = "Hard",
+                    BaseSuccessChance = 52,
+                    MinGold = 35,
+                    MaxGold = 65,
+                    ItemRewards = new Dictionary<string, int>
+                    {
+                        {"potion", 80},
+                        {"iron gladius", 40}
+                    },
+                    PotentialRecruit = "Felix",
                     BaseExperienceReward = 200
                 }
             };

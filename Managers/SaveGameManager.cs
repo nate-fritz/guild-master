@@ -165,6 +165,9 @@ namespace GuildMaster.Managers
                     gameState.ActiveQuests.Add(savedQuest);
                 }
 
+                // Save completed quest IDs
+                gameState.CompletedQuestIds = player.CompletedQuestIds;
+
                 // Save shown messages
                 if (ProgramStatics.messageManager != null)
                 {
@@ -324,6 +327,9 @@ namespace GuildMaster.Managers
                     };
                     gameState.ActiveQuests.Add(savedQuest);
                 }
+
+                // Save completed quest IDs
+                gameState.CompletedQuestIds = player.CompletedQuestIds;
 
                 // Save shown messages
                 if (ProgramStatics.messageManager != null)
@@ -672,6 +678,9 @@ namespace GuildMaster.Managers
                     player.ActiveQuests.Add(quest);
                 }
             }
+
+            // Restore completed quest IDs
+            player.CompletedQuestIds = state.CompletedQuestIds ?? new List<string>();
 
             // Remove taken items from rooms
             foreach (string takenItem in player.TakenItems)

@@ -59,14 +59,15 @@ namespace GuildMaster.Managers
         {
             var player = context.Player;
 
-            AnsiConsole.MarkupLine("[#ac00db]    ╔════════════════════════════════════════════════════════╗[/]");
-            AnsiConsole.MarkupLine("[#9700c1]    ║   ██████╗  ██╗   ██╗███████╗███████╗████████╗███████╗  ║[/]");
-            AnsiConsole.MarkupLine("[#8500ab]    ║  ██╔═══██╗ ██║   ██║██╔════╝██╔════╝╚══██╔══╝██╔════╝  ║[/]");
-            AnsiConsole.MarkupLine("[#730096]    ║  ██║   ██║ ██║   ██║█████╗  ███████╗   ██║   ███████╗  ║[/]");
-            AnsiConsole.MarkupLine("[#620081]    ║  ██║   ██║ ██║   ██║██╔══╝  ╚════██║   ██║   ╚════██║  ║[/]");
-            AnsiConsole.MarkupLine("[#51006c]    ║  ╚██████▀▄╗╚██████╔╝███████╗███████║   ██║   ███████║  ║[/]");
-            AnsiConsole.MarkupLine("[#420057]    ║   ╚════╝ ╚╝ ╚═════╝ ╚══════╝╚══════╝   ╚═╝   ╚══════╝  ║[/]");
-            AnsiConsole.MarkupLine("[#350046]    ╚════════════════════════════════════════════════════════╝[/]");
+            // Clear resting status for recruits whose rest time has passed
+            CheckRestingRecruits();
+
+            AnsiConsole.MarkupLine("[#ac00db]       ██████╗  ██╗   ██╗███████╗███████╗████████╗███████╗  [/]");
+            AnsiConsole.MarkupLine("[#9700c1]      ██╔═══██╗ ██║   ██║██╔════╝██╔════╝╚══██╔══╝██╔════╝  [/]");
+            AnsiConsole.MarkupLine("[#8500ab]      ██║   ██║ ██║   ██║█████╗  ███████╗   ██║   ███████╗  [/]");
+            AnsiConsole.MarkupLine("[#730096]      ██║   ██║ ██║   ██║██╔══╝  ╚════██║   ██║   ╚════██║  [/]");
+            AnsiConsole.MarkupLine("[#620081]      ╚██████▀▄╗╚██████╔╝███████╗███████║   ██║   ███████║  [/]");
+            AnsiConsole.MarkupLine("[#51006c]       ╚════╝ ╚╝ ╚═════╝ ╚══════╝╚══════╝   ╚═╝   ╚══════╝  [/]");
 
             CheckCompletedQuests();
 
@@ -227,6 +228,10 @@ namespace GuildMaster.Managers
             }
 
             currentQuests = QuestData.GetAvailableQuests();
+
+            // Filter out completed recruit quests
+            currentQuests = currentQuests.Where(q => !context.Player.CompletedQuestIds.Contains(q.Id)).ToList();
+
             AnsiConsole.MarkupLine($"\n=== Available Quests for {selectedRecruit.Name} ===");
 
             for (int i = 0; i < currentQuests.Count; i++)
@@ -289,6 +294,26 @@ namespace GuildMaster.Managers
             return true;
         }
 
+        private void CheckRestingRecruits()
+        {
+            var player = context.Player;
+            float currentTime = (player.CurrentDay * 24 + player.CurrentHour);
+
+            foreach (var recruit in player.Recruits)
+            {
+                if (recruit.IsResting)
+                {
+                    float restEndTime = (recruit.RestUntilDay * 24 + recruit.RestUntil);
+
+                    // If rest time has passed, clear the resting flag
+                    if (currentTime >= restEndTime)
+                    {
+                        recruit.IsResting = false;
+                    }
+                }
+            }
+        }
+
         public void CheckCompletedQuests()
         {
             var player = context.Player;
@@ -349,12 +374,41 @@ namespace GuildMaster.Managers
 
                     if (!string.IsNullOrEmpty(quest.PotentialRecruit))
                     {
-                        int recruitChance = quest.Difficulty == "Easy" ? 10 :
-                                          quest.Difficulty == "Medium" ? 20 : 40;
-                        if (random.Next(100) < recruitChance)
+                        // Check if player already has this recruit
+                        bool alreadyHasRecruit = player.Recruits.Any(r => r.Name == quest.PotentialRecruit);
+
+                        if (!alreadyHasRecruit)
                         {
-                            AnsiConsole.MarkupLine($"[#fff394]New recruit found: {quest.PotentialRecruit}![/]");
-                            player.Recruits.Add(new Recruit(quest.PotentialRecruit, "Fighter", player.CurrentDay));
+                            int recruitChance = quest.Difficulty == "Easy" ? 10 :
+                                              quest.Difficulty == "Medium" ? 20 : 40;
+                            if (random.Next(100) < recruitChance)
+                            {
+                                AnsiConsole.MarkupLine($"[#fff394]New recruit found: {quest.PotentialRecruit}![/]");
+
+                                // Look up the NPC from NPCData to get their proper class
+                                if (context.NPCs.ContainsKey(quest.PotentialRecruit))
+                                {
+                                    var npc = context.NPCs[quest.PotentialRecruit];
+                                    Recruit newRecruit = new Recruit(npc.Name, npc.Class?.Name ?? "Legionnaire", player.CurrentDay, npc.Class);
+                                    player.Recruits.Add(newRecruit);
+
+                                    // Mark quest as permanently completed if it rewards a recruit
+                                    if (!player.CompletedQuestIds.Contains(quest.Id))
+                                    {
+                                        player.CompletedQuestIds.Add(quest.Id);
+                                    }
+                                }
+                                else
+                                {
+                                    // Fallback if NPC not found in data
+                                    player.Recruits.Add(new Recruit(quest.PotentialRecruit, "Legionnaire", player.CurrentDay));
+
+                                    if (!player.CompletedQuestIds.Contains(quest.Id))
+                                    {
+                                        player.CompletedQuestIds.Add(quest.Id);
+                                    }
+                                }
+                            }
                         }
                     }
 

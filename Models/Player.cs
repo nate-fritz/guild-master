@@ -20,6 +20,7 @@ namespace GuildMaster.Models
         public int CurrentRoom { get; set; }
         public int PreviousRoom { get; set; }
         public List<Quest> ActiveQuests { get; set; }
+        public List<string> CompletedQuestIds { get; set; }  // Track quests that shouldn't repeat
         public bool AutoCombatEnabled { get; set; } = false;
         public bool TutorialsEnabled { get; set; } = true;
         public bool GoreEnabled { get; set; } = false;
@@ -83,6 +84,7 @@ namespace GuildMaster.Models
             PreviousRoom = 1; // Start in same room
 
             ActiveQuests = new List<Quest>();
+            CompletedQuestIds = new List<string>();
         }
     }
 }

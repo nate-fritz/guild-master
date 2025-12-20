@@ -19,6 +19,7 @@ namespace GuildMaster.Models
         public string Description { get; set; }
         public string CurrentDialogueNode { get; set; } = "greeting";
         public Dictionary<string, DialogueNode> Dialogue { get; set; }
+        public string PreCombatDialogue { get; set; } = "";  // Dialogue shown before combat begins
         public bool IsHostile { get; set; } = false;
         public int MinGold { get; set; } = 1;
         public int MaxGold { get; set; } = 5;
@@ -62,6 +63,7 @@ namespace GuildMaster.Models
                 ShortDescription = this.ShortDescription,
                 Description = this.Description,
                 CurrentDialogueNode = this.CurrentDialogueNode,
+                PreCombatDialogue = this.PreCombatDialogue,
                 IsHostile = this.IsHostile,
                 MinGold = this.MinGold,
                 MaxGold = this.MaxGold,

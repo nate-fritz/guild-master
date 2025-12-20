@@ -76,8 +76,12 @@ namespace GuildMaster.Services
 
         private bool isWaitingForLoadSlot = false;
         private SaveGameManager? tempLoadManager = null;
+        private bool isInPreCombatDialogue = false;
+        private List<NPC>? pendingCombatEnemies = null;
+        private Room? pendingCombatRoom = null;
 
         public bool IsWaitingForLoadSlot => isWaitingForLoadSlot;
+        public bool IsInPreCombatDialogue => isInPreCombatDialogue;
 
         private async Task<bool> HandleLoadSlotSelection(string input)
         {
@@ -179,6 +183,7 @@ namespace GuildMaster.Services
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
             gameController = new GameController(gameContext, combatManager, saveManager, questManager);
+            gameController.SetGameEngine(this);
 
             // Set up dialogue->shop callback (shop manager will be created on first use)
             dialogueManager.SetOpenShopCallback((vendor) =>
@@ -243,6 +248,7 @@ namespace GuildMaster.Services
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
             gameController = new GameController(gameContext, combatManager, saveManager, questManager);
+            gameController.SetGameEngine(this);
 
             // Set up dialogue->shop callback (shop manager will be created on first use)
             dialogueManager.SetOpenShopCallback((vendor) =>
@@ -309,6 +315,12 @@ namespace GuildMaster.Services
             }
             AnsiConsole.MarkupLine("[dim]DEBUG GameEngine: Not in combat, continuing to next checks[/]");
 
+            // Check if we're in pre-combat dialogue
+            if (isInPreCombatDialogue)
+            {
+                ProcessPreCombatDialogueInput(input);
+                return;
+            }
 
             // Check if we're in dialogue mode
             if (dialogueManager != null && dialogueManager.IsInDialogue)
@@ -818,6 +830,48 @@ namespace GuildMaster.Services
             if (displayHour == 0) displayHour = 12;
 
             AnsiConsole.MarkupLine($"\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
+        }
+
+        public void StartPreCombatDialogue(List<NPC> enemies, Room room)
+        {
+            // Store pending combat info
+            pendingCombatEnemies = enemies;
+            pendingCombatRoom = room;
+            isInPreCombatDialogue = true;
+
+            // Display pre-combat dialogue from enemies
+            foreach (var enemy in enemies)
+            {
+                if (!string.IsNullOrEmpty(enemy.PreCombatDialogue))
+                {
+                    AnsiConsole.MarkupLine("");
+                    TextHelper.DisplayTextWithPaging(enemy.PreCombatDialogue, "#fc3838");
+                    break; // Only show dialogue from first enemy with dialogue
+                }
+            }
+
+            // Show continuation prompt
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Press 0 to continue)[/]");
+        }
+
+        public void ProcessPreCombatDialogueInput(string input)
+        {
+            if (input == "0")
+            {
+                // Clear pre-combat dialogue state
+                isInPreCombatDialogue = false;
+
+                // Start combat with pending enemies
+                if (pendingCombatEnemies != null && pendingCombatRoom != null && combatManager != null)
+                {
+                    combatManager.StartCombat(pendingCombatEnemies, pendingCombatRoom);
+                }
+
+                // Clear pending combat info
+                pendingCombatEnemies = null;
+                pendingCombatRoom = null;
+            }
         }
     }
 }

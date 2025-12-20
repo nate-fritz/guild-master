@@ -14,6 +14,7 @@ namespace GuildMaster.Managers
         private readonly GameContext context;
         private readonly CombatManager combatManager;
         private readonly SaveGameManager saveManager;
+        private GameEngine? gameEngine;
         public ShopManager shopManager;
         public QuestManager questManager;
 
@@ -23,6 +24,11 @@ namespace GuildMaster.Managers
             combatManager = combatMgr;
             saveManager = saveMgr;
             questManager = questMgr;
+        }
+
+        public void SetGameEngine(GameEngine engine)
+        {
+            gameEngine = engine;
         }
 
         public void HandleLookCommand(string input)
@@ -283,15 +289,27 @@ namespace GuildMaster.Managers
                     var hostileNPCs = newRoom.NPCs.Where(n => n.IsHostile).ToList();
                     if (hostileNPCs.Count > 0)
                     {
-                        if (hostileNPCs.Count == 1)
+                        // Check if any hostile NPCs have pre-combat dialogue
+                        bool hasPreCombatDialogue = hostileNPCs.Any(npc => !string.IsNullOrEmpty(npc.PreCombatDialogue));
+
+                        if (hasPreCombatDialogue && gameEngine != null)
                         {
-                            AnsiConsole.MarkupLine($"\n{hostileNPCs[0].ShortDescription} attacks!");
+                            // Show pre-combat dialogue and wait for player to continue
+                            gameEngine.StartPreCombatDialogue(hostileNPCs, newRoom);
                         }
                         else
                         {
-                            AnsiConsole.MarkupLine($"\n{hostileNPCs.Count} enemies attack!");
+                            // No pre-combat dialogue, start combat immediately
+                            if (hostileNPCs.Count == 1)
+                            {
+                                AnsiConsole.MarkupLine($"\n{hostileNPCs[0].ShortDescription} attacks!");
+                            }
+                            else
+                            {
+                                AnsiConsole.MarkupLine($"\n{hostileNPCs.Count} enemies attack!");
+                            }
+                            combatManager.StartCombat(hostileNPCs, newRoom);
                         }
-                        combatManager.StartCombat(hostileNPCs, newRoom);
                         return;
                     }
 

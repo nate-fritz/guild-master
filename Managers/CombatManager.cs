@@ -350,6 +350,9 @@ namespace GuildMaster.Managers
             if (currentActingPartyMember == null)
                 return;
 
+            var player = context.Player;
+            var itemDescriptions = context.ItemDescriptions;
+
             currentState = CombatState.SelectingAction;
 
             AnsiConsole.MarkupLine($"\n[#FFFF00]== {currentActingPartyMember.Name}'s Turn ==[/]");
@@ -359,6 +362,18 @@ namespace GuildMaster.Managers
             // Change Row option
             string rowAction = currentActingPartyMember.IsBackRow ? "Engage" : "Disengage";
             AnsiConsole.MarkupLine($"3. {rowAction}");
+
+            // Check if player has any consumable items (inventory is shared)
+            var consumables = player.Inventory.Where(item =>
+                itemDescriptions.Values.Any(room =>
+                    room.ContainsKey(item) && room[item].IsConsumable)).ToList();
+
+            currentConsumables = consumables;
+
+            if (consumables.Count > 0)
+            {
+                AnsiConsole.MarkupLine("4. Items");
+            }
 
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine($"[HP: {currentActingPartyMember.Health}/{currentActingPartyMember.MaxHealth} | EP: {currentActingPartyMember.Energy}/{currentActingPartyMember.MaxEnergy}]");
@@ -498,7 +513,8 @@ namespace GuildMaster.Managers
                     else
                     {
                         // No items, so option 4 is Flee
-                        AnsiConsole.MarkupLine("\nYou flee from combat!");
+                        var previousRoom = context.Rooms[player.PreviousRoom];
+                        AnsiConsole.MarkupLine($"\nYou flee from combat to {previousRoom.Title}!");
                         player.CurrentRoom = player.PreviousRoom; // Return to previous room
                         combatActive = false;
                         if (activeEnemies != null)
@@ -511,7 +527,8 @@ namespace GuildMaster.Managers
                 case "5": // Flee (when items exist)
                     if (currentConsumables != null && currentConsumables.Count > 0)
                     {
-                        AnsiConsole.MarkupLine("\nYou flee from combat!");
+                        var previousRoom = context.Rooms[player.PreviousRoom];
+                        AnsiConsole.MarkupLine($"\nYou flee from combat to {previousRoom.Title}!");
                         player.CurrentRoom = player.PreviousRoom; // Return to previous room
                         combatActive = false;
                         if (activeEnemies != null)
@@ -550,6 +567,18 @@ namespace GuildMaster.Managers
 
                 case "3": // Engage/Disengage (Change Row)
                     HandleRowChange(currentActingPartyMember);
+                    break;
+
+                case "4": // Items
+                    if (currentConsumables != null && currentConsumables.Count > 0)
+                    {
+                        ShowItemMenu();
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("\nInvalid choice! Please choose again.");
+                        ShowPartyMemberActionMenu();
+                    }
                     break;
 
                 default:
@@ -692,6 +721,12 @@ namespace GuildMaster.Managers
             character.IsBackRow = !character.IsBackRow;
             string newRow = character.IsBackRow ? "back row" : "front row";
             AnsiConsole.MarkupLine($"\n[#FFFF00]{character.Name} moves to the {newRow}.[/]");
+
+            // Clear the current acting party member if this was a party member
+            if (currentActingPartyMember != null && currentActingPartyMember == character)
+            {
+                currentActingPartyMember = null;
+            }
 
             // Complete the turn
             CompleteTurn();
@@ -1067,7 +1102,14 @@ namespace GuildMaster.Managers
 
             if (currentConsumables == null || currentConsumables.Count == 0)
             {
-                ShowPlayerActionMenu();
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberActionMenu();
+                }
+                else
+                {
+                    ShowPlayerActionMenu();
+                }
                 return;
             }
 
@@ -1084,13 +1126,27 @@ namespace GuildMaster.Managers
         {
             if (input == "0")
             {
-                ShowPlayerActionMenu();
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberActionMenu();
+                }
+                else
+                {
+                    ShowPlayerActionMenu();
+                }
                 return;
             }
 
             if (currentConsumables == null || currentConsumables.Count == 0)
             {
-                ShowPlayerActionMenu();
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberActionMenu();
+                }
+                else
+                {
+                    ShowPlayerActionMenu();
+                }
                 return;
             }
 
@@ -1099,6 +1155,9 @@ namespace GuildMaster.Managers
                 var player = context.Player;
                 var item = currentConsumables[itemIndex - 1];
                 var itemDescriptions = context.ItemDescriptions;
+
+                // Determine who is using the item
+                Character actingCharacter = currentActingPartyMember != null ? (Character)currentActingPartyMember : player;
 
                 // Get item data and apply its effect
                 var itemData = itemDescriptions.Values
@@ -1118,7 +1177,7 @@ namespace GuildMaster.Managers
                     else
                     {
                         // Handle single-target effects
-                        ApplyCombatSingleEffect(item, effect, player);
+                        ApplyCombatSingleEffect(item, effect, actingCharacter);
                     }
 
                     player.Inventory.Remove(item);
@@ -1127,7 +1186,7 @@ namespace GuildMaster.Managers
                 else
                 {
                     // Fallback if item data not found
-                    AnsiConsole.MarkupLine($"\nYou use {TextHelper.CapitalizeFirst(item)}!");
+                    AnsiConsole.MarkupLine($"\n{actingCharacter.Name} uses {TextHelper.CapitalizeFirst(item)}!");
                     player.Inventory.Remove(item);
                 }
 
@@ -1383,38 +1442,38 @@ namespace GuildMaster.Managers
             return false;
         }
 
-        private void ApplyCombatSingleEffect(string itemName, Effect effect, Player player)
+        private void ApplyCombatSingleEffect(string itemName, Effect effect, Character character)
         {
             int rollAmount = RollDice(effect.DiceCount, effect.DiceSides, effect.Bonus);
 
             switch (effect.Type)
             {
                 case EffectType.Heal:
-                    int actualHeal = Math.Min(rollAmount, player.MaxHealth - player.Health);
-                    player.Health += actualHeal;
+                    int actualHeal = Math.Min(rollAmount, character.MaxHealth - character.Health);
+                    character.Health += actualHeal;
 
-                    AnsiConsole.MarkupLine($"\n[#00FF00]You use the {itemName}![/]");
+                    AnsiConsole.MarkupLine($"\n[#00FF00]{character.Name} uses the {itemName}![/]");
                     AnsiConsole.MarkupLine($"(Rolled {effect.DiceCount}d{effect.DiceSides}+{effect.Bonus} for [#00FF00]{rollAmount} hit points[/]!)");
                     if (actualHeal < rollAmount)
                     {
-                        AnsiConsole.MarkupLine($"[#808080](You were healed for {actualHeal} as you're near full health)[/]");
+                        AnsiConsole.MarkupLine($"[#808080]({character.Name} was healed for {actualHeal} as they're near full health)[/]");
                     }
                     break;
 
                 case EffectType.RestoreEnergy:
-                    int actualEnergyRestore = Math.Min(rollAmount, player.MaxEnergy - player.Energy);
-                    player.Energy += actualEnergyRestore;
+                    int actualEnergyRestore = Math.Min(rollAmount, character.MaxEnergy - character.Energy);
+                    character.Energy += actualEnergyRestore;
 
-                    AnsiConsole.MarkupLine($"\n[#0080FF]You use the {itemName}![/]");
+                    AnsiConsole.MarkupLine($"\n[#0080FF]{character.Name} uses the {itemName}![/]");
                     AnsiConsole.MarkupLine($"(Rolled {effect.DiceCount}d{effect.DiceSides}+{effect.Bonus} for [#0080FF]{rollAmount} energy[/]!)");
                     if (actualEnergyRestore < rollAmount)
                     {
-                        AnsiConsole.MarkupLine($"[#808080](You restored {actualEnergyRestore} energy as you're near full energy)[/]");
+                        AnsiConsole.MarkupLine($"[#808080]({character.Name} restored {actualEnergyRestore} energy as they're near full energy)[/]");
                     }
                     break;
 
                 default:
-                    AnsiConsole.MarkupLine($"\n[#FFFF00]You use the {itemName}, but nothing seems to happen.[/]");
+                    AnsiConsole.MarkupLine($"\n[#FFFF00]{character.Name} uses the {itemName}, but nothing seems to happen.[/]");
                     break;
             }
         }
@@ -1871,8 +1930,6 @@ namespace GuildMaster.Managers
             else
             {
                 AnsiConsole.MarkupLine("");
-       
-                AnsiConsole.MarkupLine($"   FLED COMBAT   ");
 
                 CleanupCombat(player);
             }

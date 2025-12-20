@@ -48,6 +48,7 @@ namespace GuildMaster.Models
 
         // Quests
         public List<SavedQuest> ActiveQuests { get; set; }
+        public List<string> CompletedQuestIds { get; set; }
 
         // Priority Message System
         public HashSet<string> ShownMessages { get; set; }
@@ -61,6 +62,7 @@ namespace GuildMaster.Models
             Recruits = new List<SavedRecruit>();
             ActivePartyNames = new List<string>();
             ActiveQuests = new List<SavedQuest>();
+            CompletedQuestIds = new List<string>();
             ShownMessages = new HashSet<string>();
         }
     }

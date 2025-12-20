@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GuildMaster.Models;
 using GuildMaster.Data;
+using GuildMaster.Helpers;
 
 namespace GuildMaster.Managers
 {
@@ -63,11 +64,8 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine(" 1. Buy Items");
             AnsiConsole.MarkupLine(" 2. Sell Items");
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine(" Enter a number to choose, or press Enter to exit.");
+            AnsiConsole.MarkupLine(" Enter a number to choose, or press 0 to exit.");
             AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-            AnsiConsole.MarkupLine("");
-            ShowStatusBar();
-            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
         }
 
         public bool ProcessShopInput(string input)
@@ -95,11 +93,11 @@ namespace GuildMaster.Managers
 
         private bool ProcessMainMenuInput(string input)
         {
-            if (string.IsNullOrEmpty(input))
+            if (input == "0" || string.IsNullOrEmpty(input))
             {
                 AnsiConsole.MarkupLine($"\n[dim]You leave {currentVendor.Name}'s shop.[/]");
                 EndShop();
-                return true;
+                return false; // Return false to allow game engine to show status bar
             }
             else if (input == "1")
             {
@@ -115,7 +113,8 @@ namespace GuildMaster.Managers
             }
             else
             {
-                AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice. Please enter 1, 2, or press Enter to leave.[/]");
+                AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice. Please enter 1, 2, or 0 to leave.[/]");
+                ShowMainMenu(); // Redisplay the menu
                 return true;
             }
         }
@@ -153,11 +152,8 @@ namespace GuildMaster.Managers
             {
                 AnsiConsole.MarkupLine(" [dim]The vendor has nothing for sale right now.[/]");
                 AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine(" Press Enter to return.");
+                AnsiConsole.MarkupLine(" Press 0 to return.");
                 AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
-                ShowStatusBar();
-                AnsiConsole.MarkupLine("[dim](Press Enter to return)[/]");
                 currentBuyList = new List<KeyValuePair<string, int>>();
                 return;
             }
@@ -169,9 +165,20 @@ namespace GuildMaster.Managers
             {
                 string itemName = kvp.Key;
                 int price = kvp.Value;
-                var equipment = EquipmentData.GetEquipment(itemName);
 
-                string displayName = equipment != null ? equipment.Name : itemName;
+                // Check if item exists in EquipmentData (weapons, armor, etc)
+                string displayName;
+                if (EquipmentData.AllEquipment.ContainsKey(itemName.ToLower()))
+                {
+                    var equipment = EquipmentData.GetEquipment(itemName);
+                    displayName = equipment.Name;
+                }
+                else
+                {
+                    // Item is not equipment (potions, quest items, etc), just capitalize it
+                    displayName = TextHelper.CapitalizeFirst(itemName);
+                }
+
                 string priceText = $"{price} gold";
                 string dottedLine = GetDottedLine(displayName, priceText);
 
@@ -180,16 +187,13 @@ namespace GuildMaster.Managers
             }
 
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine(" Enter number to buy, or press Enter to return.");
+            AnsiConsole.MarkupLine(" Enter number to buy, or press 0 to return.");
             AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-            AnsiConsole.MarkupLine("");
-            ShowStatusBar();
-            AnsiConsole.MarkupLine("[dim](Enter a number to buy)[/]");
         }
 
         private bool ProcessBuyMenuInput(string input)
         {
-            if (string.IsNullOrEmpty(input))
+            if (input == "0" || string.IsNullOrEmpty(input))
             {
                 currentShopState = "main";
                 ShowMainMenu();
@@ -221,7 +225,19 @@ namespace GuildMaster.Managers
             context.Player.Gold -= price;
             context.Player.Inventory.Add(itemName);
 
-            AnsiConsole.MarkupLine($"\n[#00FF00]You purchased {itemName} for {price}g![/]");
+            // Get proper display name for the purchase message
+            string displayName;
+            if (EquipmentData.AllEquipment.ContainsKey(itemName.ToLower()))
+            {
+                var equipment = EquipmentData.GetEquipment(itemName);
+                displayName = equipment.Name;
+            }
+            else
+            {
+                displayName = TextHelper.CapitalizeFirst(itemName);
+            }
+
+            AnsiConsole.MarkupLine($"\n[#00FF00]You purchased {displayName} for {price}g![/]");
             AnsiConsole.MarkupLine($"[dim]Gold remaining: {context.Player.Gold}g[/]");
         }
 
@@ -243,11 +259,8 @@ namespace GuildMaster.Managers
             {
                 AnsiConsole.MarkupLine(" [dim]You have no equipment to sell.[/]");
                 AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine(" Press Enter to return.");
+                AnsiConsole.MarkupLine(" Press 0 to return.");
                 AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
-                ShowStatusBar();
-                AnsiConsole.MarkupLine("[dim](Press Enter to return)[/]");
                 currentSellList = new List<string>();
                 return;
             }
@@ -280,16 +293,13 @@ namespace GuildMaster.Managers
             }
 
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine(" Enter number to sell, or press Enter to return.");
+            AnsiConsole.MarkupLine(" Enter number to sell, or press 0 to return.");
             AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-            AnsiConsole.MarkupLine("");
-            ShowStatusBar();
-            AnsiConsole.MarkupLine("[dim](Enter a number to sell)[/]");
         }
 
         private bool ProcessSellMenuInput(string input)
         {
-            if (string.IsNullOrEmpty(input))
+            if (input == "0" || string.IsNullOrEmpty(input))
             {
                 currentShopState = "main";
                 ShowMainMenu();
@@ -324,7 +334,8 @@ namespace GuildMaster.Managers
             context.Player.Inventory.Remove(itemName);
             context.Player.Gold += sellPrice;
 
-            AnsiConsole.MarkupLine($"\n[#00FF00]You sold {itemName} for {sellPrice}g![/]");
+            string displayName = equipment.Name;
+            AnsiConsole.MarkupLine($"\n[#00FF00]You sold {displayName} for {sellPrice}g![/]");
             AnsiConsole.MarkupLine($"[dim]Gold: {context.Player.Gold}g[/]");
         }
 

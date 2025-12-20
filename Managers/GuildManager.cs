@@ -231,21 +231,21 @@ namespace GuildMaster.Managers
 
             // Create a character sheet box
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine($"╔═══════════════════════════════════════╗");
-            AnsiConsole.MarkupLine($"║         CHARACTER SHEET               ║");
-            AnsiConsole.MarkupLine($"╠═══════════════════════════════════════╣");
-            AnsiConsole.MarkupLine($"║ Name:    {recruit.Name,-28} ║");
-            AnsiConsole.MarkupLine($"║ Class:   {recruit.Class?.Name ?? "Unknown",-28} ║");
-            AnsiConsole.MarkupLine($"║ Status:  {GetRecruitStatus(recruit),-28} ║");
-            AnsiConsole.MarkupLine($"╠═══════════════════════════════════════╣");
-            AnsiConsole.MarkupLine($"║ Health:  {recruit.Health,3}/{recruit.MaxHealth,-28} ║");
-            AnsiConsole.MarkupLine($"║ Energy:  {recruit.Energy,3}/{recruit.MaxEnergy,-28} ║");
-            AnsiConsole.MarkupLine($"║ Attack:  1d4+{recruit.AttackDamage,-24} ║");
-            AnsiConsole.MarkupLine($"║ Defense: {recruit.Defense,-28} ║");
-            AnsiConsole.MarkupLine($"║ Speed:   {recruit.Speed,-28} ║");
-            AnsiConsole.MarkupLine($"╠═══════════════════════════════════════╣");
-            AnsiConsole.MarkupLine($"║ Recruited: Day {recruit.RecruitedDay,-22} ║");
-            AnsiConsole.MarkupLine($"╚═══════════════════════════════════════╝");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($"         CHARACTER SHEET               ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($" Name:    {recruit.Name,-28} ");
+            AnsiConsole.MarkupLine($" Class:   {recruit.Class?.Name ?? "Unknown",-28} ");
+            AnsiConsole.MarkupLine($" Status:  {GetRecruitStatus(recruit),-28} ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($" Health:  {recruit.Health,3}/{recruit.MaxHealth,-28} ");
+            AnsiConsole.MarkupLine($" Energy:  {recruit.Energy,3}/{recruit.MaxEnergy,-28} ");
+            AnsiConsole.MarkupLine($" Attack:  1d4+{recruit.AttackDamage,-24} ");
+            AnsiConsole.MarkupLine($" Defense: {recruit.Defense,-28} ");
+            AnsiConsole.MarkupLine($" Speed:   {recruit.Speed,-28} ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($" Recruited: Day {recruit.RecruitedDay,-22} ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
 
             return true;
         }

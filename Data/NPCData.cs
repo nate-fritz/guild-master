@@ -80,7 +80,7 @@ namespace GuildMaster.Data
 
             // Shop inventory (item name -> price)
             blacksmith.ShopInventory.Add("iron gladius", 50);
-            blacksmith.ShopInventory.Add("iron axe", 60);
+            blacksmith.ShopInventory.Add("battle axe", 60);
             blacksmith.ShopInventory.Add("hunter's bow", 55);
             blacksmith.ShopInventory.Add("steel gladius", 120);
             blacksmith.ShopInventory.Add("leather armor", 40);
@@ -484,6 +484,45 @@ namespace GuildMaster.Data
                 }
             });
 
+            // Lucius - Quest Recruit (Raid Bandit Camp)
+            NPC lucius = new NPC();
+            lucius.Name = "Lucius";
+            lucius.Description = "A battle-hardened warrior with scars from countless fights. He wields a massive two-handed sword with practiced ease.";
+            lucius.ShortDescription = "Lucius";
+            lucius.IsHostile = false;
+            lucius.Class = new Legionnaire(); // Tough frontline fighter
+            lucius.Class.ApplyClassBonuses(lucius);
+            npcs.Add(lucius.Name, lucius);
+
+            // Grax - Quest Recruit (Mountain Rescue)
+            NPC grax = new NPC();
+            grax.Name = "Grax";
+            grax.Description = "A grizzled mountain hunter with keen eyes and a weather-worn bow. He moves with the quiet confidence of someone who's survived years in the wilderness.";
+            grax.ShortDescription = "Grax";
+            grax.IsHostile = false;
+            grax.Class = new Venator(); // Skilled ranged fighter
+            grax.Class.ApplyClassBonuses(grax);
+            npcs.Add(grax.Name, grax);
+
+            // Cassia - Quest Recruit (Cultist Investigation)
+            NPC cassia = new NPC();
+            cassia.Name = "Cassia";
+            cassia.Description = "A mysterious Oracle draped in flowing robes, her eyes gleaming with ancient knowledge. She carries a gnarled staff adorned with mystical runes.";
+            cassia.ShortDescription = "Cassia";
+            cassia.IsHostile = false;
+            cassia.Class = new Oracle(); // Spellcaster and healer
+            cassia.Class.ApplyClassBonuses(cassia);
+            npcs.Add(cassia.Name, cassia);
+
+            // Felix - Quest Recruit (Goblin Siege)
+            NPC felix = new NPC();
+            felix.Name = "Felix";
+            felix.Description = "A young but determined Legionnaire with polished armor and a sharp gladius. His disciplined stance speaks of rigorous training.";
+            felix.ShortDescription = "Felix";
+            felix.IsHostile = false;
+            felix.Class = new Legionnaire(); // Defensive warrior
+            felix.Class.ApplyClassBonuses(felix);
+            npcs.Add(felix.Name, felix);
 
             NPC bandit = new NPC();
             bandit.Name = "Bandit";
@@ -803,13 +842,14 @@ namespace GuildMaster.Data
             banditEnforcer.MaxGold = 25;
             banditEnforcer.ExperienceReward = 75;
             banditEnforcer.Role = EnemyRole.Melee;
-            banditEnforcer.LootTable = new Dictionary<string, int> { {"potion", 50}, {"energy potion", 30}, {"iron axe", 15} };
+            banditEnforcer.LootTable = new Dictionary<string, int> { {"potion", 50}, {"energy potion", 30}, {"battle axe", 15} };
 
             // Bandit Warlord - Boss (Level 7)
             NPC banditWarlord = new NPC();
             banditWarlord.Name = "Bandit Warlord";
             banditWarlord.Description = "The bandit leader stands before you, clad in stolen armor and wielding a wicked-looking blade. His eyes gleam with malice and greed. This is the Warlord who has terrorized the region.";
             banditWarlord.ShortDescription = "The Bandit Warlord";
+            banditWarlord.PreCombatDialogue = "As you step into the chamber, the Bandit Warlord rises from his makeshift throne as his enforcers on either side grab their weapons and approach you.  The Warlord eyes you with a cruel grin on his face, then speaks: \"So, you've come to take all of this from me?  Let's get this over with.\"";
             banditWarlord.IsHostile = true;
             banditWarlord.Health = 85;
             banditWarlord.MaxHealth = 85;

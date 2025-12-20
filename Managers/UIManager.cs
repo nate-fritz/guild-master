@@ -258,14 +258,11 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("Load game:            load");
             AnsiConsole.MarkupLine("Quit the game:        qq or quit");
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine("[dim]Type '/adminhelp' for debug and admin commands[/]");
         }
 
         public void ShowAdminHelp()
         {
-            AnsiConsole.MarkupLine("\n[#FFD700]═══════════════════════════════════════════════════════════════════[/]");
-            AnsiConsole.MarkupLine("[#FFD700]                        ADMIN / DEBUG COMMANDS                        [/]");
-            AnsiConsole.MarkupLine("[#FFD700]═══════════════════════════════════════════════════════════════════[/]");
+            AnsiConsole.MarkupLine("[#FC7938]                        ADMIN / DEBUG COMMANDS                        [/]");
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Teleportation:");
             AnsiConsole.MarkupLine("Teleport to room:     tpto [room number]");
