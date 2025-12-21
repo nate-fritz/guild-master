@@ -292,7 +292,6 @@ namespace GuildMaster.Data
             Room forestBend = CreateRoom(46, "forestBend", "A bend in the forest path", "The path through the forest curves from the north to the east.  The path is looking less worn here, and the canopy overhead is so thick that only a few thin beams of light shine through.  You hear rustling leaves all around you, as though the creatures of this forest are constantly on the move.  To the north you can hear a stream, and to the east the path continues into the deeper parts of the woods.");
             forestBend.Exits.Add("north", 45);
             forestBend.Exits.Add("east", 47);
-            forestBend.Exits.Add("south", 53);
             forestBend.NPCs.Add(npcs["Dire Wolf"].Clone());  // Clone dire wolf
             forestBend.NPCs.Add(npcs["Bandit"].Clone());  // Clone bandit  
             forestBend.NPCs.Add(npcs["Bandit Thug"].Clone());  // Clone bandit thug
