@@ -221,7 +221,11 @@ namespace GuildMaster.Managers
 
         private void ProcessGuildManagePartyAddInput(string input)
         {
-            if (input == "0")
+            // Check if recruits are available - if not, accept Enter key as well as "0"
+            bool hasRecruits = guildManager.HasRecruitsAvailableToAdd();
+            bool isBack = hasRecruits ? GuildMaster.Helpers.MenuInputHelper.IsBack(input) : GuildMaster.Helpers.MenuInputHelper.IsBackOrContinue(input);
+
+            if (isBack)
             {
                 currentMenu = MenuState.GuildManageParty;
                 guildManager.DisplayManagePartyMenu();
@@ -241,7 +245,11 @@ namespace GuildMaster.Managers
 
         private void ProcessGuildManagePartyRemoveInput(string input)
         {
-            if (input == "0")
+            // Check if party members exist - if not, accept Enter key as well as "0"
+            bool hasPartyMembers = guildManager.HasPartyMembersToRemove();
+            bool isBack = hasPartyMembers ? GuildMaster.Helpers.MenuInputHelper.IsBack(input) : GuildMaster.Helpers.MenuInputHelper.IsBackOrContinue(input);
+
+            if (isBack)
             {
                 currentMenu = MenuState.GuildManageParty;
                 guildManager.DisplayManagePartyMenu();

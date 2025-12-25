@@ -689,7 +689,7 @@ namespace GuildMaster.Managers
             if (abilities.Count == 0)
             {
                 AnsiConsole.MarkupLine($"\n{currentActingPartyMember.Name} has no abilities available.");
-                AnsiConsole.MarkupLine("[dim](Press 0 to go back)[/]");
+                AnsiConsole.MarkupLine("\nPress Enter to go back");
                 return;
             }
 
@@ -897,7 +897,7 @@ namespace GuildMaster.Managers
             if (abilities.Count == 0)
             {
                 AnsiConsole.MarkupLine("\nYou have no abilities available.");
-                AnsiConsole.MarkupLine("[dim](Press 0 to go back)[/]");
+                AnsiConsole.MarkupLine("\nPress Enter to go back");
                 return;
             }
 
@@ -915,7 +915,22 @@ namespace GuildMaster.Managers
         {
             DebugLog($"DEBUG: HandleAbilitySelection called with input='{input}'");
 
-            if (input == "0")
+            // Determine which character is using abilities
+            Character actingCharacter = currentActingPartyMember != null ? (Character)currentActingPartyMember : context.Player;
+            var allAbilities = actingCharacter.Class?.GetClassAbilities() ?? new List<Ability>();
+            // Filter abilities by unlock level
+            var abilities = allAbilities.Where(a => actingCharacter.Level >= a.UnlockLevel).ToList();
+            // War Cry replaces Battle Cry at level 20 - hide Battle Cry if War Cry is available
+            if (abilities.Any(a => a.Name == "War Cry"))
+            {
+                abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+            }
+
+            // Check if abilities are available - if not, accept Enter key as well as "0"
+            bool hasAbilities = abilities.Count > 0;
+            bool isBack = hasAbilities ? GuildMaster.Helpers.MenuInputHelper.IsBack(input) : GuildMaster.Helpers.MenuInputHelper.IsBackOrContinue(input);
+
+            if (isBack)
             {
                 if (currentActingPartyMember != null)
                 {
@@ -926,17 +941,6 @@ namespace GuildMaster.Managers
                     ShowPlayerActionMenu();
                 }
                 return;
-            }
-
-            // Determine which character is using abilities
-            Character actingCharacter = currentActingPartyMember != null ? (Character)currentActingPartyMember : context.Player;
-            var allAbilities = actingCharacter.Class?.GetClassAbilities() ?? new List<Ability>();
-            // Filter abilities by unlock level
-            var abilities = allAbilities.Where(a => actingCharacter.Level >= a.UnlockLevel).ToList();
-            // War Cry replaces Battle Cry at level 20 - hide Battle Cry if War Cry is available
-            if (abilities.Any(a => a.Name == "War Cry"))
-            {
-                abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
             }
 
             if (abilities.Count == 0)

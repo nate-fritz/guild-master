@@ -115,6 +115,15 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
         }
 
+        public bool HasRecruitsAvailableToAdd()
+        {
+            var player = context.Player;
+            return player.Recruits.Any(r =>
+                !player.ActiveParty.Contains(r) &&
+                !r.IsOnQuest &&
+                !r.IsResting);
+        }
+
         public void DisplayAddToPartyMenu()
         {
             var player = context.Player;
@@ -126,7 +135,7 @@ namespace GuildMaster.Managers
             if (available.Count == 0)
             {
                 AnsiConsole.MarkupLine("\nNo recruits available! They may be resting or on quests.");
-                AnsiConsole.MarkupLine("0. Back");
+                AnsiConsole.MarkupLine("\nPress Enter to go back");
                 return;
             }
 
@@ -140,6 +149,12 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
         }
 
+        public bool HasPartyMembersToRemove()
+        {
+            var player = context.Player;
+            return player.ActiveParty.Count > 0;
+        }
+
         public void DisplayRemoveFromPartyMenu()
         {
             var player = context.Player;
@@ -147,7 +162,7 @@ namespace GuildMaster.Managers
             if (player.ActiveParty.Count == 0)
             {
                 AnsiConsole.MarkupLine("\nNo one in party to remove.");
-                AnsiConsole.MarkupLine("0. Back");
+                AnsiConsole.MarkupLine("\nPress Enter to go back");
                 return;
             }
 

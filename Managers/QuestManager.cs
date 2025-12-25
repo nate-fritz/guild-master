@@ -117,22 +117,45 @@ namespace GuildMaster.Managers
             }
 
             AnsiConsole.MarkupLine("\n=== Options ===");
+            bool hasOptions = false;
             if (currentAvailableRecruits.Count > 0)
             {
                 AnsiConsole.MarkupLine("1. Send Recruit on Quest");
+                hasOptions = true;
             }
             if (player.ActiveQuests.Any(q => q.IsComplete))
             {
                 AnsiConsole.MarkupLine("2. Collect Quest Rewards");
+                hasOptions = true;
             }
-            AnsiConsole.MarkupLine("0. Back");
-            AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+
+            // If no options available, show "Press Enter" instead of "0. Back"
+            if (!hasOptions)
+            {
+                AnsiConsole.MarkupLine("\nPress Enter to go back");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("0. Back");
+                AnsiConsole.MarkupLine("");
+                AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+            }
         }
 
         private bool ProcessMainMenuInput(string input)
         {
             var player = context.Player;
+
+            // Check if there are any options available (determines if Enter key should work for back)
+            bool hasOptions = (currentAvailableRecruits != null && currentAvailableRecruits.Count > 0) ||
+                             player.ActiveQuests.Any(q => q.IsComplete);
+
+            // Handle back/exit - accept Enter if no options available
+            if (hasOptions ? GuildMaster.Helpers.MenuInputHelper.IsBack(input) : GuildMaster.Helpers.MenuInputHelper.IsBackOrContinue(input))
+            {
+                isInQuestMenu = false;
+                return false; // Exit quest menu
+            }
 
             switch (input)
             {
@@ -163,9 +186,6 @@ namespace GuildMaster.Managers
                         DisplayMainMenu();
                     }
                     break;
-                case "0":
-                    isInQuestMenu = false;
-                    return false; // Exit quest menu
                 default:
                     AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
                     DisplayMainMenu();

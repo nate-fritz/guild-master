@@ -152,7 +152,7 @@ namespace GuildMaster.Managers
             {
                 AnsiConsole.MarkupLine(" [dim]The vendor has nothing for sale right now.[/]");
                 AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine(" Press 0 to return.");
+                AnsiConsole.MarkupLine(" Press Enter to return");
                 AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
                 currentBuyList = new List<KeyValuePair<string, int>>();
                 return;
@@ -259,7 +259,7 @@ namespace GuildMaster.Managers
             {
                 AnsiConsole.MarkupLine(" [dim]You have no equipment to sell.[/]");
                 AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine(" Press 0 to return.");
+                AnsiConsole.MarkupLine(" Press Enter to return");
                 AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
                 currentSellList = new List<string>();
                 return;

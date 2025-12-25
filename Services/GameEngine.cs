@@ -850,12 +850,13 @@ namespace GuildMaster.Services
 
             // Show continuation prompt
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine("[dim](Press 0 to continue)[/]");
+            AnsiConsole.MarkupLine("Press Enter to continue");
         }
 
         public void ProcessPreCombatDialogueInput(string input)
         {
-            if (input == "0")
+            // Accept Enter key or "0" to continue to combat
+            if (GuildMaster.Helpers.MenuInputHelper.IsBackOrContinue(input))
             {
                 // Clear pre-combat dialogue state
                 isInPreCombatDialogue = false;
