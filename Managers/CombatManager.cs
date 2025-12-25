@@ -60,7 +60,7 @@ namespace GuildMaster.Managers
         private Recruit? currentActingPartyMember;  // Track which party member is currently taking their turn
 
         private GameContext context;
-        private Random random = new Random();
+        private Random random => ProgramStatics.Random;
 
         // Turn delay configuration (in milliseconds)
         private const int TURN_DELAY_MS = 1000;
@@ -88,11 +88,22 @@ namespace GuildMaster.Managers
             this.onStateChanged = stateChangedCallback;
         }
 
+        /// <summary>
+        /// Outputs debug messages only when debug logs are enabled
+        /// </summary>
+        private void DebugLog(string message)
+        {
+            if (context?.Player?.DebugLogsEnabled == true)
+            {
+                AnsiConsole.MarkupLine($"[dim]{message}[/]");
+            }
+        }
+
         public void StartCombat(List<NPC> enemies, Room currentRoom)
         {
             try
             {
-                AnsiConsole.MarkupLine("[dim]DEBUG: StartCombat called[/]");
+                DebugLog("DEBUG: StartCombat called");
                 var player = context.Player;
 
                 // Initialize combat state
@@ -104,7 +115,7 @@ namespace GuildMaster.Managers
                 isDefending = false;
                 combatActive = true;
 
-                AnsiConsole.MarkupLine("[dim]DEBUG: Combat state initialized[/]");
+                DebugLog("DEBUG: Combat state initialized");
 
                 // Pulsing red "COMBAT BEGINS" effect with animation
                 AnsiConsole.MarkupLine("");
@@ -126,12 +137,12 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine("!");
                 }
 
-                AnsiConsole.MarkupLine("[dim]DEBUG: About to roll initiative[/]");
+                DebugLog("DEBUG: About to roll initiative");
 
                 // Roll initiative
                 turnOrder = RollInitiative(player, enemies);
 
-                AnsiConsole.MarkupLine("[dim]DEBUG: Initiative rolled[/]");
+                DebugLog("DEBUG: Initiative rolled");
 
                 // Display initiative results
                 AnsiConsole.MarkupLine("\nInitiative Order:");
@@ -145,12 +156,12 @@ namespace GuildMaster.Managers
                 // Display positioning
                 DisplayCombatPositioning(player, enemies);
 
-                AnsiConsole.MarkupLine("[dim]DEBUG: About to process first turn[/]");
+                DebugLog("DEBUG: About to process first turn");
 
                 // Start the first turn
                 ProcessNextTurn();
 
-                AnsiConsole.MarkupLine("[dim]DEBUG: ProcessNextTurn completed[/]");
+                DebugLog("DEBUG: ProcessNextTurn completed");
             }
             catch (Exception ex)
             {
@@ -165,21 +176,21 @@ namespace GuildMaster.Managers
         {
             try
             {
-                AnsiConsole.MarkupLine("[dim]DEBUG: ProcessNextTurn called[/]");
+                DebugLog("DEBUG: ProcessNextTurn called");
                 var player = context.Player;
 
                 if (turnOrder == null || activeEnemies == null)
                 {
-                    AnsiConsole.MarkupLine("[dim]DEBUG: turnOrder or activeEnemies is null[/]");
+                    DebugLog("DEBUG: turnOrder or activeEnemies is null");
                     return;
                 }
 
-                AnsiConsole.MarkupLine($"[dim]DEBUG: turnOrder.Count={turnOrder.Count}, currentTurnIndex={currentTurnIndex}[/]");
+                DebugLog($"DEBUG: turnOrder.Count={turnOrder.Count}, currentTurnIndex={currentTurnIndex}");
 
                 // Check if combat should end
                 if (!combatActive || !player.IsAlive || !activeEnemies.Any(e => e.Health > 0))
                 {
-                    AnsiConsole.MarkupLine("[dim]DEBUG: Combat should end[/]");
+                    DebugLog("DEBUG: Combat should end");
                     HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
                     // Only set to CombatEnded if we're not in recruitment or death menu
                     if (currentState != CombatState.RecruitmentPrompt && currentState != CombatState.DeathMenu)
@@ -192,13 +203,13 @@ namespace GuildMaster.Managers
                 // Move to next valid combatant
                 while (currentTurnIndex < turnOrder.Count)
                 {
-                    AnsiConsole.MarkupLine($"[dim]DEBUG: Processing turn index {currentTurnIndex}[/]");
+                    DebugLog($"DEBUG: Processing turn index {currentTurnIndex}");
                     var combatant = turnOrder[currentTurnIndex];
 
                     // Skip dead combatants
                     if (!combatant.IsAlive)
                     {
-                        AnsiConsole.MarkupLine($"[dim]DEBUG: Skipping dead combatant[/]");
+                        DebugLog($"DEBUG: Skipping dead combatant");
                         currentTurnIndex++;
                         continue;
                     }
@@ -206,15 +217,15 @@ namespace GuildMaster.Managers
                     // Check if combat should continue
                     if (!player.IsAlive || !activeEnemies.Any(e => e.Health > 0) || !combatActive)
                     {
-                        AnsiConsole.MarkupLine("[dim]DEBUG: Combat should end (mid-turn check)[/]");
+                        DebugLog("DEBUG: Combat should end (mid-turn check)");
                         HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
                         currentState = CombatState.CombatEnded;
                         return;
                     }
 
-                    AnsiConsole.MarkupLine($"[dim]DEBUG: About to display combat status[/]");
+                    DebugLog($"DEBUG: About to display combat status");
                     DisplayCombatStatus(player, activeEnemies, combatant);
-                    AnsiConsole.MarkupLine($"[dim]DEBUG: Displayed combat status[/]");
+                    DebugLog($"DEBUG: Displayed combat status");
 
                     if (combatant.IsPlayer && combatant.Character == player)
                 {
@@ -295,7 +306,7 @@ namespace GuildMaster.Managers
             // If we've gone through all combatants, reset to the beginning
             if (currentTurnIndex >= turnOrder.Count)
             {
-                AnsiConsole.MarkupLine("[dim]DEBUG: Resetting turn order[/]");
+                DebugLog("DEBUG: Resetting turn order");
                 currentTurnIndex = 0;
                 _ = ScheduleNextTurnAsync();
             }
@@ -431,11 +442,11 @@ namespace GuildMaster.Managers
 
         public bool ProcessCombatInput(string input)
         {
-            AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessCombatInput called with input='{input}', IsInCombat={IsInCombat}, currentState={currentState}[/]");
+            DebugLog($"DEBUG: ProcessCombatInput called with input='{input}', IsInCombat={IsInCombat}, currentState={currentState}");
 
             if (!IsInCombat)
             {
-                AnsiConsole.MarkupLine("[dim]DEBUG: Not in combat, returning false[/]");
+                DebugLog("DEBUG: Not in combat, returning false");
                 return false;
             }
 
@@ -468,12 +479,12 @@ namespace GuildMaster.Managers
                     break;
 
                 case CombatState.RecruitmentPrompt:
-                    AnsiConsole.MarkupLine("[dim]DEBUG: Handling recruitment selection[/]");
+                    DebugLog("DEBUG: Handling recruitment selection");
                     HandleRecruitmentSelection(input);
                     break;
 
                 default:
-                    AnsiConsole.MarkupLine($"[dim]DEBUG: Unhandled state: {currentState}[/]");
+                    DebugLog($"DEBUG: Unhandled state: {currentState}");
                     return false;
             }
 
@@ -692,19 +703,19 @@ namespace GuildMaster.Managers
 
         private void CompleteTurn()
         {
-            AnsiConsole.MarkupLine($"[dim]DEBUG: CompleteTurn called, currentTurnIndex={currentTurnIndex}[/]");
+            DebugLog($"DEBUG: CompleteTurn called, currentTurnIndex={currentTurnIndex}");
             currentTurnIndex++;
             currentState = CombatState.ProcessingTurn;
-            AnsiConsole.MarkupLine($"[dim]DEBUG: About to call ProcessNextTurn directly (no delay), new index={currentTurnIndex}[/]");
+            DebugLog($"DEBUG: About to call ProcessNextTurn directly (no delay), new index={currentTurnIndex}");
 
             // TEMPORARY FIX: Call directly without delay to test if async is causing the freeze
             try
             {
                 ProcessNextTurn();
-                AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessNextTurn completed, currentState={currentState}, IsInCombat={IsInCombat}[/]");
-                AnsiConsole.MarkupLine($"[dim]DEBUG: About to invoke onStateChanged[/]");
+                DebugLog($"DEBUG: ProcessNextTurn completed, currentState={currentState}, IsInCombat={IsInCombat}");
+                DebugLog($"DEBUG: About to invoke onStateChanged");
                 onStateChanged?.Invoke();
-                AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged completed, currentState={currentState}, IsInCombat={IsInCombat}[/]");
+                DebugLog($"DEBUG: onStateChanged completed, currentState={currentState}, IsInCombat={IsInCombat}");
             }
             catch (Exception ex)
             {
@@ -736,24 +747,24 @@ namespace GuildMaster.Managers
         {
             try
             {
-                AnsiConsole.MarkupLine($"[dim]DEBUG: ScheduleNextTurnAsync executing, about to delay {TURN_DELAY_MS}ms, currentState={currentState}[/]");
+                DebugLog($"DEBUG: ScheduleNextTurnAsync executing, about to delay {TURN_DELAY_MS}ms, currentState={currentState}");
 
                 // Use ConfigureAwait(false) to avoid deadlocks
                 await Task.Delay(TURN_DELAY_MS).ConfigureAwait(false);
 
-                AnsiConsole.MarkupLine($"[dim]DEBUG: Delay complete, calling ProcessNextTurn, currentState={currentState}, combatActive={combatActive}[/]");
+                DebugLog($"DEBUG: Delay complete, calling ProcessNextTurn, currentState={currentState}, combatActive={combatActive}");
                 ProcessNextTurn();
-                AnsiConsole.MarkupLine($"[dim]DEBUG: ProcessNextTurn returned, about to invoke onStateChanged, currentState={currentState}[/]");
+                DebugLog($"DEBUG: ProcessNextTurn returned, about to invoke onStateChanged, currentState={currentState}");
 
                 if (onStateChanged != null)
                 {
-                    AnsiConsole.MarkupLine($"[dim]DEBUG: Invoking onStateChanged[/]");
+                    DebugLog($"DEBUG: Invoking onStateChanged");
                     onStateChanged.Invoke();
-                    AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged completed[/]");
+                    DebugLog($"DEBUG: onStateChanged completed");
                 }
                 else
                 {
-                    AnsiConsole.MarkupLine($"[dim]DEBUG: onStateChanged is null, skipping[/]");
+                    DebugLog($"DEBUG: onStateChanged is null, skipping");
                 }
             }
             catch (Exception ex)
@@ -900,7 +911,7 @@ namespace GuildMaster.Managers
 
         private void HandleAbilitySelection(string input)
         {
-            AnsiConsole.MarkupLine($"[dim]DEBUG: HandleAbilitySelection called with input='{input}'[/]");
+            DebugLog($"DEBUG: HandleAbilitySelection called with input='{input}'");
 
             if (input == "0")
             {
@@ -942,7 +953,7 @@ namespace GuildMaster.Managers
             if (int.TryParse(input, out int abilityIndex) && abilityIndex > 0 && abilityIndex <= abilities.Count)
             {
                 var ability = abilities[abilityIndex - 1];
-                AnsiConsole.MarkupLine($"[dim]DEBUG: Selected ability '{ability.Name}', energyCost={ability.EnergyCost}[/]");
+                DebugLog($"DEBUG: Selected ability '{ability.Name}', energyCost={ability.EnergyCost}");
 
                 // Check energy cost
                 if (actingCharacter.Energy < ability.EnergyCost)
@@ -964,15 +975,15 @@ namespace GuildMaster.Managers
                 abilityCharacter = actingCharacter;
 
                 // Check if ability needs target selection
-                AnsiConsole.MarkupLine($"[dim]DEBUG: Checking target requirements, NeedsEnemyTarget={NeedsEnemyTarget(ability)}[/]");
+                DebugLog($"DEBUG: Checking target requirements, NeedsEnemyTarget={NeedsEnemyTarget(ability)}");
                 if (activeEnemies != null && NeedsEnemyTarget(ability))
                 {
                     var aliveEnemies = activeEnemies.Where(e => e.Health > 0).ToList();
-                    AnsiConsole.MarkupLine($"[dim]DEBUG: aliveEnemies.Count={aliveEnemies.Count}[/]");
+                    DebugLog($"DEBUG: aliveEnemies.Count={aliveEnemies.Count}");
 
                     if (aliveEnemies.Count == 1)
                     {
-                        AnsiConsole.MarkupLine($"[dim]DEBUG: Single enemy, auto-targeting[/]");
+                        DebugLog($"DEBUG: Single enemy, auto-targeting");
                         // Auto-target single enemy
                         ExecuteAbilityForCharacter(ability, actingCharacter, activeEnemies, context.Player);
                         // Clear party member after ability execution
@@ -981,7 +992,7 @@ namespace GuildMaster.Managers
                     }
                     else
                     {
-                        AnsiConsole.MarkupLine($"[dim]DEBUG: Multiple enemies, showing target selection[/]");
+                        DebugLog($"DEBUG: Multiple enemies, showing target selection");
                         // Show target selection
                         currentTargetList = aliveEnemies;
                         currentState = CombatState.SelectingAbilityTarget;
@@ -1044,7 +1055,7 @@ namespace GuildMaster.Managers
 
         private void HandleAbilityTargetSelection(string input)
         {
-            AnsiConsole.MarkupLine($"[dim]DEBUG: HandleAbilityTargetSelection called with input='{input}'[/]");
+            DebugLog($"DEBUG: HandleAbilityTargetSelection called with input='{input}'");
 
             if (currentTargetList == null || pendingAbility == null || abilityCharacter == null || activeEnemies == null)
             {
@@ -1076,13 +1087,13 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            AnsiConsole.MarkupLine($"[dim]DEBUG: Valid target selected, executing ability[/]");
+            DebugLog($"DEBUG: Valid target selected, executing ability");
 
             // Execute ability with selected target
             preselectedTarget = currentTargetList[targetIndex - 1];
-            AnsiConsole.MarkupLine($"[dim]DEBUG: About to execute ability '{pendingAbility?.Name}' on {preselectedTarget?.Name}[/]");
+            DebugLog($"DEBUG: About to execute ability '{pendingAbility?.Name}' on {preselectedTarget?.Name}");
             ExecuteAbilityForCharacter(pendingAbility, abilityCharacter, activeEnemies, context.Player, preselectedTarget);
-            AnsiConsole.MarkupLine($"[dim]DEBUG: Ability executed, clearing state[/]");
+            DebugLog($"DEBUG: Ability executed, clearing state");
 
             // Clear pending ability state
             pendingAbility = null;
@@ -1091,9 +1102,9 @@ namespace GuildMaster.Managers
             preselectedTarget = null;
             currentActingPartyMember = null;
 
-            AnsiConsole.MarkupLine($"[dim]DEBUG: Calling CompleteTurn[/]");
+            DebugLog($"DEBUG: Calling CompleteTurn");
             CompleteTurn();
-            AnsiConsole.MarkupLine($"[dim]DEBUG: CompleteTurn returned[/]");
+            DebugLog($"DEBUG: CompleteTurn returned");
         }
 
         private void ShowItemMenu()
@@ -2046,7 +2057,7 @@ namespace GuildMaster.Managers
 
         private void CleanupCombat(Player player)
         {
-            AnsiConsole.MarkupLine("[dim]DEBUG: CleanupCombat called[/]");
+            DebugLog("DEBUG: CleanupCombat called");
             // Clear DOT effects after combat
             if (player.ActiveDOTs != null)
                 player.ActiveDOTs.Clear();
@@ -2058,7 +2069,7 @@ namespace GuildMaster.Managers
             }
 
             ClearCombatStatusEffects(player);
-            AnsiConsole.MarkupLine($"[dim]DEBUG: CleanupCombat setting currentState to CombatEnded (was {currentState})[/]");
+            DebugLog($"DEBUG: CleanupCombat setting currentState to CombatEnded (was {currentState})");
             currentState = CombatState.CombatEnded;
         }
 
@@ -2086,25 +2097,25 @@ namespace GuildMaster.Managers
 
         private void ShowRecruitmentPrompt()
         {
-            AnsiConsole.MarkupLine("[dim]DEBUG: ShowRecruitmentPrompt called[/]");
+            DebugLog("DEBUG: ShowRecruitmentPrompt called");
             if (recruitableNPCs == null || currentRecruitIndex >= recruitableNPCs.Count)
             {
-                AnsiConsole.MarkupLine("[dim]DEBUG: No recruitable NPCs, finishing victory[/]");
+                DebugLog("DEBUG: No recruitable NPCs, finishing victory");
                 var player = context.Player;
                 FinishVictory(player, activeEnemies?.ToList() ?? new List<NPC>(), combatRoom);
                 return;
             }
 
-            AnsiConsole.MarkupLine($"[dim]DEBUG: About to set currentState to RecruitmentPrompt (was {currentState})[/]");
+            DebugLog($"DEBUG: About to set currentState to RecruitmentPrompt (was {currentState})");
             currentState = CombatState.RecruitmentPrompt;
-            AnsiConsole.MarkupLine($"[dim]DEBUG: Set currentState to RecruitmentPrompt, IsInCombat={IsInCombat}, currentState={currentState}[/]");
+            DebugLog($"DEBUG: Set currentState to RecruitmentPrompt, IsInCombat={IsInCombat}, currentState={currentState}");
             var npc = recruitableNPCs[currentRecruitIndex];
 
             AnsiConsole.MarkupLine($"\n{npc.Name} yields, breathing heavily.");
             AnsiConsole.MarkupLine($"\"{npc.YieldDialogue}\"");
             AnsiConsole.MarkupLine($"\n1. Welcome to the guild, {npc.Name}.");
             AnsiConsole.MarkupLine("\n[dim](Enter 1 to recruit)[/]");
-            AnsiConsole.MarkupLine($"[dim]DEBUG: Exiting ShowRecruitmentPrompt, currentState={currentState}, IsInCombat={IsInCombat}[/]");
+            DebugLog($"DEBUG: Exiting ShowRecruitmentPrompt, currentState={currentState}, IsInCombat={IsInCombat}");
         }
 
         private void HandleRecruitmentSelection(string input)
@@ -3820,7 +3831,7 @@ namespace GuildMaster.Managers
         private string GetKillFlavorText(string killerName, string victimName, Equipment weapon, bool goreEnabled)
         {
             string weaponType = GetWeaponType(weapon);
-            Random rng = new Random();
+            Random rng = ProgramStatics.Random;
 
             // Define flavor text collections by weapon type
             var flavorTexts = new Dictionary<string, (List<string> clean, List<string> gore)>

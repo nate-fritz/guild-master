@@ -13,7 +13,7 @@ namespace GuildMaster.Managers
     public class ItemManager
     {
         private readonly GameContext context;
-        private Random random = new Random();
+        private Random random => ProgramStatics.Random;
 
         public ItemManager(GameContext gameContext)
         {

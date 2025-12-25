@@ -78,6 +78,11 @@ namespace GuildMaster.Managers
                 gameState.GoreEnabled = player.GoreEnabled;
                 gameState.DebugLogsEnabled = player.DebugLogsEnabled;
 
+                // Milestone tracking
+                gameState.TotalRecruitsEver = context.TotalRecruitsEver;
+                gameState.CompletedMilestones = context.CompletedMilestones ?? new HashSet<string>();
+                gameState.RoomStateOverrides = context.RoomStateOverrides ?? new Dictionary<int, string>();
+
                 // Time
                 gameState.CurrentDay = player.CurrentDay;
                 gameState.CurrentHour = player.CurrentHour;
@@ -250,6 +255,11 @@ namespace GuildMaster.Managers
                 gameState.TutorialsEnabled = player.TutorialsEnabled;
                 gameState.GoreEnabled = player.GoreEnabled;
                 gameState.DebugLogsEnabled = player.DebugLogsEnabled;
+
+                // Milestone tracking
+                gameState.TotalRecruitsEver = context.TotalRecruitsEver;
+                gameState.CompletedMilestones = context.CompletedMilestones ?? new HashSet<string>();
+                gameState.RoomStateOverrides = context.RoomStateOverrides ?? new Dictionary<int, string>();
 
                 // Time
                 gameState.CurrentDay = player.CurrentDay;
@@ -778,6 +788,11 @@ namespace GuildMaster.Managers
             {
                 ProgramStatics.messageManager.SetShownMessages(state.ShownMessages);
             }
+
+            // Restore milestone tracking
+            context.TotalRecruitsEver = state.TotalRecruitsEver;
+            context.CompletedMilestones = state.CompletedMilestones ?? new HashSet<string>();
+            context.RoomStateOverrides = state.RoomStateOverrides ?? new Dictionary<int, string>();
         }
 
         public async Task<bool> SaveExistsAsync(int slot)
