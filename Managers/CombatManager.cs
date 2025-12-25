@@ -61,6 +61,7 @@ namespace GuildMaster.Managers
 
         private GameContext context;
         private Random random => ProgramStatics.Random;
+        private AbilityExecutor? abilityExecutor;
 
         // Turn delay configuration (in milliseconds)
         private const int TURN_DELAY_MS = 1000;
@@ -86,6 +87,7 @@ namespace GuildMaster.Managers
             this.context = gameContext;
             this.onPlayerDeath = onPlayerDeathCallback;
             this.onStateChanged = stateChangedCallback;
+            this.abilityExecutor = new AbilityExecutor(gameContext, this, ProgramStatics.messageManager);
         }
 
         /// <summary>
@@ -666,7 +668,7 @@ namespace GuildMaster.Managers
             CompleteTurn();
         }
 
-        private void ShowPartyMemberAbilityMenu()
+        public void ShowPartyMemberAbilityMenu()
         {
             if (currentActingPartyMember == null)
                 return;
@@ -876,7 +878,7 @@ namespace GuildMaster.Managers
             CompleteTurn();
         }
 
-        private void ShowAbilityMenu()
+        public void ShowAbilityMenu()
         {
             currentState = CombatState.SelectingAbility;
             var player = context.Player;
@@ -985,7 +987,7 @@ namespace GuildMaster.Managers
                     {
                         DebugLog($"DEBUG: Single enemy, auto-targeting");
                         // Auto-target single enemy
-                        ExecuteAbilityForCharacter(ability, actingCharacter, activeEnemies, context.Player);
+                        abilityExecutor.ExecuteAbilityForCharacter(ability, actingCharacter, activeEnemies, context.Player);
                         // Clear party member after ability execution
                         currentActingPartyMember = null;
                         CompleteTurn();
@@ -1010,7 +1012,7 @@ namespace GuildMaster.Managers
                     // No target needed, execute directly
                     if (activeEnemies != null)
                     {
-                        ExecuteAbilityForCharacter(ability, actingCharacter, activeEnemies, context.Player);
+                        abilityExecutor.ExecuteAbilityForCharacter(ability, actingCharacter, activeEnemies, context.Player);
                     }
                     // Clear party member after ability execution
                     currentActingPartyMember = null;
@@ -1092,7 +1094,7 @@ namespace GuildMaster.Managers
             // Execute ability with selected target
             preselectedTarget = currentTargetList[targetIndex - 1];
             DebugLog($"DEBUG: About to execute ability '{pendingAbility?.Name}' on {preselectedTarget?.Name}");
-            ExecuteAbilityForCharacter(pendingAbility, abilityCharacter, activeEnemies, context.Player, preselectedTarget);
+            abilityExecutor.ExecuteAbilityForCharacter(pendingAbility, abilityCharacter, activeEnemies, context.Player, preselectedTarget);
             DebugLog($"DEBUG: Ability executed, clearing state");
 
             // Clear pending ability state
@@ -1256,7 +1258,7 @@ namespace GuildMaster.Managers
                 return false;
             }
 
-            return ExecuteAbilityForCharacter(selectedAbility, character, enemies, player);
+            return abilityExecutor.ExecuteAbilityForCharacter(selectedAbility, character, enemies, player);
         }
 
         private bool ExecuteWhirlwind(Player player, List<NPC> enemies)
@@ -1598,7 +1600,7 @@ namespace GuildMaster.Managers
                 if (healingAbility != null)
                 {
                     AnsiConsole.MarkupLine($"[dim]{ally.Name} uses {healingAbility.Name}![/]");
-                    ExecuteAbilityForCharacter(healingAbility, ally, activeEnemies, context.Player);
+                    abilityExecutor.ExecuteAbilityForCharacter(healingAbility, ally, activeEnemies, context.Player);
                     CompleteTurn();
                     return;
                 }
@@ -1627,7 +1629,7 @@ namespace GuildMaster.Managers
                     preselectedTarget = target;
                 }
 
-                ExecuteAbilityForCharacter(bestAbility, ally, activeEnemies, context.Player);
+                abilityExecutor.ExecuteAbilityForCharacter(bestAbility, ally, activeEnemies, context.Player);
                 CompleteTurn();
                 return;
             }
@@ -2396,7 +2398,7 @@ namespace GuildMaster.Managers
             return weaponPart;
         }
 
-        private int RollDice(int count, int sides, int modifier = 0)
+        public int RollDice(int count, int sides, int modifier = 0)
         {
             int total = modifier;
             for (int i = 0; i < count; i++)
@@ -2503,7 +2505,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"═══════════════════════════════════════════════════════════════════════");
         }
 
-        private void DisplayStatusEffect(string effectType, string targetName, bool isTargetPlayer, string baseMessage, string[] gradientColors)
+        public void DisplayStatusEffect(string effectType, string targetName, bool isTargetPlayer, string baseMessage, string[] gradientColors)
         {
             // Get emoji and CSS class for the effect type
             string emoji = effectType switch
@@ -2645,98 +2647,6 @@ namespace GuildMaster.Managers
             }
         }
 
-        private bool ExecuteAbilityForCharacter(Ability ability, Character character, List<NPC> enemies, Player player, NPC preselectedTarget = null)
-        {
-            // Check if character is in back row and trying to use melee ability
-            if (character.IsBackRow && !ability.IsRanged)
-            {
-                string characterName = character == player ? "You" : character.Name;
-                string verb = character == player ? "cannot use" : "cannot use";
-                AnsiConsole.MarkupLine($"\n[#FF0000]{characterName} {verb} melee abilities from the back row![/]");
-
-                // Show appropriate menu based on who is acting
-                if (character == player)
-                {
-                    ShowAbilityMenu();
-                }
-                else if (currentActingPartyMember != null && currentActingPartyMember == character)
-                {
-                    ShowPartyMemberAbilityMenu();
-                }
-
-                return false;
-            }
-
-            character.Energy -= ability.EnergyCost;
-
-            switch (ability.Name)
-            {
-                // Legionnaire Abilities
-                case "Shield Bash":
-                    return ExecuteShieldBashGeneric(ability, character, enemies);
-                case "Taunt":
-                case "Battle Cry":
-                    return ExecuteTauntGeneric(ability, character, enemies);
-                case "Shield Wall":
-                    return ExecuteShieldWallGeneric(ability, character, player);
-                case "Cleave":
-                    return ExecuteCleaveGeneric(ability, character, enemies);
-                case "Rending Strike":  
-                    return ExecuteRendingStrikeGeneric(ability, character, enemies);
-
-                // Venator Abilities  
-                case "Multi-Shot":
-                    return ExecuteMultiShotGeneric(ability, character, enemies);
-                case "Piercing Arrow":
-                    return ExecutePiercingArrowGeneric(ability, character, enemies);
-                case "Evasive Fire":
-                    return ExecuteEvasiveFireGeneric(ability, character);
-                case "Covering Shot":
-                    return ExecuteCoveringShotGeneric(ability, character, enemies);
-
-                // Oracle Abilities
-                case "Heal":
-                    return ExecuteHealGeneric(ability, character, player);
-                case "Lightning Bolt":
-                    return ExecuteLightningBoltGeneric(ability, character, enemies);
-                case "Blessing":
-                    return ExecuteBlessingGeneric(ability, character, player);
-                case "Flame Strike":
-                    return ExecuteFlameStrikeGeneric(ability, character, enemies);
-
-                // Level 5 Abilities
-                case "Barbed Arrow":
-                    return ExecuteBarbedArrowGeneric(ability, character, enemies);
-                case "Frostbolt":
-                    return ExecuteFrostboltGeneric(ability, character, enemies);
-
-                // Level 10 Abilities
-                case "Sunder Armor":
-                    return ExecuteSunderArmorGeneric(ability, character, enemies);
-                case "Frost Arrow":
-                    return ExecuteFrostArrowGeneric(ability, character, enemies);
-                case "Venom":
-                    return ExecuteVenomGeneric(ability, character, enemies);
-
-                // Level 15 Abilities
-                case "Devastating Slam":
-                    return ExecuteDevastingSlamGeneric(ability, character, enemies);
-                case "Thunder Volley":
-                    return ExecuteThunderVolleyGeneric(ability, character, enemies);
-                case "Divine Wrath":
-                    return ExecuteDivineWrathGeneric(ability, character, enemies);
-
-                // Level 20 Abilities
-                case "Whirlwind":
-                    return ExecuteWhirlwindGeneric(ability, character, enemies);
-                case "War Cry":
-                    return ExecuteWarCryGeneric(ability, character, enemies, player);
-
-                default:
-                    AnsiConsole.MarkupLine($"[#FF0000]Ability '{ability.Name}' not yet implemented for {character.Name}![/]");
-                    return false;
-            }
-        }
 
 
         private bool HealTarget(Ability ability, Character caster, Character target, string targetName)
@@ -3828,7 +3738,7 @@ namespace GuildMaster.Managers
             return "unarmed";
         }
 
-        private string GetKillFlavorText(string killerName, string victimName, Equipment weapon, bool goreEnabled)
+        public string GetKillFlavorText(string killerName, string victimName, Equipment weapon, bool goreEnabled)
         {
             string weaponType = GetWeaponType(weapon);
             Random rng = ProgramStatics.Random;
