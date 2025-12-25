@@ -103,6 +103,55 @@ namespace GuildMaster.Data
                 Bonus = 2,
                 Value = 30
             });
+
+            // Mid-Tier Weapons (Guild Armory)
+            AllEquipment.Add("mithril sword", new Equipment
+            {
+                Name = "Mithril Sword",
+                ShortName = "sword",
+                Description = "A lightweight blade forged from rare mithril, perfectly balanced.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 2,
+                DiceSides = 6,
+                Bonus = 3,
+                Value = 200
+            });
+
+            AllEquipment.Add("elven bow", new Equipment
+            {
+                Name = "Elven Bow",
+                ShortName = "bow",
+                Description = "Crafted by elven artisans, this bow is both beautiful and deadly.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 2,
+                DiceSides = 4,
+                Bonus = 4,
+                Value = 180
+            });
+
+            AllEquipment.Add("arcane staff", new Equipment
+            {
+                Name = "Arcane Staff",
+                ShortName = "staff",
+                Description = "Ancient runes carved into this staff pulse with magical power.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 1,
+                DiceSides = 8,
+                Bonus = 4,
+                Value = 160
+            });
+
+            AllEquipment.Add("war hammer", new Equipment
+            {
+                Name = "War Hammer",
+                ShortName = "hammer",
+                Description = "A massive two-handed hammer that crushes armor and bone alike.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 2,
+                DiceSides = 8,
+                Bonus = 1,
+                Value = 220
+            });
         }
 
         private static void InitializeArmor()
@@ -136,6 +185,29 @@ namespace GuildMaster.Data
                 DefenseBonus = 3,
                 SpeedBonus = -1,
                 Value = 100
+            });
+
+            // Mid-Tier Armor (Guild Armory)
+            AllEquipment.Add("dragon scale armor", new Equipment
+            {
+                Name = "Dragon Scale Armor",
+                ShortName = "armor",
+                Description = "Armor crafted from the scales of a dragon, nearly impenetrable.",
+                Slot = EquipmentSlot.Armor,
+                DefenseBonus = 4,
+                HealthBonus = 15,
+                Value = 300
+            });
+
+            AllEquipment.Add("mithril chainmail", new Equipment
+            {
+                Name = "Mithril Chainmail",
+                ShortName = "chainmail",
+                Description = "Lightweight mithril links provide excellent protection without hindering movement.",
+                Slot = EquipmentSlot.Armor,
+                DefenseBonus = 3,
+                SpeedBonus = 1,
+                Value = 250
             });
         }
 
@@ -203,6 +275,42 @@ namespace GuildMaster.Data
                 Slot = EquipmentSlot.Ring,
                 AttackBonus = 2,
                 Value = 80
+            });
+
+            // Class-Specific Rings (Guild Treasury)
+            AllEquipment.Add("legionnaire's ring", new Equipment
+            {
+                Name = "Legionnaire's Ring",
+                ShortName = "ring",
+                Description = "A ring bearing the sigil of the ancient legions. It bolsters strength and fortitude.",
+                Slot = EquipmentSlot.Ring,
+                HealthBonus = 20,
+                AttackBonus = 2,
+                DefenseBonus = 1,
+                Value = 150
+            });
+
+            AllEquipment.Add("venator's ring", new Equipment
+            {
+                Name = "Venator's Ring",
+                ShortName = "ring",
+                Description = "Worn by master hunters, this ring enhances precision and agility.",
+                Slot = EquipmentSlot.Ring,
+                SpeedBonus = 2,
+                AttackBonus = 3,
+                Value = 150
+            });
+
+            AllEquipment.Add("oracle's ring", new Equipment
+            {
+                Name = "Oracle's Ring",
+                ShortName = "ring",
+                Description = "A mystical ring that channels arcane energies, favored by oracles and mages.",
+                Slot = EquipmentSlot.Ring,
+                EnergyBonus = 15,
+                AttackBonus = 2,
+                HealthBonus = 10,
+                Value = 150
             });
 
             // Note: The "amulet" from the Silvacis quest is NOT equipment - it's a quest item only

@@ -76,6 +76,7 @@ namespace GuildMaster.Managers
                 gameState.AutoCombatEnabled = player.AutoCombatEnabled;
                 gameState.TutorialsEnabled = player.TutorialsEnabled;
                 gameState.GoreEnabled = player.GoreEnabled;
+                gameState.DebugLogsEnabled = player.DebugLogsEnabled;
 
                 // Time
                 gameState.CurrentDay = player.CurrentDay;
@@ -167,6 +168,15 @@ namespace GuildMaster.Managers
 
                 // Save completed quest IDs
                 gameState.CompletedQuestIds = player.CompletedQuestIds;
+
+                // Save quest flags
+                gameState.QuestFlags = player.QuestFlags;
+
+                // Save triggered event IDs (if EventManager is available)
+                if (ProgramStatics.eventManager != null)
+                {
+                    gameState.TriggeredEventIds = ProgramStatics.eventManager.GetTriggeredEvents();
+                }
 
                 // Save shown messages
                 if (ProgramStatics.messageManager != null)
@@ -239,6 +249,7 @@ namespace GuildMaster.Managers
                 gameState.AutoCombatEnabled = player.AutoCombatEnabled;
                 gameState.TutorialsEnabled = player.TutorialsEnabled;
                 gameState.GoreEnabled = player.GoreEnabled;
+                gameState.DebugLogsEnabled = player.DebugLogsEnabled;
 
                 // Time
                 gameState.CurrentDay = player.CurrentDay;
@@ -330,6 +341,15 @@ namespace GuildMaster.Managers
 
                 // Save completed quest IDs
                 gameState.CompletedQuestIds = player.CompletedQuestIds;
+
+                // Save quest flags
+                gameState.QuestFlags = player.QuestFlags;
+
+                // Save triggered event IDs (if EventManager is available)
+                if (ProgramStatics.eventManager != null)
+                {
+                    gameState.TriggeredEventIds = ProgramStatics.eventManager.GetTriggeredEvents();
+                }
 
                 // Save shown messages
                 if (ProgramStatics.messageManager != null)
@@ -481,6 +501,7 @@ namespace GuildMaster.Managers
             player.AutoCombatEnabled = state.AutoCombatEnabled;
             player.TutorialsEnabled = state.TutorialsEnabled;
             player.GoreEnabled = state.GoreEnabled;
+            player.DebugLogsEnabled = state.DebugLogsEnabled;
 
             // Load equipment - try new format first, fall back to old format
             if (!string.IsNullOrEmpty(state.EquippedWeaponName))
@@ -529,15 +550,33 @@ namespace GuildMaster.Managers
             player.CurrentHour = state.CurrentHour >= 0 ? state.CurrentHour : 8.0f;
 
             // Initialize note text with player name
-            context.NoteText = "You pick up the note, unfold it, and begin reading the letter addressed to you.<br><br>" +
+            context.NoteText = 
+                "You pick up the note, unfold it, and begin reading the letter addressed to you.<br><br>" +
+
                 "\"Dear " + player.Name + ",<br><br>" +
-                "Sorry I couldn't stay to greet you — urgent business pulled me away, and you happened to arrive at the perfect (and slightly unconscious) moment.<br><br>" +
-                "We spoke briefly last night — at least, you spoke, and I assumed you were lucid. You told me your name and hinted at a past life of adventuring, so I'm officially handing you the reins of the *former* Adventurer's Guild.<br><br>" +
-                "It's just you for now. Over the next year, see if you can revive the place: recruit around ten members and scrape together at least 100 gold. If you manage that, wonderful. If not… well, perhaps I put too much faith in the stranger who face-planted outside my door.<br><br>" +
-                "I'll check in at year's end.<br><br>" +
-                "Good luck!<br><br>" +
+
+                "I had hoped to be around when you awoke, but my journey can be delayed no longer.<br><br>" +
+
+                "It is hard to say how much you remember of your time here. At times, you seemed perfectly lucid, and at others you hardly knew your own name.<br><br>" +
+
+                "Seventeen days ago I had closed and locked the door to this old guild hall behind me and started on my journey, only to find you laying in the road a few hundred paces from the front door. Pardon my honesty, but your timing could not have been worse.<br><br>" +
+
+                "Regardless, I patched you up to the best of my ability, and after several days you awoke. We spoke for some time before you eventually drifted back into a deep sleep. Over the following days, you would drift in and out of consciousness, and as often as you felt up to it, we spoke just enough for me to learn that you are " + player.Name + ", an itinerant " + player.Class.Name + ".<br><br>" +
+
+                "Yesterday, I received a missive that let me know that my departure was long past due, and as such, I am forced to leave you here on your own. Not ideal, but circumstances forced my hand.<br><br>" +
+
+                "To make it up to you, I leave you the guild. Well, the guild hall anyway; you see, I was the last remaining member and Guild Master of the old Adventurer’s Guild. Now that job belongs to you, if you will take it.<br><br>" +
+
+                "I hope that you do. The present peace and stability of the empire should not be taken for granted. A time will soon come when protectors of the realm are needed. Try to find like-minded individuals - at least ten - and see if you can fill the coffers with gold once more. Saving the world can be expensive work.<br><br>" +
+
+                "Time is of the essence. Try to rebuild the guild within the next hundred days. If I survive my journey, I will write to you then to see how things are coming along.<br><br>" +
+
+                "Good fortune and may the gods watch over you.<br><br>" +
+
                 "Signed,<br><br>" +
-                "Alaron, Ex-Guildmaster.\"";
+
+                "Alaron, former Guild Master of the Adventurer's Guild\"";
+
 
             // Restore NPC dialogue states
             if (state.NPCDialogueStates != null)
@@ -681,6 +720,15 @@ namespace GuildMaster.Managers
 
             // Restore completed quest IDs
             player.CompletedQuestIds = state.CompletedQuestIds ?? new List<string>();
+
+            // Restore quest flags
+            player.QuestFlags = state.QuestFlags ?? new Dictionary<string, bool>();
+
+            // Restore triggered event IDs (if EventManager is available)
+            if (ProgramStatics.eventManager != null && state.TriggeredEventIds != null)
+            {
+                ProgramStatics.eventManager.SetTriggeredEvents(state.TriggeredEventIds);
+            }
 
             // Remove taken items from rooms
             foreach (string takenItem in player.TakenItems)

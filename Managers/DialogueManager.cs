@@ -22,10 +22,16 @@ namespace GuildMaster.Managers
         private List<DialogueNode.Choice>? currentChoices;
         private bool isInDialogue = false;
 
+        // Event dialogue trees (not tied to NPCs)
+        private Dictionary<string, Dictionary<string, DialogueNode>> eventDialogueTrees;
+        private bool isEventDialogue = false;  // Track if current dialogue is from an event
+        private string? currentDialogueTreeId = null;  // Track current event dialogue tree ID
+
         public DialogueManager(GameContext gameContext, Action onRecruitmentCallback = null)
         {
             context = gameContext;
             recruitmentCallback = onRecruitmentCallback;
+            eventDialogueTrees = new Dictionary<string, Dictionary<string, DialogueNode>>();
         }
 
         public void SetOpenShopCallback(Action<NPC> callback)
@@ -208,6 +214,13 @@ namespace GuildMaster.Managers
             if (!isInDialogue)
                 return false;
 
+            // Handle event dialogue separately
+            if (isEventDialogue && !string.IsNullOrEmpty(currentDialogueTreeId))
+            {
+                ProcessEventDialogueChoice(input, currentDialogueTreeId);
+                return true;
+            }
+
             if (!int.TryParse(input, out int choice))
             {
                 AnsiConsole.MarkupLine("[#FF0000]Please enter a number.[/]");
@@ -267,16 +280,21 @@ namespace GuildMaster.Managers
             if (!isInDialogue)
                 return;
 
-            // Handle special cases after dialogue ends
-            HandlePostDialogueEffects(currentNode, currentNPC, currentRoom);
-
-            if (currentNode != "end")
+            // Handle special cases after dialogue ends (only for NPC dialogue)
+            if (!isEventDialogue && currentNPC != null)
             {
-                currentNPC.CurrentDialogueNode = currentNode;
+                HandlePostDialogueEffects(currentNode, currentNPC, currentRoom);
+
+                if (currentNode != "end")
+                {
+                    currentNPC.CurrentDialogueNode = currentNode;
+                }
             }
 
             // Clear state
             isInDialogue = false;
+            isEventDialogue = false;
+            currentDialogueTreeId = null;
             currentNPC = null;
             currentRoom = null;
             currentChoices = null;
@@ -389,6 +407,131 @@ namespace GuildMaster.Managers
                 npc.IsHostile = true;
                 // Combat manager will handle this when we return to game loop
             }
+        }
+
+        /// <summary>
+        /// Registers an event dialogue tree for use by the event system
+        /// </summary>
+        public void RegisterEventDialogue(string treeId, Dictionary<string, DialogueNode> dialogueTree)
+        {
+            if (string.IsNullOrEmpty(treeId) || dialogueTree == null)
+                return;
+
+            eventDialogueTrees[treeId] = dialogueTree;
+        }
+
+        /// <summary>
+        /// Starts dialogue using an event dialogue tree ID (without requiring an NPC)
+        /// </summary>
+        public void StartEventDialogue(string dialogueTreeId, string startNode = "start")
+        {
+            if (string.IsNullOrEmpty(dialogueTreeId))
+                return;
+
+            if (!eventDialogueTrees.ContainsKey(dialogueTreeId))
+            {
+                AnsiConsole.MarkupLine($"[#FF0000]Event dialogue tree '{dialogueTreeId}' not found.[/]");
+                return;
+            }
+
+            currentNPC = null;  // No NPC for event dialogue
+            currentRoom = context.Rooms[context.Player.CurrentRoom];
+            isInDialogue = true;
+            isEventDialogue = true;
+            currentDialogueTreeId = dialogueTreeId;
+            currentNode = startNode;
+
+            AnsiConsole.MarkupLine("");  // Add spacing
+            ShowEventDialogueNode(dialogueTreeId);
+        }
+
+        /// <summary>
+        /// Shows the current dialogue node for event dialogue
+        /// </summary>
+        private void ShowEventDialogueNode(string dialogueTreeId)
+        {
+            var player = context.Player;
+
+            if (!eventDialogueTrees[dialogueTreeId].ContainsKey(currentNode))
+            {
+                AnsiConsole.MarkupLine("Something went wrong with the event dialogue.");
+                EndDialogue();
+                return;
+            }
+
+            DialogueNode node = eventDialogueTrees[dialogueTreeId][currentNode];
+
+            TextHelper.DisplayTextWithPaging(node.Text, "#90FF90");
+
+            // Execute any dialogue actions
+            if (node.Action != null)
+            {
+                ExecuteDialogueAction(node.Action, null, currentRoom);
+            }
+
+            // Build choices list
+            currentChoices = node.Choices.Where(choice => choice.IsAvailable(player.Inventory)).ToList();
+
+            // Check if there are any choices
+            if (currentChoices.Count == 0)
+            {
+                if (context.Player.DebugLogsEnabled)
+                {
+                    AnsiConsole.MarkupLine("\n[#808080](Event concludes)[/]");
+                }
+                EndDialogue();
+                return;
+            }
+
+            AnsiConsole.MarkupLine("");
+
+            for (int i = 0; i < currentChoices.Count; i++)
+            {
+                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {currentChoices[i].choiceText}[/]");
+            }
+            AnsiConsole.MarkupLine("[#808080]0. Continue[/]");
+            AnsiConsole.MarkupLine("");
+            ShowStatusBar();
+            AnsiConsole.MarkupLine("[dim](Enter a number to respond)[/]");
+        }
+
+        /// <summary>
+        /// Processes dialogue choice for event dialogue
+        /// Must be called from the existing ProcessDialogueChoice when isEventDialogue is true
+        /// </summary>
+        private void ProcessEventDialogueChoice(string input, string dialogueTreeId)
+        {
+            if (!int.TryParse(input, out int choice))
+            {
+                AnsiConsole.MarkupLine("[#FF0000]Please enter a number.[/]");
+                return;
+            }
+
+            if (choice == 0)
+            {
+                AnsiConsole.MarkupLine("\n[#808080]You continue...[/]");
+                EndDialogue();
+                return;
+            }
+
+            if (choice < 1 || choice > currentChoices.Count)
+            {
+                AnsiConsole.MarkupLine($"[#FF0000]Please choose a number between 1 and {currentChoices.Count}, or 0 to continue.[/]");
+                return;
+            }
+
+            var selectedChoice = currentChoices[choice - 1];
+
+            // Handle choice actions
+            if (selectedChoice.Action != null)
+            {
+                ExecuteDialogueAction(selectedChoice.Action, null, currentRoom);
+            }
+
+            currentNode = selectedChoice.nextNodeID;
+            AnsiConsole.MarkupLine("");
+
+            ShowEventDialogueNode(dialogueTreeId);
         }
     }
 

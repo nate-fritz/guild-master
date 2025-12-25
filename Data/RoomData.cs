@@ -30,20 +30,51 @@ namespace GuildMaster.Data
             Room study = CreateRoom(3, "guildHallStudy", "The Guild Hall - Study", "You're in a dusty study filled with old books, scrolls, and other trinkets.  The hallway that you entered from is to the north.");
             study.Exits.Add("north", 2);
             study.Items.Add("desk");
-            study.Items.Add("energy potion");
             study.Items.Add("restoration scroll");
-            study.Items.Add("leather armor");
-            study.Items.Add("iron gladius");
+            study.Items.Add("dusty tome");
+
 
             // Updated
             Room commonArea = CreateRoom(4, "guildHallCommonArea", "The Guild Hall - Common Area", "A large common area with tables, chairs, and couches in front of a large fireplace.  You imagine this room was once quite lively, but today it sits unused.  The main door to the guildhall is to the north, and a hallway is to the south.");
             commonArea.Exits.Add("south", 2);
             commonArea.Exits.Add("north", 5);
+            // Dynamic descriptions based on guild size
+            commonArea.DescriptionVariants.Add("recruits_4", "A large common area with tables, chairs, and couches arranged before a roaring fireplace. The space is beginning to show signs of life - a few members can be seen relaxing between missions. The main door to the guildhall is to the north, and a hallway is to the south. A passage to the west leads to the newly opened training yard.");
+            commonArea.DescriptionVariants.Add("recruits_6", "A lively common area filled with the sounds of conversation and camaraderie. Tables and chairs surround a roaring fireplace where guild members gather to share tales of their adventures. The room feels alive with purpose. The main door is to the north, the hallway to the south. Passages lead west to the training yard and east to the armory.");
+            commonArea.DescriptionVariants.Add("recruits_8", "A bustling common area that serves as the heart of your thriving guild. Members fill the space, some relaxing by the fireplace, others planning their next quest. The energy is palpable. The main door is to the north, the hallway to the south, with passages leading west to the training yard and east to the armory.");
+            commonArea.DescriptionVariants.Add("recruits_10", "The vibrant heart of a legendary guild hall. This grand common area is filled with elite adventurers, their equipment gleaming in the firelight. Trophies from epic quests line the walls. The main door is to the north, the hallway to the south, with passages leading west to the training yard and east to the armory. Your guild has achieved greatness.");
 
             // Updated
             Room frontDoor = CreateRoom(5, "guildHallFrontDoor", "The Guild Hall - Front Door", "You stand before a modest two-story building made of grey stone with a yellow thatched roof. Ivy climbs the walls, and the roof looks a bit worse for wear, but considering it's been largely abandoned in recent years, it's relatively well maintained. Two large wooden doors stand at the back of the portico at the front of the guildhall. A hanging sign sways lazily in the wind, its painted lettering worn away to the point of being indecipherable.");
             frontDoor.Exits.Add("south", 4);
             frontDoor.Exits.Add("north", 6);
+
+            // Progressive Guild Rooms (unlock based on recruit count)
+            // Room 64: Training Yard (unlocks with 4 recruits)
+            Room trainingYard = CreateRoom(64, "guildHallTrainingYard", "The Guild Hall - Training Yard", "A spacious outdoor training yard behind the guild hall. Wooden practice dummies line one wall, their surfaces scarred from countless strikes. A weapons rack holds an assortment of training weapons, and the packed earth shows signs of recent use. Your guild is growing, and this space gives your warriors room to hone their skills.");
+            trainingYard.Exits.Add("east", 4);  // Back to Common Area
+
+            // Room 65: Armory (unlocks with 6 recruits)
+            Room armory = CreateRoom(65, "guildHallArmory", "The Guild Hall - Armory", "A well-stocked armory filled with weapon racks and armor stands. The smell of oil and leather fills the air. Light streams through narrow windows, glinting off polished steel. With your guild's reputation growing, a mysterious armorer has taken up residence here, offering quality equipment to those with coin to spare.");
+            armory.Exits.Add("west", 4);  // Back to Common Area
+            armory.NPCs.Add(npcs["Guild Armorer"].Clone());  // Add the guild armorer
+            // East exit to Treasury (66) added conditionally when 8 recruits reached
+
+            // Room 66: Treasury (unlocks with 8 recruits)
+            Room treasury = CreateRoom(66, "guildHallTreasury", "The Guild Hall - Treasury", "A secure treasury room lined with reinforced chests and lockboxes. The walls are thick stone, and a heavy iron door guards the entrance. Your guild's wealth and most valuable treasures are stored here. In the center of the room sits an ornate chest containing rings of power, one for each class of adventurer.");
+            treasury.Exits.Add("west", 65);  // Back to Armory
+            treasury.Items.Add("legionnaire's ring");
+            treasury.Items.Add("venator's ring");
+            treasury.Items.Add("oracle's ring");
+            // South exit to Portal Room (67) added conditionally when 10 recruits reached
+
+            // Room 67: Portal Room (unlocks with 10 recruits)
+            Room portalRoom = CreateRoom(67, "guildHallPortalRoom", "The Guild Hall - Portal Chamber", "A mystical chamber thrumming with arcane energy. Three shimmering portals stand in alcoves along the walls, their surfaces rippling like water. Ancient runes are carved into the floor in concentric circles, glowing with a faint blue light. Your guild has achieved greatness, and these portals now offer passage to distant lands that would otherwise take weeks to reach.");
+            portalRoom.Exits.Add("north", 66);  // Back to Treasury
+            // Portal exits to far-off regions
+            portalRoom.Exits.Add("east", 80);   // Portal to Belum Town Square
+            portalRoom.Exits.Add("west", 25);   // Portal to Mountain Peak (Mount Gelus)
+            portalRoom.Exits.Add("down", 61);   // Portal to Eastern Forest Exit (Hircinian Forest)
 
             // Updated
             Room guildPath = CreateRoom(6, "guildPath", "A Dirt Path", "You're on a wide dirt path that runs roughly north to south. Rolling grass covered hills flank either side of the path, with the occasional tree breaking up the sea of green.  To the south you can still see the guild hall.  The wilderness stretches for as far as you can see to the north.");
@@ -467,7 +498,7 @@ namespace GuildMaster.Data
             mainStreetSouth.NPCs.Add(npcs["Villager"].Clone());
 
             // Needs update
-            Room townSquare = CreateRoom(80, "townSquare", "Belum - Town Square", "The heart of Belum opens into a grand square. A large stone fountain depicting Neptune dominates the center. Important-looking buildings surround the square - the town hall, a temple, and what appears to be a guild house of some kind.");
+            Room townSquare = CreateRoom(80, "townSquare", "Belum - Town Square", "The heart of Belum opens into a grand square. A large stone fountain depicting Marea, goddess of the sea, dominates the center. Important-looking buildings surround the square - the town hall, a temple, and what appears to be a guild house of some kind.");
             townSquare.Exits.Add("north", 81);
             townSquare.Exits.Add("east", 77);
             townSquare.Exits.Add("south", 79);
@@ -476,58 +507,62 @@ namespace GuildMaster.Data
             townSquare.NPCs.Add(npcs["Villager"].Clone());
             townSquare.NPCs.Add(npcs["Merchant"].Clone());
 
-            // Needs update
-            Room residentialNorth = CreateRoom(81, "residentialNorth", "Belum - North Residential", "Well-appointed homes belonging to Belum's more prosperous citizens line this quiet street. Gardens and small courtyards provide greenery.");
+            Room residentialNorth = CreateRoom(81, "residentialNorth", "Belum - North Residential", "Well-appointed homes belonging to Belum's more prosperous citizens line this quiet street. Gardens and small courtyards provide greenery.  The northern gate leading out of town is to the north, shops are to the east, the town square lies directly south, and to the west is a large plaza surrounded by temples to the gods.");
             residentialNorth.Exits.Add("north",90);
             residentialNorth.Exits.Add("east", 76);
             residentialNorth.Exits.Add("south", 80);
-            residentialNorth.Exits.Add("West", 82);
+            residentialNorth.Exits.Add("west", 82);
 
             Room templeDistrict = CreateRoom(82, "templeDistrict", "Belum - Temple District", "Massive temples of white stone surround an open plaza.  The largest of all of these, to the north, is devoted to Keius - father of the gods.  If you look straight up, you can barely see the tops of the colossal columns that line the temple's facade.  Temples to major and minor gods of Keius' pantheon fill the rest of the square.  To the east is a residential district on the main street through Belum.  To the south are several inns, and more residences to the west.");
             templeDistrict.Exits.Add("east", 81);
             templeDistrict.Exits.Add("south", 83);
             templeDistrict.Exits.Add("west", 89);
 
+            // Needs update
             Room innDistrict = CreateRoom(83, "innDistrict", "Belum - Inn District", "Several inns compete for business here, their signs creaking in the breeze. 'The Wanderer's Rest', 'The Sleeping Lion', and 'Beds & Breakfast' all promise comfortable lodging.");
             innDistrict.Exits.Add("north", 82);
             innDistrict.Exits.Add("east", 80);
             innDistrict.Exits.Add("south", 84);
             innDistrict.Exits.Add("west", 88);
 
+            // Needs update
             Room armorersRow = CreateRoom(84, "armorersRow", "Belum - Armorer's Row", "Shops specializing in armor and protective gear line this street. Mannequins display everything from leather jerkins to full plate mail. A testing dummy stands outside one shop, heavily dented.");
             armorersRow.Exits.Add("north", 83);
             armorersRow.Exits.Add("east", 79);
             armorersRow.Exits.Add("south", 85);
             armorersRow.Exits.Add("west", 87);
 
+            // Needs update
             Room thievesGuild = CreateRoom(85, "thievesGuild", "Belum - Unmarked Alley", "A dead-end alley with a single unmarked door. Those who know, know. Those who don't, shouldn't be here.");
             thievesGuild.Exits.Add("north", 84);
             thievesGuild.Exits.Add("east", 70);
             thievesGuild.Exits.Add("west", 86);
 
+            // Needs update
             Room shadowyCorner = CreateRoom(86, "shadowyCorner", "Belum - A Shadowy Corner", "This corner of town sees less traffic. A nondescript door leads to what might be a less-than-legitimate establishment. The locals here don't meet your eyes.");
             shadowyCorner.Exits.Add("north", 87);
             shadowyCorner.Exits.Add("east", 85);
 
+            // Needs update
             Room townHall = CreateRoom(87, "townHall", "Belum - Town Hall", "The administrative center of Belum. An imposing building with marble columns and bronze doors. Guards stand at attention. A notice board displays official proclamations.");
             townHall.Exits.Add("north", 88);
             townHall.Exits.Add("south", 86);
             townHall.Exits.Add("east", 84);
             townHall.NPCs.Add(npcs["Town Guard"].Clone());
 
+            // Needs update
             Room barracks = CreateRoom(88, "barracks", "Belum - Guard Barracks", "The town guard's headquarters. Soldiers drill in a courtyard while others sharpen weapons or play dice. The captain's office is visible through an open door.");
-            barracks.Exits.Add("north", 89);
             barracks.Exits.Add("east", 83);
             barracks.Exits.Add("south", 87);
             barracks.NPCs.Add(npcs["Town Guard"].Clone());
             barracks.NPCs.Add(npcs["Town Guard"].Clone());
 
-            Room room89 = CreateRoom(89, "room89", "Room 89", "This is room 89.  Inexplicably, there's nothing here.  Literally.  Just empty void as far as the eyes can see to the north and west.  To the south, you see the town guard's barracks.  To the east, you see an open plaza surrounded by majestic temples of polished white stone.");
-            room89.Exits.Add("south", 88);
-            room89.Exits.Add("east", 82);
+            Room templeOfKeius = CreateRoom(89, "templeOfKeius", "Belum - Temple of Keius", "You step into the Temple of Keius and immediately feel small. The columns soar far above the city walls that surround Belum. The ceiling is lost in shadow. Everything here is built on a scale meant to humble mortals before the divine. To complete that feeling, an enormous statue of Keius sits at the back of the temple, looking onward in judgement of all who enter.  Back to the east lies the plaza of the Temple District.");
+            templeOfKeius.Exits.Add("east", 82);
+            templeOfKeius.NPCs.Add(npcs["Caelia"]);
 
-            Room room90 = CreateRoom(90, "room90", "Room 90", "This is room 90.  Inexplicably, there's nothing here.  Literally.  Just empty void as far as the eyes can see to the north, east, and west.  To the south, you see the residential district.");
-            room90.Exits.Add("south", 81);
+            Room belumNorthGate = CreateRoom(90, "belumNorthGate", "Belum - North Gate", "A large wooden and iron gate stands open here, stone towers on either side. Armed guards stand at attention, watching for any sign of trouble.  To the south is the residential district, and the road north leads out of town.");
+            belumNorthGate.Exits.Add("south", 81);
             
 
             // Guild Hall
@@ -536,6 +571,12 @@ namespace GuildMaster.Data
             rooms.Add(3, study);
             rooms.Add(4, commonArea);
             rooms.Add(5, frontDoor);
+
+            // Progressive Guild Hall Rooms (unlock based on recruit count)
+            rooms.Add(64, trainingYard);
+            rooms.Add(65, armory);
+            rooms.Add(66, treasury);
+            rooms.Add(67, portalRoom);
 
             // Crossroads Area
             rooms.Add(6, guildPath);
@@ -616,8 +657,72 @@ namespace GuildMaster.Data
             rooms.Add(86, shadowyCorner);
             rooms.Add(87, townHall);
             rooms.Add(88, barracks);
-            rooms.Add(89, room89);
-            rooms.Add(90, room90);
+            rooms.Add(89, templeOfKeius);
+            rooms.Add(90, belumNorthGate);
+
+            // ===== TESTING ROOMS (999-991) - Hidden recruit testing area =====
+            // Test Room 999 - Valeria (Legionnaire, Female, Conversational)
+            Room testRoom999 = CreateRoom(999, "testRoom999", "[TEST] Recruit Testing Area 1", "[TEST ROOM] A simple testing chamber. Use 'teleport 999' to get here.");
+            testRoom999.Exits.Add("south", 998);
+            testRoom999.NPCs.Add(npcs["Valeria"].Clone());
+
+            // Test Room 998 - Darius (Venator, Male, Conversational)
+            Room testRoom998 = CreateRoom(998, "testRoom998", "[TEST] Recruit Testing Area 2", "[TEST ROOM] Another testing chamber.");
+            testRoom998.Exits.Add("north", 999);
+            testRoom998.Exits.Add("south", 997);
+            testRoom998.NPCs.Add(npcs["Darius"].Clone());
+
+            // Test Room 997 - Lyra (Oracle, Female, Conversational)
+            Room testRoom997 = CreateRoom(997, "testRoom997", "[TEST] Recruit Testing Area 3", "[TEST ROOM] Yet another testing chamber.");
+            testRoom997.Exits.Add("north", 998);
+            testRoom997.Exits.Add("south", 996);
+            testRoom997.NPCs.Add(npcs["Lyra"].Clone());
+
+            // Test Room 996 - Marcus the Bold (Legionnaire, Male, Combat)
+            Room testRoom996 = CreateRoom(996, "testRoom996", "[TEST] Recruit Testing Area 4", "[TEST ROOM] Combat recruit testing - talk to Marcus to fight.");
+            testRoom996.Exits.Add("north", 997);
+            testRoom996.Exits.Add("south", 995);
+            testRoom996.NPCs.Add(npcs["Marcus the Bold"].Clone());
+
+            // Test Room 995 - Aria Swift (Venator, Female, Combat)
+            Room testRoom995 = CreateRoom(995, "testRoom995", "[TEST] Recruit Testing Area 5", "[TEST ROOM] Combat recruit testing - talk to Aria to fight.");
+            testRoom995.Exits.Add("north", 996);
+            testRoom995.Exits.Add("south", 994);
+            testRoom995.NPCs.Add(npcs["Aria Swift"].Clone());
+
+            // Test Room 994 - Aldric the Wise (Oracle, Male, Combat)
+            Room testRoom994 = CreateRoom(994, "testRoom994", "[TEST] Recruit Testing Area 6", "[TEST ROOM] Combat recruit testing - talk to Aldric to fight.");
+            testRoom994.Exits.Add("north", 995);
+            testRoom994.Exits.Add("south", 993);
+            testRoom994.NPCs.Add(npcs["Aldric the Wise"].Clone());
+
+            // Test Room 993 - Thora (Legionnaire, Female, Conversational)
+            Room testRoom993 = CreateRoom(993, "testRoom993", "[TEST] Recruit Testing Area 7", "[TEST ROOM] More conversational testing.");
+            testRoom993.Exits.Add("north", 994);
+            testRoom993.Exits.Add("south", 992);
+            testRoom993.NPCs.Add(npcs["Thora"].Clone());
+
+            // Test Room 992 - Fenris (Venator, Male, Conversational)
+            Room testRoom992 = CreateRoom(992, "testRoom992", "[TEST] Recruit Testing Area 8", "[TEST ROOM] Beast tracker testing.");
+            testRoom992.Exits.Add("north", 993);
+            testRoom992.Exits.Add("south", 991);
+            testRoom992.NPCs.Add(npcs["Fenris"].Clone());
+
+            // Test Room 991 - Celestia (Oracle, Female, Conversational)
+            Room testRoom991 = CreateRoom(991, "testRoom991", "[TEST] Recruit Testing Area 9", "[TEST ROOM] Final testing chamber. Use 'teleport 1' to return to guild hall.");
+            testRoom991.Exits.Add("north", 992);
+            testRoom991.NPCs.Add(npcs["Celestia"].Clone());
+
+            // Add test rooms
+            rooms.Add(999, testRoom999);
+            rooms.Add(998, testRoom998);
+            rooms.Add(997, testRoom997);
+            rooms.Add(996, testRoom996);
+            rooms.Add(995, testRoom995);
+            rooms.Add(994, testRoom994);
+            rooms.Add(993, testRoom993);
+            rooms.Add(992, testRoom992);
+            rooms.Add(991, testRoom991);
 
             return rooms;
         }

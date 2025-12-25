@@ -19,7 +19,13 @@ namespace GuildMaster.Helpers
         {
             List<string> wrappedLines = new List<string>();
 
-            // Split by <br> tags first (these are hard line breaks)
+            // First normalize all line breaks to <br> for consistent processing
+            // Replace \r\n, \n\n, and single \n with <br>
+            text = text.Replace("\r\n", "<br>");
+            text = text.Replace("\n\n", "<br><br>");  // Double newlines = paragraph breaks
+            text = text.Replace("\n", " ");  // Single newlines become spaces (soft wrap)
+
+            // Split by <br> tags (these are hard line breaks)
             var segments = System.Text.RegularExpressions.Regex.Split(
                 text,
                 @"<br\s*/?>",
@@ -68,7 +74,7 @@ namespace GuildMaster.Helpers
             return string.Join("\n", wrappedLines);
         }
 
-        public static void DisplayTextWithPaging(string text, int maxLineLength = 80, int linesPerPage = 10, string color = null)
+        public static void DisplayTextWithPaging(string text, int maxLineLength = 80, int linesPerPage = 16, string color = null)
         {
             string wrappedText = WrapText(text, maxLineLength);
             string[] lines = wrappedText.Split('\n');
@@ -123,7 +129,7 @@ namespace GuildMaster.Helpers
 
         public static void DisplayTextWithPaging(string text, string color)
         {
-            DisplayTextWithPaging(text, 80, 10, color);
+            DisplayTextWithPaging(text, 80, 16, color);
         }
 
         private static void DisplayLine(string line, string color)
@@ -140,7 +146,7 @@ namespace GuildMaster.Helpers
             }
         }
 
-        public static void DisplayColoredText(string text, string color, int maxLineLength = 80, int linesPerPage = 10)
+        public static void DisplayColoredText(string text, string color, int maxLineLength = 80, int linesPerPage = 16)
         {
             DisplayTextWithPaging(text, maxLineLength, linesPerPage, color);
         }

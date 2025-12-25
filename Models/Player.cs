@@ -21,10 +21,12 @@ namespace GuildMaster.Models
         public int PreviousRoom { get; set; }
         public List<Quest> ActiveQuests { get; set; }
         public List<string> CompletedQuestIds { get; set; }  // Track quests that shouldn't repeat
+        public Dictionary<string, bool> QuestFlags { get; set; }  // Track quest state flags for events and conditions
         public bool AutoCombatEnabled { get; set; } = false;
         public bool TutorialsEnabled { get; set; } = true;
         public bool GoreEnabled { get; set; } = false;
         public bool RoomNumbersEnabled { get; set; } = false;
+        public bool DebugLogsEnabled { get; set; } = false;
         public int ThreeMemberCombatCount { get; set; } = 0;
 
         public Player(string name = "Adventurer", CharacterClass characterClass = null)
@@ -85,6 +87,7 @@ namespace GuildMaster.Models
 
             ActiveQuests = new List<Quest>();
             CompletedQuestIds = new List<string>();
+            QuestFlags = new Dictionary<string, bool>();
         }
     }
 }

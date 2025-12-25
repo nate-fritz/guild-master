@@ -141,6 +141,34 @@ namespace GuildMaster.Data
 
             npcs.Add(scribe.Name, scribe);
 
+            // Guild Armorer - Sells mid-tier equipment in guild armory (Room 65)
+            NPC guildArmorer = new NPC();
+            guildArmorer.Name = "Guild Armorer";
+            guildArmorer.Description = "A grizzled veteran with a master smith's apron stands before an array of exceptional weapons and armor. Scars and burn marks on his weathered hands speak to decades of forge work. His eyes gleam with professional pride as he examines each piece of equipment.";
+            guildArmorer.ShortDescription = "A master armorer";
+            guildArmorer.IsHostile = false;
+            guildArmorer.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Welcome to the guild armory. Your reputation precedes you - only the finest equipment for proven adventurers. What catches your eye?",
+                Choices = { }
+            });
+
+            // Set up as vendor
+            guildArmorer.IsVendor = true;
+            guildArmorer.BuybackMultiplier = 0.6f; // Better buyback than town shops
+
+            // Shop inventory - Mid-tier equipment
+            guildArmorer.ShopInventory.Add("mithril sword", 200);
+            guildArmorer.ShopInventory.Add("elven bow", 180);
+            guildArmorer.ShopInventory.Add("arcane staff", 160);
+            guildArmorer.ShopInventory.Add("war hammer", 220);
+            guildArmorer.ShopInventory.Add("dragon scale armor", 300);
+            guildArmorer.ShopInventory.Add("mithril chainmail", 250);
+            guildArmorer.ShopInventory.Add("plate armor", 100);
+            guildArmorer.ShopInventory.Add("crown of focus", 75);
+
+            npcs.Add(guildArmorer.Name, guildArmorer);
+
             // Gate Guard - Quest giver for bandit cave quest
             NPC gateGuard = new NPC();
             gateGuard.Name = "Marcus";
@@ -239,6 +267,26 @@ namespace GuildMaster.Data
 
             npcs.Add(gateGuard.Name, gateGuard);
 
+            NPC priestess = new NPC();
+            priestess.Name = "Caelia";
+            priestess.Description = "A slender woman with fair skin and golden hair greets you with a smile.  While her face shows no signs of old age, her silver eyes seem to contain endless wisdom.  She is dressed simply in white robes, with a single silver armlet around her left bicep.";
+            priestess.ShortDescription = "A priestess";
+            
+            priestess.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "The priestess turns towards you with a smile, then speaks. \"Welcome.  I am Caelia, Priestess of Keius. What brings you to his temple?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "Just window shopping, thanks.", nextNodeID = "end" }
+                }
+            });
+
+            priestess.Dialogue.Add("end", new DialogueNode ()
+            {
+                Text = "Caelia gives you a quizzical look, then smiles softly.  \"Very well.  When you're ready, come see me again.\"",
+                Choices = { }
+            });
+
 
             NPC farmer = new NPC();
             farmer.Name = "Gaius";
@@ -280,7 +328,7 @@ namespace GuildMaster.Data
 
             farmer.Dialogue.Add("recruit", new DialogueNode()
             {
-                Text = "Recuits?  For that old guildhall?  Hah-\n\n(The farmer coughs mid-laughter and enters a brief fit of wheezing)\n\nSorry about that... you might find someone in there - I saw a ranger go that way earlier.",
+                Text = "Recuits?  For that old guildhall?  Hah-<br><br>(The farmer coughs mid-laughter and enters a brief fit of wheezing)<br><br>Sorry about that... you might find someone in there - I saw a ranger go that way earlier.",
 
                 Choices =
                 {
@@ -689,6 +737,7 @@ namespace GuildMaster.Data
             iceElemental.MinGold = 8;
             iceElemental.MaxGold = 15;
             iceElemental.ExperienceReward = 200;
+            iceElemental.Role = EnemyRole.Ranged;  // Magical attacks from range
             iceElemental.LootTable = new Dictionary<string, int>
 {
     {"potion", 70},
@@ -709,6 +758,7 @@ namespace GuildMaster.Data
             thunderEagle.MinGold = 10;
             thunderEagle.MaxGold = 20;
             thunderEagle.ExperienceReward = 250;
+            thunderEagle.Role = EnemyRole.Ranged;  // Flying creature with lightning attacks
             thunderEagle.LootTable = new Dictionary<string, int>
 {
     {"potion", 80},
@@ -772,6 +822,7 @@ namespace GuildMaster.Data
             npcs.Add(banditLeader.Name, banditLeader);
             npcs.Add(fighter.Name, fighter);
             npcs.Add(direWolf.Name, direWolf);
+            npcs.Add(priestess.Name, priestess);
 
             // ===== BANDIT CAVE NPCS =====
 
@@ -912,6 +963,216 @@ namespace GuildMaster.Data
             npcs.Add(banditEnforcer.Name, banditEnforcer);
             npcs.Add(banditWarlord.Name, banditWarlord);
             npcs.Add(lydia.Name, lydia);
+
+            // ===== TESTING RECRUITS (Hidden in rooms 999-991) =====
+            // Test Recruit 1 - Legionnaire, Female, Conversational
+            NPC testRecruit1 = new NPC();
+            testRecruit1.Name = "Valeria";
+            testRecruit1.Description = "A strong woman in battle-worn armor stands at attention, clearly experienced in combat.";
+            testRecruit1.ShortDescription = "A veteran warrior";
+            testRecruit1.IsHostile = false;
+            testRecruit1.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Greetings! I've been waiting for someone from the guild. Ready to serve!",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "Join the guild?", nextNodeID = "recruit_offer" }
+                }
+            });
+            testRecruit1.Dialogue.Add("recruit_offer", new DialogueNode()
+            {
+                Text = "Absolutely! I'll head to the guild hall immediately.",
+                Action = new DialogueAction { Type = "add_recruit", Parameters = { { "class", "Legionnaire" } } },
+                Choices = { }
+            });
+
+            // Test Recruit 2 - Venator, Male, Conversational
+            NPC testRecruit2 = new NPC();
+            testRecruit2.Name = "Darius";
+            testRecruit2.Description = "A skilled archer with keen eyes scans the area, bow at the ready.";
+            testRecruit2.ShortDescription = "A skilled hunter";
+            testRecruit2.IsHostile = false;
+            testRecruit2.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Good timing. I was just thinking about joining an adventuring guild.",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "Join us?", nextNodeID = "recruit_offer" }
+                }
+            });
+            testRecruit2.Dialogue.Add("recruit_offer", new DialogueNode()
+            {
+                Text = "Count me in. I'll make my way to the guild hall.",
+                Action = new DialogueAction { Type = "add_recruit", Parameters = { { "class", "Venator" } } },
+                Choices = { }
+            });
+
+            // Test Recruit 3 - Oracle, Female, Conversational
+            NPC testRecruit3 = new NPC();
+            testRecruit3.Name = "Lyra";
+            testRecruit3.Description = "A young woman in flowing robes hums softly, her hands glowing with faint magical energy.";
+            testRecruit3.ShortDescription = "A mystic";
+            testRecruit3.IsHostile = false;
+            testRecruit3.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "The stars told me you'd come. I see a guild in your future... and mine.",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "Will you join?", nextNodeID = "recruit_offer" }
+                }
+            });
+            testRecruit3.Dialogue.Add("recruit_offer", new DialogueNode()
+            {
+                Text = "Destiny calls. I shall follow.",
+                Action = new DialogueAction { Type = "add_recruit", Parameters = { { "class", "Oracle" } } },
+                Choices = { }
+            });
+
+            // Test Recruit 4 - Legionnaire, Male, Combat Recruit
+            NPC testRecruit4 = new NPC();
+            testRecruit4.Name = "Marcus the Bold";
+            testRecruit4.Description = "A proud warrior crosses his arms and eyes you challengingly.";
+            testRecruit4.ShortDescription = "A proud warrior";
+            testRecruit4.IsHostile = false;
+            testRecruit4.Health = 10;
+            testRecruit4.MaxHealth = 10;
+            testRecruit4.AttackDamage = 2;
+            testRecruit4.Defense = 1;
+            testRecruit4.Speed = 1;
+            testRecruit4.MinGold = 0;
+            testRecruit4.MaxGold = 0;
+            testRecruit4.RecruitableAfterDefeat = true;
+            testRecruit4.RecruitClass = "Legionnaire";
+            testRecruit4.YieldDialogue = "You fight well. I'll join your guild.";
+            testRecruit4.AcceptDialogue = "I'll head to the guild hall. You've earned my respect.";
+            testRecruit4.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Prove your strength in combat, and I'll consider your guild!",
+                Action = new DialogueAction { Type = "trigger_combat" },
+                Choices = { }
+            });
+
+            // Test Recruit 5 - Venator, Female, Combat Recruit
+            NPC testRecruit5 = new NPC();
+            testRecruit5.Name = "Aria Swift";
+            testRecruit5.Description = "A nimble archer twirls her bow, eager for a challenge.";
+            testRecruit5.ShortDescription = "A swift archer";
+            testRecruit5.IsHostile = false;
+            testRecruit5.Health = 8;
+            testRecruit5.MaxHealth = 8;
+            testRecruit5.AttackDamage = 3;
+            testRecruit5.Defense = 0;
+            testRecruit5.Speed = 2;
+            testRecruit5.MinGold = 0;
+            testRecruit5.MaxGold = 0;
+            testRecruit5.RecruitableAfterDefeat = true;
+            testRecruit5.RecruitClass = "Venator";
+            testRecruit5.YieldDialogue = "Impressive! You're quick. I'll join.";
+            testRecruit5.AcceptDialogue = "On my way to the guild hall!";
+            testRecruit5.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Let's see what you've got! En garde!",
+                Action = new DialogueAction { Type = "trigger_combat" },
+                Choices = { }
+            });
+
+            // Test Recruit 6 - Oracle, Male, Combat Recruit
+            NPC testRecruit6 = new NPC();
+            testRecruit6.Name = "Aldric the Wise";
+            testRecruit6.Description = "An elderly mage taps his staff, arcane energies crackling around him.";
+            testRecruit6.ShortDescription = "An old mage";
+            testRecruit6.IsHostile = false;
+            testRecruit6.Health = 6;
+            testRecruit6.MaxHealth = 6;
+            testRecruit6.AttackDamage = 4;
+            testRecruit6.Defense = 0;
+            testRecruit6.Speed = 1;
+            testRecruit6.MinGold = 0;
+            testRecruit6.MaxGold = 0;
+            testRecruit6.RecruitableAfterDefeat = true;
+            testRecruit6.RecruitClass = "Oracle";
+            testRecruit6.YieldDialogue = "Your magical prowess is... acceptable. I'll join.";
+            testRecruit6.AcceptDialogue = "I shall lend my wisdom to your guild.";
+            testRecruit6.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "A duel of magic, then! Prepare yourself!",
+                Action = new DialogueAction { Type = "trigger_combat" },
+                Choices = { }
+            });
+
+            // Test Recruit 7 - Legionnaire, Female, Conversational
+            NPC testRecruit7 = new NPC();
+            testRecruit7.Name = "Thora";
+            testRecruit7.Description = "A shield-maiden practices defensive stances.";
+            testRecruit7.ShortDescription = "A shield-maiden";
+            testRecruit7.IsHostile = false;
+            testRecruit7.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "I've been looking for a worthy guild to join. Is this it?",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "Join us!", nextNodeID = "recruit_offer" }
+                }
+            });
+            testRecruit7.Dialogue.Add("recruit_offer", new DialogueNode()
+            {
+                Text = "I'm in. Let's make this guild legendary.",
+                Action = new DialogueAction { Type = "add_recruit", Parameters = { { "class", "Legionnaire" } } },
+                Choices = { }
+            });
+
+            // Test Recruit 8 - Venator, Male, Conversational
+            NPC testRecruit8 = new NPC();
+            testRecruit8.Name = "Fenris";
+            testRecruit8.Description = "A tracker studies animal prints in the dirt, his wolf companion nearby.";
+            testRecruit8.ShortDescription = "A beast tracker";
+            testRecruit8.IsHostile = false;
+            testRecruit8.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Me and my wolf are available for hire. Guild work sounds good.",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "Join the guild?", nextNodeID = "recruit_offer" }
+                }
+            });
+            testRecruit8.Dialogue.Add("recruit_offer", new DialogueNode()
+            {
+                Text = "We're in. The guild hall is south of the crossroads, right?",
+                Action = new DialogueAction { Type = "add_recruit", Parameters = { { "class", "Venator" } } },
+                Choices = { }
+            });
+
+            // Test Recruit 9 - Oracle, Female, Conversational
+            NPC testRecruit9 = new NPC();
+            testRecruit9.Name = "Celestia";
+            testRecruit9.Description = "A priestess meditates peacefully, surrounded by softly glowing orbs of light.";
+            testRecruit9.ShortDescription = "A priestess";
+            testRecruit9.IsHostile = false;
+            testRecruit9.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "I sense great potential in your guild. I would be honored to join.",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "Please do!", nextNodeID = "recruit_offer" }
+                }
+            });
+            testRecruit9.Dialogue.Add("recruit_offer", new DialogueNode()
+            {
+                Text = "The light guides me to your guild hall. I shall go there now.",
+                Action = new DialogueAction { Type = "add_recruit", Parameters = { { "class", "Oracle" } } },
+                Choices = { }
+            });
+
+            // Add test recruits
+            npcs.Add(testRecruit1.Name, testRecruit1);
+            npcs.Add(testRecruit2.Name, testRecruit2);
+            npcs.Add(testRecruit3.Name, testRecruit3);
+            npcs.Add(testRecruit4.Name, testRecruit4);
+            npcs.Add(testRecruit5.Name, testRecruit5);
+            npcs.Add(testRecruit6.Name, testRecruit6);
+            npcs.Add(testRecruit7.Name, testRecruit7);
+            npcs.Add(testRecruit8.Name, testRecruit8);
+            npcs.Add(testRecruit9.Name, testRecruit9);
 
             return npcs;
         }

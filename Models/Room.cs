@@ -16,6 +16,10 @@ namespace GuildMaster.Models
         public List<string> Items { get; set; }
         public List<NPC> NPCs { get; set; }
 
+        // Dynamic room state variants
+        public Dictionary<string, string> DescriptionVariants { get; set; }
+        public Dictionary<string, Dictionary<string, int>> ExitVariants { get; set; }
+
         // Respawn properties
         public bool CanRespawn { get; set; } = false;
         public float RespawnTimeHours { get; set; } = 16f;
@@ -29,6 +33,22 @@ namespace GuildMaster.Models
             Items = new List<string>();
             NPCs = new List<NPC>();
             OriginalNPCs = new List<NPC>();
+            DescriptionVariants = new Dictionary<string, string>();
+            ExitVariants = new Dictionary<string, Dictionary<string, int>>();
+        }
+
+        public string GetDescription(string state = "default")
+        {
+            if (DescriptionVariants.ContainsKey(state))
+                return DescriptionVariants[state];
+            return Description;
+        }
+
+        public Dictionary<string, int> GetExits(string state = "default")
+        {
+            if (ExitVariants.ContainsKey(state))
+                return ExitVariants[state];
+            return Exits;
         }
 
         public bool ShouldRespawn(int currentDay, float currentHour)

@@ -74,18 +74,18 @@ namespace GuildMaster.Models
 
         public void Heal(int amount)
         {
-            Health = Math.Min(MaxHealth, Health + amount);
+            Health = Math.Min(TotalMaxHealth, Health + amount);
         }
 
         public void RestoreEnergy(int amount)
         {
-            Energy = Math.Min(MaxEnergy, Energy - amount);
+            Energy = Math.Min(TotalMaxEnergy, Energy + amount);
         }
 
         public void FullRestore()
         {
-            Health = MaxHealth;
-            Energy = MaxEnergy;
+            Health = TotalMaxHealth;
+            Energy = TotalMaxEnergy;
         }
 
         public int GetXPForNextLevel(int level)

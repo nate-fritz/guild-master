@@ -21,6 +21,7 @@ namespace GuildMaster.Services
         private GuildManager? guildManager;
         private MenuManager? menuManager;
         private DialogueManager? dialogueManager;
+        private EventManager? eventManager;
         private GameController? gameController;
         private Action? stateChangedCallback;
         private PaginationManager paginationManager;
@@ -182,8 +183,18 @@ namespace GuildMaster.Services
             menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager);
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
-            gameController = new GameController(gameContext, combatManager, saveManager, questManager);
+            eventManager = new EventManager(gameContext);
+            ProgramStatics.eventManager = eventManager;
+            eventManager.LoadEvents();
+
+            // Register event dialogue trees
+            EventDataDefinitions.RegisterEventDialogueTrees(dialogueManager);
+
+            var recruitNPCManager = new RecruitNPCManager(gameContext);
+            gameController = new GameController(gameContext, combatManager, saveManager, questManager, recruitNPCManager);
             gameController.SetGameEngine(this);
+            gameController.eventManager = eventManager;
+            gameController.dialogueManager = dialogueManager;
 
             // Set up dialogue->shop callback (shop manager will be created on first use)
             dialogueManager.SetOpenShopCallback((vendor) =>
@@ -215,15 +226,32 @@ namespace GuildMaster.Services
             var effects = EffectData.InitializeEffects();
 
             // Full note text
-            string noteText = "You pick up the note, unfold it, and begin reading the letter addressed to you.<br><br>" +
+            string noteText = 
+                "You pick up the note, unfold it, and begin reading the letter addressed to you.<br><br>" +
+
                 "\"Dear " + player.Name + ",<br><br>" +
-                "Sorry I couldn't stay to greet you — urgent business pulled me away, and you happened to arrive at the perfect (and slightly unconscious) moment.<br><br>" +
-                "We spoke briefly last night — at least, you spoke, and I assumed you were lucid. You told me your name and hinted at a past life of adventuring, so I'm officially handing you the reins of the *former* Adventurer's Guild.<br><br>" +
-                "It's just you for now. Over the next year, see if you can revive the place: recruit around ten members and scrape together at least 100 gold. If you manage that, wonderful. If not… well, perhaps I put too much faith in the stranger who face-planted outside my door.<br><br>" +
-                "I'll check in at year's end.<br><br>" +
-                "Good luck!<br><br>" +
+
+                "I had hoped to be around when you awoke, but my journey can be delayed no longer.<br><br>" +
+
+                "It is hard to say how much you remember of your time here. At times, you seemed perfectly lucid, and at others you hardly knew your own name.<br><br>" +
+
+                "Seventeen days ago I had closed and locked the door to this old guild hall behind me and started on my journey, only to find you laying in the road a few hundred paces from the front door. Pardon my honesty, but your timing could not have been worse.<br><br>" +
+
+                "Regardless, I patched you up to the best of my ability, and after several days you awoke. We spoke for some time before you eventually drifted back into a deep sleep. Over the following days, you would drift in and out of consciousness, and as often as you felt up to it, we spoke just enough for me to learn that you are " + player.Name + ", an itinerant " + player.Class.Name + ".<br><br>" +
+
+                "Yesterday, I received a missive that let me know that my departure was long past due, and as such, I am forced to leave you here on your own. Not ideal, but circumstances forced my hand.<br><br>" +
+
+                "To make it up to you, I leave you the guild. Well, the guild hall anyway; you see, I was the last remaining member and Guild Master of the old Adventurer’s Guild. Now that job belongs to you, if you will take it.<br><br>" +
+
+                "I hope that you do. The present peace and stability of the empire should not be taken for granted. A time will soon come when protectors of the realm are needed. Try to find like-minded individuals - at least ten - and see if you can fill the coffers with gold once more. Saving the world can be expensive work.<br><br>" +
+
+                "Time is of the essence. Try to rebuild the guild within the next hundred days. If I survive my journey, I will write to you then to see how things are coming along.<br><br>" +
+
+                "Good fortune and may the gods watch over you.<br><br>" +
+
                 "Signed,<br><br>" +
-                "Alaron, Ex-Guildmaster.\"";
+
+                "Alaron, former Guild Master of the Adventurer's Guild\"";
 
             // Initialize game context
             gameContext = new GameContext
@@ -247,8 +275,18 @@ namespace GuildMaster.Services
             menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager);
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
-            gameController = new GameController(gameContext, combatManager, saveManager, questManager);
+            eventManager = new EventManager(gameContext);
+            ProgramStatics.eventManager = eventManager;
+            eventManager.LoadEvents();
+
+            // Register event dialogue trees
+            EventDataDefinitions.RegisterEventDialogueTrees(dialogueManager);
+
+            var recruitNPCManager = new RecruitNPCManager(gameContext);
+            gameController = new GameController(gameContext, combatManager, saveManager, questManager, recruitNPCManager);
             gameController.SetGameEngine(this);
+            gameController.eventManager = eventManager;
+            gameController.dialogueManager = dialogueManager;
 
             // Set up dialogue->shop callback (shop manager will be created on first use)
             dialogueManager.SetOpenShopCallback((vendor) =>
@@ -293,22 +331,38 @@ namespace GuildMaster.Services
                 paginationManager.ShowNextPage();
 
                 // Re-check if pagination is done after showing the page
-                if (!paginationManager.HasMorePages && player.CurrentRoom == 1)
+                if (!paginationManager.HasMorePages)
                 {
-                    // Check if we just finished reading the note (by checking if we're in room 1)
-                    string afterNoteText = "After you finish reading the letter, you notice a door to the east.";
-                    AnsiConsole.MarkupLine("");
-                    TextHelper.DisplayTextWithPaging(afterNoteText, "#FA935F");
-                    ProgramStatics.messageManager?.CheckAndShowMessage("first_movement_tutorial");
+                    // Pagination complete - show status bar after final page
+                    if (player.CurrentRoom == 1)
+                    {
+                        // Check if we just finished reading the note (by checking if we're in room 1)
+                        string afterNoteText = "After you finish reading the letter, you notice a door to the east.";
+                        AnsiConsole.MarkupLine("");
+                        TextHelper.DisplayTextWithPaging(afterNoteText, "#FA935F");
+                        ProgramStatics.messageManager?.CheckAndShowMessage("first_movement_tutorial");
+                        // Note: Don't call DisplayStats here - the message/tutorial handler already shows it
+                    }
+                    else
+                    {
+                        // For all other paginated content, show stats after final page
+                        DisplayStats();
+                    }
                 }
                 return;
             }
 
             // Check if we're in combat mode first
-            AnsiConsole.MarkupLine($"[dim]DEBUG GameEngine: combatManager != null: {combatManager != null}, IsInCombat: {combatManager?.IsInCombat}[/]");
+            if (player.DebugLogsEnabled)
+            {
+                AnsiConsole.MarkupLine($"[dim]DEBUG GameEngine: combatManager != null: {combatManager != null}, IsInCombat: {combatManager?.IsInCombat}[/]");
+            }
             if (combatManager != null && combatManager.IsInCombat)
             {
-                AnsiConsole.MarkupLine("[dim]DEBUG GameEngine: Routing to combat manager[/]");
+                if (player.DebugLogsEnabled)
+                {
+                    AnsiConsole.MarkupLine("[dim]DEBUG GameEngine: Routing to combat manager[/]");
+                }
                 // Route input to combat system
                 combatManager.ProcessCombatInput(input);
                 return;
@@ -412,7 +466,7 @@ namespace GuildMaster.Services
             // Special Look Note Command for Starting Room only
             if ((input == "look note" || input == "l note") && player.CurrentRoom == 1)
             {
-                TextHelper.DisplayTextWithPaging(gameContext.NoteText, "#fff394");
+                TextHelper.DisplayTextWithPaging(gameContext.NoteText, "#90FF90");
 
                 // Only show the follow-up text if pagination is complete
                 if (!paginationManager.HasMorePages)
@@ -561,7 +615,7 @@ namespace GuildMaster.Services
             }
             else if (input == "settings")
             {
-                ShowSettingsMenu();
+                menuManager?.ShowSettingsMenu();
             }
             else if (input.StartsWith("shop ") || input.StartsWith("trade "))
             {
@@ -618,6 +672,29 @@ namespace GuildMaster.Services
                     AnsiConsole.MarkupLine("[#FF0000]Usage: givegold <amount>[/]");
                 }
             }
+            else if (input == "flags")
+            {
+                AnsiConsole.MarkupLine("\n[#FFD700]═══ Quest Flags ═══[/]");
+                if (gameContext.Player.QuestFlags.Count == 0)
+                {
+                    AnsiConsole.MarkupLine("[dim]No quest flags set.[/]");
+                }
+                else
+                {
+                    foreach (var flag in gameContext.Player.QuestFlags.OrderBy(f => f.Key))
+                    {
+                        string value = flag.Value ? "[#00FF00]TRUE[/]" : "[#FF0000]FALSE[/]";
+                        AnsiConsole.MarkupLine($"  {flag.Key}: {value}");
+                    }
+                }
+                AnsiConsole.MarkupLine("");
+            }
+            else if (input == "showdebug")
+            {
+                gameContext.Player.DebugLogsEnabled = !gameContext.Player.DebugLogsEnabled;
+                string status = gameContext.Player.DebugLogsEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
+                AnsiConsole.MarkupLine($"\nDebug logs {status}.");
+            }
             else if (input == "roomnumbers")
             {
                 gameContext.Player.RoomNumbersEnabled = !gameContext.Player.RoomNumbersEnabled;
@@ -668,85 +745,6 @@ namespace GuildMaster.Services
             stateChangedCallback?.Invoke();
         }
 
-        private void ShowSettingsMenu()
-        {
-            if (gameContext?.Player == null)
-                return;
-
-            while (true)
-            {
-                // Display settings menu
-                AnsiConsole.MarkupLine("\n═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("                           [#FFFF00]SETTINGS[/]");
-                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
-
-                string tutorialsStatus = gameContext.Player.TutorialsEnabled ? "[#00FF00]ON[/]" : "[#FF0000]OFF[/]";
-                string autoCombatStatus = gameContext.Player.AutoCombatEnabled ? "[#00FF00]ON[/]" : "[#FF0000]OFF[/]";
-                string goreStatus = gameContext.Player.GoreEnabled ? "[#00FF00]ON[/]" : "[#FF0000]OFF[/]";
-
-                AnsiConsole.MarkupLine($"1. Tutorials ................ {tutorialsStatus}");
-                AnsiConsole.MarkupLine($"2. Auto-Combat .............. {autoCombatStatus}");
-                AnsiConsole.MarkupLine($"3. Gore Mode ................ {goreStatus}");
-                AnsiConsole.MarkupLine("");
-                AnsiConsole.MarkupLine("Enter a number to toggle, or press Enter to return.");
-                AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
-                AnsiConsole.MarkupLine("");
-
-                // Get user input
-                string input = Console.ReadLine()?.Trim() ?? "";
-
-                if (string.IsNullOrEmpty(input))
-                {
-                    // Exit settings menu
-                    AnsiConsole.MarkupLine("\nReturning to game...");
-                    break;
-                }
-                else if (input == "1")
-                {
-                    // Toggle tutorials
-                    gameContext.Player.TutorialsEnabled = !gameContext.Player.TutorialsEnabled;
-                    string newStatus = gameContext.Player.TutorialsEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
-                    AnsiConsole.MarkupLine($"\nTutorials {newStatus}.");
-                }
-                else if (input == "2")
-                {
-                    // Toggle auto-combat
-                    gameContext.Player.AutoCombatEnabled = !gameContext.Player.AutoCombatEnabled;
-                    string newStatus = gameContext.Player.AutoCombatEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
-                    AnsiConsole.MarkupLine($"\nAuto-Combat {newStatus}.");
-                    if (gameContext.Player.AutoCombatEnabled)
-                    {
-                        AnsiConsole.MarkupLine("[dim]Party members will now use AI to select abilities during combat.[/]");
-                    }
-                    else
-                    {
-                        AnsiConsole.MarkupLine("[dim]You will manually control party members during combat.[/]");
-                    }
-                }
-                else if (input == "3")
-                {
-                    // Toggle gore mode
-                    gameContext.Player.GoreEnabled = !gameContext.Player.GoreEnabled;
-                    string newStatus = gameContext.Player.GoreEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
-                    AnsiConsole.MarkupLine($"\nGore Mode {newStatus}.");
-                    if (gameContext.Player.GoreEnabled)
-                    {
-                        AnsiConsole.MarkupLine("[dim]Combat kill messages will now display graphic descriptions.[/]");
-                    }
-                    else
-                    {
-                        AnsiConsole.MarkupLine("[dim]Combat kill messages will use standard descriptions.[/]");
-                    }
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("\n[#FF0000]Invalid choice. Please enter 1, 2, 3, or press Enter to exit.[/]");
-                }
-
-                AnsiConsole.MarkupLine("");
-            }
-        }
 
         private void HandleShopCommand(string npcName)
         {
@@ -829,7 +827,7 @@ namespace GuildMaster.Services
             int displayHour = hour > 12 ? hour - 12 : hour;
             if (displayHour == 0) displayHour = 12;
 
-            AnsiConsole.MarkupLine($"\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
+            AnsiConsole.MarkupLine($"\n<span class='stats-bar'>[HP: {player.Health}/{player.TotalMaxHealth} | EP: {player.Energy}/{player.TotalMaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
         }
 
         public void StartPreCombatDialogue(List<NPC> enemies, Room room)

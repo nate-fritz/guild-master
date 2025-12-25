@@ -135,6 +135,15 @@ namespace GuildMaster.Managers
                     ("VICTORY! You've rebuilt the guild to its former glory - 10 recruits strong and 1000 gold in the coffers! The old Guildmaster would be proud!",
                      MessageType.Achievement),
 
+                // Milestone-based narrative events
+                "guild_expansion_1" =>
+                    ("With your growing roster of adventurers, the guild hall has expanded. New quarters have opened up to house your recruits.",
+                     MessageType.Narrative),
+
+                "imperial_visitor" =>
+                    ("Word of your guild's success has spread. Upon your next visit to the guild hall, you may find an unexpected visitor awaiting you.",
+                     MessageType.Narrative),
+
                 // Hints
                 "hint_talk_to_npcs" =>
                     ("[dim]Hint: Some NPCs may join your guild if you help them or prove yourself worthy.[/]",
@@ -155,17 +164,17 @@ namespace GuildMaster.Managers
             switch (type)
             {
                 case MessageType.Tutorial:
-                    AnsiConsole.MarkupLine("[#FA935F]═══════════════════════════════════════════════════════════════════[/]");
-                    AnsiConsole.MarkupLine("[#FA935F]                            TUTORIAL                               [/]");
-                    AnsiConsole.MarkupLine("[#FA935F]═══════════════════════════════════════════════════════════════════[/]");
-                    WrapAndDisplay(text, "#FA935F");
-                    AnsiConsole.MarkupLine("[#FA935F]═══════════════════════════════════════════════════════════════════[/]");
+                    AnsiConsole.MarkupLine("[#fff394]═══════════════════════════════════════════════════════════════════[/]");
+                    AnsiConsole.MarkupLine("[#fff394]                            TUTORIAL                               [/]");
+                    AnsiConsole.MarkupLine("[#fff394]═══════════════════════════════════════════════════════════════════[/]");
+                    WrapAndDisplay(text, "#fff394");
+                    AnsiConsole.MarkupLine("[#fff394]═══════════════════════════════════════════════════════════════════[/]");
                     break;
 
                 case MessageType.Narrative:
-                    AnsiConsole.MarkupLine("[#FFD700]═══════════════════════════════════════════════════════════════════[/]");
-                    WrapAndDisplay(text, "#FFD700");
-                    AnsiConsole.MarkupLine("[#FFD700]═══════════════════════════════════════════════════════════════════[/]");
+                    AnsiConsole.MarkupLine("[#fb8af1ff]═══════════════════════════════════════════════════════════════════[/]");
+                    WrapAndDisplay(text, "#fb8af1ff");
+                    AnsiConsole.MarkupLine("[#fb8af1ff]═══════════════════════════════════════════════════════════════════[/]");
                     break;
 
                 case MessageType.Achievement:

@@ -20,7 +20,6 @@ namespace GuildMaster.Managers
 
         public void ShowTitleScreen()
         {
-            Console.Clear();
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("[#FA935F]██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗[/]");
             AnsiConsole.MarkupLine("[#FA8448]██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝[/]");
@@ -47,7 +46,6 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("[#FA8448]                      ~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~[/]");
             AnsiConsole.MarkupLine("");
-            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public void ShowNewGameHeader()
@@ -60,7 +58,6 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("[#0A62FF]        ██║ ╚████║███████╗╚███╔███╔╝  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗     [/]");
             AnsiConsole.MarkupLine("[#0048C9]        ╚═╝  ╚═══╝╚══════╝ ╚══╝╚══╝    ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝     [/]");
             AnsiConsole.MarkupLine("");
-            Console.ResetColor();
         }
 
         public void ShowCharacterStatsHeader()
@@ -73,14 +70,11 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("[#01838D]      ██║     ██╔══██║██╔══██║██╔══██╗██╔══██║██║        ██║   ██╔══╝  ██╔══██╗  [/]");
             AnsiConsole.MarkupLine("[#017077]      ╚██████╗██║  ██║██║  ██║██║  ██║██║  ██║╚██████╗   ██║   ███████╗██║  ██║  [/]");
             AnsiConsole.MarkupLine("[#015C62]       ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝  [/]");
- 
-            Console.ResetColor();
         }
 
         public void DisplayStats()
         {
             var player = context.Player;
-            Console.ForegroundColor = ConsoleColor.Cyan;
 
             int hour = (int)player.CurrentHour;
             int minutes = (int)((player.CurrentHour - hour) * 60);
@@ -90,7 +84,6 @@ namespace GuildMaster.Managers
             if (displayHour == 0) displayHour = 12;
 
             AnsiConsole.MarkupLine($"\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
-            Console.ResetColor();
         }
 
         public void ShowStats()
@@ -276,6 +269,10 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Display:");
             AnsiConsole.MarkupLine("Toggle room numbers:  roomnumbers");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Debug:");
+            AnsiConsole.MarkupLine("View quest flags:     flags");
+            AnsiConsole.MarkupLine("Toggle debug logs:    showdebug");
             AnsiConsole.MarkupLine("");
         }
 

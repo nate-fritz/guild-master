@@ -263,7 +263,7 @@ namespace GuildMaster.Managers
                 }
                 else
                 {
-                    HandleEnemyTurn(combatant.Character as NPC, player);
+                    HandleEnemyTurn(combatant.Character as NPC, player, activeEnemies);
 
                     if (isDefending)
                     {
@@ -1226,9 +1226,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("0. Back");
 
             Console.Write("Choose ability: ");
-            Console.ForegroundColor = ConsoleColor.Cyan;
             string abilityChoice = Console.ReadLine();
-            Console.ResetColor();
 
             if (abilityChoice == "0")
                 return false;
@@ -1314,9 +1312,7 @@ namespace GuildMaster.Managers
                 }
                 Console.Write("Target: ");
 
-                Console.ForegroundColor = ConsoleColor.Cyan;
                 string targetChoice = Console.ReadLine();
-                Console.ResetColor();
 
                 if (int.TryParse(targetChoice, out int targetIndex) && targetIndex > 0 && targetIndex <= powerEnemies.Count)
                 {
@@ -1397,9 +1393,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("0. Back");
 
             Console.Write("Use item: ");
-            Console.ForegroundColor = ConsoleColor.Cyan;
             string itemChoice = Console.ReadLine();
-            Console.ResetColor();
 
             if (itemChoice == "0")
             {
@@ -1645,7 +1639,7 @@ namespace GuildMaster.Managers
             CompleteTurn();
         }
 
-        private bool ExecuteEnemyAbility(Ability ability, NPC enemy, Character target, List<Character> possibleTargets, Player player)
+        private bool ExecuteEnemyAbility(Ability ability, NPC enemy, Character target, List<Character> possibleTargets, List<NPC> activeEnemies, Player player)
         {
             // Deduct energy cost
             enemy.Energy -= ability.EnergyCost;
@@ -1656,6 +1650,22 @@ namespace GuildMaster.Managers
             // Handle different ability types
             switch (ability.Type)
             {
+                case AbilityType.Heal:
+                    // Heal ability - restore health to target ally
+                    int healAmount = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+
+                    if (target is NPC npcTarget && activeEnemies.Contains(npcTarget))
+                    {
+                        int oldHealth = npcTarget.Health;
+                        npcTarget.Health = Math.Min(npcTarget.MaxHealth, npcTarget.Health + healAmount);
+                        int actualHealing = npcTarget.Health - oldHealth;
+
+                        AnsiConsole.MarkupLine($"\n[#FF0000]{enemyName} uses {ability.Name} on {npcTarget.Name}![/]");
+                        AnsiConsole.MarkupLine($"[#00FF00]{npcTarget.Name} recovers {actualHealing} health![/]");
+                        return true;
+                    }
+                    return false;
+
                 case AbilityType.SingleTarget:
                     // Single target damage ability
                     int damage = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
@@ -1741,7 +1751,7 @@ namespace GuildMaster.Managers
             }
         }
 
-        private void HandleEnemyTurn(NPC attackingEnemy, Player player)
+        private void HandleEnemyTurn(NPC attackingEnemy, Player player, List<NPC> activeEnemies)
         {
             if (attackingEnemy != null && attackingEnemy.Health > 0)
             {
@@ -1811,26 +1821,63 @@ namespace GuildMaster.Managers
                             }
                         }
 
-                        // 40% chance to use an ability if available
-                        if (usableAbilities.Count > 0 && random.Next(100) < 40)
+                        // Smart AI ability selection
+                        if (usableAbilities.Count > 0)
                         {
-                            // For now, just pick a random usable ability
-                            // TODO: Implement smarter ability selection (AOE when multiple targets, heals when ally hurt, etc.)
-                            var selectedAbility = usableAbilities[random.Next(usableAbilities.Count)];
+                            Ability selectedAbility = null;
+                            Character abilityTarget = target;
 
-                            // Execute the ability
-                            // Note: We need to convert possibleTargets to List<NPC> for enemy abilities
-                            // For now, enemies will only use offensive abilities
-                            var enemyTargets = new List<NPC>(); // Empty for now, enemies attack player/party
-                            bool abilityExecuted = ExecuteEnemyAbility(selectedAbility, attackingEnemy, target, possibleTargets, player);
+                            // 1. Check for healing abilities if any ally is below 50% HP
+                            var hurtAllies = activeEnemies.Where(e => e.Health > 0 && e.Health < e.MaxHealth / 2).ToList();
+                            var healAbilities = usableAbilities.Where(a => a.Type == AbilityType.Heal).ToList();
 
-                            if (abilityExecuted)
+                            if (hurtAllies.Count > 0 && healAbilities.Count > 0)
                             {
-                                // Regenerate energy at end of turn
-                                attackingEnemy.Energy = Math.Min(attackingEnemy.MaxEnergy, attackingEnemy.Energy + attackingEnemy.EnergyRegenPerTurn);
-                                return; // Ability was used, turn is over
+                                selectedAbility = healAbilities.First();
+                                abilityTarget = hurtAllies.OrderBy(e => e.Health).First(); // Heal the most wounded ally
                             }
-                            // If ability execution failed, fall through to basic attack
+                            // 2. Check for AOE abilities when there are 2+ targets and 30% random chance
+                            else if (possibleTargets.Count >= 2 && random.Next(100) < 30)
+                            {
+                                var aoeAbilities = usableAbilities.Where(a => a.Type == AbilityType.AreaOfEffect).ToList();
+                                if (aoeAbilities.Count > 0)
+                                {
+                                    selectedAbility = aoeAbilities.First();
+                                }
+                            }
+
+                            // 3. Otherwise, pick the strongest affordable single-target ability (by damage potential)
+                            if (selectedAbility == null)
+                            {
+                                var damageAbilities = usableAbilities.Where(a =>
+                                    a.Type == AbilityType.SingleTarget || a.Type == AbilityType.AreaOfEffect).ToList();
+
+                                if (damageAbilities.Count > 0)
+                                {
+                                    // Select ability with highest average damage (DiceCount * DiceSides / 2 + Bonus)
+                                    selectedAbility = damageAbilities.OrderByDescending(a =>
+                                        (a.DiceCount * a.DiceSides / 2.0) + a.Bonus).First();
+                                }
+                                else
+                                {
+                                    // Fallback to random ability if no damage abilities
+                                    selectedAbility = usableAbilities[random.Next(usableAbilities.Count)];
+                                }
+                            }
+
+                            // Execute the ability if one was selected
+                            if (selectedAbility != null)
+                            {
+                                bool abilityExecuted = ExecuteEnemyAbility(selectedAbility, attackingEnemy, abilityTarget, possibleTargets, activeEnemies, player);
+
+                                if (abilityExecuted)
+                                {
+                                    // Regenerate energy at end of turn
+                                    attackingEnemy.Energy = Math.Min(attackingEnemy.MaxEnergy, attackingEnemy.Energy + attackingEnemy.EnergyRegenPerTurn);
+                                    return; // Ability was used, turn is over
+                                }
+                                // If ability execution failed, fall through to basic attack
+                            }
                         }
                     }
 
@@ -1939,8 +1986,7 @@ namespace GuildMaster.Managers
         {
             currentState = CombatState.DeathMenu;
 
-            Console.ForegroundColor = ConsoleColor.Red;
-            AnsiConsole.MarkupLine("\n**** YOU DIED ****");
+            AnsiConsole.MarkupLine("\n[red]**** YOU DIED ****[/]");
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("    ╔═══════════════════════════════════════════════════════════════════════════════════╗");
             AnsiConsole.MarkupLine("    ║      ██████╗  █████╗ ███╗   ███╗███████╗    ██████╗ ██╗   ██╗███████╗██████╗      ║");
@@ -1951,7 +1997,6 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("    ║       ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝   ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝     ║");
             AnsiConsole.MarkupLine("    ╚═══════════════════════════════════════════════════════════════════════════════════╝");
             AnsiConsole.MarkupLine("");
-            Console.ResetColor();
 
             AnsiConsole.MarkupLine("\n[#FFD700]What would you like to do?[/]");
             AnsiConsole.MarkupLine("1. Load a saved game");
@@ -3134,9 +3179,7 @@ namespace GuildMaster.Managers
             }
 
             Console.Write("Target: ");
-            Console.ForegroundColor = ConsoleColor.Cyan;
             string choice = Console.ReadLine();
-            Console.ResetColor();
 
             if (!int.TryParse(choice, out int index) || index < 1 || index > targets.Count)
             {
@@ -3794,7 +3837,17 @@ namespace GuildMaster.Managers
                         $"[#90FF90]{victimName} staggers and falls, defeated![/]",
                         $"[#90FF90]{killerName} strikes true! {victimName} is vanquished![/]",
                         $"[#90FF90]The clash of steel ends with {victimName} on the ground![/]",
-                        $"[#90FF90]{victimName} falls before {killerName}'s superior swordplay![/]"
+                        $"[#90FF90]{victimName} falls before {killerName}'s superior swordplay![/]",
+                        $"[#90FF90]{killerName}'s blade carves through {victimName}'s defense![/]",
+                        $"[#90FF90]{victimName} staggers and falls to the sword![/]",
+                        $"[#90FF90]A swift strike finishes {victimName}![/]",
+                        $"[#90FF90]{killerName}'s gladius finds the gap in {victimName}'s guard![/]",
+                        $"[#90FF90]{victimName} crumples before {killerName}'s steel![/]",
+                        $"[#90FF90]The final thrust drops {victimName} to the ground![/]",
+                        $"[#90FF90]{killerName}'s blade sings {victimName}'s death song![/]",
+                        $"[#90FF90]Steel flashes and {victimName} falls![/]",
+                        $"[#90FF90]{victimName} can't match {killerName}'s skill with a blade![/]",
+                        $"[#90FF90]A masterful cut ends {victimName}'s resistance![/]"
                     },
                     new List<string>
                     {
@@ -3807,7 +3860,17 @@ namespace GuildMaster.Managers
                         $"[#FA8A8A]A arterial spray erupts as {killerName} cuts down {victimName}![/]",
                         $"[#FA8A8A]{victimName}'s entrails spill out from the mortal wound![/]",
                         $"[#FA8A8A]{killerName} hacks {victimName} apart in a gory display![/]",
-                        $"[#FA8A8A]{victimName}'s body crumples, soaked in their own blood![/]"
+                        $"[#FA8A8A]{victimName}'s body crumples, soaked in their own blood![/]",
+                        $"[#FA8A8A]The sword opens {victimName}'s throat in a crimson gush![/]",
+                        $"[#FA8A8A]{killerName}'s blade pierces {victimName}'s heart, blood erupting![/]",
+                        $"[#FA8A8A]{victimName}'s severed arm hits the ground before they do![/]",
+                        $"[#FA8A8A]Steel bites deep into {victimName}'s neck, nearly decapitating them![/]",
+                        $"[#FA8A8A]{victimName} collapses in a widening pool of their own blood![/]",
+                        $"[#FA8A8A]The gladius carves through ribs and lungs, blood frothing from {victimName}'s mouth![/]",
+                        $"[#FA8A8A]{killerName} splits {victimName} from shoulder to hip![/]",
+                        $"[#FA8A8A]Viscera spills as the blade opens {victimName}'s belly![/]",
+                        $"[#FA8A8A]{victimName} gurgles on blood as the sword pierces their lung![/]",
+                        $"[#FA8A8A]A savage cut paints the ground red with {victimName}'s blood![/]"
                     }
                 ),
                 ["bow"] = (
@@ -3822,7 +3885,17 @@ namespace GuildMaster.Managers
                         $"[#90FF90]The arrow finds a gap in {victimName}'s armor![/]",
                         $"[#90FF90]{victimName} falls with a strangled gasp![/]",
                         $"[#90FF90]{killerName}'s marksmanship proves superior![/]",
-                        $"[#90FF90]A fatal shot brings {victimName} down![/]"
+                        $"[#90FF90]A fatal shot brings {victimName} down![/]",
+                        $"[#90FF90]{killerName}'s arrow finds its mark with deadly precision![/]",
+                        $"[#90FF90]{victimName} falls with an arrow through them![/]",
+                        $"[#90FF90]A perfectly placed shot ends {victimName}![/]",
+                        $"[#90FF90]{killerName}'s bowstring sings {victimName}'s death knell![/]",
+                        $"[#90FF90]The arrow strikes a vital point! {victimName} collapses![/]",
+                        $"[#90FF90]{victimName} drops as the arrow hits home![/]",
+                        $"[#90FF90]Swift and silent, {killerName}'s arrow fells {victimName}![/]",
+                        $"[#90FF90]The shot flies true and {victimName} is no more![/]",
+                        $"[#90FF90]{killerName}'s archery skills prove lethal![/]",
+                        $"[#90FF90]One arrow is all it takes to end {victimName}![/]"
                     },
                     new List<string>
                     {
@@ -3835,7 +3908,17 @@ namespace GuildMaster.Managers
                         $"[#FA8A8A]{victimName} convulses violently as the arrow finds their heart![/]",
                         $"[#FA8A8A]{killerName}'s shot rips through {victimName}'s neck, nearly decapitating them![/]",
                         $"[#FA8A8A]Blood pours from {victimName}'s mouth as they collapse, arrow-riddled![/]",
-                        $"[#FA8A8A]The arrow punches through ribs and organs! {victimName} dies screaming![/]"
+                        $"[#FA8A8A]The arrow punches through ribs and organs! {victimName} dies screaming![/]",
+                        $"[#FA8A8A]The arrow impales {victimName}'s windpipe, blood streaming![/]",
+                        $"[#FA8A8A]{victimName} chokes on blood as the arrow punctures their lung![/]",
+                        $"[#FA8A8A]The arrowhead tears through {victimName}'s jugular in a crimson fountain![/]",
+                        $"[#FA8A8A]{killerName}'s arrow splits {victimName}'s skull like ripe fruit![/]",
+                        $"[#FA8A8A]Blood sprays as the arrow rips clean through {victimName}![/]",
+                        $"[#FA8A8A]The arrow pierces {victimName}'s heart, blood gushing from the wound![/]",
+                        $"[#FA8A8A]{victimName} dies with three arrows buried in their chest![/]",
+                        $"[#FA8A8A]The shot tears through {victimName}'s abdomen, spilling their guts![/]",
+                        $"[#FA8A8A]{victimName} collapses in a heap, arrows protruding from vital organs![/]",
+                        $"[#FA8A8A]Crimson blooms across {victimName}'s chest as the arrow strikes home![/]"
                     }
                 ),
                 ["staff"] = (
@@ -3850,7 +3933,17 @@ namespace GuildMaster.Managers
                         $"[#90FF90]The staff's power strikes down {victimName}![/]",
                         $"[#90FF90]Ethereal flames engulf {victimName}![/]",
                         $"[#90FF90]{victimName} succumbs to {killerName}'s magic![/]",
-                        $"[#90FF90]A surge of power ends {victimName}'s resistance![/]"
+                        $"[#90FF90]A surge of power ends {victimName}'s resistance![/]",
+                        $"[#90FF90]Arcane power surges through {victimName}![/]",
+                        $"[#90FF90]{victimName} is overwhelmed by magical force![/]",
+                        $"[#90FF90]{killerName}'s staff channels devastating energy into {victimName}![/]",
+                        $"[#90FF90]Magic crackles as {victimName} falls![/]",
+                        $"[#90FF90]Mystical energy tears through {victimName}![/]",
+                        $"[#90FF90]The arcane blast drops {victimName} instantly![/]",
+                        $"[#90FF90]{victimName} cannot withstand {killerName}'s sorcery![/]",
+                        $"[#90FF90]Eldritch power ends {victimName}![/]",
+                        $"[#90FF90]{killerName}'s magic proves too strong for {victimName}![/]",
+                        $"[#90FF90]The final spell seals {victimName}'s fate![/]"
                     },
                     new List<string>
                     {
@@ -3863,7 +3956,17 @@ namespace GuildMaster.Managers
                         $"[#FA8A8A]Lightning chars {victimName}'s corpse black![/]",
                         $"[#FA8A8A]{victimName}'s organs liquefy from the magical assault![/]",
                         $"[#FA8A8A]Frost shatters {victimName}'s frozen body into bloody chunks![/]",
-                        $"[#FA8A8A]{killerName}'s spell rips {victimName} apart at the seams![/]"
+                        $"[#FA8A8A]{killerName}'s spell rips {victimName} apart at the seams![/]",
+                        $"[#FA8A8A]Magical flames reduce {victimName} to ash and charred bone![/]",
+                        $"[#FA8A8A]{victimName}'s eyes burst from arcane pressure![/]",
+                        $"[#FA8A8A]The spell causes {victimName}'s blood to ignite from within![/]",
+                        $"[#FA8A8A]Arcane energy flays the flesh from {victimName}'s body![/]",
+                        $"[#FA8A8A]{victimName} screams as magic boils them alive![/]",
+                        $"[#FA8A8A]Dark power turns {victimName}'s insides to mush![/]",
+                        $"[#FA8A8A]{killerName}'s spell ruptures {victimName}'s organs one by one![/]",
+                        $"[#FA8A8A]Mystic force tears {victimName} limb from limb![/]",
+                        $"[#FA8A8A]{victimName} convulses violently as magic ravages their body![/]",
+                        $"[#FA8A8A]The curse causes {victimName} to hemorrhage from every orifice![/]"
                     }
                 ),
                 ["dagger"] = (
@@ -3878,7 +3981,17 @@ namespace GuildMaster.Managers
                         $"[#90FF90]{killerName} delivers the killing blow![/]",
                         $"[#90FF90]{victimName} staggers back and falls![/]",
                         $"[#90FF90]A flash of steel ends the fight![/]",
-                        $"[#90FF90]{killerName}'s speed overwhelms {victimName}![/]"
+                        $"[#90FF90]{killerName}'s speed overwhelms {victimName}![/]",
+                        $"[#90FF90]A quick thrust to a vital spot fells {victimName}![/]",
+                        $"[#90FF90]{killerName}'s dagger strikes like a viper![/]",
+                        $"[#90FF90]Precision and speed bring {victimName} down![/]",
+                        $"[#90FF90]The blade finds its mark between the ribs![/]",
+                        $"[#90FF90]{victimName} never saw the strike coming![/]",
+                        $"[#90FF90]Silent and swift, the dagger ends {victimName}![/]",
+                        $"[#90FF90]{killerName}'s lethal precision defeats {victimName}![/]",
+                        $"[#90FF90]One well-placed stab is all it takes![/]",
+                        $"[#90FF90]The dagger slips past {victimName}'s defenses![/]",
+                        $"[#90FF90]{victimName} falls to {killerName}'s quick blade![/]"
                     },
                     new List<string>
                     {
@@ -3891,7 +4004,17 @@ namespace GuildMaster.Managers
                         $"[#FA8A8A]The dagger twists in {victimName}'s ribcage, blood pouring out![/]",
                         $"[#FA8A8A]{victimName} chokes on their own blood as the dagger finds home![/]",
                         $"[#FA8A8A]{killerName} carves {victimName} up like a butcher![/]",
-                        $"[#FA8A8A]Arterial spray paints the ground as {victimName} bleeds out![/]"
+                        $"[#FA8A8A]Arterial spray paints the ground as {victimName} bleeds out![/]",
+                        $"[#FA8A8A]The blade opens {victimName}'s jugular in a crimson fountain![/]",
+                        $"[#FA8A8A]{killerName} stabs {victimName} in the liver, blood pouring![/]",
+                        $"[#FA8A8A]The dagger punctures {victimName}'s heart repeatedly![/]",
+                        $"[#FA8A8A]{victimName} gurgles as blood fills their punctured throat![/]",
+                        $"[#FA8A8A]Quick stabs perforate {victimName}'s vital organs![/]",
+                        $"[#FA8A8A]{killerName} opens {victimName}'s belly, entrails spilling![/]",
+                        $"[#FA8A8A]Blood streams from a dozen stab wounds as {victimName} falls![/]",
+                        $"[#FA8A8A]The dagger finds the gap between armor plates, piercing deep![/]",
+                        $"[#FA8A8A]{victimName} collapses in a spreading pool of their own gore![/]",
+                        $"[#FA8A8A]{killerName} eviscerates {victimName} with brutal efficiency![/]"
                     }
                 ),
                 ["axe"] = (
@@ -3906,7 +4029,17 @@ namespace GuildMaster.Managers
                         $"[#90FF90]The heavy blade finds its mark![/]",
                         $"[#90FF90]{victimName} crumples under the axe's weight![/]",
                         $"[#90FF90]{killerName}'s savage strike is decisive![/]",
-                        $"[#90FF90]A powerful chop ends the battle![/]"
+                        $"[#90FF90]A powerful chop ends the battle![/]",
+                        $"[#90FF90]The battle axe cleaves {victimName} in two![/]",
+                        $"[#90FF90]{killerName}'s overhead swing fells {victimName}![/]",
+                        $"[#90FF90]Brutal strength overpowers {victimName}![/]",
+                        $"[#90FF90]The axe's heavy blade crushes through![/]",
+                        $"[#90FF90]{victimName} cannot withstand the mighty blow![/]",
+                        $"[#90FF90]A devastating chop ends {victimName}![/]",
+                        $"[#90FF90]{killerName} splits {victimName}'s guard with raw power![/]",
+                        $"[#90FF90]The weighty axe proves unstoppable![/]",
+                        $"[#90FF90]{victimName} falls before {killerName}'s brutal assault![/]",
+                        $"[#90FF90]One mighty swing ends the fight![/]"
                     },
                     new List<string>
                     {
@@ -3919,7 +4052,17 @@ namespace GuildMaster.Managers
                         $"[#FA8A8A]{killerName} hacks {victimName} apart with savage chops![/]",
                         $"[#FA8A8A]Ribs shatter and organs burst from the axe's impact![/]",
                         $"[#FA8A8A]{victimName}'s body splits open, innards spilling out![/]",
-                        $"[#FA8A8A]Blood and viscera fly as {killerName}'s axe strikes home![/]"
+                        $"[#FA8A8A]Blood and viscera fly as {killerName}'s axe strikes home![/]",
+                        $"[#FA8A8A]The axe embeds in {victimName}'s ribcage with a sickening crunch![/]",
+                        $"[#FA8A8A]{killerName} splits {victimName} from collarbone to navel![/]",
+                        $"[#FA8A8A]The brutal chop opens {victimName} like a slaughtered pig![/]",
+                        $"[#FA8A8A]{victimName}'s head rolls away as the axe severs it![/]",
+                        $"[#FA8A8A]Bone splinters and blood sprays from the devastating blow![/]",
+                        $"[#FA8A8A]The axe cleaves through armor, bone, and flesh alike![/]",
+                        $"[#FA8A8A]{victimName}'s chest cavity opens in a gush of blood and organs![/]",
+                        $"[#FA8A8A]Multiple savage chops reduce {victimName} to a mangled corpse![/]",
+                        $"[#FA8A8A]The heavy blade crushes through {victimName}'s skull![/]",
+                        $"[#FA8A8A]{killerName} butchers {victimName} with brutal efficiency![/]"
                     }
                 ),
                 ["hammer"] = (
@@ -3990,7 +4133,17 @@ namespace GuildMaster.Managers
                         $"[#90FF90]{killerName}'s fists prove deadly![/]",
                         $"[#90FF90]A decisive strike ends {victimName}![/]",
                         $"[#90FF90]{victimName} falls, overwhelmed![/]",
-                        $"[#90FF90]{killerName}'s raw strength prevails![/]"
+                        $"[#90FF90]{killerName}'s raw strength prevails![/]",
+                        $"[#90FF90]A devastating punch drops {victimName}![/]",
+                        $"[#90FF90]{killerName} pummels {victimName} into submission![/]",
+                        $"[#90FF90]Bare-knuckle fury ends {victimName}![/]",
+                        $"[#90FF90]{victimName} cannot match {killerName}'s fighting skill![/]",
+                        $"[#90FF90]A crushing blow brings {victimName} down![/]",
+                        $"[#90FF90]{killerName}'s martial arts prove superior![/]",
+                        $"[#90FF90]{victimName} falls to a powerful strike![/]",
+                        $"[#90FF90]Fist meets flesh and {victimName} crumples![/]",
+                        $"[#90FF90]{killerName} defeats {victimName} with pure combat skill![/]",
+                        $"[#90FF90]A final strike ends {victimName}'s resistance![/]"
                     },
                     new List<string>
                     {
@@ -4003,7 +4156,17 @@ namespace GuildMaster.Managers
                         $"[#FA8A8A]{victimName}'s skull fractures under the brutal blows![/]",
                         $"[#FA8A8A]{killerName} tears {victimName} apart with savage violence![/]",
                         $"[#FA8A8A]Blood sprays from {victimName}'s ruptured organs![/]",
-                        $"[#FA8A8A]{victimName}'s spine snaps like a twig in {killerName}'s grip![/]"
+                        $"[#FA8A8A]{victimName}'s spine snaps like a twig in {killerName}'s grip![/]",
+                        $"[#FA8A8A]{killerName} caves in {victimName}'s chest with a brutal strike![/]",
+                        $"[#FA8A8A]Bone shatters as {killerName} pummels {victimName}![/]",
+                        $"[#FA8A8A]{victimName}'s face becomes an unrecognizable bloody mess![/]",
+                        $"[#FA8A8A]A vicious strike ruptures {victimName}'s internal organs![/]",
+                        $"[#FA8A8A]{killerName} breaks every bone in {victimName}'s body![/]",
+                        $"[#FA8A8A]Blood and teeth scatter as {killerName} beats {victimName} to death![/]",
+                        $"[#FA8A8A]{victimName} gurgles on blood from their crushed throat![/]",
+                        $"[#FA8A8A]{killerName} rips {victimName}'s head clean off![/]",
+                        $"[#FA8A8A]Savage blows reduce {victimName} to a broken, bleeding heap![/]",
+                        $"[#FA8A8A]{victimName}'s ribcage collapses inward from the brutal assault![/]"
                     }
                 )
             };

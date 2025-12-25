@@ -14,16 +14,20 @@ namespace GuildMaster.Managers
         private readonly GameContext context;
         private readonly CombatManager combatManager;
         private readonly SaveGameManager saveManager;
+        private readonly RecruitNPCManager recruitNPCManager;
         private GameEngine? gameEngine;
         public ShopManager shopManager;
         public QuestManager questManager;
+        public EventManager? eventManager;
+        public DialogueManager? dialogueManager;
 
-        public GameController(GameContext gameContext, CombatManager combatMgr, SaveGameManager saveMgr, QuestManager questMgr)
+        public GameController(GameContext gameContext, CombatManager combatMgr, SaveGameManager saveMgr, QuestManager questMgr, RecruitNPCManager recruitMgr)
         {
             context = gameContext;
             combatManager = combatMgr;
             saveManager = saveMgr;
             questManager = questMgr;
+            recruitNPCManager = recruitMgr;
         }
 
         public void SetGameEngine(GameEngine engine)
@@ -53,7 +57,7 @@ namespace GuildMaster.Managers
                 }
                 AnsiConsole.MarkupLine($"\n<span class='room-title'>[{roomTitle}]</span>");
 
-                TextHelper.DisplayTextWithPaging(currentRoomObj.Description, "#FA935F");
+                TextHelper.DisplayTextWithPaging(GetRoomDescription(currentRoomObj), "#FA935F");
 
                 if (currentRoomObj.NPCs.Count > 0)
                 {
@@ -237,6 +241,9 @@ namespace GuildMaster.Managers
 
             if (currentRoomObj.Exits.ContainsKey(direction))
             {
+                // Clear recruit NPCs from current room before leaving
+                recruitNPCManager.ClearDynamicNPCsInRoom(player.CurrentRoom);
+
                 player.PreviousRoom = player.CurrentRoom; // Track previous room for flee
                 player.CurrentRoom = currentRoomObj.Exits[direction];
                 Room newRoom = rooms[player.CurrentRoom];
@@ -255,7 +262,12 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine("[#FFFF00][The area has been reoccupied by enemies!][/]");
                 }
 
+                // Spawn recruit NPCs in new room
+                recruitNPCManager.SpawnIdleRecruitsInRoom(player.CurrentRoom);
+
                 AnsiConsole.MarkupLine($"\nYou move {direction} to {newRoom.Title}.");
+
+                // Display room description first
                 AnsiConsole.MarkupLine("\n");
 
                 // Display room title with optional room number
@@ -266,9 +278,51 @@ namespace GuildMaster.Managers
                 }
                 AnsiConsole.MarkupLine($"\n<span class='room-title'>[{roomTitle}]</span>");
 
-                TextHelper.DisplayTextWithPaging(newRoom.Description, "#FA935F");
+                TextHelper.DisplayTextWithPaging(GetRoomDescription(newRoom), "#FA935F");
 
-                if (newRoom.Exits.Count > 0)
+                // Check for events AFTER showing room description
+                if (eventManager != null)
+                {
+                    EventData triggeredEvent = eventManager.CheckForEvent(player.CurrentRoom);
+
+                    if (triggeredEvent != null)
+                    {
+                        // Execute event actions first
+                        eventManager.ExecuteActions(triggeredEvent);
+
+                        // Trigger associated dialogue tree (if specified)
+                        if (!string.IsNullOrEmpty(triggeredEvent.DialogueTreeId) && dialogueManager != null)
+                        {
+                            dialogueManager.StartEventDialogue(triggeredEvent.DialogueTreeId);
+                        }
+
+                        // Mark event as triggered if one-time
+                        if (triggeredEvent.IsOneTime)
+                        {
+                            eventManager.MarkEventTriggered(triggeredEvent.EventId);
+                        }
+
+                        // Check if ForceTravel action changed the room
+                        if (player.CurrentRoom != newRoom.NumericId)
+                        {
+                            // Player was moved by event action - update to new room
+                            newRoom = rooms[player.CurrentRoom];
+                            // Spawn recruit NPCs in the new room
+                            recruitNPCManager.SpawnIdleRecruitsInRoom(player.CurrentRoom);
+                        }
+                    }
+                }
+
+                // Check if we're now in dialogue after event processing
+                bool inDialogue = dialogueManager != null && dialogueManager.IsInDialogue;
+
+                // If event started dialogue, return early to let dialogue system take over
+                if (inDialogue)
+                {
+                    return;
+                }
+
+                if (!inDialogue && newRoom.Exits.Count > 0)
                 {
                     string[] directionOrder = { "north", "east", "south", "west" };
                     var orderedExits = directionOrder.Where(dir => newRoom.Exits.ContainsKey(dir)).ToList();
@@ -283,8 +337,8 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine($"\n[Exits: {exitList}]");
                 }
 
-                // Check for hostile NPCs and start combat
-                if (newRoom.NPCs.Count > 0)
+                // Check for hostile NPCs and start combat (unless in dialogue)
+                if (!inDialogue && newRoom.NPCs.Count > 0)
                 {
                     var hostileNPCs = newRoom.NPCs.Where(n => n.IsHostile).ToList();
                     if (hostileNPCs.Count > 0)
@@ -332,6 +386,32 @@ namespace GuildMaster.Managers
             }
         }
 
+        /// <summary>
+        /// Gets the appropriate room description based on game state (e.g., recruit count for guild rooms)
+        /// </summary>
+        private string GetRoomDescription(Room room)
+        {
+            var player = context.Player;
+
+            // Special handling for Room 4 (Common Area) based on recruit count
+            if (room.NumericId == 4)
+            {
+                int recruitCount = player.Recruits.Count;
+
+                if (recruitCount >= 10)
+                    return room.GetDescription("recruits_10");
+                else if (recruitCount >= 8)
+                    return room.GetDescription("recruits_8");
+                else if (recruitCount >= 6)
+                    return room.GetDescription("recruits_6");
+                else if (recruitCount >= 4)
+                    return room.GetDescription("recruits_4");
+            }
+
+            // Default description
+            return room.Description;
+        }
+
         public void TeleportToRoom(int roomId)
         {
             var player = context.Player;
@@ -343,13 +423,19 @@ namespace GuildMaster.Managers
                 return;
             }
 
+            // Clear recruit NPCs from current room before teleporting
+            recruitNPCManager.ClearDynamicNPCsInRoom(player.CurrentRoom);
+
             player.CurrentRoom = roomId;
             Room newRoom = rooms[roomId];
+
+            // Spawn recruit NPCs in new room
+            recruitNPCManager.SpawnIdleRecruitsInRoom(player.CurrentRoom);
 
             AnsiConsole.MarkupLine($"\n[#00FFFF]You teleport to {newRoom.Title}.[/]");
             AnsiConsole.MarkupLine("\n");
             AnsiConsole.MarkupLine($"\n<span class='room-title'>[{newRoom.Title}]</span>");
-            TextHelper.DisplayTextWithPaging(newRoom.Description, "#FA935F");
+            TextHelper.DisplayTextWithPaging(GetRoomDescription(newRoom), "#FA935F");
 
             if (newRoom.Exits.Count > 0)
             {

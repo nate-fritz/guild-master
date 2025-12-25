@@ -33,6 +33,7 @@ namespace GuildMaster.Models
         public bool AutoCombatEnabled { get; set; } = false;
         public bool TutorialsEnabled { get; set; } = true;
         public bool GoreEnabled { get; set; } = false;
+        public bool DebugLogsEnabled { get; set; } = false;
 
         // Time
         public int CurrentDay { get; set; }
@@ -49,9 +50,19 @@ namespace GuildMaster.Models
         // Quests
         public List<SavedQuest> ActiveQuests { get; set; }
         public List<string> CompletedQuestIds { get; set; }
+        public Dictionary<string, bool> QuestFlags { get; set; }  // Quest state flags
+
+        // Events
+        public HashSet<string> TriggeredEventIds { get; set; }  // Track which one-time events have triggered
 
         // Priority Message System
         public HashSet<string> ShownMessages { get; set; }
+
+        // Milestone tracking for dynamic content
+        public int TotalRecruitsEver { get; set; } = 0;
+        public HashSet<string> CompletedMilestones { get; set; }
+        public Dictionary<int, string> RoomStateOverrides { get; set; }  // RoomId -> State
+
         public GameState()
         {
             PlayerInventory = new List<string>();
@@ -63,7 +74,11 @@ namespace GuildMaster.Models
             ActivePartyNames = new List<string>();
             ActiveQuests = new List<SavedQuest>();
             CompletedQuestIds = new List<string>();
+            QuestFlags = new Dictionary<string, bool>();
+            TriggeredEventIds = new HashSet<string>();
             ShownMessages = new HashSet<string>();
+            CompletedMilestones = new HashSet<string>();
+            RoomStateOverrides = new Dictionary<int, string>();
         }
     }
 

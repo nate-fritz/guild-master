@@ -11,12 +11,19 @@ namespace GuildMaster.Models
         public Dictionary<string, Effect> Effects { get; set; }
         public string NoteText { get; set; }
 
+        // Milestone tracking for dynamic content
+        public int TotalRecruitsEver { get; set; } = 0;
+        public HashSet<string> CompletedMilestones { get; set; }
+        public Dictionary<int, string> RoomStateOverrides { get; set; }
+
         public GameContext()
         {
             NPCs = new Dictionary<string, NPC>();
             Rooms = new Dictionary<int, Room>();
             ItemDescriptions = new Dictionary<int, Dictionary<string, Item>>();
             Effects = new Dictionary<string, Effect>();
+            CompletedMilestones = new HashSet<string>();
+            RoomStateOverrides = new Dictionary<int, string>();
         }
     }
 }
