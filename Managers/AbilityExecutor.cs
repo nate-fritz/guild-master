@@ -497,29 +497,34 @@ namespace GuildMaster.Managers
 
         public bool ExecuteAbilityForCharacter(Ability ability, Character character, List<NPC> enemies, Player player, NPC preselectedTarget = null)
         {
-            // Check if character is in back row and trying to use melee ability
-            if (character.IsBackRow && !ability.IsRanged)
+            try
             {
-                string characterName = character == player ? "You" : character.Name;
-                string verb = character == player ? "cannot use" : "cannot use";
-                AnsiConsole.MarkupLine($"\n[#FF0000]{characterName} {verb} melee abilities from the back row![/]");
+                // Set the preselected target for use in SelectEnemyTarget
+                this.preselectedTarget = preselectedTarget;
 
-                // Show appropriate menu based on who is acting
-                if (character == player)
+                // Check if character is in back row and trying to use melee ability
+                if (character.IsBackRow && !ability.IsRanged)
                 {
-                    ShowAbilityMenu();
+                    string characterName = character == player ? "You" : character.Name;
+                    string verb = character == player ? "cannot use" : "cannot use";
+                    AnsiConsole.MarkupLine($"\n[#FF0000]{characterName} {verb} melee abilities from the back row![/]");
+
+                    // Show appropriate menu based on who is acting
+                    if (character == player)
+                    {
+                        ShowAbilityMenu();
+                    }
+                    else if (currentActingPartyMember != null && currentActingPartyMember == character)
+                    {
+                        ShowPartyMemberAbilityMenu();
+                    }
+
+                    return false;
                 }
-                else if (currentActingPartyMember != null && currentActingPartyMember == character)
-                {
-                    ShowPartyMemberAbilityMenu();
-                }
 
-                return false;
-            }
+                character.Energy -= ability.EnergyCost;
 
-            character.Energy -= ability.EnergyCost;
-
-            switch (ability.Name)
+                switch (ability.Name)
             {
                 // Legionnaire Abilities
                 case "Shield Bash":
@@ -585,6 +590,12 @@ namespace GuildMaster.Managers
                 default:
                     AnsiConsole.MarkupLine($"[#FF0000]Ability '{ability.Name}' not yet implemented for {character.Name}![/]");
                     return false;
+                }
+            }
+            finally
+            {
+                // Always clear the preselected target after execution to avoid stale references
+                this.preselectedTarget = null;
             }
         }
 
