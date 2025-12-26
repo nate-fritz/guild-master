@@ -198,6 +198,7 @@
         if (GameEngine.IsWaitingForLoadSlot)
         {
             await GameEngine.ProcessCommand(command);
+            GameEngine.DisplayStats(); // Always show status bar after command
             return;
         }
 
@@ -274,6 +275,7 @@
             {
                 GameConsole.MarkupLine("");
                 await GameEngine.ProcessCommand("load");
+                GameEngine.DisplayStats(); // Always show status bar after command
                 return;
             }
             else
@@ -286,6 +288,7 @@
         if (GameEngine.IsGameStarted)
         {
             await GameEngine.ProcessCommand(command);
+            GameEngine.DisplayStats(); // Always show status bar after command
         }
     }
 

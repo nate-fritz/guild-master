@@ -118,7 +118,6 @@ namespace GuildMaster.Services
                         tempLoadManager = null;
 
                         AnsiConsole.MarkupLine("\n[#00FF00]Game loaded successfully![/]");
-                        DisplayStats();
                         return true;
                     }
                     else
@@ -146,7 +145,6 @@ namespace GuildMaster.Services
                         tempLoadManager = null;
 
                         AnsiConsole.MarkupLine("\n[#00FF00]Autosave loaded successfully![/]");
-                        DisplayStats();
                         return true;
                     }
                     else
@@ -335,13 +333,8 @@ namespace GuildMaster.Services
                         AnsiConsole.MarkupLine("");
                         TextHelper.DisplayTextWithPaging(afterNoteText, "#FA935F");
                         ProgramStatics.messageManager?.CheckAndShowMessage("first_movement_tutorial");
-                        // Note: Don't call DisplayStats here - the message/tutorial handler already shows it
                     }
-                    else
-                    {
-                        // For all other paginated content, show stats after final page
-                        DisplayStats();
-                    }
+                    // Status bar will be shown by Home.razor after command completes
                 }
                 return;
             }
@@ -393,11 +386,7 @@ namespace GuildMaster.Services
                             }
                             combatManager.StartCombat(hostileNPCs, currentRoom);
                         }
-                        else
-                        {
-                            // Dialogue ended without combat - show status bar
-                            DisplayStats();
-                        }
+                        // Status bar will be shown by Home.razor after command completes
                     }
                 }
                 catch (Exception ex)
@@ -418,12 +407,7 @@ namespace GuildMaster.Services
             {
                 // Route input to menu system
                 await menuManager.ProcessMenuInputAsync(input);
-
-                // Show status bar after menu action (unless still in menu)
-                if (!menuManager.IsInMenu)
-                {
-                    DisplayStats();
-                }
+                // Status bar will be shown by Home.razor after command completes
                 return;
             }
 
@@ -432,12 +416,7 @@ namespace GuildMaster.Services
             {
                 // Route input to shop system
                 gameController.shopManager.ProcessShopInput(input);
-
-                // Show status bar after shop action (unless still in shop)
-                if (!gameController.shopManager.IsInShop)
-                {
-                    DisplayStats();
-                }
+                // Status bar will be shown by Home.razor after command completes
                 return;
             }
 
@@ -446,12 +425,7 @@ namespace GuildMaster.Services
             {
                 // Route input to quest system
                 gameController.questManager.ProcessQuestInput(input);
-
-                // Show status bar after quest action (unless still in quest menu)
-                if (!gameController.questManager.IsInQuestMenu)
-                {
-                    DisplayStats();
-                }
+                // Status bar will be shown by Home.razor after command completes
                 return;
             }
 
@@ -705,14 +679,7 @@ namespace GuildMaster.Services
             }
 
             // Show status bar after command completes, ready for next input
-            // (Combat, dialogue, menus, and shops have their own status displays)
-            if ((combatManager == null || !combatManager.IsInCombat) &&
-                (dialogueManager == null || !dialogueManager.IsInDialogue) &&
-                (menuManager == null || !menuManager.IsInMenu) &&
-                (gameController?.shopManager == null || !gameController.shopManager.IsInShop))
-            {
-                DisplayStats();
-            }
+            // Status bar will be shown by Home.razor after command completes
         }
 
         private async Task HandleQuitCommand()

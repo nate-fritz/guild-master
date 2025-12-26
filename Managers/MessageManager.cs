@@ -190,17 +190,8 @@ namespace GuildMaster.Managers
                     break;
             }
 
-            // Display status bar after tutorial messages, but only for specific ones
-            // that don't happen within commands (commands show status bar on completion)
-            if (type == MessageType.Tutorial && (triggerId == "game_start_commands" || triggerId == "first_movement_tutorial"))
-            {
-                AnsiConsole.MarkupLine("");
-                uiManager.DisplayStats();
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("");
-            }
+            // Status bar is now always shown by Home.razor after command completes
+            AnsiConsole.MarkupLine("");
         }
 
         private void WrapAndDisplay(string text, string color)
