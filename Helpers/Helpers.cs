@@ -46,7 +46,8 @@ namespace GuildMaster.Helpers
                 }
 
                 // Wrap this segment
-                var words = segment.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                // Use StringSplitOptions.None to preserve multiple spaces for alignment
+                var words = segment.Split(new[] { ' ' }, StringSplitOptions.None);
                 var currentLine = "";
 
                 foreach (var word in words)
