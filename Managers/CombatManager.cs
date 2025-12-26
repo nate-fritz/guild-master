@@ -1216,54 +1216,7 @@ namespace GuildMaster.Managers
             }
         }
 
-        private bool HandleCharacterAbilities(Character character, List<NPC> enemies, Player player)
-        {
-            var allAbilities = character.Class?.GetClassAbilities() ?? new List<Ability>();
-            var abilities = allAbilities.Where(a => character.Level >= a.UnlockLevel).ToList();
-
-            // War Cry replaces Battle Cry at level 20
-            if (abilities.Any(a => a.Name == "War Cry"))
-            {
-                abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
-            }
-
-            if (abilities.Count == 0)
-            {
-                AnsiConsole.MarkupLine($"\n{character.Name} doesn't know any special abilities yet!");
-                return false;
-            }
-
-            AnsiConsole.MarkupLine($"\n{character.Name}'s Abilities:");
-            for (int i = 0; i < abilities.Count; i++)
-            {
-                var ability = abilities[i];
-                string energyColor = character.Energy >= ability.EnergyCost ? "#FFFF00" : "#808080";
-                AnsiConsole.MarkupLine($"{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description} (Current EP: [#00FFFF]{character.Energy}/{character.MaxEnergy}[/])");
-            }
-            AnsiConsole.MarkupLine("0. Back");
-
-            Console.Write("Choose ability: ");
-            string abilityChoice = Console.ReadLine();
-
-            if (abilityChoice == "0")
-                return false;
-
-            if (!int.TryParse(abilityChoice, out int index) || index < 1 || index > abilities.Count)
-            {
-                AnsiConsole.MarkupLine("Invalid choice!");
-                return false;
-            }
-
-            var selectedAbility = abilities[index - 1];
-
-            if (character.Energy < selectedAbility.EnergyCost)
-            {
-                AnsiConsole.MarkupLine($"\nNot enough energy! {character.Name} needs {selectedAbility.EnergyCost} EP.");
-                return false;
-            }
-
-            return abilityExecutor.ExecuteAbilityForCharacter(selectedAbility, character, enemies, player);
-        }
+        // REMOVED: HandleCharacterAbilities() - Dead code, never called, replaced by AbilityExecutor
 
         private bool ExecuteWhirlwind(Player player, List<NPC> enemies)
         {
@@ -1308,39 +1261,9 @@ namespace GuildMaster.Managers
                 return false;
             }
 
-            NPC powerTarget = null;
-            var powerEnemies = enemies.Where(e => e.Health > 0).ToList();
-
-            if (powerEnemies.Count == 0)
-            {
-                AnsiConsole.MarkupLine("No enemies to attack!");
-                return false;
-            }
-            else if (powerEnemies.Count == 1)
-            {
-                powerTarget = powerEnemies[0];
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("\nChoose target:");
-                for (int i = 0; i < powerEnemies.Count; i++)
-                {
-                    AnsiConsole.MarkupLine($"{i + 1}. {powerEnemies[i].Name} (HP: {powerEnemies[i].Health}/{powerEnemies[i].MaxHealth})");
-                }
-                Console.Write("Target: ");
-
-                string targetChoice = Console.ReadLine();
-
-                if (int.TryParse(targetChoice, out int targetIndex) && targetIndex > 0 && targetIndex <= powerEnemies.Count)
-                {
-                    powerTarget = powerEnemies[targetIndex - 1];
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("Invalid target!");
-                    return false;
-                }
-            }
+            // Use non-blocking target selection (integrated with state machine)
+            var powerTarget = SelectEnemyTarget(enemies);
+            if (powerTarget == null) return false;
 
             player.Energy -= AbilityData.PowerAttack.EnergyCost;
             int powerDamage = RollDice(AbilityData.PowerAttack.DiceCount,
@@ -1385,73 +1308,7 @@ namespace GuildMaster.Managers
             return true;
         }
 
-        private bool HandleCombatItems(Player player, List<string> consumableItems)
-        {
-            if (consumableItems.Count == 0)
-            {
-                AnsiConsole.MarkupLine("\nNo usable items!");
-                return false;
-            }
-
-            AnsiConsole.MarkupLine("\nItems:");
-            for (int i = 0; i < consumableItems.Count; i++)
-            {
-                var itemData = context.ItemDescriptions.Values
-                    .Where(room => room.ContainsKey(consumableItems[i]))
-                    .Select(room => room[consumableItems[i]])
-                    .FirstOrDefault();
-
-                if (itemData != null && context.Effects.ContainsKey(itemData.EffectId))
-                {
-                    var effect = context.Effects[itemData.EffectId];
-                    AnsiConsole.MarkupLine($"{i + 1}. {TextHelper.CapitalizeFirst(consumableItems[i])} - {effect.Description}");
-                }
-            }
-            AnsiConsole.MarkupLine("0. Back");
-
-            Console.Write("Use item: ");
-            string itemChoice = Console.ReadLine();
-
-            if (itemChoice == "0")
-            {
-                return false;
-            }
-
-            if (int.TryParse(itemChoice, out int itemIndex) && itemIndex > 0 && itemIndex <= consumableItems.Count)
-            {
-                string usedItem = consumableItems[itemIndex - 1];
-
-                var itemData = context.ItemDescriptions.Values
-                    .Where(room => room.ContainsKey(usedItem))
-                    .Select(room => room[usedItem])
-                    .FirstOrDefault();
-
-                if (itemData != null && context.Effects.ContainsKey(itemData.EffectId))
-                {
-                    var effect = context.Effects[itemData.EffectId];
-
-                    // Handle party-wide effects
-                    if (effect.TargetsParty)
-                    {
-                        ApplyCombatPartyEffect(usedItem, effect, player);
-                    }
-                    else
-                    {
-                        // Handle single-target effects
-                        ApplyCombatSingleEffect(usedItem, effect, player);
-                    }
-
-                    player.Inventory.Remove(usedItem);
-                    AnsiConsole.MarkupLine($"The {usedItem} has been consumed.");
-                    return true;
-                }
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("Invalid choice!");
-            }
-            return false;
-        }
+        // REMOVED: HandleCombatItems() - Dead code, never called
 
         private void ApplyCombatSingleEffect(string itemName, Effect effect, Character character)
         {
@@ -3091,29 +2948,9 @@ namespace GuildMaster.Managers
             var targets = new List<Character> { player };
             targets.AddRange(player.ActiveParty.Where(a => a.Health > 0));
 
-            if (targets.Count == 1)
-            {
-                return HealTarget(ability, caster, player, caster == player ? "You" : player.Name);
-            }
-
-            AnsiConsole.MarkupLine("\nWho do you want to heal?");
-            for (int i = 0; i < targets.Count; i++)
-            {
-                string name = targets[i] == player ? "Player" : targets[i].Name;
-                AnsiConsole.MarkupLine($"{i + 1}. {name} (HP: {targets[i].Health}/{targets[i].MaxHealth})");
-            }
-
-            Console.Write("Target: ");
-            string choice = Console.ReadLine();
-
-            if (!int.TryParse(choice, out int index) || index < 1 || index > targets.Count)
-            {
-                AnsiConsole.MarkupLine("Invalid target!");
-                return false;
-            }
-
-            var target = targets[index - 1];
-            string targetName = target == player ? "the player" : target.Name;
+            // Auto-select most injured party member (non-blocking)
+            var target = targets.OrderBy(t => (float)t.Health / t.MaxHealth).First();
+            string targetName = target == player ? "You" : target.Name;
 
             return HealTarget(ability, caster, target, targetName);
         }
