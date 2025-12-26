@@ -188,13 +188,24 @@ namespace GuildMaster.Services
             ProgramStatics.eventManager = eventManager;
             eventManager.LoadEvents();
 
-            // Restore shown messages from loaded state (must happen AFTER MessageManager creation)
+            // Restore shown messages and triggered events from loaded state
+            // (must happen AFTER MessageManager and EventManager creation)
             if (tempLoadManager != null)
             {
                 var loadedState = tempLoadManager.GetLastLoadedState();
-                if (loadedState?.ShownMessages != null)
+                if (loadedState != null)
                 {
-                    messageManager.SetShownMessages(loadedState.ShownMessages);
+                    // Restore shown messages
+                    if (loadedState.ShownMessages != null)
+                    {
+                        messageManager.SetShownMessages(loadedState.ShownMessages);
+                    }
+
+                    // Restore triggered event IDs
+                    if (loadedState.TriggeredEventIds != null)
+                    {
+                        eventManager.SetTriggeredEvents(loadedState.TriggeredEventIds);
+                    }
                 }
             }
 

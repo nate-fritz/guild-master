@@ -448,11 +448,8 @@ namespace GuildMaster.Managers
             // Restore quest flags
             player.QuestFlags = state.QuestFlags ?? new Dictionary<string, bool>();
 
-            // Restore triggered event IDs (if EventManager is available)
-            if (ProgramStatics.eventManager != null && state.TriggeredEventIds != null)
-            {
-                ProgramStatics.eventManager.SetTriggeredEvents(state.TriggeredEventIds);
-            }
+            // NOTE: Triggered event IDs and shown messages are restored in GameEngine.InitializeManagersAfterLoad()
+            // after the EventManager and MessageManager are created. Don't restore them here.
 
             // Remove taken items from rooms
             foreach (string takenItem in player.TakenItems)
@@ -495,12 +492,6 @@ namespace GuildMaster.Managers
                         }
                     }
                 }
-            }
-
-            // Restore shown messages
-            if (state.ShownMessages != null && ProgramStatics.messageManager != null)
-            {
-                ProgramStatics.messageManager.SetShownMessages(state.ShownMessages);
             }
 
             // Restore milestone tracking
@@ -656,6 +647,8 @@ namespace GuildMaster.Managers
         }
 
         private int? pendingSaveSlot = null;
+
+        public bool IsWaitingForConfirmation => pendingSaveSlot.HasValue;
 
         public async Task<bool> ProcessSaveInputAsync(string input)
         {

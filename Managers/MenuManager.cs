@@ -299,10 +299,13 @@ namespace GuildMaster.Managers
             {
                 currentMenu = MenuState.None;
             }
-            else
+            else if (!saveManager.IsWaitingForConfirmation)
             {
+                // Only redisplay menu if we're not waiting for confirmation
+                // (e.g., user entered invalid input)
                 await saveManager.DisplaySaveMenuAsync();
             }
+            // If waiting for confirmation, don't redisplay - the prompt is already visible
         }
 
         private async Task ProcessLoadInputAsync(string input)
