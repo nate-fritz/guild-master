@@ -155,7 +155,9 @@ namespace GuildMaster.Managers
 
             DialogueNode node = currentNPC.Dialogue[currentNode];
 
-            TextHelper.DisplayTextWithPaging(node.Text, "#90FF90");
+            // Substitute placeholders in dialogue text
+            string displayText = SubstituteDialogueText(node.Text);
+            TextHelper.DisplayTextWithPaging(displayText, "#90FF90");
 
             // Execute any dialogue actions
             if (node.Action != null)
@@ -189,7 +191,9 @@ namespace GuildMaster.Managers
 
             for (int i = 0; i < currentChoices.Count; i++)
             {
-                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {currentChoices[i].choiceText}[/]");
+                // Substitute placeholders in choice text
+                string displayChoice = SubstituteDialogueText(currentChoices[i].choiceText);
+                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {displayChoice}[/]");
             }
             AnsiConsole.MarkupLine("[#808080]0. End conversation[/]");
             AnsiConsole.MarkupLine("");
@@ -207,6 +211,31 @@ namespace GuildMaster.Managers
             if (displayHour == 0) displayHour = 12;
 
             AnsiConsole.MarkupLine($"\n<span class='stats-bar'>[HP: {player.Health}/{player.MaxHealth} | EP: {player.Energy}/{player.MaxEnergy} | Day {player.CurrentDay}, {displayHour}:{minutes:D2} {timeOfDay} | Gold: {player.Gold} | Recruits: {player.Recruits.Count}/10]</span>");
+        }
+
+        /// <summary>
+        /// Substitutes placeholders in dialogue text with actual player/game values
+        /// Supported placeholders: {player.name}, {player.class}, {player.level}, {npc.name}
+        /// </summary>
+        private string SubstituteDialogueText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            var player = context.Player;
+
+            // Replace player placeholders (case-insensitive)
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\{player\.name\}", player.Name, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\{player\.class\}", player.Class?.Name ?? "Adventurer", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\{player\.level\}", player.Level.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            // Replace NPC placeholders if we have a current NPC
+            if (currentNPC != null)
+            {
+                text = System.Text.RegularExpressions.Regex.Replace(text, @"\{npc\.name\}", currentNPC.Name, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            }
+
+            return text;
         }
 
         public bool ProcessDialogueChoice(string input)
@@ -461,7 +490,9 @@ namespace GuildMaster.Managers
 
             DialogueNode node = eventDialogueTrees[dialogueTreeId][currentNode];
 
-            TextHelper.DisplayTextWithPaging(node.Text, "#90FF90");
+            // Substitute placeholders in event dialogue text
+            string displayText = SubstituteDialogueText(node.Text);
+            TextHelper.DisplayTextWithPaging(displayText, "#90FF90");
 
             // Execute any dialogue actions
             if (node.Action != null)
@@ -487,7 +518,9 @@ namespace GuildMaster.Managers
 
             for (int i = 0; i < currentChoices.Count; i++)
             {
-                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {currentChoices[i].choiceText}[/]");
+                // Substitute placeholders in choice text
+                string displayChoice = SubstituteDialogueText(currentChoices[i].choiceText);
+                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {displayChoice}[/]");
             }
             AnsiConsole.MarkupLine("[#808080]0. Continue[/]");
             AnsiConsole.MarkupLine("");

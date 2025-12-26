@@ -290,18 +290,18 @@ namespace GuildMaster.Data
 
             NPC farmer = new NPC();
             farmer.Name = "Gaius";
-            farmer.Description = "A burly man of over two meters leans against one of the four posts of his small stall. As he notices you, he regards you with a mixture of kindness and mild surprise.";
+            farmer.Description = "A burly man of over two meters leans against one of the four posts of his small stall.  His olive skin is deeply tanned from years of tending to his farm in the sun.  As he notices you, he regards you with a mixture of kindness and mild surprise.";
             farmer.ShortDescription = "A farmer";
 
             farmer.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Is there anything I can help you with? ",
+                Text = "As you approach the farmer's stand, he rises to meet you with a smile.  <br><br>\"Greetings, friend.  Haven't seen you 'round these parts before.  Name's Gaius.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "What can you tell me about the area?", nextNodeID = "ask_about_area" },
-                    new DialogueNode.Choice { choiceText = "Actually, I'm taking over that old guildhouse.", nextNodeID = "explain_guild" },
-                    new DialogueNode.Choice { choiceText = "Tell me more about this dangerous forest.", nextNodeID = "ask_about_forest" },
-                    new DialogueNode.Choice { choiceText = "Thanks for the warning. I should get going.", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"Greetings.  {player.name}, and I actually have no idea where 'these parts' even are.  Where am I?\"", nextNodeID = "ask_about_area" },
+                    // new DialogueNode.Choice { choiceText = "Actually, I'm taking over that old guildhouse.", nextNodeID = "explain_guild" },
+                    // new DialogueNode.Choice { choiceText = "Tell me more about this dangerous forest.", nextNodeID = "ask_about_forest" },
+                    new DialogueNode.Choice { choiceText = "I should get going.", nextNodeID = "end" }
                 }
             });
 
