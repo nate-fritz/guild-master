@@ -299,57 +299,78 @@ namespace GuildMaster.Data
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"Greetings.  {player.name}, and I actually have no idea where 'these parts' even are.  Where am I?\"", nextNodeID = "ask_about_area" },
-                    // new DialogueNode.Choice { choiceText = "Actually, I'm taking over that old guildhouse.", nextNodeID = "explain_guild" },
-                    // new DialogueNode.Choice { choiceText = "Tell me more about this dangerous forest.", nextNodeID = "ask_about_forest" },
-                    new DialogueNode.Choice { choiceText = "I should get going.", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end" }
                 }
             });
 
             farmer.Dialogue.Add("ask_about_area", new DialogueNode()
             {
-                Text = "I thought you looked new.  I assume you've been to Belum, the town to the north, but if you head west you'll pass my farm on the way to the mountains.  East of here is a nasty forest, I'd stay out of there if I were you - unless you're looking for trouble, I suppose.  What were you doing down by the old guildhouse?  Get lost?",
+                Text = "The farmer briefly raises an eyebrow at this, but a smile quickly replaces the suspicious look on his face.<br><br>\"Well, in that case, welcome to Belum.<br><br>The town itself is behind those fortress walls to the north.  My farm is a ways to the west, before you reach Mount Gelus. Hircinian Forest is east of here, although you'd be better off avoiding it.   Strange folk have been coming and going from there of late.<br><br>I saw you come from the south, so I imagine you saw that old guild hall.  I think it's been abandoned for a while now.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Actually, I'm taking over that old guildhouse.", nextNodeID = "explain_guild" },
-                    new DialogueNode.Choice { choiceText = "Tell me more about this dangerous forest.", nextNodeID = "ask_about_forest" },
-                    new DialogueNode.Choice { choiceText = "Thanks for the warning. I should get going.", nextNodeID = "end" },
-                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "greeting"}
+                    new DialogueNode.Choice { choiceText = "\"I did come from there, but it's not exactly abandoned any more.   It's mine now, apparently.\"", nextNodeID = "explain_guild" },  
+                    new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end_generic" }
                 }
             });
 
             farmer.Dialogue.Add("explain_guild", new DialogueNode()
             {
-                Text = "A guild? Here? Ha! That old place has been empty for years. But... I suppose someone with ambition could make something of it. You seem determined enough.",
+                Text = "At this, Gaius makes no more attempts to hide his surprise.<br><br> \"Now that's not something I expected to hear!  I'm not sure if I should offer congratulations or condolences.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "greeting"}
+                    new DialogueNode.Choice { choiceText = "\"Too early to say, I think.  I've been tasked with rebuilding the Adventurer's Guild, which means I need to start recruiting.  I suppose I should head into town and see if I can find anyone interested.\"", nextNodeID = "recruit" },
+                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "other_topics"}
                 }
             });
 
-            farmer.Dialogue.Add("recruit", new DialogueNode()
+            farmer.Dialogue.Add("other_topics", new DialogueNode()
             {
-                Text = "Recuits?  For that old guildhall?  Hah-<br><br>(The farmer coughs mid-laughter and enters a brief fit of wheezing)<br><br>Sorry about that... you might find someone in there - I saw a ranger go that way earlier.",
+                Text = "\"What can I help you with?\"",
 
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "greeting"}
+                    new DialogueNode.Choice { choiceText = "\"You said the gate to town was closed.  Permanently?\"", nextNodeID = "ask_about_gate" }
+                }
+            });
+
+            farmer.Dialogue.Add("ask_about_gate", new DialogueNode()
+            {
+                Text = "Gaius gives a small frown, then explains \"The sentry can tell you more, but it seems to me that they're nervous about leaving that gate open given all of the unusual activity down this way.  Bandits, mostly, but also whatever's going on in the forest.<br><br>If I'm being honest, I hope they can resolve it quickly. I'm uncomfortable with those bandits holing up so close to my farm, and there's not enough traffic through these crossroads for me to make a living.<br><br>If you think you can help, talk to Marcus at the gate.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I might just do that.  I wanted to ask about something else.\"", nextNodeID = "greeting"}
+                }
+            });
+
+
+            farmer.Dialogue.Add("recruit", new DialogueNode()
+            {
+                Text = "\"Well, I've got bad news.  The south gate is closed, which is why I'm out here.  Normally I'd head into the market to sell my goods, but with the gate being closed I'm forced to set up shop out here.<br><br>There's a north gate and a west gate, but you'll have a hard time getting to either of them.<br><br>Bandits have holed up in the caves to the west, and all sorts of foul creatures live in the mountains.<br><br>I hate to say it, but if you're looking for anyone to help you clear out monsters or bandits, maybe your best bet is to head into that nasty old forest after all.\"",
+
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Could you tell me more about this forest and the people you've seen going into it?\"", nextNodeID = "ask_about_forest" }
                 }
             });
 
             farmer.Dialogue.Add("ask_about_forest", new DialogueNode()
             {
-                Text = "Dark woods, full of wolves and worse things. Lost a few chickens to whatever lurks in there. Some say there's treasure hidden deep inside, but I say it's not worth the risk.",
+                Text = "\"Dark woods, full of wolves and worse things. Lost a few chickens to whatever lurks in there.<br><br>Lately a lot of horse-drawn carts have been headed in to the woods.  A couple of them stopped here and bought some food, although part of me wished they hadn't.  Unsettling folk, every one of them.<br><br>The last two weren't so bad, though.  A venator passed through, and said he'd be back this way once he found whatever it is that he's looking for.  Besides him, a soldier went into the forest just this morning.  Friendly enough, but had a crazed look in his eye.  Seemed like he was looking for someone or something to fight.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Maybe that's where I'll find my first recruits.", nextNodeID = "recruit" },
-                    new DialogueNode.Choice { choiceText = "I'll stay clear of it then.", nextNodeID = "end" },
-                    new DialogueNode.Choice { choiceText = "Talk about something else.", nextNodeID = "greeting"}
+                    new DialogueNode.Choice { choiceText = "\"Interesting.  It sounds like the woods are my best bet, then.  Maybe one of these interesting characters will join up with me.\"", nextNodeID = "end" }
                 }
             });
 
             farmer.Dialogue.Add("end", new DialogueNode()
             {
-                Text = "Safe travels, friend. Stop by my farm sometime if you're heading west.",
+                Text = "Gaius smiles at that and says \"Ha! Maybe they will.  Be safe in there, friend, and good luck finding those recruits.<br><br>If you ever end up west of here, come stop by my farm some time. \"",
+                Choices = { } // empty = conversation ends
+            });
+
+            farmer.Dialogue.Add("end_generic", new DialogueNode()
+            {
+                Text = "Gaius smiles at that and says \"Alright, don't let me keep you.<br><br>If you ever end up west of here, stop by my farm some time. \"",
                 Choices = { } // empty = conversation ends
             });
 
