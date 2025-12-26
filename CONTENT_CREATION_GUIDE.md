@@ -589,6 +589,109 @@ yourNPC.Dialogue.Add("end", new DialogueNode()
 });
 ```
 
+### Dialogue Node Naming - IMPORTANT!
+
+#### The Special "end" Node
+**Nodes named "end" have special behavior that resets conversation:**
+
+```csharp
+// ✅ Node named "end" - Conversation resets to "greeting" next time
+farmer.Dialogue.Add("end", new DialogueNode()
+{
+    Text = "Farewell! Come back anytime.",
+    Choices = new List<DialogueNode.Choice>()  // Empty = conversation ends
+});
+
+// ⚠️ Node named anything else - NPC remembers this position
+farmer.Dialogue.Add("end_generic", new DialogueNode()
+{
+    Text = "Goodbye for now.",
+    Choices = new List<DialogueNode.Choice>()  // Empty = conversation ends
+});
+```
+
+**How it works:**
+- When dialogue ends on a node named **"end"**: NPC forgets where you left off, next conversation starts at "greeting" (fresh start)
+- When dialogue ends on any **other node** (like "end_generic"): NPC remembers that node, next conversation continues from there
+
+**If you end on a non-"end" terminal node:**
+- Player talks to NPC again → Starts at "end_generic"
+- "end_generic" has no choices → Immediately ends again
+- Result: NPC appears "stuck" and won't talk anymore
+
+#### Use Cases for Different Terminal Nodes
+
+**Use "end" when:**
+- Normal conversation endings
+- Player should be able to restart dialogue from greeting
+- Merchant/vendor conversations (can browse again)
+
+**Use other names when:**
+- One-time conversations (NPC says something once, then stops)
+- NPC becomes unavailable after quest completion
+- Progressive dialogue (different responses on subsequent visits)
+
+**Example - Progressive Dialogue:**
+```csharp
+// First conversation
+farmer.Dialogue.Add("greeting", new DialogueNode()
+{
+    Text = "Hello stranger!",
+    Choices =
+    {
+        new DialogueNode.Choice { choiceText = "Tell me about yourself", nextNodeID = "about" }
+    }
+});
+
+farmer.Dialogue.Add("about", new DialogueNode()
+{
+    Text = "I'm a farmer. Thanks for asking!",
+    Choices =
+    {
+        new DialogueNode.Choice { choiceText = "Interesting!", nextNodeID = "post_introduction" }
+    }
+});
+
+// After introduction - different greeting
+farmer.Dialogue.Add("post_introduction", new DialogueNode()
+{
+    Text = "Good to see you again, friend!",
+    Choices =
+    {
+        new DialogueNode.Choice { choiceText = "Goodbye", nextNodeID = "end" }
+    }
+});
+```
+Now after first conversation, farmer always greets with "Good to see you again" instead of "Hello stranger".
+
+#### Dynamic Text Substitution (Placeholders)
+
+**You can use placeholders in dialogue text and choices that get replaced at runtime:**
+
+Available placeholders (case-insensitive):
+- `{player.name}` - Player's name
+- `{player.class}` - Player's class (Legionnaire, Venator, Oracle)
+- `{player.level}` - Player's level number
+- `{npc.name}` - Current NPC's name
+
+**Example:**
+```csharp
+farmer.Dialogue.Add("greeting", new DialogueNode()
+{
+    Text = "Welcome, {player.name}! I see you're a {player.class}. Impressive!",
+    Choices =
+    {
+        new DialogueNode.Choice
+        {
+            choiceText = "Greetings, {npc.name}. I'm here to help.",
+            nextNodeID = "offer_help"
+        }
+    }
+});
+```
+
+**Displays as:** "Welcome, Sinogue! I see you're a Legionnaire. Impressive!"
+
 ### Advanced Dialogue Features
 
 #### Conditional Choices (Show Only If...)
