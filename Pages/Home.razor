@@ -258,6 +258,7 @@
             GameConsole.MarkupLine("");
 
             GameEngine.StartNewGame(pendingPlayerName, className);
+            GameEngine.DisplayStats(); // Always show status bar after starting game
             return;
         }
 
