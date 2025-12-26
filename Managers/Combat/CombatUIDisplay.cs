@@ -296,17 +296,17 @@ namespace GuildMaster.Managers.Combat
 
         public void DisplayLevelUpStats(Character character)
         {
-            AnsiConsole.MarkupLine($"\n[#FFD700]╔═══════════════════════════════════════════╗[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]║          ⭐ LEVEL UP! ⭐                 ║[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]╠═══════════════════════════════════════════╣[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]║  {character.Name} reached Level {character.Level}!{new string(' ', 35 - character.Name.Length - character.Level.ToString().Length)}║[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]╠═══════════════════════════════════════════╣[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]║  Max Health:  {character.MaxHealth} {"",4} ║[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]║  Max Energy:  {character.MaxEnergy} {"",4} ║[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]║  Attack:      {character.AttackDamage} {"",4} ║[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]║  Defense:     {character.Defense} {"",4} ║[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]║  Speed:       {character.Speed} {"",4} ║[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]╚═══════════════════════════════════════════╝[/]");
+
+            AnsiConsole.MarkupLine($"<br><br>");
+            AnsiConsole.MarkupLine($"[#FFD700]═══════════════════════════════════════════[/]");
+            AnsiConsole.MarkupLine($"[#FFD700]  {character.Name} reached Level {character.Level}!{new string(' ', 35 - character.Name.Length - character.Level.ToString().Length)}[/]");
+            AnsiConsole.MarkupLine($"[#FFD700]═══════════════════════════════════════════[/]");
+            AnsiConsole.MarkupLine($"[#FFD700]  Max Health:  {character.MaxHealth} {"",4} [/]");
+            AnsiConsole.MarkupLine($"[#FFD700]  Max Energy:  {character.MaxEnergy} {"",4} [/]");
+            AnsiConsole.MarkupLine($"[#FFD700]  Attack:      {character.AttackDamage} {"",4} [/]");
+            AnsiConsole.MarkupLine($"[#FFD700]  Defense:     {character.Defense} {"",4} [/]");
+            AnsiConsole.MarkupLine($"[#FFD700]  Speed:       {character.Speed} {"",4} [/]");
+
         }
     }
 }

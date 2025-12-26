@@ -22,7 +22,7 @@ namespace GuildMaster.Models
 
         // Respawn properties
         public bool CanRespawn { get; set; } = false;
-        public float RespawnTimeHours { get; set; } = 16f;
+        public float RespawnTimeHours { get; set; } = 48f;
         public int LastClearedDay { get; set; } = -1;
         public float LastClearedHour { get; set; } = -1f;
         public List<NPC> OriginalNPCs { get; set; }  // Store original NPCs for respawning

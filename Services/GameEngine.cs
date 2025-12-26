@@ -679,7 +679,7 @@ namespace GuildMaster.Services
             }
             else
             {
-                AnsiConsole.MarkupLine("\nCommand not recognized. Type [cyan]/help[/] to see available commands.");
+                AnsiConsole.MarkupLine("\nCommand not recognized. Type [cyan]help[/] to see available commands.");
             }
 
             // Show status bar after command completes, ready for next input
@@ -779,7 +779,7 @@ namespace GuildMaster.Services
             console.MarkupLine("[#FA5A0A]╚██████╔╝╚██████╔╝██║███████╗██████╔╝    ██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║[/]");
             console.MarkupLine("[#BA3E00] ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝     ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝[/]");
             console.MarkupLine("");
-            console.MarkupLine("[dim]                                                             Type '/help' for command list[/]");
+            console.MarkupLine("[dim]                                                             Type 'help' for command list[/]");
             console.MarkupLine("");
             console.MarkupLine("");
             console.MarkupLine("[#FFD700]1. New Game[/]");

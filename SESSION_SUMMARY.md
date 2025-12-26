@@ -23,7 +23,7 @@
   - Uses AOE when 2+ targets with 30% chance
   - Selects strongest affordable ability by damage potential
 - Added Heal ability support in ExecuteEnemyAbility
-- Bandit Warlord and Lydia already configured with abilities
+- Bandit Warlord and Livia already configured with abilities
 
 ### Task 4: More Combat Flavor Text ✅
 **Status:** Completed

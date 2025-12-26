@@ -215,7 +215,7 @@ namespace GuildMaster.Data
             Room floodedChamber = CreateRoom(19, "floodedChamber", "Bandit Cave - Flooded Chamber", "An underground stream flows through this chamber, the water black and swift. A narrow ledge runs along the eastern wall. Someone is standing guard here - a woman with a bow. She doesn't look like the other bandits. The only way forward is west, across a rickety wooden bridge.");
             floodedChamber.Exits.Add("north", 14);
             floodedChamber.Exits.Add("south", 20);
-            floodedChamber.NPCs.Add(npcs["Lydia"].Clone());  // Recruitable Venator
+            floodedChamber.NPCs.Add(npcs["Livia"].Clone());  // Recruitable Venator
 
             // Updated
             Room undergroundRiver = CreateRoom(20, "undergroundRiver", "Bandit Cave - Underground River", "A narrow chasm opens up in the middle of this cavern, with a rickety looking wood and rope bridge spanning across it.  It's too dark to see the bottom of the chasm, but you can faintly hear the flowing water of an underground river far below you.  You hear loud voices to the west, and to the distant north is the cave's entrance.");
@@ -287,7 +287,7 @@ namespace GuildMaster.Data
             ancientAltar.NPCs.Add(npcs["Elite Guard"].Clone());
             ancientAltar.NPCs.Add(npcs["Elite Guard"].Clone());
             ancientAltar.CanRespawn = true;
-            ancientAltar.RespawnTimeHours = 24f; // Boss takes longer to respawn
+            ancientAltar.RespawnTimeHours = 96f; // Boss takes longer to respawn
             ancientAltar.OriginalNPCs.Add(npcs["Mountain Warlord"].Clone());
             ancientAltar.OriginalNPCs.Add(npcs["Elite Guard"].Clone());
             ancientAltar.OriginalNPCs.Add(npcs["Elite Guard"].Clone());
@@ -424,7 +424,7 @@ namespace GuildMaster.Data
             // Needs update
             Room belumApproach = CreateRoom(69, "belumApproach", "Approach to Belum", "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands closed. A veteran guard named Marcus stands watch. A signpost reads: 'GATE CLOSED'.");
             belumApproach.Exits.Add("south", 68);
-            belumApproach.NPCs.Add(npcs["Marcus"].Clone());  // Gate guard quest giver
+            belumApproach.NPCs.Add(npcs["Marcus"].Clone());  // sentry quest giver
             // belumApproach.Exits.Add("north", 70);  // Opens after completing bandit quest
 
             // BELUM - THE TOWN (Rooms 70-89)

@@ -170,16 +170,16 @@ namespace GuildMaster.Data
             npcs.Add(guildArmorer.Name, guildArmorer);
 
             // Gate Guard - Quest giver for bandit cave quest
-            NPC gateGuard = new NPC();
-            gateGuard.Name = "Marcus";
-            gateGuard.Description = "A weathered veteran guard in bronze armor stands at attention. His scarred face and alert eyes suggest many years of service. The crest of Belum is emblazoned on his breastplate.";
-            gateGuard.ShortDescription = "Gate Guard Marcus";
-            gateGuard.IsHostile = false;
+            NPC sentry = new NPC();
+            sentry.Name = "Marcus";
+            sentry.Description = "A weathered veteran guard in bronze armor stands at attention. His scarred face and alert eyes suggest many years of service. The crest of Belum is emblazoned on his breastplate.";
+            sentry.ShortDescription = "Belum South Gate Sentry";
+            sentry.IsHostile = false;
 
             // Initial dialogue - explains closed gate
-            gateGuard.Dialogue.Add("greeting", new DialogueNode()
+            sentry.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Halt, traveler. The gate to Belum is closed by order of the town council. None may enter.",
+                Text = "Halt, traveler. This gate to Belum is closed by order of the town council. None may enter.",
                 Choices =
                 {
                     new DialogueNode.Choice {
@@ -193,7 +193,7 @@ namespace GuildMaster.Data
                 }
             });
 
-            gateGuard.Dialogue.Add("explain_bandits", new DialogueNode()
+            sentry.Dialogue.Add("explain_bandits", new DialogueNode()
             {
                 Text = "Bandits. A large group has made camp in caves to the southwest - west of Gaius' farm, south of the mountains. They've been raiding travelers and farms. Until they're dealt with, the council won't allow the southern gate to open. Too dangerous.",
                 Choices =
@@ -209,7 +209,7 @@ namespace GuildMaster.Data
                 }
             });
 
-            gateGuard.Dialogue.Add("offer_help", new DialogueNode()
+            sentry.Dialogue.Add("offer_help", new DialogueNode()
             {
                 Text = "You? [He sizes you up] ...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I'll convince the council to open the gate. The caves are south of the lower mountain slopes, room 12 if you're keeping track.",
                 Choices =
@@ -219,7 +219,7 @@ namespace GuildMaster.Data
                 }
             });
 
-            gateGuard.Dialogue.Add("quest_accepted", new DialogueNode()
+            sentry.Dialogue.Add("quest_accepted", new DialogueNode()
             {
                 Text = "Good luck. You'll need it. Be careful down there - the bandits fight dirty and they outnumber you. Return with the Warlord's head and your reward will be access to Belum.",
                 Choices =
@@ -241,7 +241,7 @@ namespace GuildMaster.Data
             });
 
             // Quest completion dialogue - player has the warlord's head
-            gateGuard.Dialogue.Add("quest_complete", new DialogueNode()
+            sentry.Dialogue.Add("quest_complete", new DialogueNode()
             {
                 Text = "By the gods... you actually did it! The Warlord's head! [He examines it grimly] This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I'll inform the council immediately - the southern gate is now open to you.",
                 Action = new DialogueAction { Type = "open_gate" },
@@ -249,7 +249,7 @@ namespace GuildMaster.Data
             });
 
             // After quest is complete
-            gateGuard.Dialogue.Add("after_quest", new DialogueNode()
+            sentry.Dialogue.Add("after_quest", new DialogueNode()
             {
                 Text = "Marcus nods at you respectfully. 'Thank you again for taking care of those bandits. The roads are safer now because of you.'",
                 Choices =
@@ -259,13 +259,13 @@ namespace GuildMaster.Data
                 }
             });
 
-            gateGuard.Dialogue.Add("end", new DialogueNode()
+            sentry.Dialogue.Add("end", new DialogueNode()
             {
                 Text = "Stay safe out there.",
                 Choices = { }
             });
 
-            npcs.Add(gateGuard.Name, gateGuard);
+            npcs.Add(sentry.Name, sentry);
 
             NPC priestess = new NPC();
             priestess.Name = "Caelia";
@@ -928,41 +928,41 @@ namespace GuildMaster.Data
                 {"greater potion", 40}
             };
 
-            // Lydia - Recruitable Venator (Hunter/Archer class)
-            NPC lydia = new NPC();
-            lydia.Name = "Lydia";
-            lydia.Description = "A skilled hunter with a hunter's bow slung across her back. She eyes you warily, hand near her quiver. Her stance suggests she's been fighting for survival in these caves.";
-            lydia.ShortDescription = "A woman with a bow";
-            lydia.IsHostile = true;  // Initially hostile
-            lydia.Health = 50;
-            lydia.MaxHealth = 50;
-            lydia.Energy = 30;
-            lydia.MaxEnergy = 30;
-            lydia.AttackDamage = 9;
-            lydia.Defense = 4;
-            lydia.Speed = 13;
-            lydia.DamageCount = 1;
-            lydia.DamageDie = 8;
-            lydia.DamageBonus = 7;
-            lydia.MinGold = 10;
-            lydia.MaxGold = 20;
-            lydia.ExperienceReward = 60;
-            lydia.Role = EnemyRole.Ranged;
-            lydia.IsBackRow = true;
-            lydia.EnergyRegenPerTurn = 2;
-            lydia.AbilityNames.Add("Piercing Arrow");
-            lydia.AbilityNames.Add("Covering Shot");
-            lydia.RecruitableAfterDefeat = true;
-            lydia.RecruitClass = "Venator";
-            lydia.YieldDialogue = "Wait! [She lowers her bow] I surrender. I'm not one of these bandits - they captured me weeks ago and forced me to stand guard. Please, let me join you. I'm a skilled hunter and I know how to survive.";
-            lydia.AcceptDialogue = "Thank the gods. I won't let you down. These bandits will pay for what they've done.";
+            // Livia - Recruitable Venator (Hunter/Archer class)
+            NPC livia = new NPC();
+            livia.Name = "Livia";
+            livia.Description = "A skilled hunter with a hunter's bow slung across her back. She eyes you warily, hand near her quiver. Her stance suggests she's been fighting for survival in these caves.";
+            livia.ShortDescription = "A woman with a bow";
+            livia.IsHostile = true;  // Initially hostile
+            livia.Health = 50;
+            livia.MaxHealth = 50;
+            livia.Energy = 30;
+            livia.MaxEnergy = 30;
+            livia.AttackDamage = 9;
+            livia.Defense = 4;
+            livia.Speed = 13;
+            livia.DamageCount = 1;
+            livia.DamageDie = 8;
+            livia.DamageBonus = 7;
+            livia.MinGold = 10;
+            livia.MaxGold = 20;
+            livia.ExperienceReward = 60;
+            livia.Role = EnemyRole.Ranged;
+            livia.IsBackRow = true;
+            livia.EnergyRegenPerTurn = 2;
+            livia.AbilityNames.Add("Piercing Arrow");
+            livia.AbilityNames.Add("Covering Shot");
+            livia.RecruitableAfterDefeat = true;
+            livia.RecruitClass = "Venator";
+            livia.YieldDialogue = "Wait! [She lowers her bow] I surrender. I'm not one of these bandits - they captured me weeks ago and forced me to stand guard. Please, let me join you. I'm a skilled hunter and I know how to survive.";
+            livia.AcceptDialogue = "Thank the gods. I won't let you down. These bandits will pay for what they've done.";
 
-            // Add bandit cave NPCs (gateGuard/Marcus already added earlier)
+            // Add bandit cave NPCs (sentry/Marcus already added earlier)
             npcs.Add(banditScout.Name, banditScout);
             npcs.Add(banditCutthroat.Name, banditCutthroat);
             npcs.Add(banditEnforcer.Name, banditEnforcer);
             npcs.Add(banditWarlord.Name, banditWarlord);
-            npcs.Add(lydia.Name, lydia);
+            npcs.Add(livia.Name, livia);
 
             // ===== TESTING RECRUITS (Hidden in rooms 999-991) =====
             // Test Recruit 1 - Legionnaire, Female, Conversational
