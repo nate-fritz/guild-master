@@ -49,145 +49,13 @@ namespace GuildMaster.Managers
                 gameState.SaveVersion = CURRENT_SAVE_VERSION;
                 var player = context.Player;
 
-                // Player basics
-                gameState.PlayerName = player.Name;
-                gameState.CurrentRoom = player.CurrentRoom;
-                gameState.PlayerInventory = player.Inventory;
-                gameState.TakenItems = player.TakenItems;
-                gameState.ExaminedItems = player.ExaminedItems;
-
-                // Player stats
-                gameState.Health = player.Health;
-                gameState.MaxHealth = player.MaxHealth;
-                gameState.Energy = player.Energy;
-                gameState.MaxEnergy = player.MaxEnergy;
-                gameState.Gold = player.Gold;
-                gameState.AttackDamage = player.AttackDamage;
-                gameState.Defense = player.Defense;
-                gameState.Speed = player.Speed;
-                gameState.EquippedWeaponName = player.EquippedWeapon?.Name.ToLower();
-                gameState.EquippedArmorName = player.EquippedArmor?.Name.ToLower();
-                gameState.EquippedHelmName = player.EquippedHelm?.Name.ToLower();
-                gameState.EquippedRingName = player.EquippedRing?.Name.ToLower();
-                gameState.PlayerClass = player.Class?.Name ?? "Fighter";
-                gameState.Level = player.Level;
-                gameState.Experience = player.Experience;
-                gameState.ExperienceToNextLevel = player.ExperienceToNextLevel;
-                gameState.AutoCombatEnabled = player.AutoCombatEnabled;
-                gameState.TutorialsEnabled = player.TutorialsEnabled;
-                gameState.GoreEnabled = player.GoreEnabled;
-                gameState.DebugLogsEnabled = player.DebugLogsEnabled;
-
-                // Milestone tracking
-                gameState.TotalRecruitsEver = context.TotalRecruitsEver;
-                gameState.CompletedMilestones = context.CompletedMilestones ?? new HashSet<string>();
-                gameState.RoomStateOverrides = context.RoomStateOverrides ?? new Dictionary<int, string>();
-
-                // Time
-                gameState.CurrentDay = player.CurrentDay;
-                gameState.CurrentHour = player.CurrentHour;
-
-                // NPCs
-                foreach (var npc in context.NPCs.Values)
-                {
-                    gameState.NPCDialogueStates[npc.Name] = npc.CurrentDialogueNode;
-                }
-
-                // Track which NPCs are still in rooms (not defeated)
-                foreach (var room in context.Rooms.Values)
-                {
-                    if (room.NPCs.Count > 0)
-                    {
-                        if (!gameState.RemovedNPCs.ContainsKey(room.NumericId))
-                        {
-                            gameState.RemovedNPCs[room.NumericId] = new List<string>();
-                        }
-                        foreach (var npc in room.NPCs)
-                        {
-                            gameState.RemovedNPCs[room.NumericId].Add(npc.Name);
-                        }
-                    }
-                }
-
-                // Recruits
-                foreach (var recruit in player.Recruits)
-                {
-                    var savedRecruit = new SavedRecruit
-                    {
-                        Name = recruit.Name,
-                        Class = recruit.Class?.Name ?? "Fighter",
-                        RecruitedDay = recruit.RecruitedDay,
-                        Health = recruit.Health,
-                        MaxHealth = recruit.MaxHealth,
-                        Energy = recruit.Energy,
-                        MaxEnergy = recruit.MaxEnergy,
-                        AttackDamage = recruit.AttackDamage,
-                        Defense = recruit.Defense,
-                        Speed = recruit.Speed,
-                        EquippedWeaponName = recruit.EquippedWeapon?.Name.ToLower(),
-                        EquippedArmorName = recruit.EquippedArmor?.Name.ToLower(),
-                        EquippedHelmName = recruit.EquippedHelm?.Name.ToLower(),
-                        EquippedRingName = recruit.EquippedRing?.Name.ToLower(),
-                        Level = recruit.Level,
-                        Experience = recruit.Experience,
-                        ExperienceToNextLevel = recruit.ExperienceToNextLevel,
-                        IsOnQuest = recruit.IsOnQuest,
-                        IsResting = recruit.IsResting,
-                        RestUntil = recruit.RestUntil,
-                        RestUntilDay = recruit.RestUntilDay
-                    };
-                    gameState.Recruits.Add(savedRecruit);
-                }
-
-                // Active party
-                foreach (var member in player.ActiveParty)
-                {
-                    gameState.ActivePartyNames.Add(member.Name);
-                }
-
-                // Quests
-                foreach (var quest in player.ActiveQuests)
-                {
-                    var savedQuest = new SavedQuest
-                    {
-                        Id = quest.Id,
-                        Name = quest.Name,
-                        Description = quest.Description,
-                        Difficulty = quest.Difficulty,
-                        AssignedRecruitName = quest.AssignedRecruit?.Name,
-                        StartDay = quest.StartDay,
-                        StartTime = quest.StartTime,
-                        Duration = quest.Duration,
-                        MinGold = quest.MinGold,
-                        MaxGold = quest.MaxGold,
-                        BaseSuccessChance = quest.BaseSuccessChance,
-                        BaseExperienceReward = quest.BaseExperienceReward,
-                        IsActive = quest.IsActive,
-                        IsComplete = quest.IsComplete,
-                        WasSuccessful = quest.WasSuccessful,
-                        ItemRewards = quest.ItemRewards,
-                        PotentialRecruit = quest.PotentialRecruit
-                    };
-                    gameState.ActiveQuests.Add(savedQuest);
-                }
-
-                // Save completed quest IDs
-                gameState.CompletedQuestIds = player.CompletedQuestIds;
-
-                // Save quest flags
-                gameState.QuestFlags = player.QuestFlags;
-
-                // Save triggered event IDs (if EventManager is available)
-                if (ProgramStatics.eventManager != null)
-                {
-                    gameState.TriggeredEventIds = ProgramStatics.eventManager.GetTriggeredEvents();
-                }
-
-                // Save shown messages
-                if (ProgramStatics.messageManager != null)
-                {
-                    gameState.ShownMessages = ProgramStatics.messageManager.GetShownMessages();
-                }
+                // Use helper methods to serialize game state
+                SerializePlayerState(player, gameState);
+                SerializeNPCStates(gameState);
+                gameState.Recruits = SerializeRecruits(player.Recruits);
+                gameState.ActivePartyNames = SerializeActiveParty(player.ActiveParty);
+                gameState.ActiveQuests = SerializeQuests(player.ActiveQuests);
+                SerializeGameplayFlags(player, gameState);
 
                 var options = new JsonSerializerOptions
                 {
@@ -227,145 +95,13 @@ namespace GuildMaster.Managers
                 gameState.SaveVersion = CURRENT_SAVE_VERSION;
                 var player = context.Player;
 
-                // Player basics
-                gameState.PlayerName = player.Name;
-                gameState.CurrentRoom = player.CurrentRoom;
-                gameState.PlayerInventory = player.Inventory;
-                gameState.TakenItems = player.TakenItems;
-                gameState.ExaminedItems = player.ExaminedItems;
-
-                // Player stats
-                gameState.Health = player.Health;
-                gameState.MaxHealth = player.MaxHealth;
-                gameState.Energy = player.Energy;
-                gameState.MaxEnergy = player.MaxEnergy;
-                gameState.Gold = player.Gold;
-                gameState.AttackDamage = player.AttackDamage;
-                gameState.Defense = player.Defense;
-                gameState.Speed = player.Speed;
-                gameState.EquippedWeaponName = player.EquippedWeapon?.Name.ToLower();
-                gameState.EquippedArmorName = player.EquippedArmor?.Name.ToLower();
-                gameState.EquippedHelmName = player.EquippedHelm?.Name.ToLower();
-                gameState.EquippedRingName = player.EquippedRing?.Name.ToLower();
-                gameState.PlayerClass = player.Class?.Name ?? "Fighter";
-                gameState.Level = player.Level;
-                gameState.Experience = player.Experience;
-                gameState.ExperienceToNextLevel = player.ExperienceToNextLevel;
-                gameState.AutoCombatEnabled = player.AutoCombatEnabled;
-                gameState.TutorialsEnabled = player.TutorialsEnabled;
-                gameState.GoreEnabled = player.GoreEnabled;
-                gameState.DebugLogsEnabled = player.DebugLogsEnabled;
-
-                // Milestone tracking
-                gameState.TotalRecruitsEver = context.TotalRecruitsEver;
-                gameState.CompletedMilestones = context.CompletedMilestones ?? new HashSet<string>();
-                gameState.RoomStateOverrides = context.RoomStateOverrides ?? new Dictionary<int, string>();
-
-                // Time
-                gameState.CurrentDay = player.CurrentDay;
-                gameState.CurrentHour = player.CurrentHour;
-
-                // NPCs
-                foreach (var npc in context.NPCs.Values)
-                {
-                    gameState.NPCDialogueStates[npc.Name] = npc.CurrentDialogueNode;
-                }
-
-                // Track which NPCs are still in rooms (not defeated)
-                foreach (var room in context.Rooms.Values)
-                {
-                    if (room.NPCs.Count > 0)
-                    {
-                        if (!gameState.RemovedNPCs.ContainsKey(room.NumericId))
-                        {
-                            gameState.RemovedNPCs[room.NumericId] = new List<string>();
-                        }
-                        foreach (var npc in room.NPCs)
-                        {
-                            gameState.RemovedNPCs[room.NumericId].Add(npc.Name);
-                        }
-                    }
-                }
-
-                // Recruits
-                foreach (var recruit in player.Recruits)
-                {
-                    var savedRecruit = new SavedRecruit
-                    {
-                        Name = recruit.Name,
-                        Class = recruit.Class?.Name ?? "Fighter",
-                        RecruitedDay = recruit.RecruitedDay,
-                        Health = recruit.Health,
-                        MaxHealth = recruit.MaxHealth,
-                        Energy = recruit.Energy,
-                        MaxEnergy = recruit.MaxEnergy,
-                        AttackDamage = recruit.AttackDamage,
-                        Defense = recruit.Defense,
-                        Speed = recruit.Speed,
-                        EquippedWeaponName = recruit.EquippedWeapon?.Name.ToLower(),
-                        EquippedArmorName = recruit.EquippedArmor?.Name.ToLower(),
-                        EquippedHelmName = recruit.EquippedHelm?.Name.ToLower(),
-                        EquippedRingName = recruit.EquippedRing?.Name.ToLower(),
-                        Level = recruit.Level,
-                        Experience = recruit.Experience,
-                        ExperienceToNextLevel = recruit.ExperienceToNextLevel,
-                        IsOnQuest = recruit.IsOnQuest,
-                        IsResting = recruit.IsResting,
-                        RestUntil = recruit.RestUntil,
-                        RestUntilDay = recruit.RestUntilDay
-                    };
-                    gameState.Recruits.Add(savedRecruit);
-                }
-
-                // Active party
-                foreach (var member in player.ActiveParty)
-                {
-                    gameState.ActivePartyNames.Add(member.Name);
-                }
-
-                // Quests
-                foreach (var quest in player.ActiveQuests)
-                {
-                    var savedQuest = new SavedQuest
-                    {
-                        Id = quest.Id,
-                        Name = quest.Name,
-                        Description = quest.Description,
-                        Difficulty = quest.Difficulty,
-                        AssignedRecruitName = quest.AssignedRecruit?.Name,
-                        StartDay = quest.StartDay,
-                        StartTime = quest.StartTime,
-                        Duration = quest.Duration,
-                        MinGold = quest.MinGold,
-                        MaxGold = quest.MaxGold,
-                        BaseSuccessChance = quest.BaseSuccessChance,
-                        BaseExperienceReward = quest.BaseExperienceReward,
-                        IsActive = quest.IsActive,
-                        IsComplete = quest.IsComplete,
-                        WasSuccessful = quest.WasSuccessful,
-                        ItemRewards = quest.ItemRewards,
-                        PotentialRecruit = quest.PotentialRecruit
-                    };
-                    gameState.ActiveQuests.Add(savedQuest);
-                }
-
-                // Save completed quest IDs
-                gameState.CompletedQuestIds = player.CompletedQuestIds;
-
-                // Save quest flags
-                gameState.QuestFlags = player.QuestFlags;
-
-                // Save triggered event IDs (if EventManager is available)
-                if (ProgramStatics.eventManager != null)
-                {
-                    gameState.TriggeredEventIds = ProgramStatics.eventManager.GetTriggeredEvents();
-                }
-
-                // Save shown messages
-                if (ProgramStatics.messageManager != null)
-                {
-                    gameState.ShownMessages = ProgramStatics.messageManager.GetShownMessages();
-                }
+                // Use helper methods to serialize game state
+                SerializePlayerState(player, gameState);
+                SerializeNPCStates(gameState);
+                gameState.Recruits = SerializeRecruits(player.Recruits);
+                gameState.ActivePartyNames = SerializeActiveParty(player.ActiveParty);
+                gameState.ActiveQuests = SerializeQuests(player.ActiveQuests);
+                SerializeGameplayFlags(player, gameState);
 
                 var options = new JsonSerializerOptions
                 {
@@ -560,33 +296,7 @@ namespace GuildMaster.Managers
             player.CurrentHour = state.CurrentHour >= 0 ? state.CurrentHour : 8.0f;
 
             // Initialize note text with player name
-            context.NoteText = 
-                "You pick up the note, unfold it, and begin reading the letter addressed to you.<br><br>" +
-
-                "\"Dear " + player.Name + ",<br><br>" +
-
-                "I had hoped to be around when you awoke, but my journey can be delayed no longer.<br><br>" +
-
-                "It is hard to say how much you remember of your time here. At times, you seemed perfectly lucid, and at others you hardly knew your own name.<br><br>" +
-
-                "Seventeen days ago I had closed and locked the door to this old guild hall behind me and started on my journey, only to find you laying in the road a few hundred paces from the front door. Pardon my honesty, but your timing could not have been worse.<br><br>" +
-
-                "Regardless, I patched you up to the best of my ability, and after several days you awoke. We spoke for some time before you eventually drifted back into a deep sleep. Over the following days, you would drift in and out of consciousness, and as often as you felt up to it, we spoke just enough for me to learn that you are " + player.Name + ", an itinerant " + player.Class.Name + ".<br><br>" +
-
-                "Yesterday, I received a missive that let me know that my departure was long past due, and as such, I am forced to leave you here on your own. Not ideal, but circumstances forced my hand.<br><br>" +
-
-                "To make it up to you, I leave you the guild. Well, the guild hall anyway; you see, I was the last remaining member and Guild Master of the old Adventurer’s Guild. Now that job belongs to you, if you will take it.<br><br>" +
-
-                "I hope that you do. The present peace and stability of the empire should not be taken for granted. A time will soon come when protectors of the realm are needed. Try to find like-minded individuals - at least ten - and see if you can fill the coffers with gold once more. Saving the world can be expensive work.<br><br>" +
-
-                "Time is of the essence. Try to rebuild the guild within the next hundred days. If I survive my journey, I will write to you then to see how things are coming along.<br><br>" +
-
-                "Good fortune and may the gods watch over you.<br><br>" +
-
-                "Signed,<br><br>" +
-
-                "Alaron, former Guild Master of the Adventurer's Guild\"";
-
+            context.NoteText = GuildMaster.Data.NarrativeData.GenerateWelcomeNote(player.Name, player.Class.Name);
 
             // Restore NPC dialogue states
             if (state.NPCDialogueStates != null)
@@ -1112,6 +822,189 @@ namespace GuildMaster.Managers
             {
                 AnsiConsole.MarkupLine("\n[red]Invalid slot number.[/]");
                 return false;
+            }
+        }
+
+        // ============================================================================
+        // SERIALIZATION HELPER METHODS
+        // ============================================================================
+
+        /// <summary>
+        /// Serializes player state including basics, stats, equipment, settings, and time
+        /// </summary>
+        private void SerializePlayerState(Player player, GameState gameState)
+        {
+            // Player basics
+            gameState.PlayerName = player.Name;
+            gameState.CurrentRoom = player.CurrentRoom;
+            gameState.PlayerInventory = player.Inventory;
+            gameState.TakenItems = player.TakenItems;
+            gameState.ExaminedItems = player.ExaminedItems;
+
+            // Player stats
+            gameState.Health = player.Health;
+            gameState.MaxHealth = player.MaxHealth;
+            gameState.Energy = player.Energy;
+            gameState.MaxEnergy = player.MaxEnergy;
+            gameState.Gold = player.Gold;
+            gameState.AttackDamage = player.AttackDamage;
+            gameState.Defense = player.Defense;
+            gameState.Speed = player.Speed;
+            gameState.EquippedWeaponName = player.EquippedWeapon?.Name.ToLower();
+            gameState.EquippedArmorName = player.EquippedArmor?.Name.ToLower();
+            gameState.EquippedHelmName = player.EquippedHelm?.Name.ToLower();
+            gameState.EquippedRingName = player.EquippedRing?.Name.ToLower();
+            gameState.PlayerClass = player.Class?.Name ?? "Fighter";
+            gameState.Level = player.Level;
+            gameState.Experience = player.Experience;
+            gameState.ExperienceToNextLevel = player.ExperienceToNextLevel;
+            gameState.AutoCombatEnabled = player.AutoCombatEnabled;
+            gameState.TutorialsEnabled = player.TutorialsEnabled;
+            gameState.GoreEnabled = player.GoreEnabled;
+            gameState.DebugLogsEnabled = player.DebugLogsEnabled;
+
+            // Milestone tracking
+            gameState.TotalRecruitsEver = context.TotalRecruitsEver;
+            gameState.CompletedMilestones = context.CompletedMilestones ?? new HashSet<string>();
+            gameState.RoomStateOverrides = context.RoomStateOverrides ?? new Dictionary<int, string>();
+
+            // Time
+            gameState.CurrentDay = player.CurrentDay;
+            gameState.CurrentHour = player.CurrentHour;
+        }
+
+        /// <summary>
+        /// Serializes NPC dialogue states and tracks which NPCs are still in rooms
+        /// </summary>
+        private void SerializeNPCStates(GameState gameState)
+        {
+            // NPCs
+            foreach (var npc in context.NPCs.Values)
+            {
+                gameState.NPCDialogueStates[npc.Name] = npc.CurrentDialogueNode;
+            }
+
+            // Track which NPCs are still in rooms (not defeated)
+            foreach (var room in context.Rooms.Values)
+            {
+                if (room.NPCs.Count > 0)
+                {
+                    if (!gameState.RemovedNPCs.ContainsKey(room.NumericId))
+                    {
+                        gameState.RemovedNPCs[room.NumericId] = new List<string>();
+                    }
+                    foreach (var npc in room.NPCs)
+                    {
+                        gameState.RemovedNPCs[room.NumericId].Add(npc.Name);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Serializes recruit list to SavedRecruit format
+        /// </summary>
+        private List<SavedRecruit> SerializeRecruits(List<Recruit> recruits)
+        {
+            var savedRecruits = new List<SavedRecruit>();
+            foreach (var recruit in recruits)
+            {
+                var savedRecruit = new SavedRecruit
+                {
+                    Name = recruit.Name,
+                    Class = recruit.Class?.Name ?? "Fighter",
+                    RecruitedDay = recruit.RecruitedDay,
+                    Health = recruit.Health,
+                    MaxHealth = recruit.MaxHealth,
+                    Energy = recruit.Energy,
+                    MaxEnergy = recruit.MaxEnergy,
+                    AttackDamage = recruit.AttackDamage,
+                    Defense = recruit.Defense,
+                    Speed = recruit.Speed,
+                    EquippedWeaponName = recruit.EquippedWeapon?.Name.ToLower(),
+                    EquippedArmorName = recruit.EquippedArmor?.Name.ToLower(),
+                    EquippedHelmName = recruit.EquippedHelm?.Name.ToLower(),
+                    EquippedRingName = recruit.EquippedRing?.Name.ToLower(),
+                    Level = recruit.Level,
+                    Experience = recruit.Experience,
+                    ExperienceToNextLevel = recruit.ExperienceToNextLevel,
+                    IsOnQuest = recruit.IsOnQuest,
+                    IsResting = recruit.IsResting,
+                    RestUntil = recruit.RestUntil,
+                    RestUntilDay = recruit.RestUntilDay
+                };
+                savedRecruits.Add(savedRecruit);
+            }
+            return savedRecruits;
+        }
+
+        /// <summary>
+        /// Serializes active party to list of recruit names
+        /// </summary>
+        private List<string> SerializeActiveParty(List<Recruit> activeParty)
+        {
+            var partyNames = new List<string>();
+            foreach (var member in activeParty)
+            {
+                partyNames.Add(member.Name);
+            }
+            return partyNames;
+        }
+
+        /// <summary>
+        /// Serializes quest list to SavedQuest format
+        /// </summary>
+        private List<SavedQuest> SerializeQuests(List<Quest> quests)
+        {
+            var savedQuests = new List<SavedQuest>();
+            foreach (var quest in quests)
+            {
+                var savedQuest = new SavedQuest
+                {
+                    Id = quest.Id,
+                    Name = quest.Name,
+                    Description = quest.Description,
+                    Difficulty = quest.Difficulty,
+                    AssignedRecruitName = quest.AssignedRecruit?.Name,
+                    StartDay = quest.StartDay,
+                    StartTime = quest.StartTime,
+                    Duration = quest.Duration,
+                    MinGold = quest.MinGold,
+                    MaxGold = quest.MaxGold,
+                    BaseSuccessChance = quest.BaseSuccessChance,
+                    BaseExperienceReward = quest.BaseExperienceReward,
+                    IsActive = quest.IsActive,
+                    IsComplete = quest.IsComplete,
+                    WasSuccessful = quest.WasSuccessful,
+                    ItemRewards = quest.ItemRewards,
+                    PotentialRecruit = quest.PotentialRecruit
+                };
+                savedQuests.Add(savedQuest);
+            }
+            return savedQuests;
+        }
+
+        /// <summary>
+        /// Serializes gameplay flags including completed quests, quest flags, events, and messages
+        /// </summary>
+        private void SerializeGameplayFlags(Player player, GameState gameState)
+        {
+            // Save completed quest IDs
+            gameState.CompletedQuestIds = player.CompletedQuestIds;
+
+            // Save quest flags
+            gameState.QuestFlags = player.QuestFlags;
+
+            // Save triggered event IDs (if EventManager is available)
+            if (ProgramStatics.eventManager != null)
+            {
+                gameState.TriggeredEventIds = ProgramStatics.eventManager.GetTriggeredEvents();
+            }
+
+            // Save shown messages
+            if (ProgramStatics.messageManager != null)
+            {
+                gameState.ShownMessages = ProgramStatics.messageManager.GetShownMessages();
             }
         }
     }
