@@ -198,7 +198,9 @@
         if (GameEngine.IsWaitingForLoadSlot)
         {
             await GameEngine.ProcessCommand(command);
-            GameEngine.DisplayStats(); // Always show status bar after command
+            // Only show status bar if not in an interactive state (dialogue/menu/shop/combat show their own)
+            if (!GameEngine.IsInInteractiveState)
+                GameEngine.DisplayStats();
             return;
         }
 
@@ -258,7 +260,9 @@
             GameConsole.MarkupLine("");
 
             GameEngine.StartNewGame(pendingPlayerName, className);
-            GameEngine.DisplayStats(); // Always show status bar after starting game
+            // Only show status bar if not in an interactive state
+            if (!GameEngine.IsInInteractiveState)
+                GameEngine.DisplayStats();
             return;
         }
 
@@ -276,7 +280,9 @@
             {
                 GameConsole.MarkupLine("");
                 await GameEngine.ProcessCommand("load");
-                GameEngine.DisplayStats(); // Always show status bar after command
+                // Only show status bar if not in an interactive state
+                if (!GameEngine.IsInInteractiveState)
+                    GameEngine.DisplayStats();
                 return;
             }
             else
@@ -289,7 +295,9 @@
         if (GameEngine.IsGameStarted)
         {
             await GameEngine.ProcessCommand(command);
-            GameEngine.DisplayStats(); // Always show status bar after command
+            // Only show status bar if not in an interactive state (dialogue/menu/shop/combat show their own)
+            if (!GameEngine.IsInInteractiveState)
+                GameEngine.DisplayStats();
         }
     }
 

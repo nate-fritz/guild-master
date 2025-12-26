@@ -28,6 +28,14 @@ namespace GuildMaster.Services
 
         public bool IsGameStarted => gameContext?.Player != null;
 
+        // Check if we're in an interactive state that displays its own status bar
+        public bool IsInInteractiveState =>
+            (combatManager != null && combatManager.IsInCombat) ||
+            (dialogueManager != null && dialogueManager.IsInDialogue) ||
+            (menuManager != null && menuManager.IsInMenu) ||
+            (gameController?.shopManager != null && gameController.shopManager.IsInShop) ||
+            (gameController?.questManager != null && gameController.questManager.IsInQuestMenu);
+
         public GameEngine(GameConsole gameConsole, IStorageService storageService)
         {
             console = gameConsole;
