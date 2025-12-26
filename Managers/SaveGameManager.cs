@@ -19,6 +19,7 @@ namespace GuildMaster.Managers
         private GameContext context;
         private IStorageService storageService;
         private int currentSlot = 1;
+        private GameState? lastLoadedState = null;  // Store last loaded state for post-load initialization
 
         public SaveGameManager(GameContext gameContext, IStorageService storageService)
         {
@@ -164,6 +165,9 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine($"[yellow]Migrating save from version {loadedState.SaveVersion} to {CURRENT_SAVE_VERSION}...[/]");
                     loadedState = MigrateSaveData(loadedState);
                 }
+
+                // Store loaded state for post-initialization (e.g., message restoration)
+                lastLoadedState = loadedState;
 
                 // Re-initialize game data
                 context.NPCs = NPCData.InitializeNPCs();
@@ -520,6 +524,11 @@ namespace GuildMaster.Managers
         public int GetCurrentSlot()
         {
             return currentSlot;
+        }
+
+        public GameState? GetLastLoadedState()
+        {
+            return lastLoadedState;
         }
 
         public class SaveSlotInfo

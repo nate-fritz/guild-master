@@ -77,6 +77,7 @@ namespace GuildMaster.Services
 
         private bool isWaitingForLoadSlot = false;
         private SaveGameManager? tempLoadManager = null;
+        private GameState? pendingLoadedState = null;  // Store loaded state temporarily for message restoration
         private bool isInPreCombatDialogue = false;
         private List<NPC>? pendingCombatEnemies = null;
         private Room? pendingCombatRoom = null;
@@ -186,6 +187,16 @@ namespace GuildMaster.Services
             eventManager = new EventManager(gameContext);
             ProgramStatics.eventManager = eventManager;
             eventManager.LoadEvents();
+
+            // Restore shown messages from loaded state (must happen AFTER MessageManager creation)
+            if (tempLoadManager != null)
+            {
+                var loadedState = tempLoadManager.GetLastLoadedState();
+                if (loadedState?.ShownMessages != null)
+                {
+                    messageManager.SetShownMessages(loadedState.ShownMessages);
+                }
+            }
 
             // Register event dialogue trees
             EventDataDefinitions.RegisterEventDialogueTrees(dialogueManager);
