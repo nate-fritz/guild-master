@@ -51,6 +51,27 @@
 - Small tweaks that don't change functionality
 - Work-in-progress changes that aren't tested
 
+### ⚠️ IMPORTANT CHECKLIST - Before Marking Changes Complete
+
+**Every time you make changes, verify:**
+
+1. **Help Files Updated?**
+   - ✅ `UIManager.ShowHelp()` - Updated if new player-facing commands added?
+   - ✅ `UIManager.ShowAdminHelp()` - Updated if new admin/debug commands added?
+   - Examples: New commands, changed command syntax, new features players need to know
+
+2. **Save System Updated?**
+   - ✅ `Models/GameState.cs` - Does it include new Player properties?
+   - ✅ `Managers/SaveGameManager.cs` - Are new systems being saved/loaded?
+   - Examples: New Player flags, new tracking dictionaries, new manager state
+   - **Critical:** Forgetting this breaks save/load compatibility!
+
+3. **Documentation Updated?**
+   - ✅ `CONTENT_CREATION_GUIDE.md` - Updated if content creation process changed?
+   - ✅ `README.md` - Updated if setup/requirements changed?
+
+**Note:** Add these checks to your log entry under "Notes/Context" if applicable
+
 ---
 
 ## Development Log
@@ -87,11 +108,13 @@
 
 **Key Files Modified:**
 - `Models/Player.cs` - Added MetNPCs and VisitedDialogueNodes tracking
+- `Models/GameState.cs` - Added save system support for dialogue tracking (MetNPCs, VisitedDialogueNodes, WarRoomEnabled)
 - `Models/DialogueNode.cs` - Added RequireDiscussedNode, RequireNotDiscussedNode, PermanentlyEndsDialogue
 - `Managers/DialogueManager.cs` - Implemented first/repeat greeting logic, topic tracking, auto-reset
 - `Data/NPCData.cs` - Updated all dialogue with quotations, added first/repeat greetings for key NPCs
 - `Managers/WarRoomManager.cs` - Added tutorial explanation
 - `Services/GameEngine.cs` - Added warroom toggle command
+- `Managers/UIManager.cs` - Added warroom command to admin help
 - `CONTENT_CREATION_GUIDE.md` - Comprehensive documentation of new dialogue features
 
 **Notes/Context:**
@@ -104,8 +127,12 @@
 **Bug Fixes:**
 - Fixed Silvacis dialogue not showing amulet return option after "exploring" conversation path
 - Fixed dialogue getting stuck in terminal nodes (now auto-resets)
+- Fixed save/load compatibility by adding new properties to GameState.cs
 
-**Commit:** `a78757c` - Pushed to both repos (LoxGM and nate-fritz)
+**Commits:**
+- Initial implementation: `a78757c`
+- Save system fix: `4820e08`
+- Pushed to both repos (LoxGM and nate-fritz)
 
 ---
 
