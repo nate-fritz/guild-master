@@ -205,11 +205,23 @@ namespace GuildMaster.Data
             darkPassage.NPCs.Add(npcs["Bandit Enforcer"].Clone());
 
             // Updated
-            Room deepCave = CreateRoom(18, "deepCave", "Bandit Cave - Deep Cavern", "You've descended deep into the mountain. The air here is cold and still. Strange rock formations create eerie shapes in the torchlight. Water drips steadily somewhere in the darkness. The cave continues east toward the sound of loud voices and running water.  The way north leads back toward the cave exit.");
+            Room deepCave = CreateRoom(18, "deepCave", "Bandit Cave - Deep Cavern", "You've descended deep into the mountain. The air here is cold and still. Strange rock formations create eerie shapes in the torchlight. Water drips steadily somewhere in the darkness. A massive iron gate blocks the passage east. The way north leads back toward the cave exit.");
             deepCave.Exits.Add("north", 17);
-            deepCave.Exits.Add("east", 21);
-            deepCave.NPCs.Add(npcs["Bandit Enforcer"].Clone());
-            deepCave.NPCs.Add(npcs["Bandit Enforcer"].Clone());
+            // deepCave.Exits.Add("east", 21);  // Blocked by iron gate - unlocked with both keys
+            deepCave.NPCs.Add(npcs["Bandit Guard"].Clone());  // Single guard with iron key
+            deepCave.PuzzleId = "warlord_chamber_gates";
+
+            deepCave.Objects.Add(new RoomObject
+            {
+                Id = "iron_gate",
+                Name = "iron gate",
+                Aliases = new[] { "gate", "iron door", "bars" },
+                DefaultDescription = "A formidable iron gate bars the passage east. It has two keyholes - one for an iron key and one for a bronze key.",
+                LookedAtDescription = "The gate is locked tight with a complex dual-lock mechanism. You'll need both an iron key and a bronze key to open it.",
+                IsInteractable = true,
+                InteractionType = "use",
+                RequiredItem = null  // Handled by puzzle logic
+            });
 
             // Updated
             Room floodedChamber = CreateRoom(19, "floodedChamber", "Bandit Cave - Flooded Chamber", "An underground stream flows through this chamber, the water black and swift. A narrow ledge runs along the eastern wall. Someone is standing guard here - a woman with a bow. She doesn't look like the other bandits. The only way forward is west, across a rickety wooden bridge.");
@@ -218,9 +230,22 @@ namespace GuildMaster.Data
             floodedChamber.NPCs.Add(npcs["Livia"].Clone());  // Recruitable Venator
 
             // Updated
-            Room undergroundRiver = CreateRoom(20, "undergroundRiver", "Bandit Cave - Underground River", "A narrow chasm opens up in the middle of this cavern, with a rickety looking wood and rope bridge spanning across it.  It's too dark to see the bottom of the chasm, but you can faintly hear the flowing water of an underground river far below you.  You hear loud voices to the west, and to the distant north is the cave's entrance.");
+            Room undergroundRiver = CreateRoom(20, "undergroundRiver", "Bandit Cave - Underground River", "A narrow chasm opens up in the middle of this cavern, with a rickety looking wood and rope bridge spanning across it. It's too dark to see the bottom of the chasm, but you can faintly hear the flowing water of an underground river far below you. A bronze gate blocks the passage west. To the north is the way back toward the cave's entrance.");
             undergroundRiver.Exits.Add("north", 19);
-            undergroundRiver.Exits.Add("west", 21);
+            // undergroundRiver.Exits.Add("west", 21);  // Blocked by bronze gate - unlocked with both keys
+            undergroundRiver.PuzzleId = "warlord_chamber_gates";
+
+            undergroundRiver.Objects.Add(new RoomObject
+            {
+                Id = "bronze_gate",
+                Name = "bronze gate",
+                Aliases = new[] { "gate", "bronze door", "bars" },
+                DefaultDescription = "An ornate bronze gate blocks the passage west. It has two keyholes - one for an iron key and one for a bronze key.",
+                LookedAtDescription = "The gate is secured with a complex dual-lock mechanism. You'll need both an iron key and a bronze key to open it.",
+                IsInteractable = true,
+                InteractionType = "use",
+                RequiredItem = null  // Handled by puzzle logic
+            });
 
             Room warlordChamber = CreateRoom(21, "warlordChamber", "Bandit Cave - Warlord's Lair", "The passage opens into a large natural cavern that has been converted into a throne room of sorts. Stolen tapestries hang on the walls, and a crude throne of piled crates sits at the far end.");
             warlordChamber.Exits.Add("east", 20);
@@ -310,7 +335,7 @@ namespace GuildMaster.Data
             pathWithCart.Exits.Add("east", 44);
             pathWithCart.Items.Add("cart");
        
-            Room abandonedCampsite = CreateRoom(44, "abandonedCampsite", "An abandoned campsite", "You come across the charred remains of a long abandoned campsite.  You notice a charred wooden chest sticking out of one of the several ash piles.  The west leads out of the forest, while to the east the forest grows wildly.");
+            Room abandonedCampsite = CreateRoom(44, "abandonedCampsite", "An abandoned campsite", "You come across the charred remains of a long abandoned campsite.  You notice a charred wooden chest sticking out of one of the several ash piles.  The west leads out of the forest, and you can hear a stream to the south.");
             abandonedCampsite.Exits.Add("west", 43);
             abandonedCampsite.Exits.Add("south", 45);
            
@@ -323,15 +348,14 @@ namespace GuildMaster.Data
             forestBend.Exits.Add("north", 45);
             forestBend.Exits.Add("east", 47);
             forestBend.NPCs.Add(npcs["Dire Wolf"].Clone());  // Clone dire wolf
-            forestBend.NPCs.Add(npcs["Bandit"].Clone());  // Clone bandit  
-            forestBend.NPCs.Add(npcs["Bandit Thug"].Clone());  // Clone bandit thug
+            forestBend.NPCs.Add(npcs["Dire Wolf"].Clone());  // Clone dire wolf
             forestBend.CanRespawn = true;
             forestBend.RespawnTimeHours = 16f;
             forestBend.OriginalNPCs.Add(npcs["Dire Wolf"].Clone());
-            forestBend.OriginalNPCs.Add(npcs["Bandit"].Clone());
-            forestBend.OriginalNPCs.Add(npcs["Bandit Thug"].Clone());
+            forestBend.OriginalNPCs.Add(npcs["Dire Wolf"].Clone());
 
-            Room deepForest = CreateRoom(47, "deepForest", "A deep forest clearing", "This secluded clearing is barely visible from the path. A small campfire smolders near a worn bedroll, and weapons are carefully arranged on a fallen log. Someone has been living here.  You can hear a stream to the south.");
+
+            Room deepForest = CreateRoom(47, "deepForest", "A deep forest clearing", "This secluded clearing is barely visible from the path. A small campfire smolders near a worn bedroll, and weapons are carefully arranged on a fallen log. Someone has been living here. To the west the path turns back towards the forest entrance.  To the east the forest grows wildly.");
             
             deepForest.Exits.Add("west", 46);
             deepForest.Exits.Add("east", 48);
@@ -367,13 +391,15 @@ namespace GuildMaster.Data
             overgrownRuins.Exits.Add("west", 51);
             overgrownRuins.Exits.Add("south", 53);
 
-            Room foggyPath = CreateRoom(53, "foggyPath", "A foggy path", "A low fog clings to the ground here, obscuring your feet. The mist seems to swirl and shift of its own accord. You can barely make out paths to the north and east.");
+            Room foggyPath = CreateRoom(53, "foggyPath", "A foggy clearing", "An unnatural fog blankets this clearing, thick and oppressive. Unlike normal mist, this fog seems almost alive - it swirls in patterns that defy the wind and pulses with a faint, sickly luminescence. The fog is so dense to the east that you cannot see more than a few feet in that direction. To the south, the mist thins slightly, revealing a path.");
             foggyPath.Exits.Add("south", 54);
+            foggyPath.Exits.Add("north", 52);  // Back to overgrown ruins
+            foggyPath.PuzzleId = "foggy_clearing_puzzle";
 
-            Room wildernessTrail = CreateRoom(54, "wildernessTrail", "A wilderness trail", "A narrow trail winds through dense underbrush. Animal tracks crisscross the path - some disturbingly large.");
+            Room wildernessTrail = CreateRoom(54, "wildernessTrail", "A wilderness trail", "A narrow trail winds through dense underbrush. Animal tracks crisscross the path - some disturbingly large. The fog continues to obscure the path. Are you sure you're heading in the right direction?");
             wildernessTrail.Exits.Add("north", 55);
 
-            Room fungalGrove = CreateRoom(55, "fungalGrove", "A fungal grove", "Enormous mushrooms grow in clusters here, some taller than a man. Their caps glow faintly with an eerie bioluminescence. The air smells earthy and strange.");
+            Room fungalGrove = CreateRoom(55, "fungalGrove", "A fungal grove", "Enormous mushrooms grow in clusters here, some taller than a man. Their caps glow faintly with an eerie bioluminescence. The air smells earthy and strange, but the fog has subsided here. You can make out paths to the east and to the west.");
             fungalGrove.Exits.Add("west", 56);
             fungalGrove.Exits.Add("east", 54);
 
@@ -381,13 +407,71 @@ namespace GuildMaster.Data
             mossyClearingSouth.Exits.Add("north", 55);
             mossyClearingSouth.Exits.Add("south", 57);
 
-            Room twistingPath = CreateRoom(57, "twistingPath", "A twisting path", "The path twists and turns here, making it difficult to maintain your bearings. You're not entirely sure which direction you came from.");
-            twistingPath.Exits.Add("north", 56);
-            twistingPath.Exits.Add("west", 58);
+            Room twistingPath = CreateRoom(57, "twistingPath", "A twisting path", "The path twists and turns here, making it difficult to maintain your bearings. Dense undergrowth surrounds you on all sides.");
+            twistingPath.PuzzleId = "twisting_path_puzzle";
+            // Exits hidden - revealed by puzzle interactions
+            // twistingPath.Exits.Add("north", 56);  // Revealed by examining bootprints and moving vines
+            // twistingPath.Exits.Add("west", 58);   // Revealed by examining bones/tracks and pushing branches
+
+            twistingPath.Objects.Add(new RoomObject
+            {
+                Id = "animal_bones",
+                Name = "bones",
+                Aliases = new[] { "animal bones", "skeleton", "remains", "deer bones" },
+                DefaultDescription = "Scattered bones lie half-buried in the undergrowth. They look like they belonged to a deer.",
+                LookedAtDescription = "The bones have been picked clean. Whatever killed this deer dragged it through here - you can see faint drag marks and wolf tracks leading west through the undergrowth.",
+                IsInteractable = false
+            });
+
+            twistingPath.Objects.Add(new RoomObject
+            {
+                Id = "wolf_tracks",
+                Name = "tracks",
+                Aliases = new[] { "wolf tracks", "prints", "paw prints", "pawprints" },
+                DefaultDescription = "Fresh wolf tracks crisscross the area. They seem to converge from multiple directions.",
+                LookedAtDescription = "Following the tracks with your eyes, you notice they all lead toward a particularly thick tangle of branches to the west. Something regularly passes through there.",
+                IsInteractable = false,
+                IsHidden = true  // Revealed after examining bones
+            });
+
+            twistingPath.Objects.Add(new RoomObject
+            {
+                Id = "thick_branches",
+                Name = "branches",
+                Aliases = new[] { "thick branches", "tangle", "undergrowth", "brush" },
+                DefaultDescription = "A wall of tangled branches blocks any passage to the west.",
+                LookedAtDescription = "Looking closer, the branches are less solid than they first appeared. After looking closely at these branches, you notice that a narrow path continues beyond them. Maybe you could push them out of the way?",
+                IsInteractable = true,
+                InteractionType = "push",
+                OnInteractMessage = null,  // Handled by puzzle logic
+                IsHidden = true  // Revealed after examining tracks
+            });
+
+            twistingPath.Objects.Add(new RoomObject
+            {
+                Id = "boot_prints",
+                Name = "bootprints",
+                Aliases = new[] { "boot prints", "footprints", "prints", "boots" },
+                DefaultDescription = "Fresh bootprints mark the ground here.",
+                LookedAtDescription = "Wait... these bootprints match your own boots exactly. You've been walking in circles! But looking more carefully, you can see your original tracks came from the north, where thick vines now conceal the path.",
+                IsInteractable = false
+            });
+
+            twistingPath.Objects.Add(new RoomObject
+            {
+                Id = "thick_vines",
+                Name = "vines",
+                Aliases = new[] { "thick vines", "ivy", "growth" },
+                DefaultDescription = "Thick vines hang across what might once have been a path to the north.",
+                LookedAtDescription = "The vines are draped over the opening like a curtain. After looking closely at these vines, you notice that a path continues beyond them. You could probably move them aside to pass through.",
+                IsInteractable = true,
+                InteractionType = "move",
+                OnInteractMessage = null,  // Handled by puzzle logic
+                IsHidden = true  // Revealed after examining bootprints
+            });
 
             // Needs update
-            Room forestEdge = CreateRoom(58, "forestEdge", "The forest's edge", "The trees thin here and you can see open sky to the east. The forest seems reluctant to let you go, branches reaching out like grasping fingers. But the exit is clear.");
-            forestEdge.Exits.Add("east", 57);
+            Room forestEdge = CreateRoom(58, "forestEdge", "The forest's edge", "The trees thin here and you can see open sky to the south. The forest seems reluctant to let you go, however, and thorny vines and branches reach out like grasping fingers to block your path.  The way you came from seems to have disappeared behind you.  Your only way forward is to the west.");
             forestEdge.Exits.Add("west", 59);
 
             // Needs update
@@ -549,6 +633,7 @@ namespace GuildMaster.Data
             townHall.Exits.Add("north", 88);
             townHall.Exits.Add("south", 86);
             townHall.Exits.Add("east", 84);
+            townHall.Exits.Add("west", 91);
             townHall.NPCs.Add(npcs["Town Guard"].Clone());
 
             // Needs update
@@ -564,7 +649,10 @@ namespace GuildMaster.Data
 
             Room belumNorthGate = CreateRoom(90, "belumNorthGate", "Belum - North Gate", "A large wooden and iron gate stands open here, stone towers on either side. Armed guards stand at attention, watching for any sign of trouble.  To the south is the residential district, and the road north leads out of town.");
             belumNorthGate.Exits.Add("south", 81);
-            
+
+            Room townHallInterior = CreateRoom(91, "townHallInterior", "Belum - Town Hall Interior", "You step into the interior of an ancient romanesque administrative building. Tall marble columns rise to support a vaulted ceiling decorated with frescoes depicting the founding of Belum. Rows of wooden benches face a raised platform where officials conduct town business. Scrolls, ledgers, and official documents are neatly organized on shelves along the walls. The air smells of parchment and wax seals. To the east is the exit back to the town square.");
+            townHallInterior.Exits.Add("east", 87);
+            townHallInterior.NPCs.Add(npcs["Senator Quintus"]);
 
             // Guild Hall
             rooms.Add(1, bedroom);
@@ -660,6 +748,7 @@ namespace GuildMaster.Data
             rooms.Add(88, barracks);
             rooms.Add(89, templeOfKeius);
             rooms.Add(90, belumNorthGate);
+            rooms.Add(91, townHallInterior);
 
             // ===== TESTING ROOMS (999-991) - Hidden recruit testing area =====
             // Test Room 999 - Valeria (Legionnaire, Female, Conversational)

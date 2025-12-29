@@ -66,6 +66,13 @@ namespace GuildMaster.Models
         // Priority Message System
         public HashSet<string> ShownMessages { get; set; }
 
+        // Puzzle system
+        public Dictionary<string, PuzzleState> PuzzleStates { get; set; }  // Track puzzle states
+        public HashSet<string> ExaminedObjects { get; set; }  // Track which room objects have been examined
+
+        // Timer system for timed events (e.g., letter translation)
+        public Dictionary<string, GameTimer> ActiveTimers { get; set; }  // Track active timers
+
         // Milestone tracking for dynamic content
         public int TotalRecruitsEver { get; set; } = 0;
         public HashSet<string> CompletedMilestones { get; set; }
@@ -94,6 +101,24 @@ namespace GuildMaster.Models
             RoomStateOverrides = new Dictionary<int, string>();
             MetNPCs = new HashSet<string>();
             VisitedDialogueNodes = new Dictionary<string, HashSet<string>>();
+            PuzzleStates = new Dictionary<string, PuzzleState>();
+            ExaminedObjects = new HashSet<string>();
+            ActiveTimers = new Dictionary<string, GameTimer>();
+        }
+    }
+
+    public class GameTimer
+    {
+        public string TimerId { get; set; }
+        public int StartDay { get; set; }
+        public float StartHour { get; set; }
+        public float DurationHours { get; set; }
+
+        public bool IsComplete(int currentDay, float currentHour)
+        {
+            // Calculate total hours elapsed
+            float totalHoursElapsed = ((currentDay - StartDay) * 24f) + (currentHour - StartHour);
+            return totalHoursElapsed >= DurationHours;
         }
     }
 

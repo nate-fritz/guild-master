@@ -20,6 +20,10 @@ namespace GuildMaster.Models
         public Dictionary<string, string> DescriptionVariants { get; set; }
         public Dictionary<string, Dictionary<string, int>> ExitVariants { get; set; }
 
+        // Puzzle system
+        public List<RoomObject> Objects { get; set; }  // Objects that can be examined/interacted with
+        public string PuzzleId { get; set; }  // null if no puzzle in this room
+
         // Respawn properties
         public bool CanRespawn { get; set; } = false;
         public float RespawnTimeHours { get; set; } = 48f;
@@ -35,6 +39,7 @@ namespace GuildMaster.Models
             OriginalNPCs = new List<NPC>();
             DescriptionVariants = new Dictionary<string, string>();
             ExitVariants = new Dictionary<string, Dictionary<string, int>>();
+            Objects = new List<RoomObject>();
         }
 
         public string GetDescription(string state = "default")

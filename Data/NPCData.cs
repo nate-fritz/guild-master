@@ -243,7 +243,7 @@ namespace GuildMaster.Data
             // Quest completion dialogue - player has the warlord's head
             sentry.Dialogue.Add("quest_complete", new DialogueNode()
             {
-                Text = "Marcus' eyes widen as you unwrap the grisly trophy. \"By the gods... you actually did it! The Warlord's head!\" He examines it grimly. \"This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I'll inform the council immediately - the southern gate is now open to you.\"",
+                Text = "Marcus' eyes widen as you unwrap the grisly trophy. \"By the gods... you actually did it! The Warlord's head!\" He examines it grimly. \"This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I'll inform the council immediately - the southern gate is now open to you.\"<br><br>He pauses, then adds, \"If you found anything unusual on the Warlord - letters, documents, anything like that - you should take them to Senator Quintus in the town hall. He's skilled with ciphers and codes. Might be able to make sense of it.\"",
                 Action = new DialogueAction { Type = "open_gate" },
                 Choices = { }
             });
@@ -964,6 +964,28 @@ namespace GuildMaster.Data
             banditEnforcer.Role = EnemyRole.Melee;
             banditEnforcer.LootTable = new Dictionary<string, int> { {"potion", 50}, {"energy potion", 30}, {"battle axe", 15} };
 
+            // Bandit Guard - Deep Cave Guard with Iron Key (Level 6, Elite)
+            NPC banditGuard = new NPC();
+            banditGuard.Name = "Bandit Guard";
+            banditGuard.Description = "A heavily armored bandit stands guard, clearly the most formidable warrior in this section of the cave. A large iron key hangs from his belt alongside a wicked-looking axe.";
+            banditGuard.ShortDescription = "A bandit guard";
+            banditGuard.IsHostile = true;
+            banditGuard.Health = 80;  // Increased from 60
+            banditGuard.MaxHealth = 80;
+            banditGuard.Energy = 35;  // Increased from 30
+            banditGuard.MaxEnergy = 35;
+            banditGuard.AttackDamage = 12;  // Increased from 10
+            banditGuard.Defense = 7;  // Increased from 6
+            banditGuard.Speed = 11;  // Increased from 10
+            banditGuard.DamageCount = 1;
+            banditGuard.DamageDie = 12;  // Increased from d10 to d12
+            banditGuard.DamageBonus = 10;  // Increased from 8
+            banditGuard.MinGold = 15;
+            banditGuard.MaxGold = 30;
+            banditGuard.ExperienceReward = 100;  // Increased from 75
+            banditGuard.Role = EnemyRole.Melee;
+            banditGuard.LootTable = new Dictionary<string, int> { {"iron key", 100}, {"potion", 60}, {"energy potion", 40}, {"battle axe", 20} };
+
             // Bandit Warlord - Boss (Level 7)
             NPC banditWarlord = new NPC();
             banditWarlord.Name = "Bandit Warlord";
@@ -991,6 +1013,7 @@ namespace GuildMaster.Data
             banditWarlord.LootTable = new Dictionary<string, int>
             {
                 {"warlord's head", 100},  // Quest item - always drops
+                {"indecipherable letter", 100},  // Quest item - always drops
                 {"steel gladius", 30},
                 {"chainmail", 25},
                 {"potion", 60},
@@ -1024,12 +1047,13 @@ namespace GuildMaster.Data
             livia.RecruitableAfterDefeat = true;
             livia.RecruitClass = "Venator";
             livia.YieldDialogue = "Wait! [She lowers her bow] I surrender. I'm not one of these bandits - they captured me weeks ago and forced me to stand guard. Please, let me join you. I'm a skilled hunter and I know how to survive.";
-            livia.AcceptDialogue = "Thank the gods. I won't let you down. These bandits will pay for what they've done.";
+            livia.AcceptDialogue = "Thank the gods. I won't let you down. These bandits will pay for what they've done. [She reaches into her pouch] Here - take this bronze key. The bandits took it from me when they captured me. It unlocks the gate to the Warlord's chamber. You'll need it to reach him.";
 
             // Add bandit cave NPCs (sentry/Marcus already added earlier)
             npcs.Add(banditScout.Name, banditScout);
             npcs.Add(banditCutthroat.Name, banditCutthroat);
             npcs.Add(banditEnforcer.Name, banditEnforcer);
+            npcs.Add(banditGuard.Name, banditGuard);
             npcs.Add(banditWarlord.Name, banditWarlord);
             npcs.Add(livia.Name, livia);
 
@@ -1242,6 +1266,96 @@ namespace GuildMaster.Data
             npcs.Add(testRecruit7.Name, testRecruit7);
             npcs.Add(testRecruit8.Name, testRecruit8);
             npcs.Add(testRecruit9.Name, testRecruit9);
+
+            // Senator Quintus - Cipher expert in town hall
+            NPC quintus = new NPC();
+            quintus.Name = "Senator Quintus";
+            quintus.Description = "An older man with dark gray hair, dressed in the white robes and colored sashes marking him as a senator. Despite his age, his eyes are sharp and observant. He works at a desk covered in scrolls and documents.";
+            quintus.ShortDescription = "Senator Quintus";
+            quintus.IsHostile = false;
+
+            // Initial greeting - general conversation about his role
+            quintus.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "The senator looks up from his work and offers a polite nod. \"Greetings, traveler. I am Senator Quintus. While I serve in the capital city of Aevoria, I am native to Belum and return here often to handle administrative matters for the town.\" He gestures to the documents on his desk. \"How may I assist you today?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
+                        nextNodeID = "give_letter",
+                        IsAvailable = (inventory) => inventory.Contains("indecipherable letter"),
+                        Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "indecipherable letter"} } }
+                    },
+                    new DialogueNode.Choice { choiceText = "\"Tell me about yourself.\"", nextNodeID = "about_quintus" },
+                    new DialogueNode.Choice { choiceText = "\"Just looking around. Thank you.\"", nextNodeID = "end" }
+                }
+            });
+
+            quintus.Dialogue.Add("about_quintus", new DialogueNode()
+            {
+                Text = "Quintus leans back in his chair. \"I've spent most of my career in Aevoria, serving in the Senate. But Belum is my home, and I try to give back when I can.\" A subtle smile crosses his face. \"I've also maintained certain... interests from my younger days. Let's just say I've always had an appreciation for those who venture into danger for the greater good.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
+                        nextNodeID = "give_letter",
+                        IsAvailable = (inventory) => inventory.Contains("indecipherable letter"),
+                        Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "indecipherable letter"} } }
+                    },
+                    new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end" }
+                }
+            });
+
+            quintus.Dialogue.Add("give_letter", new DialogueNode()
+            {
+                Text = "You hand the letter to Quintus. He opens it and studies it closely for several minutes, his brow furrowing in concentration. Finally, he looks up.<br><br>\"Yes, I recognize this cipher. It's an old one, but I can translate it. This will take some time, though - give me a full day to work on it. Meet me back here at this time tomorrow, and I'll have it ready for you.\"<br><br>He carefully sets the letter aside on his desk.",
+                Action = new DialogueAction {
+                    Type = "start_timer",
+                    Parameters = {
+                        {"timer_id", "quintus_translation"},
+                        {"duration_hours", "24"}
+                    }
+                },
+                Choices = { }
+            });
+
+            // Waiting dialogue - player returns before 24 hours
+            quintus.Dialogue.Add("waiting", new DialogueNode()
+            {
+                Text = "Quintus looks up from his work on the letter. \"I'm still working on the translation. These ciphers take time to crack properly. Come back tomorrow, please.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I'll return later.\"", nextNodeID = "end" }
+                }
+            });
+
+            // Translation ready - player returns after 24 hours
+            quintus.Dialogue.Add("translation_ready", new DialogueNode()
+            {
+                Text = "Quintus rises as you approach, holding both the original letter and a fresh parchment with his translation.<br><br>\"Ah, excellent timing. I've finished the translation. This is... quite interesting.\" He hands you the documents. \"The letter is actually two parts - the original message is in one hand, the response in another. It appears to be correspondence between the Bandit Warlord and someone else.\"<br><br>\"The first part asks 'How soon can you deliver on your part of the plan?' The response - written by the Warlord but apparently never sent - essentially says he's no longer interested. He's 'filthy rich and well-protected,' to use his words.\"<br><br>He taps the bottom of the page. \"This is the intriguing part. There's a passphrase at the end: 'Ordo Dissolutus.' I suspect this was meant to authenticate the bearer of the letter. If someone is using passphrases, they're protecting something valuable.\"",
+                Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "translated letter"} } },
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Do you know who sent the original message?\"", nextNodeID = "about_sender" }
+                }
+            });
+
+            quintus.Dialogue.Add("about_sender", new DialogueNode()
+            {
+                Text = "Quintus shakes his head. \"The letter is unsigned, but whoever wrote it was no common criminal. The cipher itself suggests education and resources. Given the context, I'd wager you're dealing with something more organized than simple bandits.\" He pauses thoughtfully. \"Be careful out there. If this passphrase opens something, it may lead you somewhere dangerous.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Thank you for your help, Senator.\"", nextNodeID = "end" }
+                }
+            });
+
+            quintus.Dialogue.Add("end", new DialogueNode()
+            {
+                Text = "Quintus nods courteously. \"Safe travels, adventurer. My door is always open if you need assistance.\"",
+                Choices = { }
+            });
+
+            npcs.Add(quintus.Name, quintus);
 
             return npcs;
         }

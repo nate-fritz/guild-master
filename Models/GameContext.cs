@@ -16,6 +16,9 @@ namespace GuildMaster.Models
         public HashSet<string> CompletedMilestones { get; set; }
         public Dictionary<int, string> RoomStateOverrides { get; set; }
 
+        // Puzzle system
+        public Dictionary<string, PuzzleState> PuzzleStates { get; set; }
+
         public GameContext()
         {
             NPCs = new Dictionary<string, NPC>();
@@ -24,6 +27,7 @@ namespace GuildMaster.Models
             Effects = new Dictionary<string, Effect>();
             CompletedMilestones = new HashSet<string>();
             RoomStateOverrides = new Dictionary<int, string>();
+            PuzzleStates = new Dictionary<string, PuzzleState>();
         }
 
         /// <summary>

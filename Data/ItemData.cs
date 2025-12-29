@@ -232,13 +232,84 @@ namespace GuildMaster.Data
                     }
                 },
 
-                {97, new Dictionary<string, Item>()  // warlordChamber - Quest item
+                {97, new Dictionary<string, Item>()  // warlordChamber - Quest items
                     {
                         {"warlord's head", new Item {
                             Description = "The severed head of the Bandit Warlord, his face frozen in a final expression of surprise and rage. This should serve as proof of your victory. Marcus the gate guard will want to see this.",
                             ShortName = "head",
                             IsLootable = true,
                             IsConsumable = false
+                        }},
+                        {"indecipherable letter", new Item {
+                            Description = "A folded letter covered in strange symbols and coded text. You can't make sense of it - the writing appears to be encrypted with some kind of cipher. Perhaps someone with expertise in cryptography could translate it.",
+                            ShortName = "letter",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }},
+                        {"translated letter", new Item {
+                            Description = "The translated correspondence between the Bandit Warlord and an unknown sender. The first part reads: 'How soon can you deliver on your part of the plan?' The Warlord's unsent response essentially states he's no longer interested - he's 'filthy rich and well-protected.' At the bottom is written a passphrase: 'Ordo Dissolutus.'",
+                            ShortName = "letter",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }}
+                    }
+                },
+
+                {18, new Dictionary<string, Item>()  // deepCave - Iron Key
+                    {
+                        {"iron key", new Item {
+                            Description = "A large iron key, heavy and cold to the touch. It looks like it might unlock the iron gate that blocks the passage east.",
+                            ShortName = "iron",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }}
+                    }
+                },
+
+                {19, new Dictionary<string, Item>()  // floodedChamber - Bronze Key
+                    {
+                        {"bronze key", new Item {
+                            Description = "An ornate bronze key with intricate engravings. It looks like it might unlock the bronze gate in the cavern to the south.",
+                            ShortName = "bronze",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }}
+                    }
+                },
+
+                {20, new Dictionary<string, Item>()  // undergroundRiver - Bronze Key (also defined here)
+                    {
+                        {"bronze key", new Item {
+                            Description = "An ornate bronze key with intricate engravings. It looks like it might unlock the bronze gate that blocks the passage west.",
+                            ShortName = "bronze",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }}
+                    }
+                },
+
+                {47, new Dictionary<string, Item>()  // deepForest - Forest Camp
+                    {
+                        {"chest", new Item {
+                            Description = "A weathered wooden chest sits beside the bedroll. It's unlocked and slightly ajar.",
+                            EmptyDescription = "A weathered wooden chest, now empty.",
+                            IsLootable = false,
+                            IsContainer = true,
+                            Contents = new List<string> { "worn letter", "energy potion" },
+                            DiscoveryMessage = "Inside you find a [cyan]worn letter[/] and an [cyan]energy potion[/]."
+                        }},
+                        {"worn letter", new Item {
+                            Description = "A folded letter, worn from being read many times. The handwriting is elegant but hurried:\n\n\"My dearest - I cannot stay any longer. They've found me. The visions grow stronger each day, and the cult knows what I can do. I'm heading north to the old temple ruins where we first met. If you're reading this, please don't follow me. It's too dangerous. But if you must... look for the silver moon symbol. Always yours, A.\"\n\nThe letter is dated several weeks ago.",
+                            ShortName = "letter",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }},
+                        {"energy potion", new Item {
+                            Description = "A small vial filled with shimmering blue liquid. It seems to pulse with arcane energy.",
+                            ShortName = "energy",
+                            IsLootable = true,
+                            IsConsumable = true,
+                            EffectId = "energy_restore"
                         }}
                     }
                 }

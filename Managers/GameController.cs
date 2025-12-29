@@ -20,6 +20,7 @@ namespace GuildMaster.Managers
         public QuestManager questManager;
         public EventManager? eventManager;
         public DialogueManager? dialogueManager;
+        public PuzzleManager? puzzleManager;
 
         public GameController(GameContext gameContext, CombatManager combatMgr, SaveGameManager saveMgr, QuestManager questMgr, RecruitNPCManager recruitMgr)
         {
@@ -64,9 +65,15 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine($"\n{currentRoomObj.NPCs[0].ShortDescription}, {currentRoomObj.NPCs[0].Name} is here.");
                 }
 
-                if (currentRoomObj.Items.Count > 0)
+                // Display items
+                bool hasItems = currentRoomObj.Items.Count > 0;
+                bool hasObjects = currentRoomObj.Objects.Count > 0;
+
+                if (hasItems || hasObjects)
                 {
-                    AnsiConsole.MarkupLine("\nYou notice the following items in the room:");
+                    AnsiConsole.MarkupLine("\nYou notice:");
+
+                    // List takeable items
                     foreach (string item in currentRoomObj.Items)
                     {
                         // Check if item has a short name
@@ -79,6 +86,15 @@ namespace GuildMaster.Managers
                             displayText = $"{item} ({shortName})";
                         }
                         AnsiConsole.MarkupLine($"- {displayText}");
+                    }
+
+                    // List room objects (only non-hidden ones)
+                    foreach (var obj in currentRoomObj.Objects)
+                    {
+                        if (!obj.IsHidden)
+                        {
+                            AnsiConsole.MarkupLine($"- {obj.Name}");
+                        }
                     }
                 }
                 else
@@ -123,6 +139,88 @@ namespace GuildMaster.Managers
             {
                 // Specific examination
                 string itemToExamine = parts[1].ToLower();
+
+                // First check for room objects (puzzle system)
+                var roomObject = FindRoomObject(currentRoomObj, itemToExamine);
+                if (roomObject != null)
+                {
+                    // Mark as examined
+                    if (!roomObject.HasBeenExamined)
+                    {
+                        roomObject.HasBeenExamined = true;
+                        player.ExaminedItems.Add(roomObject.Id);
+
+                        // Track examination for puzzle state
+                        if (!string.IsNullOrEmpty(currentRoomObj.PuzzleId) && puzzleManager != null)
+                        {
+                            var puzzleState = puzzleManager.GetPuzzleState(currentRoomObj.PuzzleId);
+                            if (puzzleState != null)
+                            {
+                                // Update puzzle state based on which object was examined
+                                if (currentRoomObj.PuzzleId == "twisting_path_puzzle")
+                                {
+                                    if (roomObject.Id == "animal_bones")
+                                    {
+                                        puzzleState.CurrentState["examined_bones"] = true;
+                                        // Reveal tracks after examining bones
+                                        var tracksObj = currentRoomObj.Objects.FirstOrDefault(o => o.Id == "wolf_tracks");
+                                        if (tracksObj != null)
+                                        {
+                                            tracksObj.IsHidden = false;
+                                        }
+                                    }
+                                    else if (roomObject.Id == "wolf_tracks")
+                                    {
+                                        puzzleState.CurrentState["examined_tracks"] = true;
+                                        // Reveal branches after examining tracks
+                                        var branchesObj = currentRoomObj.Objects.FirstOrDefault(o => o.Id == "thick_branches");
+                                        if (branchesObj != null)
+                                        {
+                                            branchesObj.IsHidden = false;
+                                        }
+                                    }
+                                    else if (roomObject.Id == "thick_branches")
+                                    {
+                                        puzzleState.CurrentState["examined_branches"] = true;
+                                    }
+                                    else if (roomObject.Id == "boot_prints")
+                                    {
+                                        puzzleState.CurrentState["examined_bootprints"] = true;
+                                        // Reveal vines after examining bootprints
+                                        var vinesObj = currentRoomObj.Objects.FirstOrDefault(o => o.Id == "thick_vines");
+                                        if (vinesObj != null)
+                                        {
+                                            vinesObj.IsHidden = false;
+                                        }
+                                    }
+                                    else if (roomObject.Id == "thick_vines")
+                                    {
+                                        puzzleState.CurrentState["examined_vines"] = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Show appropriate description
+                    string description = roomObject.HasBeenExamined && !string.IsNullOrEmpty(roomObject.LookedAtDescription)
+                        ? roomObject.LookedAtDescription
+                        : roomObject.DefaultDescription;
+
+                    TextHelper.DisplayTextWithPaging(description);
+
+                    // If interactable, hint at that
+                    if (roomObject.IsInteractable)
+                    {
+                        string hintText = roomObject.InteractionType == "use"
+                            ? "use [[item]] on [[object]]"
+                            : $"{roomObject.InteractionType} [[object]]";
+                        AnsiConsole.MarkupLine($"\n[dim](You can interact with this using: {hintText})[/]");
+                    }
+
+                    AnsiConsole.MarkupLine("");
+                    return;
+                }
 
                 // Try to find item by exact match or short name
                 string matchedItem = null;
@@ -525,5 +623,351 @@ namespace GuildMaster.Managers
 
         // NOTE: HandleQuit removed - console-specific code not used in Blazor version
         // Quit functionality is handled by GameEngine.HandleQuitCommand() with autosave
+
+        // ============================================================================
+        // PUZZLE SYSTEM METHODS
+        // ============================================================================
+
+        /// <summary>
+        /// Helper: Find room object by name or alias
+        /// Note: This finds ALL objects, including hidden ones, so players can examine them by name.
+        /// Hidden objects just won't show in the room listing.
+        /// </summary>
+        private RoomObject FindRoomObject(Room room, string searchTerm)
+        {
+            searchTerm = searchTerm.ToLower().Trim();
+
+            return room.Objects.FirstOrDefault(obj =>
+                obj.Name.ToLower() == searchTerm ||
+                (obj.Aliases != null && obj.Aliases.Any(alias => alias.ToLower() == searchTerm))
+            );
+        }
+
+        /// <summary>
+        /// Command: interact [object] or [action] [object]
+        /// Examples: "pull lever", "ring bell", "step on platform", "move stone north"
+        /// </summary>
+        public void HandleInteractionCommand(string action, string input)
+        {
+            var player = context.Player;
+            var rooms = context.Rooms;
+
+            string[] args = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (args.Length < 2)
+            {
+                AnsiConsole.MarkupLine($"\n{char.ToUpper(action[0]) + action.Substring(1)} what?");
+                return;
+            }
+
+            string objectName = string.Join(" ", args.Skip(1));
+            Room currentRoom = rooms[player.CurrentRoom];
+
+            var roomObject = FindRoomObject(currentRoom, objectName);
+
+            if (roomObject == null)
+            {
+                AnsiConsole.MarkupLine($"\nYou don't see any '{objectName}' here.");
+                return;
+            }
+
+            if (!roomObject.IsInteractable)
+            {
+                AnsiConsole.MarkupLine($"\nYou can't interact with that.");
+                return;
+            }
+
+            // Check if action matches object's interaction type
+            if (roomObject.InteractionType.ToLower() != action.ToLower())
+            {
+                AnsiConsole.MarkupLine($"\nYou can't {action} that. Try: {roomObject.InteractionType}");
+                return;
+            }
+
+            // Trigger interaction - puzzle-specific logic goes here
+            HandleObjectInteraction(roomObject, null);
+        }
+
+        /// <summary>
+        /// Centralized interaction handler
+        /// This is where puzzle-specific logic will be called
+        /// </summary>
+        private void HandleObjectInteraction(RoomObject obj, Item usedItem)
+        {
+            var player = context.Player;
+            var rooms = context.Rooms;
+
+            // This method will check the room's PuzzleId and call appropriate puzzle logic
+            Room currentRoom = rooms[player.CurrentRoom];
+
+            if (string.IsNullOrEmpty(currentRoom.PuzzleId))
+            {
+                // No puzzle in this room, just show message
+                AnsiConsole.MarkupLine(obj.OnInteractMessage ?? "\nNothing happens.");
+                return;
+            }
+
+            // Get puzzle state
+            var puzzleState = puzzleManager?.GetPuzzleState(currentRoom.PuzzleId);
+
+            if (puzzleState == null)
+            {
+                AnsiConsole.MarkupLine("\nSomething seems wrong here...");
+                return;
+            }
+
+            if (puzzleState.IsSolved)
+            {
+                AnsiConsole.MarkupLine("\nYou've already solved this.");
+                return;
+            }
+
+            // FUTURE: Call puzzle-specific validation logic here
+            // Custom puzzle handlers
+            if (currentRoom.PuzzleId == "twisting_path_puzzle")
+            {
+                HandleTwistingPathPuzzle(obj, puzzleState, currentRoom);
+            }
+            else
+            {
+                // Default behavior for other puzzles
+                puzzleManager?.IncrementAttempts(currentRoom.PuzzleId);
+                AnsiConsole.MarkupLine(obj.OnInteractMessage ?? "\nYou interact with the object.");
+            }
+        }
+
+        /// <summary>
+        /// Handle the twisting path puzzle in room 57
+        /// Two paths can be revealed:
+        /// 1. West: examine bones, tracks, branches → push branches
+        /// 2. North: examine bootprints, vines → move vines
+        /// </summary>
+        private void HandleTwistingPathPuzzle(RoomObject obj, PuzzleState state, Room room)
+        {
+            var player = context.Player;
+
+            // Handle pushing branches (west path)
+            if (obj.Id == "thick_branches")
+            {
+                bool examinedBones = (bool)(state.CurrentState["examined_bones"] ?? false);
+                bool examinedTracks = (bool)(state.CurrentState["examined_tracks"] ?? false);
+                bool westRevealed = (bool)(state.CurrentState["west_path_revealed"] ?? false);
+
+                if (westRevealed)
+                {
+                    AnsiConsole.MarkupLine("\nThe path west is already clear.");
+                    return;
+                }
+
+                if (!examinedBones && !examinedTracks)
+                {
+                    AnsiConsole.MarkupLine("\n[#FFAA00]The branches are too thick and tangled. You can't seem to find a good grip.[/]");
+                    AnsiConsole.MarkupLine("[dim]Maybe if you looked around more carefully...[/]");
+                    return;
+                }
+
+                if (!examinedBones || !examinedTracks)
+                {
+                    AnsiConsole.MarkupLine("\n[#FFAA00]You push against the branches, but you're not sure this is the right spot...[/]");
+                    return;
+                }
+
+                // Success! Reveal west path
+                AnsiConsole.MarkupLine("\n[#90FF90]You push through the tangle of branches. They give way easily, revealing a clear path to the west![/]");
+                room.Exits["west"] = 58;
+                state.CurrentState["west_path_revealed"] = true;
+
+                // Check if puzzle is fully solved (both paths revealed)
+                bool northRevealed = (bool)(state.CurrentState["north_path_revealed"] ?? false);
+                if (northRevealed)
+                {
+                    state.IsSolved = true;
+                }
+            }
+            // Handle moving vines (north path)
+            else if (obj.Id == "thick_vines")
+            {
+                bool examinedBootprints = (bool)(state.CurrentState["examined_bootprints"] ?? false);
+                bool examinedVines = (bool)(state.CurrentState["examined_vines"] ?? false);
+                bool northRevealed = (bool)(state.CurrentState["north_path_revealed"] ?? false);
+
+                if (northRevealed)
+                {
+                    AnsiConsole.MarkupLine("\nThe path north is already clear.");
+                    return;
+                }
+
+                if (!examinedBootprints)
+                {
+                    AnsiConsole.MarkupLine("\n[#FFAA00]You tug at the vines, but you're not sure there's even a path here...[/]");
+                    return;
+                }
+
+                if (!examinedVines)
+                {
+                    AnsiConsole.MarkupLine("\n[#FFAA00]The vines are thick. Maybe you should examine them more closely first.[/]");
+                    return;
+                }
+
+                // Success! Reveal north path
+                AnsiConsole.MarkupLine("\n[#90FF90]You push the vines aside like a curtain, revealing the path you came from to the north![/]");
+                room.Exits["north"] = 56;
+                state.CurrentState["north_path_revealed"] = true;
+
+                // Check if puzzle is fully solved (both paths revealed)
+                bool westRevealed = (bool)(state.CurrentState["west_path_revealed"] ?? false);
+                if (westRevealed)
+                {
+                    state.IsSolved = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handle the warlord chamber gate puzzle
+        /// Requires BOTH iron key and bronze key to unlock EITHER gate
+        /// </summary>
+        public void HandleGatePuzzle(string input)
+        {
+            var player = context.Player;
+            var currentRoom = context.Rooms[player.CurrentRoom];
+
+            // Check if we're in a room with the gate puzzle
+            if (currentRoom.PuzzleId != "warlord_chamber_gates")
+            {
+                AnsiConsole.MarkupLine("\nThere's no gate here to use that on.");
+                return;
+            }
+
+            var puzzleState = puzzleManager?.GetPuzzleState("warlord_chamber_gates");
+            if (puzzleState == null)
+            {
+                AnsiConsole.MarkupLine("\nSomething seems wrong here...");
+                return;
+            }
+
+            // Check if this gate is already unlocked
+            bool isRoom18 = player.CurrentRoom == 18;
+            bool isRoom20 = player.CurrentRoom == 20;
+            bool ironGateUnlocked = (bool)(puzzleState.CurrentState["iron_gate_unlocked"] ?? false);
+            bool bronzeGateUnlocked = (bool)(puzzleState.CurrentState["bronze_gate_unlocked"] ?? false);
+
+            if ((isRoom18 && ironGateUnlocked) || (isRoom20 && bronzeGateUnlocked))
+            {
+                AnsiConsole.MarkupLine("\nThis gate is already unlocked.");
+                return;
+            }
+
+            // Check if player has BOTH keys
+            bool hasIronKey = player.Inventory.Contains("iron key");
+            bool hasBronzeKey = player.Inventory.Contains("bronze key");
+
+            if (!hasIronKey && !hasBronzeKey)
+            {
+                AnsiConsole.MarkupLine("\n[#FFAA00]You don't have any keys. The gate requires both an iron key and a bronze key.[/]");
+                return;
+            }
+            else if (!hasIronKey)
+            {
+                AnsiConsole.MarkupLine("\n[#FFAA00]You have the bronze key, but the gate also requires an iron key.[/]");
+                return;
+            }
+            else if (!hasBronzeKey)
+            {
+                AnsiConsole.MarkupLine("\n[#FFAA00]You have the iron key, but the gate also requires a bronze key.[/]");
+                return;
+            }
+
+            // Player has both keys! Unlock the gate
+            if (isRoom18)
+            {
+                AnsiConsole.MarkupLine("\n[#90FF90]You insert both keys into the iron gate's dual locks. With a satisfying *click*, the mechanisms turn and the gate swings open![/]");
+                currentRoom.Exits["east"] = 21;
+                puzzleState.CurrentState["iron_gate_unlocked"] = true;
+            }
+            else if (isRoom20)
+            {
+                AnsiConsole.MarkupLine("\n[#90FF90]You insert both keys into the bronze gate's dual locks. With a satisfying *click*, the mechanisms turn and the gate swings open![/]");
+                currentRoom.Exits["west"] = 21;
+                puzzleState.CurrentState["bronze_gate_unlocked"] = true;
+            }
+
+            // Check if both gates are unlocked (puzzle fully solved)
+            if ((bool)(puzzleState.CurrentState["iron_gate_unlocked"] ?? false) &&
+                (bool)(puzzleState.CurrentState["bronze_gate_unlocked"] ?? false))
+            {
+                puzzleState.IsSolved = true;
+            }
+
+            // Remove the keys from inventory (they stay in the locks)
+            player.Inventory.Remove("iron key");
+            player.Inventory.Remove("bronze key");
+            AnsiConsole.MarkupLine("[dim]The keys remain in the locks.[/]");
+        }
+
+        public void HandleSpeakCommand(string input)
+        {
+            var player = context.Player;
+            var currentRoom = context.Rooms[player.CurrentRoom];
+
+            string[] args = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (args.Length < 2)
+            {
+                AnsiConsole.MarkupLine("\nSpeak what?");
+                return;
+            }
+
+            // Get the passphrase (everything after "speak")
+            string passphrase = string.Join(" ", args.Skip(1));
+
+            // Check if we're in a room with a fog puzzle
+            if (currentRoom.PuzzleId == "foggy_clearing_puzzle")
+            {
+                HandleFogPuzzle(passphrase, currentRoom);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"\nYou speak the words '{passphrase}' aloud. Nothing happens.");
+            }
+        }
+
+        private void HandleFogPuzzle(string passphrase, Room room)
+        {
+            var puzzleState = puzzleManager?.GetPuzzleState("foggy_clearing_puzzle");
+            if (puzzleState == null)
+            {
+                AnsiConsole.MarkupLine("\nSomething seems wrong here...");
+                return;
+            }
+
+            if (puzzleState.IsSolved)
+            {
+                AnsiConsole.MarkupLine("\nThe fog has already cleared from this area.");
+                return;
+            }
+
+            // Check if the passphrase is correct
+            string correctPassphrase = "ordo dissolutus";
+            if (passphrase.Trim().ToLower() == correctPassphrase)
+            {
+                // Correct passphrase! Clear the fog
+                AnsiConsole.MarkupLine("\n[#90FF90]As you speak the ancient words 'Ordo Dissolutus,' the unnatural fog begins to shimmer and dissipate. The mist pulls back like a curtain, revealing a previously hidden path leading east into the depths of the forest.[/]");
+
+                // Update room description permanently
+                room.Description = "A clearing in the forest. The oppressive fog that once shrouded this place has lifted, revealing moss-covered stones arranged in a peculiar pattern. To the east, a narrow path winds deeper into the woods, previously concealed by the magical mist.";
+
+                // Open the east exit to the cultist lair (Room 63)
+                room.Exits["east"] = 63;
+
+                // Mark puzzle as solved
+                puzzleState.IsSolved = true;
+                puzzleState.CurrentState["fog_cleared"] = true;
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"\nYou speak the words '{passphrase}' into the fog. The mist swirls slightly but does not dissipate. Perhaps these aren't the right words...");
+            }
+        }
     }
 }

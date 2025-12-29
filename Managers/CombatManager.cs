@@ -69,6 +69,8 @@ namespace GuildMaster.Managers
         private Action? onStateChanged;
 
         public bool IsInCombat => currentState != CombatState.NotInCombat && currentState != CombatState.CombatEnded;
+        public bool ShouldShowLoadMenu { get; private set; } = false;
+        public bool ShouldStartNewGame { get; private set; } = false;
 
 
         // Buff tracking
@@ -110,6 +112,10 @@ namespace GuildMaster.Managers
                 DebugLog("DEBUG: StartCombat called");
                 var player = context.Player;
 
+                // Reset death menu flags
+                ShouldShowLoadMenu = false;
+                ShouldStartNewGame = false;
+
                 // Initialize combat state
                 activeEnemies = enemies;
                 combatRoom = currentRoom;
@@ -118,6 +124,13 @@ namespace GuildMaster.Managers
                 baseDefense = player.Defense;
                 isDefending = false;
                 combatActive = true;
+
+                // Ensure all enemies start at full health and energy
+                foreach (var enemy in enemies)
+                {
+                    enemy.Health = enemy.MaxHealth;
+                    enemy.Energy = enemy.MaxEnergy;
+                }
 
                 DebugLog("DEBUG: Combat state initialized");
 
@@ -1878,21 +1891,20 @@ namespace GuildMaster.Managers
                 case "1":
                     // Load a saved game - exit combat and trigger load
                     AnsiConsole.MarkupLine("\n[#00FF00]Exiting to load menu...[/]");
+                    ShouldShowLoadMenu = true;
                     currentState = CombatState.CombatEnded;
                     CleanupCombat(player);
                     // Restore player to living state temporarily so menus work (IsAlive is calculated from Health > 0)
                     player.Health = 1;
-                    // Trigger load through callback or show load menu
-                    onPlayerDeath?.Invoke();  // This will go to ShowMainMenu where they can load
                     break;
 
                 case "2":
                     // Start new game - use callback to signal main menu
+                    ShouldStartNewGame = true;
                     player.Health = player.MaxHealth;
                     player.Energy = player.MaxEnergy;
                     currentState = CombatState.CombatEnded;
                     CleanupCombat(player);
-                    onPlayerDeath?.Invoke();  // This will go to ShowMainMenu
                     break;
 
                 case "3":
@@ -1991,6 +2003,13 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine($"\"{npc.AcceptDialogue}\"");
                     AnsiConsole.MarkupLine($"\n[cyan]{npc.Name} has joined your party![/]");
 
+                    // Special: Livia gives bronze key
+                    if (npc.Name == "Livia" && !player.Inventory.Contains("bronze key"))
+                    {
+                        player.Inventory.Add("bronze key");
+                        AnsiConsole.MarkupLine("[#90FF90]You received the bronze key![/]");
+                    }
+
                     // Show party tutorial on FIRST recruit
                     if (player.Recruits.Count == 1)
                     {
@@ -2002,6 +2021,13 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine($"\"{npc.AcceptDialogue}\"");
                     AnsiConsole.MarkupLine($"\n[cyan]{npc.Name} has joined your guild![/]");
                     AnsiConsole.MarkupLine($"[{npc.Name} heads to the guild hall.]");
+
+                    // Special: Livia gives bronze key
+                    if (npc.Name == "Livia" && !player.Inventory.Contains("bronze key"))
+                    {
+                        player.Inventory.Add("bronze key");
+                        AnsiConsole.MarkupLine("[#90FF90]You received the bronze key![/]");
+                    }
 
                     // Show guild tutorial on THIRD recruit (party is now full)
                     if (player.Recruits.Count == 3)
@@ -3346,6 +3372,14 @@ namespace GuildMaster.Managers
             return "unarmed";
         }
 
+        private string GetWeaponName(Equipment weapon)
+        {
+            if (weapon == null)
+                return "fist";
+
+            return weapon.Name.ToLower();
+        }
+
         public string GetKillFlavorText(string killerName, string victimName, Equipment weapon, bool goreEnabled)
         {
             string weaponType = GetWeaponType(weapon);
@@ -3370,7 +3404,7 @@ namespace GuildMaster.Managers
                         $"[#90FF90]{killerName}'s blade carves through {victimName}'s defense![/]",
                         $"[#90FF90]{victimName} staggers and falls to the sword![/]",
                         $"[#90FF90]A swift strike finishes {victimName}![/]",
-                        $"[#90FF90]{killerName}'s gladius finds the gap in {victimName}'s guard![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} {GetWeaponName(weapon)} finds a gap in {victimName}'s defense, striking a killing blow![/]",
                         $"[#90FF90]{victimName} crumples before {killerName}'s steel![/]",
                         $"[#90FF90]The final thrust drops {victimName} to the ground![/]",
                         $"[#90FF90]{killerName}'s blade sings {victimName}'s death song![/]",
@@ -3408,7 +3442,7 @@ namespace GuildMaster.Managers
                         $"[#90FF90]{killerName}'s arrow strikes true! {victimName} falls![/]",
                         $"[#90FF90]An arrow pierces {victimName}'s heart. They collapse![/]",
                         $"[#90FF90]{killerName}'s shot finds its mark. {victimName} is defeated![/]",
-                        $"[#90FF90]A perfect shot from {killerName} ends {victimName}![/]",
+                        $"[#90FF90]A perfect shot from {(killerName == "You" ? "your" : killerName + "'s")} bow ends {victimName}'s life![/]",
                         $"[#90FF90]{victimName} crumples with an arrow in their chest![/]",
                         $"[#90FF90]{killerName}'s arrow flies swift and deadly![/]",
                         $"[#90FF90]The arrow finds a gap in {victimName}'s armor![/]",

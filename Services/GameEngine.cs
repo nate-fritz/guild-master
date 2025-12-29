@@ -21,6 +21,7 @@ namespace GuildMaster.Services
         private GuildManager? guildManager;
         private MenuManager? menuManager;
         private DialogueManager? dialogueManager;
+        private PuzzleManager? puzzleManager;
         private EventManager? eventManager;
         private GameController? gameController;
         private EndingEvaluator? endingEvaluator;
@@ -63,6 +64,7 @@ namespace GuildMaster.Services
                     Effects = EffectData.InitializeEffects()
                 };
                 gameContext.Rooms = RoomData.InitializeRooms(gameContext.NPCs);
+                gameContext.PuzzleStates = PuzzleData.GetAllPuzzles();
             }
 
             // Create temporary save manager
@@ -194,6 +196,7 @@ namespace GuildMaster.Services
             menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager, warRoomManager);
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
+            puzzleManager = new PuzzleManager(gameContext);
             eventManager = new EventManager(gameContext);
             ProgramStatics.eventManager = eventManager;
             eventManager.LoadEvents();
@@ -228,6 +231,7 @@ namespace GuildMaster.Services
             gameController.SetGameEngine(this);
             gameController.eventManager = eventManager;
             gameController.dialogueManager = dialogueManager;
+            gameController.puzzleManager = puzzleManager;
 
             // Set up dialogue->shop callback (shop manager will be created on first use)
             dialogueManager.SetOpenShopCallback((vendor) =>
@@ -257,6 +261,7 @@ namespace GuildMaster.Services
             var rooms = RoomData.InitializeRooms(npcs);
             var itemDescriptions = ItemData.InitializeItemDescriptions();
             var effects = EffectData.InitializeEffects();
+            var puzzleStates = PuzzleData.GetAllPuzzles();
 
             // Initialize game context
             gameContext = new GameContext
@@ -266,6 +271,7 @@ namespace GuildMaster.Services
                 Rooms = rooms,
                 ItemDescriptions = itemDescriptions,
                 Effects = effects,
+                PuzzleStates = puzzleStates,
                 NoteText = GuildMaster.Data.NarrativeData.GenerateWelcomeNote(player.Name, player.Class.Name)
             };
 
@@ -282,6 +288,7 @@ namespace GuildMaster.Services
             menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager, warRoomManager);
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
+            puzzleManager = new PuzzleManager(gameContext);
             eventManager = new EventManager(gameContext);
             ProgramStatics.eventManager = eventManager;
             eventManager.LoadEvents();
@@ -295,6 +302,7 @@ namespace GuildMaster.Services
             gameController.SetGameEngine(this);
             gameController.eventManager = eventManager;
             gameController.dialogueManager = dialogueManager;
+            gameController.puzzleManager = puzzleManager;
 
             // Set up dialogue->shop callback (shop manager will be created on first use)
             dialogueManager.SetOpenShopCallback((vendor) =>
@@ -370,6 +378,15 @@ namespace GuildMaster.Services
                 combatManager.ProcessCombatInput(input);
                 return;
             }
+
+            // Check if combat just ended and player wants to load a game
+            if (combatManager != null && combatManager.ShouldShowLoadMenu)
+            {
+                if (menuManager != null)
+                    await menuManager.ShowLoadMenuAsync();
+                return;
+            }
+
             AnsiConsole.MarkupLine("[dim]DEBUG GameEngine: Not in combat, continuing to next checks[/]");
 
             // Check if we're in pre-combat dialogue
@@ -509,7 +526,59 @@ namespace GuildMaster.Services
             }
             else if (input.StartsWith("use "))
             {
-                itemManager?.HandleUseCommand(input);
+                // Check for gate puzzle interactions first (accept "key" or "keys")
+                bool hasKeyReference = input.Contains("key on") || input.Contains("keys on");
+                bool hasGateReference = input.Contains("on gate") || input.Contains("on iron gate") || input.Contains("on bronze gate");
+
+                if (hasKeyReference && hasGateReference)
+                {
+                    gameController?.HandleGatePuzzle(input);
+                }
+                else
+                {
+                    itemManager?.HandleUseCommand(input);
+                }
+            }
+            else if (input.StartsWith("examine "))
+            {
+                // Allow "examine" as an alias for "look"
+                gameController?.HandleLookCommand(input.Replace("examine", "look"));
+            }
+            else if (input.StartsWith("pull "))
+            {
+                gameController?.HandleInteractionCommand("pull", input);
+            }
+            else if (input.StartsWith("push "))
+            {
+                gameController?.HandleInteractionCommand("push", input);
+            }
+            else if (input.StartsWith("ring "))
+            {
+                gameController?.HandleInteractionCommand("ring", input);
+            }
+            else if (input.StartsWith("step "))
+            {
+                gameController?.HandleInteractionCommand("step", input);
+            }
+            else if (input.StartsWith("move "))
+            {
+                gameController?.HandleInteractionCommand("move", input);
+            }
+            else if (input.StartsWith("set "))
+            {
+                gameController?.HandleInteractionCommand("set", input);
+            }
+            else if (input.StartsWith("ride "))
+            {
+                gameController?.HandleInteractionCommand("ride", input);
+            }
+            else if (input.StartsWith("search "))
+            {
+                gameController?.HandleInteractionCommand("search", input);
+            }
+            else if (input.StartsWith("speak "))
+            {
+                gameController?.HandleSpeakCommand(input);
             }
             else if (input == "guild" || input == "g")
             {

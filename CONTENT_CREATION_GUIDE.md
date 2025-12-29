@@ -2,7 +2,7 @@
 
 **Purpose:** Standard Operating Procedures for adding new content to GuildMaster
 **Audience:** Content creators, developers, or AI assistants adding game content
-**Last Updated:** 2025-12-24
+**Last Updated:** 2025-12-29
 
 ---
 
@@ -14,7 +14,8 @@
 5. [Adding Tutorial Messages](#5-adding-tutorial-messages)
 6. [Adding Quests](#6-adding-quests)
 7. [Adding Items](#7-adding-items)
-8. [Testing Your Content](#8-testing-your-content)
+8. [Adding Puzzles and Interactive Objects](#8-adding-puzzles-and-interactive-objects)
+9. [Testing Your Content](#9-testing-your-content)
 
 ---
 
@@ -1104,7 +1105,461 @@ effects.Add("strength_potion", new Effect
 
 ---
 
-## 8. TESTING YOUR CONTENT
+## 8. ADDING PUZZLES AND INTERACTIVE OBJECTS
+
+**Puzzles allow players to interact with environmental objects and solve challenges to progress**
+
+### Overview
+
+The puzzle system consists of:
+- **RoomObjects** - Interactive objects that can be examined and interacted with
+- **PuzzleState** - Tracks puzzle progress, attempts, and solution status
+- **Interaction Commands** - Player commands like pull, push, ring, step, set, etc.
+
+### File Locations
+- `/home/sinogue/GuildMaster/Data/PuzzleData.cs` - Define puzzle states
+- `/home/sinogue/GuildMaster/Data/RoomData.cs` - Add room objects to rooms
+- Puzzle-specific logic goes in custom handlers (see Step 5)
+
+---
+
+### Step-by-Step Process
+
+#### Step 1: Define Room Objects in RoomData.cs
+
+Add objects to a room's `Objects` list:
+
+```csharp
+new Room
+{
+    NumericId = 19,
+    Id = "bandit_vault",
+    Title = "Bandit Vault",
+    Description = "A sealed vault door blocks the north passage...",
+    PuzzleId = "bandit_vault_combination",  // Link to puzzle
+    Objects = new List<RoomObject>
+    {
+        new RoomObject
+        {
+            Id = "vault_door",
+            Name = "vault door",
+            Aliases = new[] { "door", "iron door", "vault", "combination lock" },
+            DefaultDescription = "A massive iron door with four rotating dials, each numbered 0-9. The dials are currently set to 0-0-0-0.",
+            LookedAtDescription = "The vault door's combination lock gleams in the torchlight. Four dials await the correct sequence.",
+            IsInteractable = true,
+            InteractionType = "set",  // Player will use "set door 1234"
+            OnInteractMessage = "You turn the dials...",
+            OnFailMessage = "The lock remains sealed."
+        },
+        new RoomObject
+        {
+            Id = "vault_lever",
+            Name = "lever",
+            Aliases = new[] { "bronze lever", "handle" },
+            DefaultDescription = "A bronze lever is mounted on the wall.",
+            IsInteractable = true,
+            InteractionType = "pull",  // Player will use "pull lever"
+            OnInteractMessage = "You pull the lever. It moves smoothly.",
+            RequiredItem = "bronze_key"  // Optional: item needed to interact
+        }
+    },
+    Exits = new Dictionary<string, int>
+    {
+        { "south", 18 }
+        // "north" exit will unlock when puzzle is solved
+    }
+}
+```
+
+**RoomObject Properties:**
+- `Id` - Unique identifier (e.g., "vault_door")
+- `Name` - Display name shown to player (e.g., "vault door")
+- `Aliases` - Alternative names player can use (e.g., ["door", "vault"])
+- `DefaultDescription` - Shown on first examination
+- `LookedAtDescription` - Optional, shown on subsequent examinations
+- `HasBeenExamined` - Automatically tracked (don't set manually)
+- `IsInteractable` - Can the player interact with it?
+- `InteractionType` - Command type: "pull", "push", "ring", "step", "move", "set", "ride", "search"
+- `State` - Dictionary for custom puzzle data (e.g., current dial positions)
+- `RequiredItem` - Optional item ID needed to interact
+- `OnInteractMessage` - Message shown when interacted with
+- `OnFailMessage` - Message shown when interaction fails
+
+#### Step 2: Define Puzzle State in PuzzleData.cs
+
+```csharp
+public static Dictionary<string, PuzzleState> GetAllPuzzles()
+{
+    return new Dictionary<string, PuzzleState>
+    {
+        {
+            "bandit_vault_combination", new PuzzleState
+            {
+                PuzzleId = "bandit_vault_combination",
+                RoomId = 19,
+                IsSolved = false,
+                MaxAttempts = 0,  // 0 = unlimited attempts
+                OnSolveQuestFlag = "vault_opened",  // Optional: set this flag when solved
+                OnSolveMessage = "\n[#00FF00]The vault door swings open with a satisfying click![/]",
+                UnlockedExits = new List<string> { "north" },  // Unlock north exit
+                CurrentState = new Dictionary<string, object>
+                {
+                    { "combination", "1847" },  // Store solution
+                    { "current_attempt", "0000" }  // Track player's current attempt
+                }
+            }
+        }
+    };
+}
+```
+
+**PuzzleState Properties:**
+- `PuzzleId` - Matches the room's PuzzleId
+- `RoomId` - Which room this puzzle is in
+- `IsSolved` - Has the puzzle been solved? (starts false)
+- `Attempts` - Number of attempts made (auto-incremented)
+- `MaxAttempts` - Max allowed attempts (0 = unlimited)
+- `OnSolveQuestFlag` - Optional quest flag to set when solved
+- `OnSolveMessage` - Message displayed when puzzle is solved
+- `UnlockedExits` - Exits to unlock when solved
+- `CurrentState` - Dictionary for custom puzzle data
+
+#### Step 3: Initialize Puzzle States in GameContext
+
+Puzzles are automatically loaded from `PuzzleData.GetAllPuzzles()` when the game starts. Make sure to initialize them:
+
+```csharp
+// In your game initialization (e.g., RoomData.cs or startup code):
+context.PuzzleStates = PuzzleData.GetAllPuzzles();
+```
+
+#### Step 4: Implement Puzzle Logic (Custom Handler)
+
+For complex puzzles, create a custom handler. Add to `GameController.HandleObjectInteraction`:
+
+```csharp
+private void HandleObjectInteraction(RoomObject obj, Item usedItem)
+{
+    var player = context.Player;
+    var rooms = context.Rooms;
+    Room currentRoom = rooms[player.CurrentRoom];
+
+    if (string.IsNullOrEmpty(currentRoom.PuzzleId))
+    {
+        AnsiConsole.MarkupLine(obj.OnInteractMessage ?? "\nNothing happens.");
+        return;
+    }
+
+    var puzzleState = puzzleManager?.GetPuzzleState(currentRoom.PuzzleId);
+    if (puzzleState == null || puzzleState.IsSolved)
+    {
+        AnsiConsole.MarkupLine("\nYou've already solved this.");
+        return;
+    }
+
+    // CUSTOM LOGIC: Add your puzzle-specific validation here
+    if (currentRoom.PuzzleId == "bandit_vault_combination")
+    {
+        HandleVaultCombinationPuzzle(obj, puzzleState);
+    }
+    else
+    {
+        // Default behavior
+        puzzleManager?.IncrementAttempts(currentRoom.PuzzleId);
+        AnsiConsole.MarkupLine(obj.OnInteractMessage ?? "\nYou interact with the object.");
+    }
+}
+
+private void HandleVaultCombinationPuzzle(RoomObject obj, PuzzleState state)
+{
+    // Example: Parse player input from "set door 1234"
+    // Extract "1234" from the command
+    string attempt = /* extract from player input */;
+    string solution = state.CurrentState["combination"].ToString();
+
+    if (attempt == solution)
+    {
+        puzzleManager?.SolvePuzzle(state.PuzzleId);  // Auto-displays OnSolveMessage
+        // Unlock the north exit
+        var room = context.Rooms[state.RoomId];
+        room.Exits["north"] = 20;  // Add the exit
+    }
+    else
+    {
+        puzzleManager?.IncrementAttempts(state.PuzzleId);
+        AnsiConsole.MarkupLine("\n[#FF0000]The lock doesn't budge. Wrong combination.[/]");
+    }
+}
+```
+
+#### Step 5: Player Commands
+
+Available interaction commands:
+- `look [object]` or `examine [object]` - Examine the object
+- `pull [object]` - Pull something
+- `push [object]` - Push something
+- `ring [object]` - Ring a bell, gong, etc.
+- `step [object]` - Step on a platform, tile, etc.
+- `move [object]` - Move an object
+- `set [object] [value]` - Set dials, levers, etc. (requires custom parsing)
+- `ride [object]` - Ride a vehicle, mount, etc.
+- `search [object]` - Search an area
+- `use [item] on [object]` - Use an item on an object
+
+**Example Player Interactions:**
+```
+> look door
+A massive iron door with four rotating dials...
+
+> pull lever
+You can't pull that. Try: set
+
+> set door 1234
+The vault door swings open with a satisfying click!
+```
+
+---
+
+### Puzzle Design Tips
+
+1. **Clues in Descriptions** - Hide hints in room or object descriptions
+   ```csharp
+   Description = "Four torches line the wall. The first is barely lit, the eighth burns bright..."
+   // Hint: combination might be 1-8-?-?
+   ```
+
+2. **Multi-Stage Puzzles** - Use quest flags to track progress
+   ```csharp
+   // Stage 1: Find the key
+   new EventCondition(ConditionType.HasItem, "bronze_key", true)
+
+   // Stage 2: Use the key
+   RequiredItem = "bronze_key"
+   ```
+
+3. **Environmental Storytelling** - Objects tell a story
+   ```csharp
+   DefaultDescription = "The lever is covered in dust. It hasn't been touched in years.",
+   LookedAtDescription = "Fresh fingerprints mar the dust on the lever handle."
+   ```
+
+4. **Progressive Revelation** - Change descriptions after examination
+   ```csharp
+   if (!obj.HasBeenExamined)
+   {
+       // First look reveals new information
+   }
+   ```
+
+5. **Failed Attempts** - Provide feedback on wrong solutions
+   ```csharp
+   if (state.Attempts >= 3)
+   {
+       AnsiConsole.MarkupLine("[dim]Maybe there's a clue nearby...[/]");
+   }
+   ```
+
+---
+
+### Save System Integration
+
+**Puzzle states are automatically saved/loaded** including:
+- Which puzzles have been solved
+- Current puzzle state (dials, switches, etc.)
+- Number of attempts made
+- Which objects have been examined
+
+This is handled in `SaveGameManager.cs` - no additional work needed!
+
+---
+
+### Example: Simple Lever Puzzle
+
+A complete example of a simple lever puzzle:
+
+**In RoomData.cs:**
+```csharp
+new Room
+{
+    NumericId = 25,
+    Id = "ancient_chamber",
+    Title = "Ancient Chamber",
+    Description = "Three bronze levers are mounted on the north wall.",
+    PuzzleId = "three_lever_puzzle",
+    Objects = new List<RoomObject>
+    {
+        new RoomObject
+        {
+            Id = "left_lever",
+            Name = "left lever",
+            Aliases = new[] { "lever 1", "first lever" },
+            DefaultDescription = "The left lever is in the DOWN position.",
+            IsInteractable = true,
+            InteractionType = "pull"
+        },
+        new RoomObject
+        {
+            Id = "middle_lever",
+            Name = "middle lever",
+            Aliases = new[] { "lever 2", "second lever" },
+            DefaultDescription = "The middle lever is in the UP position.",
+            IsInteractable = true,
+            InteractionType = "pull"
+        },
+        new RoomObject
+        {
+            Id = "right_lever",
+            Name = "right lever",
+            Aliases = new[] { "lever 3", "third lever" },
+            DefaultDescription = "The right lever is in the DOWN position.",
+            IsInteractable = true,
+            InteractionType = "pull"
+        }
+    },
+    Exits = new Dictionary<string, int> { { "south", 24 } }
+}
+```
+
+**In PuzzleData.cs:**
+```csharp
+{
+    "three_lever_puzzle", new PuzzleState
+    {
+        PuzzleId = "three_lever_puzzle",
+        RoomId = 25,
+        OnSolveMessage = "\n[#00FF00]A hidden door slides open in the wall![/]",
+        UnlockedExits = new List<string> { "north" },
+        CurrentState = new Dictionary<string, object>
+        {
+            { "left", "down" },
+            { "middle", "up" },
+            { "right", "down" },
+            { "solution", "up-up-down" }
+        }
+    }
+}
+```
+
+### Example: Multi-Room Gate Puzzle with Required Items
+
+A more complex puzzle where two rooms share the same puzzle state, and both items are required:
+
+**In RoomData.cs (Room 18):**
+```csharp
+Room deepCave = CreateRoom(18, "deepCave", "Bandit Cave - Deep Cavern", "A massive iron gate blocks the passage east.");
+deepCave.Exits.Add("north", 17);
+// deepCave.Exits.Add("east", 21);  // Blocked by gate - unlocked with both keys
+deepCave.PuzzleId = "warlord_chamber_gates";
+
+deepCave.Objects.Add(new RoomObject
+{
+    Id = "iron_gate",
+    Name = "iron gate",
+    Aliases = new[] { "gate", "iron door" },
+    DefaultDescription = "A formidable iron gate bars the passage east. It has two keyholes - one for an iron key and one for a bronze key.",
+    IsInteractable = true,
+    InteractionType = "use",
+    RequiredItem = null  // Handled by custom logic
+});
+```
+
+**In RoomData.cs (Room 20):**
+```csharp
+Room undergroundRiver = CreateRoom(20, "undergroundRiver", "Underground River", "A bronze gate blocks the passage west.");
+undergroundRiver.Exits.Add("north", 19);
+// undergroundRiver.Exits.Add("west", 21);  // Blocked by gate
+undergroundRiver.PuzzleId = "warlord_chamber_gates";  // Same puzzle!
+
+undergroundRiver.Objects.Add(new RoomObject
+{
+    Id = "bronze_gate",
+    Name = "bronze gate",
+    Aliases = new[] { "gate", "bronze door" },
+    DefaultDescription = "An ornate bronze gate blocks the passage west. It has two keyholes - one for an iron key and one for a bronze key.",
+    IsInteractable = true,
+    InteractionType = "use",
+    RequiredItem = null
+});
+```
+
+**In PuzzleData.cs:**
+```csharp
+{
+    "warlord_chamber_gates", new PuzzleState
+    {
+        PuzzleId = "warlord_chamber_gates",
+        RoomId = 18,  // Shared between rooms 18 and 20
+        IsSolved = false,
+        MaxAttempts = 0,
+        OnSolveMessage = null,  // Custom messages per gate
+        UnlockedExits = new List<string>(),
+        CurrentState = new Dictionary<string, object>
+        {
+            { "iron_gate_unlocked", false },
+            { "bronze_gate_unlocked", false }
+        }
+    }
+}
+```
+
+**In GameController.cs (custom handler):**
+```csharp
+public void HandleGatePuzzle(string input)
+{
+    // Check if player has BOTH required items
+    bool hasIronKey = player.Inventory.Contains("iron key");
+    bool hasBronzeKey = player.Inventory.Contains("bronze key");
+
+    if (!hasIronKey || !hasBronzeKey)
+    {
+        AnsiConsole.MarkupLine("\n[#FFAA00]You need both an iron key and a bronze key.[/]");
+        return;
+    }
+
+    // Unlock the appropriate gate based on current room
+    if (isRoom18)
+    {
+        currentRoom.Exits["east"] = 21;
+        puzzleState.CurrentState["iron_gate_unlocked"] = true;
+        AnsiConsole.MarkupLine("\n[#90FF90]The iron gate swings open![/]");
+    }
+    else if (isRoom20)
+    {
+        currentRoom.Exits["west"] = 21;
+        puzzleState.CurrentState["bronze_gate_unlocked"] = true;
+        AnsiConsole.MarkupLine("\n[#90FF90]The bronze gate swings open![/]");
+    }
+
+    // Consume the keys
+    player.Inventory.Remove("iron key");
+    player.Inventory.Remove("bronze key");
+}
+```
+
+**Wire it up in GameEngine.cs:**
+```csharp
+else if (input.StartsWith("use "))
+{
+    if (input.Contains(" key") && input.Contains(" on gate"))
+    {
+        gameController?.HandleGatePuzzle(input);
+    }
+    else
+    {
+        itemManager?.HandleUseCommand(input);
+    }
+}
+```
+
+This pattern allows:
+- Multiple rooms sharing the same puzzle state
+- Requirements for multiple items
+- Different gates unlocked from different sides
+- Items consumed when used
+
+---
+
+## 9. TESTING YOUR CONTENT
 
 ### Pre-Deployment Checklist
 
@@ -1155,6 +1610,24 @@ effects.Add("strength_potion", new Effect
 - [ ] Item appears in correct locations
 - [ ] "take" and "use" commands work
 - [ ] Short names work for quick pickup
+
+#### For Puzzles
+- [ ] PuzzleId is unique
+- [ ] PuzzleId matches between room and PuzzleData
+- [ ] RoomId is correct in PuzzleState
+- [ ] All RoomObject IDs are unique within the room
+- [ ] Object names and aliases work with commands
+- [ ] InteractionType matches available commands (pull, push, ring, step, move, set, ride, search)
+- [ ] Required items exist if specified
+- [ ] Puzzle logic validates solutions correctly
+- [ ] OnSolveMessage displays when solved
+- [ ] OnSolveQuestFlag is set when solved (if specified)
+- [ ] UnlockedExits are added to room when solved
+- [ ] Puzzle can be saved and loaded mid-solution
+- [ ] MaxAttempts enforced correctly (if not unlimited)
+- [ ] Objects show correct descriptions after examination
+- [ ] Puzzle cannot be re-solved after completion
+- [ ] Clues are findable but not too obvious
 
 ### Manual Testing Commands
 ```bash

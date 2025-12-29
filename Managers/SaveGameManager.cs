@@ -174,6 +174,7 @@ namespace GuildMaster.Managers
                 context.Rooms = RoomData.InitializeRooms(context.NPCs);
                 context.ItemDescriptions = ItemData.InitializeItemDescriptions();
                 context.Effects = EffectData.InitializeEffects();
+                context.PuzzleStates = PuzzleData.GetAllPuzzles();  // Initialize with all puzzles
 
                 // Create new player instance
                 context.Player = new Player(loadedState.PlayerName);
@@ -507,6 +508,20 @@ namespace GuildMaster.Managers
             context.TotalRecruitsEver = state.TotalRecruitsEver;
             context.CompletedMilestones = state.CompletedMilestones ?? new HashSet<string>();
             context.RoomStateOverrides = state.RoomStateOverrides ?? new Dictionary<int, string>();
+
+            // Restore puzzle states (merge saved state with fresh initialization)
+            if (state.PuzzleStates != null)
+            {
+                // Overlay saved puzzle states on top of freshly initialized ones
+                foreach (var savedPuzzle in state.PuzzleStates)
+                {
+                    if (context.PuzzleStates.ContainsKey(savedPuzzle.Key))
+                    {
+                        context.PuzzleStates[savedPuzzle.Key] = savedPuzzle.Value;
+                    }
+                }
+            }
+            // ExaminedObjects is already restored as part of ExaminedItems above
         }
 
         public async Task<bool> SaveExistsAsync(int slot)
@@ -878,6 +893,10 @@ namespace GuildMaster.Managers
             gameState.TotalRecruitsEver = context.TotalRecruitsEver;
             gameState.CompletedMilestones = context.CompletedMilestones ?? new HashSet<string>();
             gameState.RoomStateOverrides = context.RoomStateOverrides ?? new Dictionary<int, string>();
+
+            // Puzzle system
+            gameState.PuzzleStates = context.PuzzleStates ?? new Dictionary<string, PuzzleState>();
+            gameState.ExaminedObjects = player.ExaminedItems;  // Reuse existing ExaminedItems for now
 
             // Time
             gameState.CurrentDay = player.CurrentDay;
