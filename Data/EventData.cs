@@ -253,6 +253,75 @@ namespace GuildMaster.Data
                         }
                     }
                     break;
+
+                case ActionType.AdvanceTime:
+                    if (Parameters.ContainsKey("hours"))
+                    {
+                        float hours = float.Parse(Parameters["hours"].ToString());
+
+                        // Advance player time
+                        player.CurrentHour += hours;
+
+                        // Handle day overflow
+                        while (player.CurrentHour >= 24)
+                        {
+                            player.CurrentHour -= 24;
+                            player.CurrentDay++;
+                        }
+
+                        // Process time-dependent systems
+                        // Quest completion checks
+                        var questManager = GuildMaster.Services.ProgramStatics.questManager;
+                        if (questManager != null)
+                        {
+                            questManager.CheckCompletedQuests();
+                        }
+                    }
+                    break;
+
+                case ActionType.AllyWithFaction:
+                    if (Parameters.ContainsKey("factionId"))
+                    {
+                        string factionId = Parameters["factionId"].ToString();
+                        if (!player.AlliedFactions.Contains(factionId))
+                        {
+                            player.AlliedFactions.Add(factionId);
+                        }
+                    }
+                    break;
+
+                case ActionType.BreakAlliance:
+                    if (Parameters.ContainsKey("factionId"))
+                    {
+                        string factionId = Parameters["factionId"].ToString();
+                        if (player.AlliedFactions.Contains(factionId))
+                        {
+                            player.AlliedFactions.Remove(factionId);
+                        }
+                    }
+                    break;
+
+                case ActionType.UnlockRegion:
+                    if (Parameters.ContainsKey("regionId"))
+                    {
+                        string regionId = Parameters["regionId"].ToString();
+                        if (!player.UnlockedRegions.Contains(regionId))
+                        {
+                            player.UnlockedRegions.Add(regionId);
+                        }
+                    }
+                    break;
+
+                case ActionType.LockRegion:
+                    if (Parameters.ContainsKey("regionId"))
+                    {
+                        string regionId = Parameters["regionId"].ToString();
+                        if (player.UnlockedRegions.Contains(regionId))
+                        {
+                            player.UnlockedRegions.Remove(regionId);
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -272,6 +341,11 @@ namespace GuildMaster.Data
         AddPartyMember,     // Add recruit to active party
         RemovePartyMember,  // Remove recruit from active party
         SpawnNPC,           // Add NPC to a room
-        RemoveNPC           // Remove NPC from a room
+        RemoveNPC,          // Remove NPC from a room
+        AdvanceTime,        // Advance game time and process time-dependent systems
+        AllyWithFaction,    // Form an alliance with a faction
+        BreakAlliance,      // Break an alliance with a faction
+        UnlockRegion,       // Unlock a region for access
+        LockRegion          // Lock a region (remove access)
     }
 }

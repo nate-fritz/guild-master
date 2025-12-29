@@ -99,7 +99,7 @@ namespace GuildMaster.Data
                     }
                 },
 
-                 {42, new Dictionary<string, Item>()  // pathWithCart
+                 {43, new Dictionary<string, Item>()  // pathWithCart
                     {
                         {"cart", new Item {
                             Description = "Close inspection of the cart reveals several arrows protruding from the driver's seat. The cart leans against an ancient oak, slowly rotting away. Something catches the light in the mud beneath.",
@@ -235,7 +235,7 @@ namespace GuildMaster.Data
                 {97, new Dictionary<string, Item>()  // warlordChamber - Quest item
                     {
                         {"warlord's head", new Item {
-                            Description = "The severed head of the Bandit Warlord, his face frozen in a final expression of surprise and rage. This should serve as proof of your victory. Marcus the sentry will want to see this.",
+                            Description = "The severed head of the Bandit Warlord, his face frozen in a final expression of surprise and rage. This should serve as proof of your victory. Marcus the gate guard will want to see this.",
                             ShortName = "head",
                             IsLootable = true,
                             IsConsumable = false

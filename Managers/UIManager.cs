@@ -274,6 +274,10 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("View quest flags:     flags");
             AnsiConsole.MarkupLine("Toggle debug logs:    showdebug");
             AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Development/Testing:");
+            AnsiConsole.MarkupLine("Toggle War Room:      warroom");
+            AnsiConsole.MarkupLine("                      (Shows/hides War Room in Guild menu)");
+            AnsiConsole.MarkupLine("");
         }
 
         public void ShowMainMenu()

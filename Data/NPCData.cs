@@ -22,7 +22,7 @@ namespace GuildMaster.Data
             townGuard.IsHostile = false;
             townGuard.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Move along, citizen. Keep your nose clean and we won't have any problems.",
+                Text = "The guard glances at you briefly and says \"Move along, citizen. Keep your nose clean and we won't have any problems.\"",
                 Choices = { }
             });
             npcs.Add(townGuard.Name, townGuard);
@@ -34,7 +34,7 @@ namespace GuildMaster.Data
             villager.IsHostile = false;
             villager.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Good day to you, traveler. Welcome to Belum!",
+                Text = "The villager greets you with a friendly smile. \"Good day to you, traveler. Welcome to Belum!\"",
                 Choices = { }
             });
             npcs.Add(villager.Name, villager);
@@ -46,7 +46,7 @@ namespace GuildMaster.Data
             merchant.IsHostile = false;
             merchant.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Looking to buy? Looking to sell? Either way, you've come to the right place!",
+                Text = "The merchant spreads his arms wide and says \"Looking to buy? Looking to sell? Either way, you've come to the right place!\"",
                 Choices = { }
             });
             npcs.Add(merchant.Name, merchant);
@@ -58,7 +58,7 @@ namespace GuildMaster.Data
             barkeep.IsHostile = false;
             barkeep.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Welcome to the Golden Grape! What'll it be? Ale? Wine? Or perhaps you're looking for information?",
+                Text = "The barkeep looks up from wiping down the bar and greets you warmly. \"Welcome to the Golden Grape! What'll it be? Ale? Wine? Or perhaps you're looking for information?\"",
                 Choices = { }
             });
             npcs.Add(barkeep.Name, barkeep);
@@ -70,7 +70,7 @@ namespace GuildMaster.Data
             blacksmith.IsHostile = false;
             blacksmith.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Need something forged? Repaired? I'm the best smith in Belum - ask anyone.",
+                Text = "The blacksmith sets down his hammer and wipes the sweat from his brow. \"Need something forged? Repaired? I'm the best smith in Belum - ask anyone.\"",
                 Choices = { }
             });
 
@@ -97,7 +97,7 @@ namespace GuildMaster.Data
             apothecary.IsHostile = false;
             apothecary.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Welcome to my apothecary. I stock the finest potions and remedies in all of Belum. What can I prepare for you today?",
+                Text = "The apothecary looks up from her work and smiles. \"Welcome to my apothecary. I stock the finest potions and remedies in all of Belum. What can I prepare for you today?\"",
                 Choices = { }
             });
 
@@ -123,7 +123,7 @@ namespace GuildMaster.Data
             scribe.IsHostile = false;
             scribe.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Greetings, traveler. I deal in scrolls, both mundane and mystical. Are you in need of knowledge... or power?",
+                Text = "The scribe carefully sets down his quill and regards you with keen eyes. \"Greetings, traveler. I deal in scrolls, both mundane and mystical. Are you in need of knowledge... or power?\"",
                 Choices = { }
             });
 
@@ -149,7 +149,7 @@ namespace GuildMaster.Data
             guildArmorer.IsHostile = false;
             guildArmorer.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Welcome to the guild armory. Your reputation precedes you - only the finest equipment for proven adventurers. What catches your eye?",
+                Text = "The armorer nods respectfully as you approach. \"Welcome to the guild armory. Your reputation precedes you - only the finest equipment for proven adventurers. What catches your eye?\"",
                 Choices = { }
             });
 
@@ -179,53 +179,53 @@ namespace GuildMaster.Data
             // Initial dialogue - explains closed gate
             sentry.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Halt, traveler. This gate to Belum is closed by order of the town council. None may enter.",
+                Text = "As you approach the gate, the sentry adjusts his shield and spear, then barks \"Halt, traveler. This gate to Belum is closed by order of the town council. None may enter.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "I have the Bandit Warlord's head. (Show proof)",
+                        choiceText = "\"I have the Bandit Warlord's head.\" (Show him the head)",
                         nextNodeID = "quest_complete",
                         IsAvailable = (inventory) => inventory.Contains("warlord's head"),
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "warlord's head"} } }
                     },
-                    new DialogueNode.Choice { choiceText = "Why is the gate closed?", nextNodeID = "explain_bandits" },
-                    new DialogueNode.Choice { choiceText = "I understand. I'll move along.", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"Why is the gate closed?\"", nextNodeID = "explain_bandits" },
+                    new DialogueNode.Choice { choiceText = "\"I understand. I'll move along.\"", nextNodeID = "end" }
                 }
             });
 
             sentry.Dialogue.Add("explain_bandits", new DialogueNode()
             {
-                Text = "Bandits. A large group has made camp in caves to the southwest - west of Gaius' farm, south of the mountains. They've been raiding travelers and farms. Until they're dealt with, the council won't allow the southern gate to open. Too dangerous.",
+                Text = "Marcus scowls. \"Bandits. A large group has made camp in caves to the southwest - west of Gaius' farm, south of the mountains. They've been raiding travelers and farms. Until they're dealt with, the council won't allow the southern gate to open. Too dangerous.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "Actually, I already killed the Warlord. Here's his head.",
+                        choiceText = "\"You're not going to believe this, but I have the Warlord's head.\" (Show him)",
                         nextNodeID = "quest_complete",
                         IsAvailable = (inventory) => inventory.Contains("warlord's head"),
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "warlord's head"} } }
                     },
-                    new DialogueNode.Choice { choiceText = "I could deal with these bandits.", nextNodeID = "offer_help" },
-                    new DialogueNode.Choice { choiceText = "That sounds dangerous. I'll stay away.", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"I could deal with these bandits.\"", nextNodeID = "offer_help" },
+                    new DialogueNode.Choice { choiceText = "\"That sounds dangerous. I'll stay away.\"", nextNodeID = "end" }
                 }
             });
 
             sentry.Dialogue.Add("offer_help", new DialogueNode()
             {
-                Text = "You? [He sizes you up] ...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I'll convince the council to open the gate. The caves are south of the lower mountain slopes, room 12 if you're keeping track.",
+                Text = "He sizes you up. \"You?\" He pauses, then continues, \"...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I'll convince the council to open the gate. The caves are south of the lower mountain slopes, room 12 if you're keeping track.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "I'll do it. The Warlord will fall.", nextNodeID = "quest_accepted" },
-                    new DialogueNode.Choice { choiceText = "Let me think about it.", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"I'll do it. The Warlord will fall.\"", nextNodeID = "quest_accepted" },
+                    new DialogueNode.Choice { choiceText = "\"Let me think about it.\"", nextNodeID = "end" }
                 }
             });
 
             sentry.Dialogue.Add("quest_accepted", new DialogueNode()
             {
-                Text = "Good luck. You'll need it. Be careful down there - the bandits fight dirty and they outnumber you. Return with the Warlord's head and your reward will be access to Belum.",
+                Text = "Marcus nods grimly. \"Good luck. You'll need it. Be careful down there - the bandits fight dirty and they outnumber you. Return with the Warlord's head and your reward will be access to Belum.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "I have the Bandit Warlord's head. (Show proof)",
+                        choiceText = "\"I have the Bandit Warlord's head.\" (Show him)",
                         nextNodeID = "quest_complete",
                         IsAvailable = (inventory) => inventory.Contains("warlord's head"),
                         Action = new DialogueAction {
@@ -234,7 +234,7 @@ namespace GuildMaster.Data
                         }
                     },
                     new DialogueNode.Choice {
-                        choiceText = "I'm still working on it.",
+                        choiceText = "\"I'm still working on it.\"",
                         nextNodeID = "end"
                     }
                 }
@@ -243,7 +243,7 @@ namespace GuildMaster.Data
             // Quest completion dialogue - player has the warlord's head
             sentry.Dialogue.Add("quest_complete", new DialogueNode()
             {
-                Text = "By the gods... you actually did it! The Warlord's head! [He examines it grimly] This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I'll inform the council immediately - the southern gate is now open to you.",
+                Text = "Marcus' eyes widen as you unwrap the grisly trophy. \"By the gods... you actually did it! The Warlord's head!\" He examines it grimly. \"This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I'll inform the council immediately - the southern gate is now open to you.\"",
                 Action = new DialogueAction { Type = "open_gate" },
                 Choices = { }
             });
@@ -251,17 +251,17 @@ namespace GuildMaster.Data
             // After quest is complete
             sentry.Dialogue.Add("after_quest", new DialogueNode()
             {
-                Text = "Marcus nods at you respectfully. 'Thank you again for taking care of those bandits. The roads are safer now because of you.'",
+                Text = "Marcus nods at you respectfully. \"Thank you again for taking care of those bandits. The roads are safer now because of you.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Just doing my part.", nextNodeID = "end" },
-                    new DialogueNode.Choice { choiceText = "Happy to help. Take care, Marcus.", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"Just doing my part.\"", nextNodeID = "end" },
+                    new DialogueNode.Choice { choiceText = "\"Happy to help. Take care, Marcus.\"", nextNodeID = "end" }
                 }
             });
 
             sentry.Dialogue.Add("end", new DialogueNode()
             {
-                Text = "Stay safe out there.",
+                Text = "He nods curtly. \"Stay safe out there.\"",
                 Choices = { }
             });
 
@@ -271,19 +271,19 @@ namespace GuildMaster.Data
             priestess.Name = "Caelia";
             priestess.Description = "A slender woman with fair skin and golden hair greets you with a smile.  While her face shows no signs of old age, her silver eyes seem to contain endless wisdom.  She is dressed simply in white robes, with a single silver armlet around her left bicep.";
             priestess.ShortDescription = "A priestess";
-            
+
             priestess.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "The priestess turns towards you with a smile, then speaks. \"Welcome.  I am Caelia, Priestess of Keius. What brings you to his temple?\"",
+                Text = "The priestess turns towards you with a smile. \"Welcome. I am Caelia, Priestess of Keius. What brings you to his temple?\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Just window shopping, thanks.", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"Just looking around, thank you.\"", nextNodeID = "end" }
                 }
             });
 
             priestess.Dialogue.Add("end", new DialogueNode ()
             {
-                Text = "Caelia gives you a quizzical look, then smiles softly.  \"Very well.  When you're ready, come see me again.\"",
+                Text = "Caelia gives you a quizzical look, then smiles softly. \"Very well. When you're ready, come see me again.\"",
                 Choices = { }
             });
 
@@ -293,29 +293,64 @@ namespace GuildMaster.Data
             farmer.Description = "A burly man of over two meters leans against one of the four posts of his small stall.  His olive skin is deeply tanned from years of tending to his farm in the sun.  As he notices you, he regards you with a mixture of kindness and mild surprise.";
             farmer.ShortDescription = "A farmer";
 
-            farmer.Dialogue.Add("greeting", new DialogueNode()
+            // First time meeting Gaius
+            farmer.Dialogue.Add("first_greeting", new DialogueNode()
             {
-                Text = "As you approach the farmer's stand, he rises to meet you with a smile.  <br><br>\"Greetings, friend.  Haven't seen you 'round these parts before.  Name's Gaius.\"",
+                Text = "As you approach the farmer's stand, he rises to meet you with a smile.<br><br>\"Greetings, friend. Haven't seen you 'round these parts before. Name's Gaius.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"Greetings.  {player.name}, and I actually have no idea where 'these parts' even are.  Where am I?\"", nextNodeID = "ask_about_area" },
+                    new DialogueNode.Choice { choiceText = "\"Greetings. {player.name}, and I actually have no idea where 'these parts' even are. Where am I?\"", nextNodeID = "ask_about_area" },
+                    new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end" }
+                }
+            });
+
+            // Subsequent meetings with Gaius
+            farmer.Dialogue.Add("repeat_greeting", new DialogueNode()
+            {
+                Text = "Gaius looks up from arranging his wares and greets you with a familiar smile.<br><br>\"Good to see you again, {player.name}. What can I do for you?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "\"Could you tell me more about this forest and the people you've seen going into it?\"",
+                        nextNodeID = "ask_about_forest",
+                        RequireNotDiscussedNode = "ask_about_forest"  // Only show if not already discussed
+                    },
+                    new DialogueNode.Choice {
+                        choiceText = "\"Tell me about that closed gate again?\"",
+                        nextNodeID = "ask_about_gate",
+                        RequireNotDiscussedNode = "ask_about_gate"  // Only show if not already discussed
+                    },
+                    new DialogueNode.Choice {
+                        choiceText = "\"Just passing through. Take care, Gaius.\"",
+                        nextNodeID = "end"
+                    }
+                }
+            });
+
+            // Keep original greeting for backward compatibility / fallback
+            farmer.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "As you approach the farmer's stand, Gaius rises to meet you with a smile. \"Greetings, friend. Haven't seen you 'round these parts before. Name's Gaius.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Greetings. {player.name}, and I actually have no idea where 'these parts' even are. Where am I?\"", nextNodeID = "ask_about_area" },
                     new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end" }
                 }
             });
 
             farmer.Dialogue.Add("ask_about_area", new DialogueNode()
             {
-                Text = "The farmer briefly raises an eyebrow at this, but a smile quickly replaces the suspicious look on his face.<br><br>\"Well, in that case, welcome to Belum.<br><br>The town itself is behind those fortress walls to the north.  My farm is a ways to the west, before you reach Mount Gelus. Hircinian Forest is east of here, although you'd be better off avoiding it.   Strange folk have been coming and going from there of late.<br><br>I saw you come from the south, so I imagine you saw that old guild hall.  I think it's been abandoned for a while now.\"",
+                Text = "Gaius briefly raises an eyebrow at this, but a smile quickly replaces the suspicious look on his face. \"Well, in that case, welcome to Belum.\"<br><br>\"The town itself is behind those fortress walls to the north. My farm is a ways to the west, before you reach Mount Gelus. Hircinian Forest is east of here, although you'd be better off avoiding it. Strange folk have been coming and going from there of late.\"<br><br>\"I saw you come from the south, so I imagine you saw that old guild hall. I think it's been abandoned for a while now.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"I did come from there, but it's not exactly abandoned any more.   It's mine now, apparently.\"", nextNodeID = "explain_guild" },  
-                    new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end_generic" }
+                    new DialogueNode.Choice { choiceText = "\"I did come from there, but it's not exactly abandoned any more.   It's mine now, apparently.\"", nextNodeID = "explain_guild" },
+                    new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end" }
                 }
             });
 
             farmer.Dialogue.Add("explain_guild", new DialogueNode()
             {
-                Text = "At this, Gaius makes no more attempts to hide his surprise.<br><br> \"Now that's not something I expected to hear!  I'm not sure if I should offer congratulations or condolences.\"",
+                Text = "At this, Gaius makes no more attempts to hide his surprise. \"Now that's not something I expected to hear! I'm not sure if I should offer congratulations or condolences.\"",
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"Too early to say, I think.  I've been tasked with rebuilding the Adventurer's Guild, which means I need to start recruiting.  I suppose I should head into town and see if I can find anyone interested.\"", nextNodeID = "recruit" },
@@ -325,27 +360,28 @@ namespace GuildMaster.Data
 
             farmer.Dialogue.Add("other_topics", new DialogueNode()
             {
-                Text = "\"What can I help you with?\"",
+                Text = "Gaius nods. \"What can I help you with?\"",
 
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"You said the gate to town was closed.  Permanently?\"", nextNodeID = "ask_about_gate" }
+                    new DialogueNode.Choice { choiceText = "\"You said the gate to town was closed.  Permanently?\"", nextNodeID = "ask_about_gate" },
+                    new DialogueNode.Choice { choiceText = "\"Could you tell me more about this forest and the people you've seen going into it?\"", nextNodeID = "ask_about_forest" }
                 }
             });
 
             farmer.Dialogue.Add("ask_about_gate", new DialogueNode()
             {
-                Text = "Gaius gives a small frown, then explains \"The sentry can tell you more, but it seems to me that they're nervous about leaving that gate open given all of the unusual activity down this way.  Bandits, mostly, but also whatever's going on in the forest.<br><br>If I'm being honest, I hope they can resolve it quickly. I'm uncomfortable with those bandits holing up so close to my farm, and there's not enough traffic through these crossroads for me to make a living.<br><br>If you think you can help, talk to Marcus at the gate.\"",
+                Text = "Gaius gives a small frown. \"The sentry can tell you more, but it seems to me that they're nervous about leaving that gate open given all of the unusual activity down this way. Bandits, mostly, but also whatever's going on in the forest.\"<br><br>\"If I'm being honest, I hope they can resolve it quickly. I'm uncomfortable with those bandits holing up so close to my farm, and there's not enough traffic through these crossroads for me to make a living.\"<br><br>\"If you think you can help, talk to Marcus at the gate.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"I might just do that.  I wanted to ask about something else.\"", nextNodeID = "greeting"}
+                    new DialogueNode.Choice { choiceText = "\"I might just do that.  I wanted to ask about something else.\"", nextNodeID = "other_topics"}
                 }
             });
 
 
             farmer.Dialogue.Add("recruit", new DialogueNode()
             {
-                Text = "\"Well, I've got bad news.  The south gate is closed, which is why I'm out here.  Normally I'd head into the market to sell my goods, but with the gate being closed I'm forced to set up shop out here.<br><br>There's a north gate and a west gate, but you'll have a hard time getting to either of them.<br><br>Bandits have holed up in the caves to the west, and all sorts of foul creatures live in the mountains.<br><br>I hate to say it, but if you're looking for anyone to help you clear out monsters or bandits, maybe your best bet is to head into that nasty old forest after all.\"",
+                Text = "Gaius sighs. \"Well, I've got bad news. The south gate is closed, which is why I'm out here. Normally I'd head into the market to sell my goods, but with the gate being closed I'm forced to set up shop out here.\"<br><br>\"There's a north gate and a west gate, but you'll have a hard time getting to either of them.\"<br><br>\"Bandits have holed up in the caves to the west, and all sorts of foul creatures live in the mountains.\"<br><br>\"I hate to say it, but if you're looking for anyone to help you clear out monsters or bandits, maybe your best bet is to head into that nasty old forest after all.\"",
 
                 Choices =
                 {
@@ -355,62 +391,90 @@ namespace GuildMaster.Data
 
             farmer.Dialogue.Add("ask_about_forest", new DialogueNode()
             {
-                Text = "\"Dark woods, full of wolves and worse things. Lost a few chickens to whatever lurks in there.<br><br>Lately a lot of horse-drawn carts have been headed in to the woods.  A couple of them stopped here and bought some food, although part of me wished they hadn't.  Unsettling folk, every one of them.<br><br>The last two weren't so bad, though.  A venator passed through, and said he'd be back this way once he found whatever it is that he's looking for.  Besides him, a soldier went into the forest just this morning.  Friendly enough, but had a crazed look in his eye.  Seemed like he was looking for someone or something to fight.\"",
+                Text = "Gaius shakes his head. \"Dark woods, full of wolves and worse things. Lost a few chickens to whatever lurks in there.\"<br><br>\"Lately a lot of horse-drawn carts have been headed in to the woods. A couple of them stopped here and bought some food, although part of me wished they hadn't. Unsettling folk, every one of them.\"<br><br>\"The last two weren't so bad, though. A venator passed through, and said he'd be back this way once he found whatever it is that he's looking for. Besides him, a soldier went into the forest just this morning. Friendly enough, but had a crazed look in his eye. Seemed like he was looking for someone or something to fight.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"Interesting.  It sounds like the woods are my best bet, then.  Maybe one of these interesting characters will join up with me.\"", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"Interesting.  It sounds like the woods are my best bet, then.  Maybe one of these interesting characters will join up with me.\"", nextNodeID = "look_for_recruits" }
+                }
+            });
+
+            farmer.Dialogue.Add("look_for_recruits", new DialogueNode()
+            {
+                Text = "Gaius smiles at that. \"Ha! Maybe they will. Be safe in there, friend, and good luck finding those recruits.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Thank you. With luck, you'll see me coming back through here soon.\"", nextNodeID = "end"}
                 }
             });
 
             farmer.Dialogue.Add("end", new DialogueNode()
             {
-                Text = "Gaius smiles at that and says \"Ha! Maybe they will.  Be safe in there, friend, and good luck finding those recruits.<br><br>If you ever end up west of here, come stop by my farm some time. \"",
-                Choices = { } // empty = conversation ends
-            });
-
-            farmer.Dialogue.Add("end_generic", new DialogueNode()
-            {
-                Text = "Gaius smiles at that and says \"Alright, don't let me keep you.<br><br>If you ever end up west of here, stop by my farm some time. \"",
+                Text = "Gaius nods warmly. \"Alright, don't let me keep you.<br><br>If you ever end up west of here, stop by my farm some time.\"",
                 Choices = { } // empty = conversation ends
             });
 
 
             NPC ranger = new NPC();
             ranger.Name = "Silvacis";
-            ranger.Description = "A tall, slender man with light hair is here, digging through the mud rather frantically.  Suddenly, his head raises and turns towards you with a scowl.";
-            ranger.ShortDescription = "A ranger";
+            ranger.Description = "A tall, slender man with light hair and a green cloak is here, digging through the mud rather frantically.  Suddenly, his head raises and turns towards you with a scowl.";
+            ranger.ShortDescription = "A venator";
 
             // Silvacis dialogue restructure
-            ranger.Dialogue.Add("greeting", new DialogueNode()
+
+            // First time meeting Silvacis
+            ranger.Dialogue.Add("first_greeting", new DialogueNode()
             {
-                Text = "Hey! You there! Wait, you're not from around here... What brings someone new to these dangerous woods?",
+                Text = "Silvacis looks up suddenly, his eyes narrowing. \"Damn it, don't sneak up on me like that!\"<br><br>After a moment, the venator regains his composure.\"Apologies, I've been searching for something and haven't had much luck.  I certainly didn't expect to see someone standing over me, but I should be paying more attention.\"<br><br>\"I'm Silvacis.  What brings you out into these woods?\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "I'm rebuilding the Adventurer's Guild nearby.", nextNodeID = "mention_guild_first" },
-                    new DialogueNode.Choice { choiceText = "Just exploring the area.", nextNodeID = "exploring" },
-                    new DialogueNode.Choice { choiceText = "That's my business.", nextNodeID = "rude_response" }
+                    new DialogueNode.Choice { choiceText = "\"I'm rebuilding the Adventurer's Guild nearby.\"", nextNodeID = "mention_guild_first" },
+                    new DialogueNode.Choice { choiceText = "\"Just exploring the area.\"", nextNodeID = "exploring" }
+                }
+            });
+
+            // Subsequent meetings with Silvacis
+            ranger.Dialogue.Add("repeat_greeting", new DialogueNode()
+            {
+                Text = "Silvacis looks up from his search and nods in recognition. \"Ah, it's you again.\"",
+                Choices =
+                {
+                    // Show amulet option if discussed via EITHER path (duplicate choices, only one will show)
+                    new DialogueNode.Choice {
+                        choiceText = "\"Still looking for that amulet?\"",
+                        nextNodeID = "main_hub",
+                        RequireDiscussedNode = "mention_guild_first"  // Show if discussed via guild path
+                    },
+                    new DialogueNode.Choice {
+                        choiceText = "\"Still looking for that amulet?\"",
+                        nextNodeID = "main_hub",
+                        RequireDiscussedNode = "exploring"  // Show if discussed via exploring path
+                    },
+                    new DialogueNode.Choice {
+                        choiceText = "\"Just passing through. Good luck with your search.\"",
+                        nextNodeID = "end"
+                    }
                 }
             });
 
             ranger.Dialogue.Add("mention_guild_first", new DialogueNode()
             {
-                Text = "The old guild hall? Interesting... I could use the help of a guild actually. I've lost something important - a weather-worn silver amulet. I dropped it somewhere in this cursed forest and I can't find it anywhere!",
+                Text = "Silvacis' eyes widen with interest. \"The old guild hall? Interesting... I could use the help of a guild actually. The lost item I mentioned - it's a weather-worn silver amulet. I dropped it somewhere in this cursed forest and I can't find it anywhere!\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "Is this it? (Give amulet)",
+                        choiceText = "You pull the amulet out of your satchel and present it to Silvacis.  \"Is this it?\"",
                         nextNodeID = "give_amulet_guild_known",
                         IsAvailable = (inventory) => inventory.Contains("amulet"),
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
-                    new DialogueNode.Choice { choiceText = "What's so special about this amulet?", nextNodeID = "amulet_importance" },
-                    new DialogueNode.Choice { choiceText = "I'll keep an eye out for it.", nextNodeID = "will_search" }
+                    new DialogueNode.Choice { choiceText = "\"What's so special about this amulet?\"", nextNodeID = "amulet_importance" },
+                    new DialogueNode.Choice { choiceText = "\"I'll keep an eye out for it.\"", nextNodeID = "will_search" }
                 }
             });
 
             ranger.Dialogue.Add("exploring", new DialogueNode()
             {
-                Text = "Be careful then. These woods are dangerous... Actually, since you're here, maybe you can help me. I've lost something important - a weather-worn silver amulet. Have you seen it?",
+                Text = "Silvacis nods gravely. \"Be careful then. These woods are dangerous... Actually, since you're here, maybe you can help me. I've lost something important - a weather-worn silver amulet. Have you seen it?\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
@@ -419,27 +483,18 @@ namespace GuildMaster.Data
                         IsAvailable = (inventory) => inventory.Contains("amulet"),
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
-                    new DialogueNode.Choice { choiceText = "What kind of amulet?", nextNodeID = "describe_amulet_no_guild" },
-                    new DialogueNode.Choice { choiceText = "Sorry, haven't seen it.", nextNodeID = "goodbye" }
-                }
-            });
-
-            ranger.Dialogue.Add("rude_response", new DialogueNode()
-            {
-                Text = "Fair enough... Look, I don't mean to bother you, but I've lost something important. A silver amulet. If you find it, please let me know.",
-                Choices =
-                {
-                    new DialogueNode.Choice { choiceText = "Fine, I'll keep an eye out.", nextNodeID = "goodbye" }
+                    new DialogueNode.Choice { choiceText = "\"What kind of amulet?\"", nextNodeID = "describe_amulet_no_guild" },
+                    new DialogueNode.Choice { choiceText = "\"Sorry, haven't seen it.\"", nextNodeID = "end" }
                 }
             });
 
             ranger.Dialogue.Add("give_amulet_guild_known", new DialogueNode()
             {
-                Text = "That's it! That's my amulet! Thank you so much! You know what? A guild sounds perfect - I've been alone in these woods too long. An Adventurer's Guild is exactly what I need!",
+                Text = "Silvacis' face lights up with joy as he clutches the amulet. \"That's it! That's my amulet! Thank you so much!\" He pauses, considering. \"You know what? I've been alone and without purpose for too long. A guild could be exactly what I need.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "Welcome aboard! Head to the guild hall south of the crossroads.",
+                        choiceText = "\"It is good to have you, Silvacis.\"",
                         nextNodeID = "recruit_offer"
                     }
                 }
@@ -447,21 +502,20 @@ namespace GuildMaster.Data
 
             ranger.Dialogue.Add("give_amulet_no_guild", new DialogueNode()
             {
-                Text = "That's it! That's my amulet! Thank you so much! I owe you a great debt... Say, you seem capable. I don't suppose you're looking for companions? I'm a skilled ranger, and I've been thinking it's time to leave these woods.",
+                Text = "Silvacis takes the amulet reverently, his eyes glistening. \"That's it! That's my amulet! Thank you so much! I owe you a great debt...\" He looks at you appraisingly. \"Say, you seem capable. I don't suppose you're looking for companions? I'm a skilled ranger, and I've been thinking it's time to leave these woods.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "Actually, I'm rebuilding the Adventurer's Guild. Interested?", nextNodeID = "reveal_guild" },
-                    new DialogueNode.Choice { choiceText = "I work alone.", nextNodeID = "decline_company" }
+                    new DialogueNode.Choice { choiceText = "\"Actually, I was very recently tasked with rebuilding the Adventurer's Guild. Interested?\"", nextNodeID = "reveal_guild" },
                 }
             });
 
             ranger.Dialogue.Add("reveal_guild", new DialogueNode()
             {
-                Text = "An Adventurer's Guild? That's perfect! I'd be honored to join. It's been too long since I had a real purpose.",
+                Text = "Silvacis straightens with renewed purpose. \"It's been too long since I had companions or a real purpose.  Count me in.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "Welcome aboard! Head to the guild hall south of the crossroads.",
+                        choiceText = "\"It is good to have you, Silvacis.\"",
                         nextNodeID = "recruit_offer"
                     }
                 }
@@ -469,48 +523,48 @@ namespace GuildMaster.Data
 
             ranger.Dialogue.Add("amulet_importance", new DialogueNode()
             {
-                Text = "It belonged to someone important to me. It's all I have left of them... Please, if you find it, bring it to me.",
+                Text = "Silvacis' expression becomes somber. \"It belonged to someone important to me. It's all I have left of them... Please, if you find it, bring it to me.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "Is this it? (Give amulet)",
+                        choiceText = "You pull the amulet out of your satchel and present it to Silvacis.  \"Is this it?\"",
                         nextNodeID = "give_amulet_guild_known",
                         IsAvailable = (inventory) => inventory.Contains("amulet"),
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
-                    new DialogueNode.Choice { choiceText = "I'll look for it.", nextNodeID = "will_search" }
+                    new DialogueNode.Choice { choiceText = "\"I'll look for it.\"", nextNodeID = "will_search" }
                 }
             });
 
             ranger.Dialogue.Add("will_search", new DialogueNode()
             {
-                Text = "Thank you. I'll keep searching here. If you find it, please bring it to me.",
+                Text = "Silvacis nods gratefully. \"Thank you. I'll keep searching here. If you find it, please bring it to me.\"",
                 Choices = { }
             });
 
             // Main hub for return visits
             ranger.Dialogue.Add("main_hub", new DialogueNode()
             {
-                Text = "Have you found my amulet yet? It's a weather-worn silver piece, very important to me.",
+                Text = "Silvacis looks up hopefully. \"Have you found my amulet yet? It's a weather-worn silver piece, very important to me.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "Give the amulet",
+                        choiceText = "You pull the amulet out of your satchel and present it to Silvacis. \"Is this it?\"",
                         nextNodeID = "give_amulet_return",
                         IsAvailable = (inventory) => inventory.Contains("amulet"),
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
-                    new DialogueNode.Choice { choiceText = "Still looking for it.", nextNodeID = "goodbye" }
+                    new DialogueNode.Choice { choiceText = "\"Still looking for it.\"", nextNodeID = "end" }
                 }
             });
 
             ranger.Dialogue.Add("give_amulet_return", new DialogueNode()
             {
-                Text = "My amulet! Thank you! You know, I've been thinking about what you said about that guild. I'd like to join, if you'll have me.",
+                Text = "Silvacis takes the amulet with trembling hands. \"My amulet! Thank you!\" He clutches it to his chest for a moment, then looks at you with determination. \"You know, I've been thinking about what you said about that guild. I'd like to join, if you'll have me.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "Welcome to the guild!",
+                        choiceText = "\"It is good to have you, Silvacis.\"",
                         nextNodeID = "recruit_offer"
                     }
                 }
@@ -519,28 +573,22 @@ namespace GuildMaster.Data
             // Keep the existing recruit_offer
             ranger.Dialogue.Add("recruit_offer", new DialogueNode()
             {
-                Text = "I'll head to the guild hall right away. Oh, and if you're looking for more recruits, I heard there's a fighter who camps deeper in these woods - bit of a hermit, but skilled with a blade.",
+                Text = "Silvacis shoulders his pack with renewed energy. \"Lead on, Guild Master. Oh, and if you're looking for more recruits, I heard there's a fighter who camps deeper in these woods - bit of a hermit, but skilled with a blade.\"",
                 Action = new DialogueAction { Type = "add_recruit", Parameters = { { "class", "Venator" } } },
                 Choices = { }
             });
 
-            ranger.Dialogue.Add("goodbye", new DialogueNode()
+            // Terminal node - automatically resets to greeting when conversation ends
+            ranger.Dialogue.Add("end", new DialogueNode()
             {
-                Text = "Please, if you find it, let me know. I'll be searching around here.",
-                Choices = { } // conversation ends
-            });
-
-            // Also add the "decline_company" node that was referenced but missing:
-            ranger.Dialogue.Add("decline_company", new DialogueNode()
-            {
-                Text = "I understand. But please, keep the amulet as thanks. And if you ever change your mind about needing help, I'll be around.",
-                Choices = { } // conversation ends  
+                Text = "Silvacis returns to his search, his movements methodical but desperate. \"Please, if you find it, let me know. I'll be searching around here.\"",
+                Choices = { } // conversation ends and resets
             });
 
             // And "describe_amulet_no_guild" that was also referenced:
             ranger.Dialogue.Add("describe_amulet_no_guild", new DialogueNode()
             {
-                Text = "It's a weather-worn silver amulet, quite old. It belonged to someone important to me. It's all I have left of them.",
+                Text = "Silvacis' voice becomes quieter. \"It's a weather-worn silver amulet, quite old. It belonged to someone important to me. It's all I have left of them.\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
@@ -549,7 +597,7 @@ namespace GuildMaster.Data
                         IsAvailable = (inventory) => inventory.Contains("amulet"),
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
-                    new DialogueNode.Choice { choiceText = "I'll keep an eye out for it.", nextNodeID = "goodbye" }
+                    new DialogueNode.Choice { choiceText = "\"I'll keep an eye out for it.\"", nextNodeID = "end" }
                 }
             });
 
@@ -685,24 +733,24 @@ namespace GuildMaster.Data
 
             fighter.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Leave me be, stranger. I came to these woods for solitude, not conversation.",
+                Text = "Braxus stops mid-swing and turns to face you, his expression hard. \"Leave me be, stranger. I came to these woods for solitude, not conversation.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "I'm rebuilding the Adventurer's Guild. Interested?", nextNodeID = "reject_guild" },
-                    new DialogueNode.Choice { choiceText = "Fair enough. I'll leave you alone.", nextNodeID = "goodbye" }
+                    new DialogueNode.Choice { choiceText = "\"I'm rebuilding the Adventurer's Guild. Interested?\"", nextNodeID = "reject_guild" },
+                    new DialogueNode.Choice { choiceText = "\"Fair enough. I'll leave you alone.\"", nextNodeID = "goodbye" }
                 }
             });
 
             fighter.Dialogue.Add("reject_guild", new DialogueNode()
             {
-                Text = "A guild? Ha! I'm done taking orders. If you want me to join anything, you'll have to prove you're worth following. Draw your weapon!",
+                Text = "Braxus laughs bitterly. \"Ha! I'm done taking orders. If you want me to join anything, you'll have to prove you're worth following. Draw your weapon!\"",
                 Action = new DialogueAction { Type = "trigger_combat" },
                 Choices = { }
             });
 
             fighter.Dialogue.Add("goodbye", new DialogueNode()
             {
-                Text = "Smart choice. Now leave me be.",
+                Text = "Braxus grunts and returns to his practice. \"Smart choice. Now leave me be.\"",
                 Choices = { }
             });
 

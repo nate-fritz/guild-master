@@ -25,5 +25,31 @@ namespace GuildMaster.Models
             CompletedMilestones = new HashSet<string>();
             RoomStateOverrides = new Dictionary<int, string>();
         }
+
+        /// <summary>
+        /// Helper method to check if a quest flag is set to true.
+        /// Returns false if the flag doesn't exist.
+        /// </summary>
+        public bool GetQuestFlag(string flagId)
+        {
+            if (Player?.QuestFlags == null)
+                return false;
+
+            if (!Player.QuestFlags.ContainsKey(flagId))
+                return false;
+
+            return Player.QuestFlags[flagId];
+        }
+
+        /// <summary>
+        /// Helper method to set a quest flag.
+        /// </summary>
+        public void SetQuestFlag(string flagId, bool value)
+        {
+            if (Player?.QuestFlags != null)
+            {
+                Player.QuestFlags[flagId] = value;
+            }
+        }
     }
 }

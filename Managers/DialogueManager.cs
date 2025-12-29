@@ -125,7 +125,7 @@ namespace GuildMaster.Managers
             currentRoom = room;
             isInDialogue = true;
 
-            // Determine starting node
+            // Determine starting node with first_greeting/repeat_greeting support
             if (!string.IsNullOrEmpty(npc.CurrentDialogueNode) &&
                 npc.Dialogue.ContainsKey(npc.CurrentDialogueNode))
             {
@@ -133,9 +133,23 @@ namespace GuildMaster.Managers
             }
             else
             {
-                currentNode = "greeting";
-            }
+                // Check if this is the first time meeting this NPC
+                bool isFirstMeeting = !context.Player.MetNPCs.Contains(npc.Name);
 
+                if (isFirstMeeting && npc.Dialogue.ContainsKey("first_greeting"))
+                {
+                    currentNode = "first_greeting";
+                    context.Player.MetNPCs.Add(npc.Name);
+                }
+                else if (npc.Dialogue.ContainsKey("repeat_greeting"))
+                {
+                    currentNode = "repeat_greeting";
+                }
+                else
+                {
+                    currentNode = "greeting";
+                }
+            }
 
             AnsiConsole.MarkupLine($"\nYou approach {npc.Name}.\n");
 
@@ -155,6 +169,13 @@ namespace GuildMaster.Managers
 
             DialogueNode node = currentNPC.Dialogue[currentNode];
 
+            // Track that this node has been visited
+            if (!player.VisitedDialogueNodes.ContainsKey(currentNPC.Name))
+            {
+                player.VisitedDialogueNodes[currentNPC.Name] = new HashSet<string>();
+            }
+            player.VisitedDialogueNodes[currentNPC.Name].Add(currentNode);
+
             // Substitute placeholders in dialogue text
             string displayText = SubstituteDialogueText(node.Text);
             TextHelper.DisplayTextWithPaging(displayText, "#90FF90");
@@ -165,8 +186,10 @@ namespace GuildMaster.Managers
                 ExecuteDialogueAction(node.Action, currentNPC, currentRoom);
             }
 
-            // Build choices list first
-            currentChoices = node.Choices.Where(choice => choice.IsAvailable(player.Inventory)).ToList();
+            // Build choices list first - filter by inventory AND topic tracking
+            currentChoices = node.Choices.Where(choice =>
+                choice.IsAvailable(player.Inventory) &&
+                IsChoiceAvailableByTopicTracking(choice, currentNPC.Name)).ToList();
 
             // Auto-inject shop option for vendors
             if (currentNPC.IsVendor)
@@ -193,7 +216,19 @@ namespace GuildMaster.Managers
             {
                 // Substitute placeholders in choice text
                 string displayChoice = SubstituteDialogueText(currentChoices[i].choiceText);
-                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {displayChoice}[/]");
+
+                // Wrap the choice text
+                string wrappedChoice = Helpers.TextHelper.WrapText(displayChoice);
+                string[] choiceLines = wrappedChoice.Split('\n');
+
+                // Display first line with number prefix
+                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {choiceLines[0]}[/]");
+
+                // Display subsequent lines with indentation to align with first line
+                for (int j = 1; j < choiceLines.Length; j++)
+                {
+                    AnsiConsole.MarkupLine($"[#00FFFF]   {choiceLines[j]}[/]");
+                }
             }
             AnsiConsole.MarkupLine("[#808080]0. End conversation[/]");
             AnsiConsole.MarkupLine("");
@@ -236,6 +271,46 @@ namespace GuildMaster.Managers
             }
 
             return text;
+        }
+
+        /// <summary>
+        /// Checks if a dialogue choice is available based on topic tracking conditions
+        /// </summary>
+        private bool IsChoiceAvailableByTopicTracking(DialogueNode.Choice choice, string npcName)
+        {
+            var player = context.Player;
+
+            // If no topic tracking conditions, always available
+            if (string.IsNullOrEmpty(choice.RequireDiscussedNode) &&
+                string.IsNullOrEmpty(choice.RequireNotDiscussedNode))
+            {
+                return true;
+            }
+
+            // Get visited nodes for this NPC
+            HashSet<string> visitedNodes = player.VisitedDialogueNodes.ContainsKey(npcName)
+                ? player.VisitedDialogueNodes[npcName]
+                : new HashSet<string>();
+
+            // Check RequireDiscussedNode condition
+            if (!string.IsNullOrEmpty(choice.RequireDiscussedNode))
+            {
+                if (!visitedNodes.Contains(choice.RequireDiscussedNode))
+                {
+                    return false;  // Required node not visited
+                }
+            }
+
+            // Check RequireNotDiscussedNode condition
+            if (!string.IsNullOrEmpty(choice.RequireNotDiscussedNode))
+            {
+                if (visitedNodes.Contains(choice.RequireNotDiscussedNode))
+                {
+                    return false;  // Node was visited, but we require it NOT to be
+                }
+            }
+
+            return true;
         }
 
         public bool ProcessDialogueChoice(string input)
@@ -314,9 +389,19 @@ namespace GuildMaster.Managers
             {
                 HandlePostDialogueEffects(currentNode, currentNPC, currentRoom);
 
-                if (currentNode != "end")
+                // NEW BEHAVIOR: Only save dialogue position if node explicitly marks itself as permanent
+                // Otherwise, always reset to greeting (first_greeting or repeat_greeting)
+                if (!string.IsNullOrEmpty(currentNode) &&
+                    currentNPC.Dialogue.ContainsKey(currentNode) &&
+                    currentNPC.Dialogue[currentNode].PermanentlyEndsDialogue)
                 {
+                    // This node locks the dialogue permanently
                     currentNPC.CurrentDialogueNode = currentNode;
+                }
+                else
+                {
+                    // Default: Reset to greeting (will use first_greeting or repeat_greeting)
+                    currentNPC.CurrentDialogueNode = null;
                 }
             }
 
@@ -490,6 +575,13 @@ namespace GuildMaster.Managers
 
             DialogueNode node = eventDialogueTrees[dialogueTreeId][currentNode];
 
+            // Track that this node has been visited (use dialogueTreeId as the "NPC name" for events)
+            if (!player.VisitedDialogueNodes.ContainsKey(dialogueTreeId))
+            {
+                player.VisitedDialogueNodes[dialogueTreeId] = new HashSet<string>();
+            }
+            player.VisitedDialogueNodes[dialogueTreeId].Add(currentNode);
+
             // Substitute placeholders in event dialogue text
             string displayText = SubstituteDialogueText(node.Text);
             TextHelper.DisplayTextWithPaging(displayText, "#90FF90");
@@ -500,8 +592,10 @@ namespace GuildMaster.Managers
                 ExecuteDialogueAction(node.Action, null, currentRoom);
             }
 
-            // Build choices list
-            currentChoices = node.Choices.Where(choice => choice.IsAvailable(player.Inventory)).ToList();
+            // Build choices list - filter by inventory AND topic tracking
+            currentChoices = node.Choices.Where(choice =>
+                choice.IsAvailable(player.Inventory) &&
+                IsChoiceAvailableByTopicTracking(choice, dialogueTreeId)).ToList();
 
             // Check if there are any choices
             if (currentChoices.Count == 0)
@@ -520,7 +614,19 @@ namespace GuildMaster.Managers
             {
                 // Substitute placeholders in choice text
                 string displayChoice = SubstituteDialogueText(currentChoices[i].choiceText);
-                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {displayChoice}[/]");
+
+                // Wrap the choice text
+                string wrappedChoice = Helpers.TextHelper.WrapText(displayChoice);
+                string[] choiceLines = wrappedChoice.Split('\n');
+
+                // Display first line with number prefix
+                AnsiConsole.MarkupLine($"[#00FFFF]{i + 1}. {choiceLines[0]}[/]");
+
+                // Display subsequent lines with indentation to align with first line
+                for (int j = 1; j < choiceLines.Length; j++)
+                {
+                    AnsiConsole.MarkupLine($"[#00FFFF]   {choiceLines[j]}[/]");
+                }
             }
             AnsiConsole.MarkupLine("[#808080]0. Continue[/]");
             AnsiConsole.MarkupLine("");

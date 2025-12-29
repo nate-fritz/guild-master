@@ -448,6 +448,15 @@ namespace GuildMaster.Managers
             // Restore quest flags
             player.QuestFlags = state.QuestFlags ?? new Dictionary<string, bool>();
 
+            // Restore allied factions
+            player.AlliedFactions = state.AlliedFactions ?? new HashSet<string>();
+
+            // Restore unlocked regions
+            player.UnlockedRegions = state.UnlockedRegions ?? new HashSet<string> { "guild", "west" };
+
+            // Restore War Room state
+            player.WarRoomState = state.WarRoomState;
+
             // NOTE: Triggered event IDs and shown messages are restored in GameEngine.InitializeManagersAfterLoad()
             // after the EventManager and MessageManager are created. Don't restore them here.
 
@@ -996,6 +1005,15 @@ namespace GuildMaster.Managers
 
             // Save quest flags
             gameState.QuestFlags = player.QuestFlags;
+
+            // Save allied factions
+            gameState.AlliedFactions = player.AlliedFactions;
+
+            // Save unlocked regions
+            gameState.UnlockedRegions = player.UnlockedRegions;
+
+            // Save War Room state
+            gameState.WarRoomState = player.WarRoomState;
 
             // Save triggered event IDs (if EventManager is available)
             if (ProgramStatics.eventManager != null)

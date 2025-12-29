@@ -299,22 +299,21 @@ namespace GuildMaster.Data
             Room woodedPath = CreateRoom(41, "woodedPath", "A wooded path", "This section of the path is sparsely surrounded by trees and overgrowth.  To the distant west you see a crossroads and beyond that, a mountain range.  Further east the forest grows thicker.");
             woodedPath.Exits.Add("west", 40);
             woodedPath.Exits.Add("east", 42);
+            woodedPath.NPCs.Add(npcs["Silvacis"]);  // Silvacis is unique, no clone needed
 
-            Room pathWithCart = CreateRoom(42, "pathWithCart", "A wooded path with a broken cart", "As you enter this section of the wooded path, you notice a large wooden cart in a ditch on the side of the road.  The wheels are broken and the old wood is mossy and cracked.  It looks as though it's been here for ages.");
-            pathWithCart.Exits.Add("west", 41);
-            pathWithCart.Exits.Add("east", 43);
+            Room nearFallenTree = CreateRoom(42, "nearFallenTree", "A wooded path near a fallen tree", "A gigantic fallen tree blocks the path here. You would have some difficulty climbing over it, but you notice a break in the trunk just south of the path that you can squeeze through to continue along.");
+            nearFallenTree.Exits.Add("west", 41);
+            nearFallenTree.Exits.Add("east", 43);
+
+            Room pathWithCart = CreateRoom(43, "pathWithCart", "A wooded path with a broken cart", "As you enter this section of the wooded path, you notice a large wooden cart in a ditch on the side of the road.  The wheels are broken and the old wood is mossy and cracked.  It looks as though it's been here for ages.");
+            pathWithCart.Exits.Add("west", 42);
+            pathWithCart.Exits.Add("east", 44);
             pathWithCart.Items.Add("cart");
-
-            Room nearFallenTree = CreateRoom(43, "nearFallenTree", "A wooded path near a fallen tree", "A gigantic fallen tree blocks the path here. You would have some difficulty climbing over it, but you notice a break in the trunk just south of the path that you can squeeze through to continue along.  As you approach the gap, you notice a hooded man crouching down, searching through the dirt.");
-            nearFallenTree.Exits.Add("west", 42);
-            nearFallenTree.Exits.Add("east", 44);
-            nearFallenTree.NPCs.Add(npcs["Silvacis"]);  // Silvacis is unique, no clone needed
-
-            Room deepForest = CreateRoom(44, "deepForest", "A deep forest clearing", "This secluded clearing is barely visible from the path. A small campfire smolders near a worn bedroll, and weapons are carefully arranged on a fallen log. Someone has been living here.  You can hear a stream to the south.");
-            deepForest.Exits.Add("west", 43);
-            deepForest.Exits.Add("south", 45);
-            deepForest.NPCs.Add(npcs["Braxus"]);  // Braxus is unique, no clone needed
-
+       
+            Room abandonedCampsite = CreateRoom(44, "abandonedCampsite", "An abandoned campsite", "You come across the charred remains of a long abandoned campsite.  You notice a charred wooden chest sticking out of one of the several ash piles.  The west leads out of the forest, while to the east the forest grows wildly.");
+            abandonedCampsite.Exits.Add("west", 43);
+            abandonedCampsite.Exits.Add("south", 45);
+           
             Room forestStream = CreateRoom(45, "forestStream", "A stream running through the forest", "You stand before a shallow bubbling stream that runs east to west through the forest.  A waterlogged stump is stubbornly rooted in the center of the stream, the current splitting around it.  You can smell a campfire to the north. To the south a barely worn path continues into the forest, which gets darker the further you go.");
             forestStream.Exits.Add("north", 44);
             forestStream.Exits.Add("south", 46);
@@ -332,10 +331,12 @@ namespace GuildMaster.Data
             forestBend.OriginalNPCs.Add(npcs["Bandit"].Clone());
             forestBend.OriginalNPCs.Add(npcs["Bandit Thug"].Clone());
 
-            Room abandonedCampsite = CreateRoom(47, "abandonedCampsite", "An abandoned campsite", "You come across the charred remains of a long abandoned campsite.  You notice a charred wooden chest sticking out of one of the several ash piles.  The west leads out of the forest, while to the east the forest grows wildly.");
-            abandonedCampsite.Exits.Add("west", 46);
-            abandonedCampsite.Exits.Add("east", 48);
-            abandonedCampsite.Items.Add("chest");
+            Room deepForest = CreateRoom(47, "deepForest", "A deep forest clearing", "This secluded clearing is barely visible from the path. A small campfire smolders near a worn bedroll, and weapons are carefully arranged on a fallen log. Someone has been living here.  You can hear a stream to the south.");
+            
+            deepForest.Exits.Add("west", 46);
+            deepForest.Exits.Add("east", 48);
+            deepForest.Items.Add("chest");
+            deepForest.NPCs.Add(npcs["Braxus"]);  // Braxus is unique, no clone needed
 
             // ============================================
             // FOREST EXTENSION (Rooms 48-62)
@@ -424,7 +425,7 @@ namespace GuildMaster.Data
             // Needs update
             Room belumApproach = CreateRoom(69, "belumApproach", "Approach to Belum", "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands closed. A veteran guard named Marcus stands watch. A signpost reads: 'GATE CLOSED'.");
             belumApproach.Exits.Add("south", 68);
-            belumApproach.NPCs.Add(npcs["Marcus"].Clone());  // sentry quest giver
+            belumApproach.NPCs.Add(npcs["Marcus"].Clone());  // Gate guard quest giver
             // belumApproach.Exits.Add("north", 70);  // Opens after completing bandit quest
 
             // BELUM - THE TOWN (Rooms 70-89)
@@ -612,12 +613,12 @@ namespace GuildMaster.Data
             // Forest
             rooms.Add(40, eastPath);
             rooms.Add(41, woodedPath);
-            rooms.Add(42, pathWithCart);
-            rooms.Add(43, nearFallenTree);
-            rooms.Add(44, deepForest);
+            rooms.Add(42, nearFallenTree);
+            rooms.Add(43, pathWithCart);
+            rooms.Add(44, abandonedCampsite);
             rooms.Add(45, forestStream);
             rooms.Add(46, forestBend);
-            rooms.Add(47, abandonedCampsite);
+            rooms.Add(47, deepForest);
             rooms.Add(48, darkHollow);
             rooms.Add(49, tangledThicket);
             rooms.Add(50, mossyClearingNorth);

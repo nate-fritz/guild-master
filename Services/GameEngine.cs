@@ -23,6 +23,8 @@ namespace GuildMaster.Services
         private DialogueManager? dialogueManager;
         private EventManager? eventManager;
         private GameController? gameController;
+        private EndingEvaluator? endingEvaluator;
+        private WarRoomManager? warRoomManager;
         private Action? stateChangedCallback;
         private PaginationManager paginationManager;
 
@@ -185,14 +187,17 @@ namespace GuildMaster.Services
             ProgramStatics.messageManager = messageManager;
             itemManager = new ItemManager(gameContext);
             questManager = new QuestManager(gameContext);
+            ProgramStatics.questManager = questManager;
             guildManager = new GuildManager(gameContext, questManager, messageManager);
             saveManager = new SaveGameManager(gameContext, storageService);
-            menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager);
+            warRoomManager = new WarRoomManager(gameContext);
+            menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager, warRoomManager);
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
             eventManager = new EventManager(gameContext);
             ProgramStatics.eventManager = eventManager;
             eventManager.LoadEvents();
+            endingEvaluator = new EndingEvaluator(gameContext);
 
             // Restore shown messages and triggered events from loaded state
             // (must happen AFTER MessageManager and EventManager creation)
@@ -270,14 +275,17 @@ namespace GuildMaster.Services
             ProgramStatics.messageManager = messageManager;
             itemManager = new ItemManager(gameContext);
             questManager = new QuestManager(gameContext);
+            ProgramStatics.questManager = questManager;
             guildManager = new GuildManager(gameContext, questManager, messageManager);
             saveManager = new SaveGameManager(gameContext, storageService);
-            menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager);
+            warRoomManager = new WarRoomManager(gameContext);
+            menuManager = new MenuManager(gameContext, guildManager, uiManager, saveManager, questManager, warRoomManager);
             combatManager = new CombatManager(gameContext, () => { }, stateChangedCallback);
             dialogueManager = new DialogueManager(gameContext);
             eventManager = new EventManager(gameContext);
             ProgramStatics.eventManager = eventManager;
             eventManager.LoadEvents();
+            endingEvaluator = new EndingEvaluator(gameContext);
 
             // Register event dialogue trees
             EventDataDefinitions.RegisterEventDialogueTrees(dialogueManager);
@@ -676,6 +684,14 @@ namespace GuildMaster.Services
                 gameContext.Player.RoomNumbersEnabled = !gameContext.Player.RoomNumbersEnabled;
                 string status = gameContext.Player.RoomNumbersEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
                 AnsiConsole.MarkupLine($"\nRoom numbers {status}.");
+            }
+            else if (input == "warroom")
+            {
+                gameContext.Player.WarRoomEnabled = !gameContext.Player.WarRoomEnabled;
+                string status = gameContext.Player.WarRoomEnabled ? "[#00FF00]enabled[/]" : "[#FF0000]disabled[/]";
+                string visibility = gameContext.Player.WarRoomEnabled ? "appear" : "be hidden";
+                AnsiConsole.MarkupLine($"\nWar Room access {status}.");
+                AnsiConsole.MarkupLine($"[dim]War Room will now {visibility} in the Guild menu.[/]");
             }
             else if (input == "/adminhelp" || input == "adminhelp")
             {

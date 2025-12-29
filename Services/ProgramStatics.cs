@@ -7,6 +7,7 @@ namespace GuildMaster.Services
     {
         public static MessageManager? messageManager { get; set; }
         public static EventManager? eventManager { get; set; }
+        public static QuestManager? questManager { get; set; }
 
         /// <summary>
         /// Shared Random instance for consistent RNG quality across the application.

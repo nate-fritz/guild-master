@@ -51,6 +51,8 @@ namespace GuildMaster.Models
         public List<SavedQuest> ActiveQuests { get; set; }
         public List<string> CompletedQuestIds { get; set; }
         public Dictionary<string, bool> QuestFlags { get; set; }  // Quest state flags
+        public HashSet<string> AlliedFactions { get; set; }  // Allied factions
+        public HashSet<string> UnlockedRegions { get; set; }  // Unlocked regions
 
         // Events
         public HashSet<string> TriggeredEventIds { get; set; }  // Track which one-time events have triggered
@@ -62,6 +64,9 @@ namespace GuildMaster.Models
         public int TotalRecruitsEver { get; set; } = 0;
         public HashSet<string> CompletedMilestones { get; set; }
         public Dictionary<int, string> RoomStateOverrides { get; set; }  // RoomId -> State
+
+        // War Room (Act III)
+        public WarRoomState? WarRoomState { get; set; }
 
         public GameState()
         {
@@ -75,6 +80,8 @@ namespace GuildMaster.Models
             ActiveQuests = new List<SavedQuest>();
             CompletedQuestIds = new List<string>();
             QuestFlags = new Dictionary<string, bool>();
+            AlliedFactions = new HashSet<string>();
+            UnlockedRegions = new HashSet<string>();
             TriggeredEventIds = new HashSet<string>();
             ShownMessages = new HashSet<string>();
             CompletedMilestones = new HashSet<string>();

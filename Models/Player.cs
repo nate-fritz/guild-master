@@ -22,11 +22,20 @@ namespace GuildMaster.Models
         public List<Quest> ActiveQuests { get; set; }
         public List<string> CompletedQuestIds { get; set; }  // Track quests that shouldn't repeat
         public Dictionary<string, bool> QuestFlags { get; set; }  // Track quest state flags for events and conditions
+        public HashSet<string> AlliedFactions { get; set; }  // Track factions allied with the guild
+        public HashSet<string> UnlockedRegions { get; set; }  // Track which regions the player can access
+        public WarRoomState? WarRoomState { get; set; }  // War Room strategic layer (Act III)
+
+        // Dialogue tracking for repeat conversations and topic acknowledgment
+        public HashSet<string> MetNPCs { get; set; }  // Track which NPCs the player has met
+        public Dictionary<string, HashSet<string>> VisitedDialogueNodes { get; set; }  // Track which dialogue nodes have been visited for each NPC
+
         public bool AutoCombatEnabled { get; set; } = false;
         public bool TutorialsEnabled { get; set; } = true;
         public bool GoreEnabled { get; set; } = false;
         public bool RoomNumbersEnabled { get; set; } = false;
         public bool DebugLogsEnabled { get; set; } = false;
+        public bool WarRoomEnabled { get; set; } = false;  // Dev/test flag for War Room access
         public int ThreeMemberCombatCount { get; set; } = 0;
 
         public Player(string name = "Adventurer", CharacterClass characterClass = null)
@@ -88,6 +97,10 @@ namespace GuildMaster.Models
             ActiveQuests = new List<Quest>();
             CompletedQuestIds = new List<string>();
             QuestFlags = new Dictionary<string, bool>();
+            AlliedFactions = new HashSet<string>();
+            UnlockedRegions = new HashSet<string> { "guild", "west" };  // Start with Guild and West regions unlocked
+            MetNPCs = new HashSet<string>();
+            VisitedDialogueNodes = new Dictionary<string, HashSet<string>>();
         }
     }
 }

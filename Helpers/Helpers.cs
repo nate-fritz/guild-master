@@ -9,13 +9,17 @@ namespace GuildMaster.Helpers
 {
     public static class TextHelper
     {
+        // Text display constants
+        public const int MaxLineLength = 80;
+        public const int DefaultLinesPerPage = 16;
+
         // Flag to disable paging (for web version)
         public static bool DisablePaging { get; set; } = true;
 
         // Pagination manager for web version
         public static PaginationManager? PaginationManager { get; set; }
 
-        public static string WrapText(string text, int maxLineLength = 80)
+        public static string WrapText(string text, int maxLineLength = MaxLineLength)
         {
             List<string> wrappedLines = new List<string>();
 
@@ -75,7 +79,7 @@ namespace GuildMaster.Helpers
             return string.Join("\n", wrappedLines);
         }
 
-        public static void DisplayTextWithPaging(string text, int maxLineLength = 80, int linesPerPage = 16, string color = null)
+        public static void DisplayTextWithPaging(string text, int maxLineLength = MaxLineLength, int linesPerPage = DefaultLinesPerPage, string color = null)
         {
             string wrappedText = WrapText(text, maxLineLength);
             string[] lines = wrappedText.Split('\n');
@@ -130,7 +134,7 @@ namespace GuildMaster.Helpers
 
         public static void DisplayTextWithPaging(string text, string color)
         {
-            DisplayTextWithPaging(text, 80, 16, color);
+            DisplayTextWithPaging(text, MaxLineLength, DefaultLinesPerPage, color);
         }
 
         private static void DisplayLine(string line, string color)
@@ -147,7 +151,7 @@ namespace GuildMaster.Helpers
             }
         }
 
-        public static void DisplayColoredText(string text, string color, int maxLineLength = 80, int linesPerPage = 16)
+        public static void DisplayColoredText(string text, string color, int maxLineLength = MaxLineLength, int linesPerPage = DefaultLinesPerPage)
         {
             DisplayTextWithPaging(text, maxLineLength, linesPerPage, color);
         }
@@ -174,7 +178,7 @@ namespace GuildMaster.Helpers
             return startsWithVowel ? "an" : "a";
         }
 
-        public static void DisplayTextWithMarkup(string text, int maxLineLength = 80)
+        public static void DisplayTextWithMarkup(string text, int maxLineLength = MaxLineLength)
         {
             string[] lines = text.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
 

@@ -525,7 +525,6 @@ namespace GuildMaster.Managers
                         if (activeEnemies != null)
                             HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
                         currentState = CombatState.CombatEnded;
-                        ShowStatusBar(); // Display player status after fleeing
                     }
                     break;
 
@@ -539,7 +538,6 @@ namespace GuildMaster.Managers
                         if (activeEnemies != null)
                             HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
                         currentState = CombatState.CombatEnded;
-                        ShowStatusBar(); // Display player status after fleeing
                     }
                     else
                     {
@@ -2119,7 +2117,6 @@ namespace GuildMaster.Managers
             }
 
             CleanupCombat(player);
-            ShowStatusBar();
         }
 
         private List<Combatant> RollInitiative(Player player, List<NPC> enemies)

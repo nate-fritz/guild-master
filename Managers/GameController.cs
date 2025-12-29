@@ -241,11 +241,13 @@ namespace GuildMaster.Managers
 
             if (currentRoomObj.Exits.ContainsKey(direction))
             {
+                int destinationRoomId = currentRoomObj.Exits[direction];
+
                 // Clear recruit NPCs from current room before leaving
                 recruitNPCManager.ClearDynamicNPCsInRoom(player.CurrentRoom);
 
                 player.PreviousRoom = player.CurrentRoom; // Track previous room for flee
-                player.CurrentRoom = currentRoomObj.Exits[direction];
+                player.CurrentRoom = destinationRoomId;
                 Room newRoom = rooms[player.CurrentRoom];
 
                 player.CurrentHour += 0.25f;

@@ -98,7 +98,16 @@ namespace GuildMaster.Managers
             {
                 AnsiConsole.MarkupLine("1. Manage Party (Add/Remove members)");
                 AnsiConsole.MarkupLine("2. View Recruit Details");
-                AnsiConsole.MarkupLine("3. Manage Quests");
+                // Quest board unlocks after completing Act I
+                if (context.GetQuestFlag("act_1_complete"))
+                {
+                    AnsiConsole.MarkupLine("3. Manage Quests");
+                }
+                // War Room (dev/test feature - toggle with 'warroom' command)
+                if (player.WarRoomEnabled)
+                {
+                    AnsiConsole.MarkupLine("4. Enter War Room [yellow](DEV/TEST)[/]");
+                }
             }
             AnsiConsole.MarkupLine("0. Return to Game");
             AnsiConsole.MarkupLine("");

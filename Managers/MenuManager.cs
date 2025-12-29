@@ -17,6 +17,7 @@ namespace GuildMaster.Managers
             GuildManagePartyAdd,
             GuildManagePartyRemove,
             GuildRecruitDetails,
+            WarRoomMain,
             Stats,
             Inventory,
             Party,
@@ -31,16 +32,18 @@ namespace GuildMaster.Managers
         private UIManager uiManager;
         private SaveGameManager saveManager;
         private QuestManager questManager;
+        private WarRoomManager warRoomManager;
 
         public bool IsInMenu => currentMenu != MenuState.None;
 
-        public MenuManager(GameContext ctx, GuildManager guild, UIManager ui, SaveGameManager save, QuestManager quest)
+        public MenuManager(GameContext ctx, GuildManager guild, UIManager ui, SaveGameManager save, QuestManager quest, WarRoomManager warRoom)
         {
             context = ctx;
             guildManager = guild;
             uiManager = ui;
             saveManager = save;
             questManager = quest;
+            warRoomManager = warRoom;
         }
 
         public void ShowGuildMenu()
@@ -129,6 +132,9 @@ namespace GuildMaster.Managers
                 case MenuState.GuildRecruitDetails:
                     ProcessGuildRecruitDetailsInput(input);
                     break;
+                case MenuState.WarRoomMain:
+                    ProcessWarRoomMainInput(input);
+                    break;
                 case MenuState.Save:
                     await ProcessSaveInputAsync(input);
                     break;
@@ -162,10 +168,22 @@ namespace GuildMaster.Managers
                     }
                     break;
                 case "3":
-                    if (player.Recruits.Count > 0)
+                    if (player.Recruits.Count > 0 && context.GetQuestFlag("act_1_complete"))
                     {
                         currentMenu = MenuState.None; // Exit guild menu state
                         questManager.StartQuestMenu();
+                    }
+                    else if (player.Recruits.Count > 0 && !context.GetQuestFlag("act_1_complete"))
+                    {
+                        AnsiConsole.MarkupLine("\n[dim]The quest board is not yet available. Complete Act I first.[/]");
+                        guildManager.DisplayGuildMenu();
+                    }
+                    break;
+                case "4":
+                    if (player.Recruits.Count > 0)
+                    {
+                        currentMenu = MenuState.WarRoomMain;
+                        ShowWarRoomMenu();
                     }
                     break;
                 case "0":
@@ -379,6 +397,200 @@ namespace GuildMaster.Managers
                     DisplaySettingsMenu();
                     break;
             }
+        }
+
+        private void ShowWarRoomMenu()
+        {
+            // Initialize War Room if not active
+            if (!warRoomManager.WarRoomState.IsActive)
+            {
+                warRoomManager.InitializeWarRoom();
+            }
+
+            // Display War Room status
+            warRoomManager.DisplayWarRoomStatus();
+
+            // Display menu options
+            AnsiConsole.MarkupLine("[bold]=== ACTIONS ===[/]");
+            AnsiConsole.MarkupLine("1. Create Squad (1 AP) - [dim]Form a team from your recruits[/]");
+            AnsiConsole.MarkupLine("2. Assign Squad to Crisis (1 AP) - [dim]Send squad to resolve active threat[/]");
+            AnsiConsole.MarkupLine("3. Assign Squad to Seal (1 AP) - [dim]Station squad to defend a seal[/]");
+            AnsiConsole.MarkupLine("4. End Turn (Process all actions) - [dim]Resolve combat & spawn new threats[/]");
+            AnsiConsole.MarkupLine("5. View Squad Details - [dim]See squad composition and stats[/]");
+            AnsiConsole.MarkupLine("0. Return to Guild");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+        }
+
+        private void ProcessWarRoomMainInput(string input)
+        {
+            var player = context.Player;
+
+            switch (input)
+            {
+                case "1":
+                    CreateSquadFlow();
+                    break;
+                case "2":
+                    AssignSquadToCrisisFlow();
+                    break;
+                case "3":
+                    AssignSquadToSealFlow();
+                    break;
+                case "4":
+                    warRoomManager.ProcessEndOfTurn();
+                    ShowWarRoomMenu();
+                    break;
+                case "5":
+                    ViewSquadDetailsFlow();
+                    break;
+                case "0":
+                    currentMenu = MenuState.GuildMain;
+                    guildManager.DisplayGuildMenu();
+                    break;
+                default:
+                    AnsiConsole.MarkupLine("[dim]Invalid choice. Please try again.[/]");
+                    ShowWarRoomMenu();
+                    break;
+            }
+        }
+
+        private void CreateSquadFlow()
+        {
+            var player = context.Player;
+            var availableRecruits = player.Recruits.Where(r =>
+                !r.IsOnQuest &&
+                !r.IsResting &&
+                !player.ActiveParty.Contains(r) &&
+                !warRoomManager.WarRoomState.Squads.Any(s => s.Members.Any(m => m.Name == r.Name))
+            ).ToList();
+
+            if (availableRecruits.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[red]No recruits available for squad creation![/]");
+                AnsiConsole.MarkupLine("[dim]Recruits may be on quests, resting, in your party, or already in squads.[/]");
+                ShowWarRoomMenu();
+                return;
+            }
+
+            if (!warRoomManager.WarRoomState.SpendActionPoints(1))
+            {
+                AnsiConsole.MarkupLine("\n[red]Not enough action points![/]");
+                ShowWarRoomMenu();
+                return;
+            }
+
+            AnsiConsole.MarkupLine("\n[bold]=== Create Squad ===[/]");
+            AnsiConsole.MarkupLine("Available recruits:");
+            for (int i = 0; i < availableRecruits.Count; i++)
+            {
+                var r = availableRecruits[i];
+                AnsiConsole.MarkupLine($"{i + 1}. {r.Name} ({r.Class?.Name}) - HP: {r.Health}/{r.MaxHealth}, ATK: {r.AttackDamage}, DEF: {r.Defense}");
+            }
+
+            AnsiConsole.MarkupLine("\n[dim]Enter recruit numbers separated by commas (e.g., 1,2,3) - Max 4 members:[/]");
+            AnsiConsole.MarkupLine("[yellow]NOTE: This is a test UI. In final version, this will be more polished.[/]");
+
+            // For now, just create a simple test squad with the first available recruit
+            // This is temporary test code
+            var testSquad = new List<Recruit> { availableRecruits[0] };
+            string squadName = $"Squad {warRoomManager.WarRoomState.Squads.Count + 1}";
+            warRoomManager.CreateSquad(squadName, testSquad);
+
+            AnsiConsole.MarkupLine("\n[dim]Press Enter to continue...[/]");
+            ShowWarRoomMenu();
+        }
+
+        private void AssignSquadToCrisisFlow()
+        {
+            if (warRoomManager.WarRoomState.ActiveCrises.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[yellow]No active crises to assign squads to![/]");
+                ShowWarRoomMenu();
+                return;
+            }
+
+            if (warRoomManager.WarRoomState.Squads.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[yellow]No squads available! Create a squad first.[/]");
+                ShowWarRoomMenu();
+                return;
+            }
+
+            var availableSquads = warRoomManager.WarRoomState.Squads.Where(s => !s.IsDeployed()).ToList();
+            if (availableSquads.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[yellow]All squads are already deployed![/]");
+                ShowWarRoomMenu();
+                return;
+            }
+
+            AnsiConsole.MarkupLine("\n[bold]=== Assign Squad to Crisis ===[/]");
+            AnsiConsole.MarkupLine("[yellow]NOTE: This is a test UI. In final version, this will allow selection.[/]");
+
+            // For testing, automatically assign first available squad to first crisis
+            var squad = availableSquads[0];
+            var crisis = warRoomManager.WarRoomState.ActiveCrises[0];
+
+            warRoomManager.AssignSquadToCrisis(squad, crisis);
+
+            AnsiConsole.MarkupLine("\n[dim]Press Enter to continue...[/]");
+            ShowWarRoomMenu();
+        }
+
+        private void AssignSquadToSealFlow()
+        {
+            if (warRoomManager.WarRoomState.Squads.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[yellow]No squads available! Create a squad first.[/]");
+                ShowWarRoomMenu();
+                return;
+            }
+
+            var availableSquads = warRoomManager.WarRoomState.Squads.Where(s => !s.IsDeployed()).ToList();
+            if (availableSquads.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[yellow]All squads are already deployed![/]");
+                ShowWarRoomMenu();
+                return;
+            }
+
+            AnsiConsole.MarkupLine("\n[bold]=== Assign Squad to Seal ===[/]");
+            AnsiConsole.MarkupLine("[yellow]NOTE: This is a test UI. In final version, this will allow selection.[/]");
+
+            // For testing, automatically assign first available squad to first seal
+            var squad = availableSquads[0];
+            var seal = warRoomManager.WarRoomState.Seals[0];
+
+            warRoomManager.AssignSquadToSeal(squad, seal);
+
+            AnsiConsole.MarkupLine("\n[dim]Press Enter to continue...[/]");
+            ShowWarRoomMenu();
+        }
+
+        private void ViewSquadDetailsFlow()
+        {
+            if (warRoomManager.WarRoomState.Squads.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[yellow]No squads created yet![/]");
+                ShowWarRoomMenu();
+                return;
+            }
+
+            AnsiConsole.MarkupLine("\n[bold]=== Squad Details ===[/]");
+            foreach (var squad in warRoomManager.WarRoomState.Squads)
+            {
+                AnsiConsole.MarkupLine($"\n[cyan]{squad.Name}[/] (Power: {squad.GetCombatPower()})");
+                AnsiConsole.MarkupLine($"Status: {(squad.IsDeployed() ? $"[yellow]{squad.GetAssignmentDescription()}[/]" : "[green]Available[/]")}");
+                AnsiConsole.MarkupLine("Members:");
+                foreach (var member in squad.Members)
+                {
+                    AnsiConsole.MarkupLine($"  - {member.Name} ({member.Class?.Name}) - HP: {member.Health}/{member.MaxHealth}");
+                }
+            }
+
+            AnsiConsole.MarkupLine("\n[dim]Press Enter to continue...[/]");
+            ShowWarRoomMenu();
         }
     }
 }

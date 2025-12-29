@@ -513,27 +513,155 @@ secretRoom.Exits.Add("west", 4);  // Exit back
 `/home/sinogue/GuildMaster/Data/NPCData.cs` (for NPC dialogue)
 `/home/sinogue/GuildMaster/Data/EventDataDefinitions.cs` (for event dialogue)
 
+### Dialogue Writing Style
+
+**IMPORTANT: All dialogue should use quotation marks and narrative descriptions:**
+
+```csharp
+// ✅ CORRECT - Narrative outside quotes, dialogue inside quotes
+Text = "Gaius smiles warmly. \"Hello there, friend. Welcome to Belum!\""
+
+// ❌ WRONG - No narrative description, no quotation marks
+Text = "Hello there, friend. Welcome to Belum!"
+```
+
+**Format:**
+- **Narrative action/description** (outside quotes) + **actual spoken dialogue** (inside \" quotes)
+- Use `\"` to escape quotes in C# strings
+- Add character actions, expressions, and body language outside the quotes
+- Only put the words they actually speak inside the quotes
+
+**Examples:**
+```csharp
+Text = "The guard glances at you briefly. \"Move along, citizen.\""
+Text = "Silvacis' eyes widen with interest. \"The old guild hall? Interesting...\""
+Text = "Marcus scowls. \"Bandits. A large group has made camp in caves to the southwest.\""
+```
+
 ### Structure
 ```
 Dialogue Tree
-  ├─ Node "greeting"
-  │   ├─ Text: "Hello, traveler!"
+  ├─ Node "first_greeting" (first time meeting)
+  │   ├─ Text: "He rises to meet you. \"Greetings! Name's Gaius.\""
   │   ├─ Choice 1: "Who are you?" → Node "about"
   │   ├─ Choice 2: "Goodbye" → Node "end"
   │
-  ├─ Node "about"
-  │   ├─ Text: "I'm a merchant."
-  │   ├─ Choice 1: "What do you sell?" → Node "shop"
-  │   ├─ Choice 2: "I see." → Node "greeting"
+  ├─ Node "repeat_greeting" (subsequent meetings)
+  │   ├─ Text: "Gaius greets you. \"Good to see you again!\""
+  │   ├─ Choice 1: "About that quest..." → Node "quest" (only if not discussed)
+  │   ├─ Choice 2: "Goodbye" → Node "end"
   │
-  ├─ Node "shop"
-  │   ├─ Text: "I have wares..."
-  │   ├─ Choice 1: "Let's trade" → Node "open_shop"
-  │   ├─ Choice 2: "Maybe later" → Node "greeting"
+  ├─ Node "greeting" (fallback/backward compatibility)
+  │   ├─ Text: "He greets you. \"Hello, traveler!\""
+  │   └─ (Same as first_greeting)
   │
   └─ Node "end"
-      ├─ Text: "Safe travels!"
+      ├─ Text: "He waves. \"Safe travels!\""
       └─ (No choices = conversation ends)
+```
+
+### First Meeting vs. Repeat Greetings
+
+**NPCs should introduce themselves on first meeting, then use shorter greetings afterward.**
+
+The dialogue system automatically tracks which NPCs the player has met. Use these node names:
+- `first_greeting` - Shown the first time player talks to this NPC
+- `repeat_greeting` - Shown on all subsequent conversations
+- `greeting` - Fallback if first/repeat not defined
+
+**Example - Gaius the Farmer:**
+```csharp
+// First time meeting - full introduction
+farmer.Dialogue.Add("first_greeting", new DialogueNode()
+{
+    Text = "As you approach the farmer's stand, he rises to meet you with a smile.<br><br>\"Greetings, friend. Haven't seen you 'round these parts before. Name's Gaius.\"",
+    Choices =
+    {
+        new DialogueNode.Choice { choiceText = "\"Where am I?\"", nextNodeID = "ask_about_area" },
+        new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end" }
+    }
+});
+
+// Subsequent meetings - acknowledges prior meeting
+farmer.Dialogue.Add("repeat_greeting", new DialogueNode()
+{
+    Text = "Gaius looks up from arranging his wares and greets you with a familiar smile.<br><br>\"Good to see you again, {player.name}. What can I do for you?\"",
+    Choices =
+    {
+        new DialogueNode.Choice { choiceText = "\"About that forest...\"", nextNodeID = "ask_about_forest" },
+        new DialogueNode.Choice { choiceText = "\"Just passing through.\"", nextNodeID = "end" }
+    }
+});
+```
+
+### Topic Tracking and Acknowledgment
+
+**NPCs can acknowledge topics you've already discussed.**
+
+Use `RequireDiscussedNode` and `RequireNotDiscussedNode` on choices to show/hide them based on conversation history:
+
+```csharp
+farmer.Dialogue.Add("repeat_greeting", new DialogueNode()
+{
+    Text = "Gaius greets you warmly. \"Back again? What can I help with?\"",
+    Choices =
+    {
+        // Only show if player hasn't asked about forest yet
+        new DialogueNode.Choice {
+            choiceText = "\"Tell me about that forest.\"",
+            nextNodeID = "ask_about_forest",
+            RequireNotDiscussedNode = "ask_about_forest"  // Hide if already discussed
+        },
+
+        // Only show if player HAS discussed the guild
+        new DialogueNode.Choice {
+            choiceText = "\"Any news on recruits?\"",
+            nextNodeID = "recruit_update",
+            RequireDiscussedNode = "explain_guild"  // Show only after discussing guild
+        },
+
+        // Always available
+        new DialogueNode.Choice {
+            choiceText = "\"Just saying hello.\"",
+            nextNodeID = "end"
+        }
+    }
+});
+```
+
+**How it works:**
+- `RequireDiscussedNode = "node_name"` - Choice only appears if player has visited that dialogue node
+- `RequireNotDiscussedNode = "node_name"` - Choice only appears if player has NOT visited that dialogue node
+- System tracks visited nodes per NPC automatically
+- Use this to prevent repetitive conversations and acknowledge player's actions
+
+**Example - Silvacis acknowledges if you've discussed the guild:**
+```csharp
+ranger.Dialogue.Add("repeat_greeting", new DialogueNode()
+{
+    Text = "Silvacis looks up from his search and nods in recognition. \"Ah, it's you again.\"",
+    Choices =
+    {
+        // Only if guild hasn't been mentioned
+        new DialogueNode.Choice {
+            choiceText = "\"I'm rebuilding the Adventurer's Guild. Could use your help.\"",
+            nextNodeID = "mention_guild_first",
+            RequireNotDiscussedNode = "mention_guild_first"
+        },
+
+        // Only if guild HAS been mentioned (amulet quest active)
+        new DialogueNode.Choice {
+            choiceText = "\"Still looking for that amulet?\"",
+            nextNodeID = "main_hub",
+            RequireDiscussedNode = "mention_guild_first"
+        },
+
+        new DialogueNode.Choice {
+            choiceText = "\"Just passing through.\"",
+            nextNodeID = "goodbye"
+        }
+    }
+});
 ```
 
 ### Step-by-Step Process
@@ -541,24 +669,42 @@ Dialogue Tree
 #### Step 1: Create Dialogue Nodes
 ```csharp
 // In NPC definition
-yourNPC.Dialogue.Add("greeting", new DialogueNode()
+yourNPC.Dialogue.Add("first_greeting", new DialogueNode()
 {
-    Text = "Hello there!<br><br>What brings you here?",
+    Text = "A wandering merchant looks up from his wares and greets you with a smile. \"Hello there!<br><br>What brings you here?\"",
     Choices = new List<DialogueNode.Choice>
     {
         new DialogueNode.Choice
         {
-            choiceText = "Who are you?",
+            choiceText = "\"Who are you?\"",
             nextNodeID = "about"
         },
         new DialogueNode.Choice
         {
-            choiceText = "Can you help me?",
+            choiceText = "\"Can you help me?\"",
             nextNodeID = "help"
         },
         new DialogueNode.Choice
         {
-            choiceText = "Goodbye.",
+            choiceText = "\"Goodbye.\"",
+            nextNodeID = "end"
+        }
+    }
+});
+
+yourNPC.Dialogue.Add("repeat_greeting", new DialogueNode()
+{
+    Text = "The merchant nods as you approach. \"Ah, back again! How can I help you today?\"",
+    Choices = new List<DialogueNode.Choice>
+    {
+        new DialogueNode.Choice
+        {
+            choiceText = "\"What do you sell?\"",
+            nextNodeID = "shop"
+        },
+        new DialogueNode.Choice
+        {
+            choiceText = "\"Goodbye.\"",
             nextNodeID = "end"
         }
     }
@@ -566,103 +712,87 @@ yourNPC.Dialogue.Add("greeting", new DialogueNode()
 
 yourNPC.Dialogue.Add("about", new DialogueNode()
 {
-    Text = "I'm a wandering merchant.<br><br>I sell rare goods to adventurers.",
+    Text = "The merchant spreads his arms wide. \"I'm a wandering merchant.<br><br>I sell rare goods to adventurers.\"",
     Choices = new List<DialogueNode.Choice>
     {
         new DialogueNode.Choice
         {
-            choiceText = "What do you sell?",
+            choiceText = "\"What do you sell?\"",
             nextNodeID = "shop"
         },
         new DialogueNode.Choice
         {
-            choiceText = "Talk about something else.",
-            nextNodeID = "greeting"
+            choiceText = "\"Talk about something else.\"",
+            nextNodeID = "repeat_greeting"
         }
     }
 });
 
 yourNPC.Dialogue.Add("end", new DialogueNode()
 {
-    Text = "Farewell, traveler!",
+    Text = "The merchant waves as you leave. \"Farewell, traveler!\"",
     Choices = new List<DialogueNode.Choice>()  // Empty = ends conversation
 });
 ```
 
-### Dialogue Node Naming - IMPORTANT!
+### Dialogue Reset Behavior - IMPORTANT!
 
-#### The Special "end" Node
-**Nodes named "end" have special behavior that resets conversation:**
+**By default, ALL conversations reset to the appropriate greeting when they end.**
+
+This means you don't have to worry about accidentally "locking" NPCs in dialogue nodes. When a conversation ends:
+- **First time meeting**: Next conversation starts at `first_greeting` (or `greeting` if not defined)
+- **Subsequent meetings**: Next conversation starts at `repeat_greeting` (or `greeting` if not defined)
+
+**No special node names required!** You can name your nodes anything you want.
 
 ```csharp
-// ✅ Node named "end" - Conversation resets to "greeting" next time
-farmer.Dialogue.Add("end", new DialogueNode()
+// ✅ ANY ending node - Conversation always resets to greeting
+farmer.Dialogue.Add("farewell", new DialogueNode()
 {
-    Text = "Farewell! Come back anytime.",
-    Choices = new List<DialogueNode.Choice>()  // Empty = conversation ends
+    Text = "The farmer waves. \"Farewell! Come back anytime.\"",
+    Choices = new List<DialogueNode.Choice>()  // Empty = conversation ends & resets
 });
 
-// ⚠️ Node named anything else - NPC remembers this position
-farmer.Dialogue.Add("end_generic", new DialogueNode()
+farmer.Dialogue.Add("busy_working", new DialogueNode()
 {
-    Text = "Goodbye for now.",
-    Choices = new List<DialogueNode.Choice>()  // Empty = conversation ends
+    Text = "The farmer returns to his work. \"Sorry, I'm busy right now.\"",
+    Choices = new List<DialogueNode.Choice>()  // Empty = conversation ends & resets
 });
 ```
 
-**How it works:**
-- When dialogue ends on a node named **"end"**: NPC forgets where you left off, next conversation starts at "greeting" (fresh start)
-- When dialogue ends on any **other node** (like "end_generic"): NPC remembers that node, next conversation continues from there
+**Both of these will reset to greeting when the conversation ends!**
 
-**If you end on a non-"end" terminal node:**
-- Player talks to NPC again → Starts at "end_generic"
-- "end_generic" has no choices → Immediately ends again
-- Result: NPC appears "stuck" and won't talk anymore
+#### Permanently Ending Dialogue (Advanced)
 
-#### Use Cases for Different Terminal Nodes
+**Only use this for special cases where an NPC should refuse to talk again:**
 
-**Use "end" when:**
-- Normal conversation endings
-- Player should be able to restart dialogue from greeting
-- Merchant/vendor conversations (can browse again)
+Set `PermanentlyEndsDialogue = true` on a node to lock dialogue at that position:
 
-**Use other names when:**
-- One-time conversations (NPC says something once, then stops)
-- NPC becomes unavailable after quest completion
-- Progressive dialogue (different responses on subsequent visits)
-
-**Example - Progressive Dialogue:**
 ```csharp
-// First conversation
-farmer.Dialogue.Add("greeting", new DialogueNode()
+// NPC refuses to talk after you insult them
+farmer.Dialogue.Add("insulted", new DialogueNode()
 {
-    Text = "Hello stranger!",
-    Choices =
-    {
-        new DialogueNode.Choice { choiceText = "Tell me about yourself", nextNodeID = "about" }
-    }
-});
-
-farmer.Dialogue.Add("about", new DialogueNode()
-{
-    Text = "I'm a farmer. Thanks for asking!",
-    Choices =
-    {
-        new DialogueNode.Choice { choiceText = "Interesting!", nextNodeID = "post_introduction" }
-    }
-});
-
-// After introduction - different greeting
-farmer.Dialogue.Add("post_introduction", new DialogueNode()
-{
-    Text = "Good to see you again, friend!",
-    Choices =
-    {
-        new DialogueNode.Choice { choiceText = "Goodbye", nextNodeID = "end" }
-    }
+    Text = "The farmer glares at you. \"Get out of my sight! I never want to speak to you again!\"",
+    PermanentlyEndsDialogue = true,  // NPC is locked at this node
+    Choices = new List<DialogueNode.Choice>()
 });
 ```
-Now after first conversation, farmer always greets with "Good to see you again" instead of "Hello stranger".
+
+**What happens:**
+- When this conversation ends, NPC stays at the "insulted" node
+- Next time you talk to them, conversation starts at "insulted" again
+- Since it has no choices, it immediately ends
+- Result: NPC permanently won't talk to you
+
+**Use cases for PermanentlyEndsDialogue:**
+- NPC is angry and refuses further conversation
+- Quest failed permanently due to player choice
+- NPC leaves/dies as part of story
+
+**Don't use this for:**
+- Normal conversation endings (they reset automatically now!)
+- Merchant/vendor conversations
+- Any NPC that should remain talkable
 
 #### Dynamic Text Substitution (Placeholders)
 
