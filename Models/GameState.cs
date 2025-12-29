@@ -33,7 +33,13 @@ namespace GuildMaster.Models
         public bool AutoCombatEnabled { get; set; } = false;
         public bool TutorialsEnabled { get; set; } = true;
         public bool GoreEnabled { get; set; } = false;
+        public bool RoomNumbersEnabled { get; set; } = false;
         public bool DebugLogsEnabled { get; set; } = false;
+        public bool WarRoomEnabled { get; set; } = false;  // Dev/test flag for War Room access
+
+        // Dialogue tracking for repeat conversations and topic acknowledgment
+        public HashSet<string> MetNPCs { get; set; }  // Track which NPCs the player has met
+        public Dictionary<string, HashSet<string>> VisitedDialogueNodes { get; set; }  // Track visited dialogue nodes per NPC
 
         // Time
         public int CurrentDay { get; set; }
@@ -86,6 +92,8 @@ namespace GuildMaster.Models
             ShownMessages = new HashSet<string>();
             CompletedMilestones = new HashSet<string>();
             RoomStateOverrides = new Dictionary<int, string>();
+            MetNPCs = new HashSet<string>();
+            VisitedDialogueNodes = new Dictionary<string, HashSet<string>>();
         }
     }
 
