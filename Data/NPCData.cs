@@ -269,9 +269,81 @@ namespace GuildMaster.Data
 
             NPC priestess = new NPC();
             priestess.Name = "Caelia";
-            priestess.Description = "A slender woman with fair skin and golden hair greets you with a smile.  While her face shows no signs of old age, her silver eyes seem to contain endless wisdom.  She is dressed simply in white robes, with a single silver armlet around her left bicep.";
-            priestess.ShortDescription = "A priestess";
+            priestess.Description = "A woman of striking beauty stands before the altar, her age impossible to determine - she could be anywhere from thirty to three hundred. Golden hair cascades down her back, and her silver eyes hold an otherworldly luminescence. She wears the ornate robes of a High Priestess of Keius, marked with symbols of light and knowledge. As you approach, she turns with a knowing smile, as if she sensed your presence before you entered.";
+            priestess.ShortDescription = "High Priestess Caelia";
 
+            // First greeting
+            priestess.Dialogue.Add("first_greeting", new DialogueNode()
+            {
+                Text = "The priestess regards you with eyes that seem to see more than most. \"Welcome to the Temple of Keius, traveler. I am Caelia, High Priestess of this sanctuary.\" Her voice is melodious, almost musical. \"You carry yourself like one who has seen battle. Come seeking guidance, or merely respite?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Just looking around. Beautiful temple.\"", nextNodeID = "end" },
+                    new DialogueNode.Choice { choiceText = "\"Tell me about Keius.\"", nextNodeID = "about_keius" }
+                }
+            });
+
+            // Repeat greeting
+            priestess.Dialogue.Add("repeat_greeting", new DialogueNode()
+            {
+                Text = "Caelia's luminous eyes find yours as you approach. \"Welcome back.\" There's a hint of warmth in her smile. \"How may I assist you today?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "\"Senator Quintus sent me. He needs your help with some symbols.\"",
+                        nextNodeID = "quintus_symbols",
+                        IsAvailable = (inventory) => (inventory.Contains("cultist orders") || inventory.Contains("ritual notes") || inventory.Contains("philosophical tract"))
+                    },
+                    new DialogueNode.Choice { choiceText = "\"Tell me about Keius.\"", nextNodeID = "about_keius" },
+                    new DialogueNode.Choice { choiceText = "\"Just passing through.\"", nextNodeID = "end" }
+                }
+            });
+
+            priestess.Dialogue.Add("about_keius", new DialogueNode()
+            {
+                Text = "Caelia's expression becomes reverent. \"Keius is the god of light, knowledge, and truth. He teaches that understanding dispels darkness, and that wisdom is the greatest weapon against chaos.\" She gestures to the temple around you. \"This sanctuary has stood for centuries, a beacon against ignorance and fear.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Thank you for explaining.\"", nextNodeID = "end" }
+                }
+            });
+
+            // Quest dialogue - examining the symbols
+            priestess.Dialogue.Add("quintus_symbols", new DialogueNode()
+            {
+                Text = "Caelia's expression becomes serious. \"Quintus mentioned you might come. He sent a messenger ahead with the documents you discovered.\" She produces the cultist papers from a nearby table.<br><br>\"These symbols...\" Her voice drops. \"They're old. Older than the Empire. They reference the Five Seals - ancient bindings created to contain primordial chaos. Most believe them to be myth, but...\" She looks directly at you. \"I know they are real.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"What do the symbols say?\"", nextNodeID = "explain_symbols" }
+                }
+            });
+
+            priestess.Dialogue.Add("explain_symbols", new DialogueNode()
+            {
+                Text = "\"They're ritual markers,\" Caelia explains, tracing the symbols with one elegant finger. \"The cult isn't just planning an assassination - they're planning to use the deaths, the chaos, the fear generated during the festival as fuel. Fuel to weaken the seals.\"<br><br>She looks up, and for the first time you see genuine concern in her ageless eyes. \"If they succeed, if even one seal fails completely, the cascade effect could unravel all five. The things that were bound...\" She trails off. \"We need to discuss this properly. Somewhere more secure.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Where do you suggest?\"", nextNodeID = "suggest_guild" }
+                }
+            });
+
+            priestess.Dialogue.Add("suggest_guild", new DialogueNode()
+            {
+                Text = "Caelia considers for a moment. \"Your guild hall. The study there would be appropriate - private, yet neutral ground.\" A slight smile crosses her features. \"Besides, I've been curious about the one rebuilding the old Adventurer's Guild. This will give me a chance to meet you properly.\"<br><br>She gathers the documents. \"I'll inform Quintus. We'll meet you there shortly. I have... preparations to make first.\"",
+                Action = new DialogueAction { Type = "set_quest_flag", Parameters = { {"flag", "guild_council_ready"}, {"value", "true"} } },
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I'll see you there.\"", nextNodeID = "end_council" }
+                }
+            });
+
+            priestess.Dialogue.Add("end_council", new DialogueNode()
+            {
+                Text = "Caelia inclines her head gracefully. \"Until then, guild master.\"",
+                Choices = { }
+            });
+
+            // Keep original greeting for backward compatibility
             priestess.Dialogue.Add("greeting", new DialogueNode()
             {
                 Text = "The priestess turns towards you with a smile. \"Welcome. I am Caelia, Priestess of Keius. What brings you to his temple?\"",
@@ -283,7 +355,7 @@ namespace GuildMaster.Data
 
             priestess.Dialogue.Add("end", new DialogueNode ()
             {
-                Text = "Caelia gives you a quizzical look, then smiles softly. \"Very well. When you're ready, come see me again.\"",
+                Text = "\"May Keius light your path.\"",
                 Choices = { }
             });
 
@@ -1281,6 +1353,11 @@ namespace GuildMaster.Data
                 Choices =
                 {
                     new DialogueNode.Choice {
+                        choiceText = "\"Senator, I found these documents in a cultist hideout. You should see this.\"",
+                        nextNodeID = "hideout_discovered",
+                        IsAvailable = (inventory) => (inventory.Contains("cultist orders") || inventory.Contains("ritual notes") || inventory.Contains("philosophical tract"))
+                    },
+                    new DialogueNode.Choice {
                         choiceText = "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
                         nextNodeID = "give_letter",
                         IsAvailable = (inventory) => inventory.Contains("indecipherable letter"),
@@ -1332,7 +1409,7 @@ namespace GuildMaster.Data
             // Translation ready - player returns after 24 hours
             quintus.Dialogue.Add("translation_ready", new DialogueNode()
             {
-                Text = "Quintus rises as you approach, holding both the original letter and a fresh parchment with his translation.<br><br>\"Ah, excellent timing. I've finished the translation. This is... quite interesting.\" He hands you the documents. \"The letter is actually two parts - the original message is in one hand, the response in another. It appears to be correspondence between the Bandit Warlord and someone else.\"<br><br>\"The first part asks 'How soon can you deliver on your part of the plan?' The response - written by the Warlord but apparently never sent - essentially says he's no longer interested. He's 'filthy rich and well-protected,' to use his words.\"<br><br>He taps the bottom of the page. \"This is the intriguing part. There's a passphrase at the end: 'Ordo Dissolutus.' I suspect this was meant to authenticate the bearer of the letter. If someone is using passphrases, they're protecting something valuable.\"",
+                Text = "Quintus rises as you approach, holding both the original letter and a fresh parchment with his translation. \"Ah, excellent timing. I've finished the translation.\" He hands you the documents.<br><br>\"The letter has two parts - one asking 'How soon can you deliver on your part of the plan?' and the Warlord's unsent response saying he's no longer interested.\"<br><br>He taps the bottom of the page. \"There's a passphrase at the end: 'Ordo Dissolutus.' If someone is using passphrases, they're protecting something valuable.\"",
                 Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "translated letter"} } },
                 Choices =
                 {
@@ -1349,6 +1426,32 @@ namespace GuildMaster.Data
                 }
             });
 
+            // Post-hideout dialogue - player returns with cultist documents
+            quintus.Dialogue.Add("hideout_discovered", new DialogueNode()
+            {
+                Text = "Quintus's eyes widen as he examines the documents you've brought. \"By the gods... 'Strike at the heart,' 'remove the pillar,' references to the anniversary festival...\"<br><br>He spreads the papers across his desk, his expression growing darker. \"This is worse than I feared. This isn't just bandits or common criminals. This is an organized cult planning something catastrophic.\"<br><br>He points to symbols at the bottom of one document. \"These markings here - I can't decipher them. They appear to be religious in nature, but not from any faith I recognize.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Do you know anyone who could help with those symbols?\"", nextNodeID = "introduce_caelia" }
+                }
+            });
+
+            quintus.Dialogue.Add("introduce_caelia", new DialogueNode()
+            {
+                Text = "Quintus nods thoughtfully. \"There is someone. Caelia, High Priestess of Keius at the temple here in Belum. She's... remarkably knowledgeable about ancient faiths and forgotten symbols. If anyone can decipher these markings, it's her.\"<br><br>He gathers the documents. \"The temple is in the northwestern part of town. Meet me there - I'll bring these documents and we'll see what Caelia can tell us. This is too important to ignore.\"",
+                Action = new DialogueAction { Type = "set_quest_flag", Parameters = { {"flag", "quintus_temple_meeting"}, {"value", "true"} } },
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I'll head there now.\"", nextNodeID = "end_temple_quest" }
+                }
+            });
+
+            quintus.Dialogue.Add("end_temple_quest", new DialogueNode()
+            {
+                Text = "\"Good. I'll gather what we need and meet you there shortly.\"",
+                Choices = { }
+            });
+
             quintus.Dialogue.Add("end", new DialogueNode()
             {
                 Text = "Quintus nods courteously. \"Safe travels, adventurer. My door is always open if you need assistance.\"",
@@ -1356,6 +1459,332 @@ namespace GuildMaster.Data
             });
 
             npcs.Add(quintus.Name, quintus);
+
+            // Caelia - High Priestess of Keius at temple
+            // ===== CULTIST ENEMIES - Forest Hideout (Level 6-8) =====
+
+            // Cultist Scout - Light, fast, weak
+            NPC cultistScout = new NPC();
+            cultistScout.Name = "Cultist Scout";
+            cultistScout.Description = "A lightly-armored figure in tattered robes, moving with nervous energy. Their eyes dart constantly, watching for intruders.";
+            cultistScout.ShortDescription = "A cultist scout";
+            cultistScout.IsHostile = true;
+            cultistScout.Health = 40;
+            cultistScout.MaxHealth = 40;
+            cultistScout.Energy = 20;
+            cultistScout.MaxEnergy = 20;
+            cultistScout.AttackDamage = 8;
+            cultistScout.Defense = 3;
+            cultistScout.Speed = 14;
+            cultistScout.DamageCount = 1;
+            cultistScout.DamageDie = 8;
+            cultistScout.DamageBonus = 6;
+            cultistScout.MinGold = 10;
+            cultistScout.MaxGold = 25;
+            cultistScout.ExperienceReward = 100;
+            cultistScout.Role = EnemyRole.Melee;
+            cultistScout.LootTable = new Dictionary<string, int> { {"potion", 40}, {"energy potion", 30}, {"dagger", 15} };
+
+            // Cultist Zealot - Medium, basic magic user
+            NPC cultistZealot = new NPC();
+            cultistZealot.Name = "Cultist Zealot";
+            cultistZealot.Description = "A robed figure clutching a profane symbol, eyes burning with fanatic devotion. Dark energy crackles around their fingertips.";
+            cultistZealot.ShortDescription = "A cultist zealot";
+            cultistZealot.IsHostile = true;
+            cultistZealot.Health = 55;
+            cultistZealot.MaxHealth = 55;
+            cultistZealot.Energy = 35;
+            cultistZealot.MaxEnergy = 35;
+            cultistZealot.AttackDamage = 10;
+            cultistZealot.Defense = 4;
+            cultistZealot.Speed = 10;
+            cultistZealot.DamageCount = 1;
+            cultistZealot.DamageDie = 10;
+            cultistZealot.DamageBonus = 8;
+            cultistZealot.MinGold = 15;
+            cultistZealot.MaxGold = 30;
+            cultistZealot.ExperienceReward = 120;
+            cultistZealot.Role = EnemyRole.Ranged;
+            cultistZealot.AbilityNames = new List<string> { "Entropy Bolt", "Void Touch" };
+            cultistZealot.LootTable = new Dictionary<string, int> { {"potion", 50}, {"energy potion", 60}, {"scroll of fireball", 20} };
+
+            // Cultist Defacer - Equipment damage abilities
+            NPC cultistDefacer = new NPC();
+            cultistDefacer.Name = "Cultist Defacer";
+            cultistDefacer.Description = "A wild-eyed cultist carrying tools of destruction - hammers, chisels, and acid vials. They exist to unmake and destroy.";
+            cultistDefacer.ShortDescription = "A cultist defacer";
+            cultistDefacer.IsHostile = true;
+            cultistDefacer.Health = 60;
+            cultistDefacer.MaxHealth = 60;
+            cultistDefacer.Energy = 25;
+            cultistDefacer.MaxEnergy = 25;
+            cultistDefacer.AttackDamage = 11;
+            cultistDefacer.Defense = 5;
+            cultistDefacer.Speed = 9;
+            cultistDefacer.DamageCount = 1;
+            cultistDefacer.DamageDie = 12;
+            cultistDefacer.DamageBonus = 9;
+            cultistDefacer.MinGold = 12;
+            cultistDefacer.MaxGold = 28;
+            cultistDefacer.ExperienceReward = 130;
+            cultistDefacer.Role = EnemyRole.Melee;
+            cultistDefacer.AbilityNames = new List<string> { "Corrosive Strike" };
+            cultistDefacer.LootTable = new Dictionary<string, int> { {"potion", 45}, {"antidote", 50} };
+
+            // Cultist Philosopher - Support, buffs other cultists
+            NPC cultistPhilosopher = new NPC();
+            cultistPhilosopher.Name = "Cultist Philosopher";
+            cultistPhilosopher.Description = "An older cultist in pristine robes, speaking in measured tones about entropy and decay. Their calm demeanor is unnerving.";
+            cultistPhilosopher.ShortDescription = "A cultist philosopher";
+            cultistPhilosopher.IsHostile = true;
+            cultistPhilosopher.Health = 50;
+            cultistPhilosopher.MaxHealth = 50;
+            cultistPhilosopher.Energy = 40;
+            cultistPhilosopher.MaxEnergy = 40;
+            cultistPhilosopher.AttackDamage = 7;
+            cultistPhilosopher.Defense = 6;
+            cultistPhilosopher.Speed = 8;
+            cultistPhilosopher.DamageCount = 1;
+            cultistPhilosopher.DamageDie = 6;
+            cultistPhilosopher.DamageBonus = 5;
+            cultistPhilosopher.MinGold = 20;
+            cultistPhilosopher.MaxGold = 40;
+            cultistPhilosopher.ExperienceReward = 140;
+            cultistPhilosopher.Role = EnemyRole.Support;
+            cultistPhilosopher.AbilityNames = new List<string> { "Defensive Stance" };
+            cultistPhilosopher.LootTable = new Dictionary<string, int> { {"energy potion", 70}, {"greater potion", 40}, {"scroll of protection", 25} };
+
+            // Cultist Archivist - Knowledge-themed attacks
+            NPC cultistArchivist = new NPC();
+            cultistArchivist.Name = "Cultist Archivist";
+            cultistArchivist.Description = "A robed figure surrounded by torn pages and ash. They carry burning torches and seem to delight in destroying written knowledge.";
+            cultistArchivist.ShortDescription = "A cultist archivist";
+            cultistArchivist.IsHostile = true;
+            cultistArchivist.Health = 52;
+            cultistArchivist.MaxHealth = 52;
+            cultistArchivist.Energy = 30;
+            cultistArchivist.MaxEnergy = 30;
+            cultistArchivist.AttackDamage = 9;
+            cultistArchivist.Defense = 4;
+            cultistArchivist.Speed = 11;
+            cultistArchivist.DamageCount = 2;
+            cultistArchivist.DamageDie = 6;
+            cultistArchivist.DamageBonus = 7;
+            cultistArchivist.MinGold = 15;
+            cultistArchivist.MaxGold = 35;
+            cultistArchivist.ExperienceReward = 125;
+            cultistArchivist.Role = EnemyRole.Ranged;
+            cultistArchivist.AbilityNames = new List<string> { "Flame Bolt" };
+            cultistArchivist.LootTable = new Dictionary<string, int> { {"potion", 50}, {"energy potion", 55}, {"scroll of fireball", 30} };
+
+            // Cultist Breaker - High damage to structures/armor
+            NPC cultistBreaker = new NPC();
+            cultistBreaker.Name = "Cultist Breaker";
+            cultistBreaker.Description = "A hulking cultist wielding a massive sledgehammer. Their robes are torn, revealing scarred muscles. They live to destroy.";
+            cultistBreaker.ShortDescription = "A cultist breaker";
+            cultistBreaker.IsHostile = true;
+            cultistBreaker.Health = 70;
+            cultistBreaker.MaxHealth = 70;
+            cultistBreaker.Energy = 20;
+            cultistBreaker.MaxEnergy = 20;
+            cultistBreaker.AttackDamage = 14;
+            cultistBreaker.Defense = 6;
+            cultistBreaker.Speed = 7;
+            cultistBreaker.DamageCount = 1;
+            cultistBreaker.DamageDie = 14;
+            cultistBreaker.DamageBonus = 12;
+            cultistBreaker.MinGold = 18;
+            cultistBreaker.MaxGold = 35;
+            cultistBreaker.ExperienceReward = 145;
+            cultistBreaker.Role = EnemyRole.Melee;
+            cultistBreaker.AbilityNames = new List<string> { "Crushing Blow" };
+            cultistBreaker.LootTable = new Dictionary<string, int> { {"potion", 60}, {"greater potion", 35}, {"battle axe", 25} };
+
+            // Cultist Lieutenant - Mini-boss with combination abilities
+            NPC cultistLieutenant = new NPC();
+            cultistLieutenant.Name = "Cultist Lieutenant";
+            cultistLieutenant.Description = "A scarred veteran cultist in ornate defaced robes, wielding both blade and dark magic. Their eyes hold the certainty of fanaticism.";
+            cultistLieutenant.ShortDescription = "A cultist lieutenant";
+            cultistLieutenant.IsHostile = true;
+            cultistLieutenant.Health = 75;
+            cultistLieutenant.MaxHealth = 75;
+            cultistLieutenant.Energy = 40;
+            cultistLieutenant.MaxEnergy = 40;
+            cultistLieutenant.AttackDamage = 12;
+            cultistLieutenant.Defense = 7;
+            cultistLieutenant.Speed = 11;
+            cultistLieutenant.DamageCount = 2;
+            cultistLieutenant.DamageDie = 8;
+            cultistLieutenant.DamageBonus = 10;
+            cultistLieutenant.MinGold = 25;
+            cultistLieutenant.MaxGold = 50;
+            cultistLieutenant.ExperienceReward = 160;
+            cultistLieutenant.Role = EnemyRole.Melee;
+            cultistLieutenant.AbilityNames = new List<string> { "Entropy Bolt", "Crushing Blow" };
+            cultistLieutenant.LootTable = new Dictionary<string, int> { {"greater potion", 80}, {"greater energy potion", 60}, {"steel gladius", 40}, {"scroll of haste", 25} };
+
+            // Cultist Unraveler - Reality-bending magic user
+            NPC cultistUnraveler = new NPC();
+            cultistUnraveler.Name = "Cultist Unraveler";
+            cultistUnraveler.Description = "A hunched figure whose very presence seems to distort the air. Reality ripples around them as they chant words that unmake.";
+            cultistUnraveler.ShortDescription = "A cultist unraveler";
+            cultistUnraveler.IsHostile = true;
+            cultistUnraveler.Health = 48;
+            cultistUnraveler.MaxHealth = 48;
+            cultistUnraveler.Energy = 45;
+            cultistUnraveler.MaxEnergy = 45;
+            cultistUnraveler.AttackDamage = 11;
+            cultistUnraveler.Defense = 3;
+            cultistUnraveler.Speed = 12;
+            cultistUnraveler.DamageCount = 2;
+            cultistUnraveler.DamageDie = 8;
+            cultistUnraveler.DamageBonus = 8;
+            cultistUnraveler.MinGold = 20;
+            cultistUnraveler.MaxGold = 45;
+            cultistUnraveler.ExperienceReward = 150;
+            cultistUnraveler.Role = EnemyRole.Ranged;
+            cultistUnraveler.AbilityNames = new List<string> { "Void Touch", "Entropy Bolt", "Flame Bolt" };
+            cultistUnraveler.LootTable = new Dictionary<string, int> { {"greater energy potion", 80}, {"elixir of vigor", 30}, {"scroll of fireball", 35}, {"scroll of healing", 25} };
+
+            // Archon Malachar - Cultist Leader Boss (Level 8)
+            NPC archonMalachar = new NPC();
+            archonMalachar.Name = "Archon Malachar";
+            archonMalachar.Description = "The cult leader stands before an altar of defaced idols, radiating dark purpose. His robes are covered in symbols of entropy and decay. In his hand, a ritual dagger pulses with unnatural energy.";
+            archonMalachar.ShortDescription = "Archon Malachar";
+            archonMalachar.PreCombatDialogue = "Archon Malachar turns from the altar, his eyes burning with fanatic certainty. \"You've come far, but you understand nothing. The Empire built its glory on stolen foundations - ancient seals that bind what should be free. We will undo their theft. We will return everything to its natural state.\" He raises the ritual dagger. \"Your interference ends here.\"";
+            archonMalachar.IsHostile = true;
+            archonMalachar.Health = 95;
+            archonMalachar.MaxHealth = 95;
+            archonMalachar.Energy = 50;
+            archonMalachar.MaxEnergy = 50;
+            archonMalachar.AttackDamage = 13;
+            archonMalachar.Defense = 8;
+            archonMalachar.Speed = 13;
+            archonMalachar.DamageCount = 2;
+            archonMalachar.DamageDie = 10;
+            archonMalachar.DamageBonus = 11;
+            archonMalachar.MinGold = 50;
+            archonMalachar.MaxGold = 100;
+            archonMalachar.ExperienceReward = 250;
+            archonMalachar.Role = EnemyRole.Ranged;
+            archonMalachar.AbilityNames = new List<string> { "Entropy Bolt", "Void Touch", "Flame Bolt" };
+            archonMalachar.LootTable = new Dictionary<string, int>
+            {
+                {"ritual dagger", 100},  // Quest item
+                {"cultist orders", 100},  // Quest document
+                {"greater potion", 100},
+                {"greater energy potion", 80},
+                {"elixir of vigor", 50},
+                {"scroll of haste", 40},
+                {"scroll of protection", 35}
+            };
+
+            npcs.Add(cultistScout.Name, cultistScout);
+            npcs.Add(cultistZealot.Name, cultistZealot);
+            npcs.Add(cultistDefacer.Name, cultistDefacer);
+            npcs.Add(cultistPhilosopher.Name, cultistPhilosopher);
+            npcs.Add(cultistArchivist.Name, cultistArchivist);
+            npcs.Add(cultistBreaker.Name, cultistBreaker);
+            npcs.Add(cultistLieutenant.Name, cultistLieutenant);
+            npcs.Add(cultistUnraveler.Name, cultistUnraveler);
+            npcs.Add(archonMalachar.Name, archonMalachar);
+
+            // Althea - Oracle recruit found in cultist prison (Room 115)
+            NPC althea = new NPC();
+            althea.Name = "Althea";
+            althea.Description = "A young woman in tattered oracle robes huddles in the corner of the cell. Despite obvious signs of captivity - gaunt cheeks, bruises, dirt-streaked face - her eyes still glow with an eerie inner light. She watches you with a mixture of hope and wariness, as if she's seen too many visions of betrayal to trust easily. Silver hair falls in tangles around her face, and strange rune-tattoos shimmer faintly on her forearms.";
+            althea.ShortDescription = "An imprisoned oracle";
+            althea.IsHostile = false;
+            althea.Health = 40;
+            althea.MaxHealth = 40;
+            althea.Energy = 50;
+            althea.MaxEnergy = 50;
+            althea.AttackDamage = 8;
+            althea.Defense = 3;
+            althea.Speed = 10;
+
+            // Althea dialogue - First meeting (imprisoned)
+            althea.Dialogue.Add("first_greeting", new DialogueNode()
+            {
+                Text = "The woman in the cell rises slowly, gripping the bars for support. Her eyes - glowing with an otherworldly light - study you intensely.<br><br>\"You... you're not one of them,\" she says, her voice hoarse from disuse. \"I didn't foresee this. My visions showed only darkness and spirals... but you're here. How?\"<br><br>She seems to catch herself, taking a shaky breath. \"Forgive me. I am Althea. An oracle... or I was, before they took me.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Who took you? The cultists?\"", nextNodeID = "ask_about_cultists" },
+                    new DialogueNode.Choice { choiceText = "\"Are you alright? How long have you been here?\"", nextNodeID = "ask_about_condition" }
+                }
+            });
+
+            // Subsequent meetings (still imprisoned, before recruitment)
+            althea.Dialogue.Add("repeat_greeting", new DialogueNode()
+            {
+                Text = "Althea looks up as you approach the cell, a weak smile crossing her face. \"You came back. I... I wasn't sure you would.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "\"Tell me more about what the cultists are planning.\"",
+                        nextNodeID = "explain_cult_plan",
+                        RequireNotDiscussedNode = "explain_cult_plan"
+                    },
+                    new DialogueNode.Choice {
+                        choiceText = "\"I want to help you. Will you join my guild?\"",
+                        nextNodeID = "offer_recruitment"
+                    },
+                    new DialogueNode.Choice { choiceText = "\"I need to go for now.\"", nextNodeID = "end" }
+                }
+            });
+
+            althea.Dialogue.Add("ask_about_cultists", new DialogueNode()
+            {
+                Text = "Althea's expression darkens. \"The Ordo Dissolutus. The Dissolved Order. They call themselves philosophers, but they're fanatics. They worship entropy, decay, the unmaking of all things.\"<br><br>She grips the bars tighter. \"They took me because of my visions. They wanted to know about the seals - the ancient barriers that hold back chaos. When I wouldn't help them... they locked me here.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"What are they planning?\"", nextNodeID = "explain_cult_plan" }
+                }
+            });
+
+            althea.Dialogue.Add("ask_about_condition", new DialogueNode()
+            {
+                Text = "Althea looks down at her tattered robes and bruised arms. \"I... I don't know how long it's been. Days? Weeks? Time blurs when you're locked in darkness.\"<br><br>\"They fed me enough to keep me alive. Questioned me endlessly about the seals, about my visions. But I wouldn't tell them what they wanted to know.\"<br><br>Her glowing eyes meet yours. \"Thank you for asking. It's been... a very long time since anyone showed me kindness.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"What were they questioning you about?\"", nextNodeID = "ask_about_cultists" }
+                }
+            });
+
+            althea.Dialogue.Add("explain_cult_plan", new DialogueNode()
+            {
+                Text = "Althea's eyes unfocus slightly, as if seeing something far away. \"They're planning something during the anniversary festival in Aevoria. When the empire celebrates, when crowds gather at the capital...\"<br><br>\"In my visions, I saw fire and screaming. The cult intends to strike at 'the pillar' - they speak in metaphors, but I believe they mean someone important. Perhaps... perhaps the Emperor himself.\"<br><br>She shudders. \"If they weaken the seals at the same time, the chaos released by so many deaths could cascade. The barriers could fail. Ancient things that were bound long ago... they could break free.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"We need to warn the Emperor. But first, let me get you out of here.\"", nextNodeID = "offer_rescue" }
+                }
+            });
+
+            althea.Dialogue.Add("offer_rescue", new DialogueNode()
+            {
+                Text = "Althea's eyes widen. \"You... you'd do that? You don't even know me.\"<br><br>She pauses, and for a moment her eyes glow brighter. \"No... wait. I see it now. You're the guild master. The one trying to rebuild what was lost.\"<br><br>A genuine smile crosses her face. \"Perhaps the visions knew you were coming after all.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Join my guild. Help me stop this cult and protect the empire.\"", nextNodeID = "offer_recruitment" }
+                }
+            });
+
+            althea.Dialogue.Add("offer_recruitment", new DialogueNode()
+            {
+                Text = "Althea straightens despite her weakened state, determination replacing the fear in her eyes.<br><br>\"Yes. I will join you. My visions may be clouded, but I can see that our paths are meant to cross. Together, we can stop the Ordo Dissolutus.\"<br><br>She reaches through the bars. \"Once you defeat their leader, you should be able to find a key to this cell. Then we can leave this place and warn Aevoria.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I'll find that key and get you out of here.\"", nextNodeID = "end" }
+                }
+            });
+
+            althea.Dialogue.Add("end", new DialogueNode()
+            {
+                Text = "Althea nods gratefully. \"Thank you. Be careful - the cultists are dangerous, and their leader is even more so.\"",
+                Choices = { } // Conversation ends
+            });
+
+            npcs.Add(althea.Name, althea);
 
             return npcs;
         }
