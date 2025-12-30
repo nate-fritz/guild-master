@@ -74,6 +74,71 @@
 
 ---
 
+## Undocumented Notes / Session Context
+
+**IMPORTANT:** These notes capture context, incomplete work, and technical debt not fully documented in formal log entries.
+
+### Known Incomplete Work
+1. **Kill Message Capitalization (PARTIAL FIX)** - Only 1 of ~76 messages fixed
+   - Issue: Messages using `{killerName}'s` display as "You's blade" for player
+   - Fix needed: Replace with `{(killerName == "You" ? "Your" : killerName + "'s")}`
+   - Location: `Managers/CombatManager.cs` lines ~3300-3500
+   - Previous attempt with `sed` failed due to syntax breaking
+   - Decision: Documented in log, deferred to future session
+
+2. **Caelia Flirty Dialogue** - User mentioned but not implemented
+   - User said: "Beautiful, seemingly ageless, Flirty with player (optional reciprocation)"
+   - Current implementation: Professional priestess dialogue only
+   - Could add optional flirty dialogue choices in first_greeting/repeat_greeting
+   - Low priority - user said "we'll fine tune these later"
+
+3. **Travel to Aevoria Event** - Next major quest step needed
+   - Quest flag "aevoria_travel_ready" is set by council meeting
+   - Need to create: Travel event/transition to Aevoria region
+   - User mentioned: 3-day time skip during travel
+   - Introduces Act II content (Imperial capital, Emperor, assassination plot)
+
+### Quest Chain Flow (Current State)
+```
+✅ Bandit Warlord → Cultist Documents
+✅ Quintus (Town Hall) → Examine documents → Timer (24h)
+✅ Quintus → Translation ready → Directs to temple
+✅ Speak "Ordo Dissolutus" → Room 53 fog clears
+✅ Room 63 → Cultist hideout (Archon boss fight)
+✅ Quintus → Show cultist documents → Temple meeting
+✅ Caelia (Temple) → Decipher symbols → Guild meeting
+✅ Guild Study Event → Council meeting → Aevoria ready
+⏸️ NEXT: Travel to Aevoria (not yet implemented)
+```
+
+### Technical Notes
+- **NPC Priestess vs Caelia**: Single NPC with Name="Caelia", registered as "priestess" in NPCs dictionary
+  - Initially created duplicate, corrected by updating existing priestess
+  - IsAvailable lambda only checks inventory, not quest flags (limitation discovered)
+- **Event System**: EventManager + EventDataDefinitions working well for cutscenes
+  - Priority system allows event ordering
+  - One-time events tracked automatically
+  - DialogueManager.RegisterEventDialogueTrees() needed for each event dialogue
+- **Recruit Dialogue Enhancement**: testRecruit4, 5, 6 enhanced with branching paths
+  - testRecruit1-3, 7-10 remain simple (conversational, no combat)
+  - Braxus and Livia already had unique dialogue
+  - Design pattern: greeting → choice → multiple paths → combat trigger
+
+### User Preferences Noted
+- Final quest meetings should occur in guild hall study (not temple) to force player to see guild changes
+- Recruits should have unique dialogue paths (distinct personalities)
+- Fine-tuning can happen later, initial implementation should be distinct
+- Conservative with tokens when possible (appreciated documenting incomplete work)
+
+### File Locations Reference
+- **Quintus NPC**: `Data/NPCData.cs` lines ~1265-1390
+- **Caelia/Priestess NPC**: `Data/NPCData.cs` lines 270-360
+- **Guild Council Event**: `Data/EventDataDefinitions.cs` lines 104-131, 235-307
+- **Test Recruits**: `Data/NPCData.cs` lines 1132-1390
+- **Combat Kill Messages**: `Managers/CombatManager.cs` lines ~3300-3500
+
+---
+
 ## Development Log
 
 ## [2025-12-29] - Caelia Quest Expansion & Guild Council Meeting Event
