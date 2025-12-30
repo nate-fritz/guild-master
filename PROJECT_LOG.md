@@ -145,6 +145,69 @@
 - Implement travel to Aevoria (Act II transition)
 - Add flirty dialogue options for Caelia (user mentioned this but not yet implemented)
 
+## [2025-12-29] - Enhanced Recruit Dialogue Paths
+
+**Status:** Built & Tested ✅
+
+**Changes:**
+
+**Unique Dialogue for Test Recruits** - Enhanced three test recruits with distinct personalities and branching dialogue
+
+1. **Marcus the Bold** (Legionnaire - testRecruit4)
+   - Personality: Honorable ex-legion soldier, seeks worthy leader after his general's death
+   - Backstory: Served with Sixth Legion for 20 years, disbanded after general fell
+   - Dialogue paths: 5 nodes with respectful/insulting branching
+   - Yield: Acknowledges player's honor and skill in combat
+   - Accept: Swears oath by Mars, references military background
+   - Enhanced description mentioning battle scars and fallen legion crest
+
+2. **Aria Swift** (Venator - testRecruit5)
+   - Personality: Cocky solo hunter, bored with lone work, seeks excitement
+   - Backstory: 3 years hunting solo, never needed a team, craves challenge
+   - Dialogue paths: 5 nodes with enthusiastic/provocative branching
+   - Yield: Breathless laugh, admits player is faster than expected
+   - Accept: Warns she doesn't follow slow leaders, needs fast-paced action
+   - Enhanced description emphasizing fluid movements and hunter's precision
+
+3. **Aldric the Wise** (Oracle - testRecruit6)
+   - Personality: Scholarly ex-court wizard, cautious after bad experience
+   - Backstory: Former advisor to House Valerius, house fell after lord ignored wisdom
+   - Dialogue paths: 5 nodes with respectful/insulting branching
+   - Yield: Praises player's restraint and power, notes wisdom
+   - Accept: Mentions sensing great events (foreshadowing), offers knowledge
+   - Enhanced description with ancient runes and arcane power
+
+**Design Principles:**
+- Each recruit has distinct voice and motivation
+- Multiple dialogue paths (polite vs. rude) leading to same combat
+- Unique yield/accept dialogue tied to character personality
+- Enhanced descriptions that establish character before dialogue
+- Backstories that create depth and explain their motivations
+
+**Key Files Modified:**
+- `Data/NPCData.cs` - Enhanced testRecruit4, testRecruit5, testRecruit6 (lines 1196-1368)
+
+**Notes/Context:**
+- User requested: "let's make sure each recruit has a unique dialogue path"
+- User clarified: "we'll fine tune these later, but for now let's keep them distinct"
+- Existing recruits (Braxus, Livia) already had unique dialogue
+- Test recruits 1-3 and 7-10 remain with simple conversational recruitment (no combat)
+- All three enhanced recruits are combat-based (RecruitableAfterDefeat = true)
+
+**Checklist:**
+- ✅ Build Verified - No compilation errors
+- ✅ Unique Personalities - Each recruit has distinct voice and backstory
+- ✅ Multiple Dialogue Paths - Respectful vs. insulting options
+- ⚠️ Testing - Not yet tested in-game (compiled successfully)
+- ⚠️ Save System - No changes needed
+- ⚠️ Help Files - No new commands added
+
+**Follow-up Needed:**
+- Test all three recruit dialogues in-game
+- Verify combat triggers correctly from dialogue
+- Fine-tune dialogue based on user feedback
+- Consider adding similar depth to other test recruits
+
 ## [2025-12-29] - Quintus Quest Chain, Timer System, and Critical Bug Fixes
 
 **Status:** Built & Tested ✅

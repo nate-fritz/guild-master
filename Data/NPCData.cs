@@ -1196,7 +1196,7 @@ namespace GuildMaster.Data
             // Test Recruit 4 - Legionnaire, Male, Combat Recruit
             NPC testRecruit4 = new NPC();
             testRecruit4.Name = "Marcus the Bold";
-            testRecruit4.Description = "A proud warrior crosses his arms and eyes you challengingly.";
+            testRecruit4.Description = "A proud warrior with a stern expression stands before you, his hand resting on the pommel of his sword. Battle scars mark his arms, and his weathered armor bears the crest of a fallen legion.";
             testRecruit4.ShortDescription = "A proud warrior";
             testRecruit4.IsHostile = false;
             testRecruit4.Health = 10;
@@ -1208,11 +1208,45 @@ namespace GuildMaster.Data
             testRecruit4.MaxGold = 0;
             testRecruit4.RecruitableAfterDefeat = true;
             testRecruit4.RecruitClass = "Legionnaire";
-            testRecruit4.YieldDialogue = "You fight well. I'll join your guild.";
-            testRecruit4.AcceptDialogue = "I'll head to the guild hall. You've earned my respect.";
+            testRecruit4.YieldDialogue = "[He lowers his sword, breathing heavily] You fight with honor. Few have bested me in single combat. The gods have spoken - I was meant to follow you.";
+            testRecruit4.AcceptDialogue = "You have my blade, guild master. I swear by Mars himself - I will defend your guild as I once defended the Sixth Legion. Lead on, and I shall follow.";
+
             testRecruit4.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Prove your strength in combat, and I'll consider your guild!",
+                Text = "Marcus eyes you with a mixture of pride and wariness. \"So, you're the one rebuilding the old Adventurer's Guild. I've heard whispers.\"<br><br>He crosses his arms. \"I served with the Sixth Legion for twenty years. Honor. Discipline. Victory. That legion is gone now - disbanded after our general fell.\" His jaw tightens. \"I won't join just anyone's banner again.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"What would it take to earn your service?\"", nextNodeID = "explain_honor" },
+                    new DialogueNode.Choice { choiceText = "\"Your loss. I don't need reluctant recruits.\"", nextNodeID = "offended" }
+                }
+            });
+
+            testRecruit4.Dialogue.Add("explain_honor", new DialogueNode()
+            {
+                Text = "Marcus nods approvingly. \"The right question. I seek a leader worthy of following - someone who won't abandon their soldiers when times grow dark.\"<br><br>He draws his gladius, sunlight glinting off the well-maintained blade. \"Prove your strength. Best me in honorable combat, and I'll know you have what it takes. Refuse, and you're not the leader I'm looking for.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I accept your challenge. Draw steel!\"", nextNodeID = "accept_duel" },
+                    new DialogueNode.Choice { choiceText = "\"I don't have time for this.\"", nextNodeID = "refuse_duel" }
+                }
+            });
+
+            testRecruit4.Dialogue.Add("accept_duel", new DialogueNode()
+            {
+                Text = "\"Good!\" Marcus assumes a combat stance, respect flickering in his eyes. \"Show me the mettle of the new guild master!\"",
+                Action = new DialogueAction { Type = "trigger_combat" },
+                Choices = { }
+            });
+
+            testRecruit4.Dialogue.Add("refuse_duel", new DialogueNode()
+            {
+                Text = "Marcus's expression hardens with disappointment. \"Then you're not the leader I thought you were. Leave me.\"",
+                Choices = { }
+            });
+
+            testRecruit4.Dialogue.Add("offended", new DialogueNode()
+            {
+                Text = "Marcus's eyes flash with anger. \"Arrogant whelp! You'll regret those words!\"<br><br>He draws his sword aggressively. \"I'll teach you some respect!\"",
                 Action = new DialogueAction { Type = "trigger_combat" },
                 Choices = { }
             });
@@ -1220,7 +1254,7 @@ namespace GuildMaster.Data
             // Test Recruit 5 - Venator, Female, Combat Recruit
             NPC testRecruit5 = new NPC();
             testRecruit5.Name = "Aria Swift";
-            testRecruit5.Description = "A nimble archer twirls her bow, eager for a challenge.";
+            testRecruit5.Description = "A lithe archer with a cocky grin leans against a tree, her hunter's bow already strung. Her movements are fluid and precise - the mark of someone who's spent years stalking prey through dense wilderness.";
             testRecruit5.ShortDescription = "A swift archer";
             testRecruit5.IsHostile = false;
             testRecruit5.Health = 8;
@@ -1232,11 +1266,45 @@ namespace GuildMaster.Data
             testRecruit5.MaxGold = 0;
             testRecruit5.RecruitableAfterDefeat = true;
             testRecruit5.RecruitClass = "Venator";
-            testRecruit5.YieldDialogue = "Impressive! You're quick. I'll join.";
-            testRecruit5.AcceptDialogue = "On my way to the guild hall!";
+            testRecruit5.YieldDialogue = "[She laughs breathlessly, lowering her bow] Alright, alright! You're faster than you look. Diana's grace, I haven't had a fight that intense in months!";
+            testRecruit5.AcceptDialogue = "You've got my attention - and my bow. Fair warning though: I don't follow slow leaders. Keep up that pace, and we'll get along just fine. See you at the guild hall!";
+
             testRecruit5.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "Let's see what you've got! En garde!",
+                Text = "Aria's eyes light up as you approach. \"Well, well! Fresh meat walking through my hunting grounds.\" She grins mischievously. \"Wait - I've heard about you. The guild master wannabe, right?\"<br><br>She spins an arrow between her fingers with practiced ease. \"I've been hunting these woods solo for three years. Bandits, beasts, bounties - you name it. Never needed a team before.\" She tilts her head. \"But I'm bored out of my mind. Maybe a guild could be... interesting.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Interested enough to join?\"", nextNodeID = "explain_boredom" },
+                    new DialogueNode.Choice { choiceText = "\"A lone wolf, huh? We don't need loners.\"", nextNodeID = "provoked" }
+                }
+            });
+
+            testRecruit5.Dialogue.Add("explain_boredom", new DialogueNode()
+            {
+                Text = "\"Ha! Maybe.\" Aria nocks an arrow casually. \"But here's the thing - I'm not joining some amateur operation. I need to know you can keep up.\"<br><br>She grins wolfishly. \"So how about this: a friendly duel. You and me. If you can match my speed, prove you're not just another plodding swordsman... then yeah, I'm in. What do you say, guild master?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"You're on. Let's dance!\"", nextNodeID = "accept_duel" },
+                    new DialogueNode.Choice { choiceText = "\"I don't have time for games.\"", nextNodeID = "refuse_duel" }
+                }
+            });
+
+            testRecruit5.Dialogue.Add("accept_duel", new DialogueNode()
+            {
+                Text = "\"Now we're talking!\" Aria takes a few steps back, grinning ear to ear. \"Try to keep up!\"",
+                Action = new DialogueAction { Type = "trigger_combat" },
+                Choices = { }
+            });
+
+            testRecruit5.Dialogue.Add("refuse_duel", new DialogueNode()
+            {
+                Text = "Aria shrugs, clearly disappointed. \"Boring. Come back when you've got some fire in you.\"<br><br>She turns away, already losing interest.",
+                Choices = { }
+            });
+
+            testRecruit5.Dialogue.Add("provoked", new DialogueNode()
+            {
+                Text = "Aria's grin widens dangerously. \"Oh, you did NOT just say that.\" She draws her bow in one smooth motion. \"Let me show you what this 'loner' can do!\"",
                 Action = new DialogueAction { Type = "trigger_combat" },
                 Choices = { }
             });
@@ -1244,7 +1312,7 @@ namespace GuildMaster.Data
             // Test Recruit 6 - Oracle, Male, Combat Recruit
             NPC testRecruit6 = new NPC();
             testRecruit6.Name = "Aldric the Wise";
-            testRecruit6.Description = "An elderly mage taps his staff, arcane energies crackling around him.";
+            testRecruit6.Description = "An elderly mage with silver hair and penetrating eyes studies you carefully. His gnarled staff pulses with barely-contained arcane power, and ancient runes glow faintly on his weathered robes. Despite his age, there's a sharpness to his gaze that suggests a keen and dangerous mind.";
             testRecruit6.ShortDescription = "An old mage";
             testRecruit6.IsHostile = false;
             testRecruit6.Health = 6;
@@ -1256,11 +1324,45 @@ namespace GuildMaster.Data
             testRecruit6.MaxGold = 0;
             testRecruit6.RecruitableAfterDefeat = true;
             testRecruit6.RecruitClass = "Oracle";
-            testRecruit6.YieldDialogue = "Your magical prowess is... acceptable. I'll join.";
-            testRecruit6.AcceptDialogue = "I shall lend my wisdom to your guild.";
+            testRecruit6.YieldDialogue = "[He leans heavily on his staff, breathing with effort] Remarkable. Your command of the arcane... and more importantly, your restraint in not delivering a killing blow... speaks to both power and wisdom. Perhaps you ARE worth following.";
+            testRecruit6.AcceptDialogue = "I shall lend my knowledge to your guild. My days of solitary study grow lonely, and I sense great events approaching. The stars themselves whisper of change. Lead wisely, young one, and I shall stand with you.";
+
             testRecruit6.Dialogue.Add("greeting", new DialogueNode()
             {
-                Text = "A duel of magic, then! Prepare yourself!",
+                Text = "The old mage regards you with calculating eyes. \"You carry yourself like one touched by destiny.\" His voice is measured, scholarly. \"I am Aldric - once court wizard to House Valerius, now... merely a wanderer.\"<br><br>He taps his staff thoughtfully. \"I've heard whispers of someone rebuilding the Adventurer's Guild. A bold undertaking. Foolish, perhaps... but bold nonetheless.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Would you consider joining our cause?\"", nextNodeID = "explain_caution" },
+                    new DialogueNode.Choice { choiceText = "\"Foolish? Watch your tongue, old man.\"", nextNodeID = "insulted" }
+                }
+            });
+
+            testRecruit6.Dialogue.Add("explain_caution", new DialogueNode()
+            {
+                Text = "Aldric strokes his beard. \"Direct. I appreciate that.\" He pauses, studying you more intently. \"My last lord squandered my counsel, pursuing glory over wisdom. His house fell to ruin.\"<br><br>\"Before I pledge my knowledge to another... I must know you possess both strength AND judgment. A test, then - one of magical prowess and restraint.\" His staff begins to glow. \"Face me in arcane combat. But know this: how you fight matters as much as whether you win.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I accept your test, Aldric.\"", nextNodeID = "accept_test" },
+                    new DialogueNode.Choice { choiceText = "\"I don't have time for tests.\"", nextNodeID = "refuse_test" }
+                }
+            });
+
+            testRecruit6.Dialogue.Add("accept_test", new DialogueNode()
+            {
+                Text = "\"Good.\" Aldric's eyes gleam with approval. \"Let us see what you are made of.\"<br><br>Arcane energy crackles around his staff as he takes a defensive stance.",
+                Action = new DialogueAction { Type = "trigger_combat" },
+                Choices = { }
+            });
+
+            testRecruit6.Dialogue.Add("refuse_test", new DialogueNode()
+            {
+                Text = "Aldric's expression grows cold. \"Then you lack the patience required for true leadership. Do not waste more of my time.\"<br><br>He turns away dismissively.",
+                Choices = { }
+            });
+
+            testRecruit6.Dialogue.Add("insulted", new DialogueNode()
+            {
+                Text = "Aldric's eyes narrow dangerously, and power surges around him. \"Arrogance AND ignorance. A lethal combination.\" His voice drops to a deadly whisper. \"Let me educate you, child!\"<br><br>Lightning crackles along his staff.",
                 Action = new DialogueAction { Type = "trigger_combat" },
                 Choices = { }
             });
