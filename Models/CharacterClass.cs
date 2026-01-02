@@ -14,6 +14,11 @@ namespace GuildMaster.Models
         public int BaseSpeed { get; set; }
         public bool PreferBackRow { get; set; }
 
+        // EP Regeneration System
+        public float EpPerBasicAttack { get; set; } // Percent of max EP gained per basic attack (0.0 - 1.0)
+        public float EpPerTurnStart { get; set; }   // Percent of max EP gained at turn start (0.0 - 1.0)
+        public bool ResetEpOnRest { get; set; }     // If true, rest resets EP to 0; if false, rest restores to max
+
         public abstract List<Ability> GetClassAbilities();
         public abstract void ApplyClassBonuses(Character character);
     }
@@ -30,6 +35,11 @@ namespace GuildMaster.Models
             BaseDefense = 3;
             BaseSpeed = 1;
             PreferBackRow = false; // Front row tank
+
+            // EP Regeneration: Builds EP through attacks
+            EpPerBasicAttack = 0.20f; // 20% max EP per basic attack
+            EpPerTurnStart = 0.0f;    // No passive EP regeneration
+            ResetEpOnRest = true;     // Rest resets EP to 0
         }
 
         public override List<Ability> GetClassAbilities()
@@ -74,6 +84,11 @@ namespace GuildMaster.Models
             BaseDefense = 1;
             BaseSpeed = 3;
             PreferBackRow = true; // Ranged DPS
+
+            // EP Regeneration: Balanced attack and passive generation
+            EpPerBasicAttack = 0.05f; // 5% max EP per basic attack
+            EpPerTurnStart = 0.05f;   // 5% max EP at turn start
+            ResetEpOnRest = false;    // Rest restores EP to max
         }
 
         public override List<Ability> GetClassAbilities()
@@ -116,6 +131,11 @@ namespace GuildMaster.Models
             BaseDefense = 0;
             BaseSpeed = 2;
             PreferBackRow = true; // Caster/support
+
+            // EP Regeneration: High passive regeneration
+            EpPerBasicAttack = 0.05f; // 5% max EP per basic attack
+            EpPerTurnStart = 0.20f;   // 20% max EP at turn start
+            ResetEpOnRest = false;    // Rest restores EP to max
         }
 
         public override List<Ability> GetClassAbilities()

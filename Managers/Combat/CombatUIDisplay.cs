@@ -33,7 +33,7 @@ namespace GuildMaster.Managers.Combat
 
         public string GenerateHealthBar(int current, int max)
         {
-            if (max <= 0) return "[#808080][DEAD][/]     ";
+            if (max <= 0) return "<span style='color:#808080'>[DEAD]</span>    ";
 
             float percentage = (float)current / max;
             int filledSegments = (int)Math.Round(percentage * 10);
@@ -58,7 +58,7 @@ namespace GuildMaster.Managers.Combat
                 cssClass = "hp-bar-low";
             }
             else
-                return "[#808080][DEAD][/]     ";
+                return "<span style='color:#808080'>[DEAD]</span>    ";
 
             // Build the bar with CSS glow effect
             string bar = $"<span class='{cssClass}'>[{color}]";
@@ -197,16 +197,29 @@ namespace GuildMaster.Managers.Combat
             string playerRow = player.IsBackRow ? "<span style='color:#00FF00'>[Back]</span>" : "<span style='color:#00FF00'>[Front]</span>";
             AnsiConsole.MarkupLine($" {"You",-12} HP:{playerHealthBar} {playerHP}  EP:{playerEnergyBar} {playerEP}  {playerRow}");
 
-            // Party members
-            foreach (var ally in player.ActiveParty.Where(a => a.Health > 0))
+            // Party members (show ALL, dim the fallen ones)
+            foreach (var ally in player.ActiveParty)
             {
-                string allyHealthBar = GenerateHealthBar(ally.Health, ally.MaxHealth);
-                string allyEnergyBar = GenerateEnergyBar(ally.Energy, ally.MaxEnergy);
+                bool isKnockedOut = ally.Health <= 0;
                 string allyName = ally.Name.Length > 12 ? ally.Name.Substring(0, 12) : ally.Name;
                 string allyHP = $"{ally.Health}/{ally.MaxHealth}".PadLeft(9);
                 string allyEP = $"{ally.Energy}/{ally.MaxEnergy}".PadLeft(9);
                 string allyRow = ally.IsBackRow ? "<span style='color:#00FF00'>[Back]</span>" : "<span style='color:#00FF00'>[Front]</span>";
-                AnsiConsole.MarkupLine($" {allyName,-12} HP:{allyHealthBar} {allyHP}  EP:{allyEnergyBar} {allyEP}  {allyRow}");
+
+                if (isKnockedOut)
+                {
+                    // For knocked out members, show everything in gray using CSS
+                    string grayHealthBar = new string('░', 10);
+                    string grayEnergyBar = new string('░', 10);
+                    string grayRow = ally.IsBackRow ? "[Back]" : "[Front]";
+                    AnsiConsole.MarkupLine($" <span style='color:#808080'>{allyName,-12} HP:{grayHealthBar} {allyHP}  EP:{grayEnergyBar} {allyEP}  {grayRow} [KNOCKED OUT]</span>");
+                }
+                else
+                {
+                    string allyHealthBar = GenerateHealthBar(ally.Health, ally.MaxHealth);
+                    string allyEnergyBar = GenerateEnergyBar(ally.Energy, ally.MaxEnergy);
+                    AnsiConsole.MarkupLine($" {allyName,-12} HP:{allyHealthBar} {allyHP}  EP:{allyEnergyBar} {allyEP}  {allyRow}");
+                }
             }
 
             // Spacing
@@ -296,17 +309,12 @@ namespace GuildMaster.Managers.Combat
 
         public void DisplayLevelUpStats(Character character)
         {
-
-            AnsiConsole.MarkupLine($"<br><br>");
-            AnsiConsole.MarkupLine($"[#FFD700]═══════════════════════════════════════════[/]");
-            AnsiConsole.MarkupLine($"[#FFD700]  {character.Name} reached Level {character.Level}!{new string(' ', 35 - character.Name.Length - character.Level.ToString().Length)}[/]");
             AnsiConsole.MarkupLine($"[#FFD700]═══════════════════════════════════════════[/]");
             AnsiConsole.MarkupLine($"[#FFD700]  Max Health:  {character.MaxHealth} {"",4} [/]");
             AnsiConsole.MarkupLine($"[#FFD700]  Max Energy:  {character.MaxEnergy} {"",4} [/]");
             AnsiConsole.MarkupLine($"[#FFD700]  Attack:      {character.AttackDamage} {"",4} [/]");
             AnsiConsole.MarkupLine($"[#FFD700]  Defense:     {character.Defense} {"",4} [/]");
             AnsiConsole.MarkupLine($"[#FFD700]  Speed:       {character.Speed} {"",4} [/]");
-
         }
     }
 }

@@ -125,7 +125,16 @@ namespace GuildMaster.Managers
             currentRoom = room;
             isInDialogue = true;
 
+            // Check for completed timers and update NPC dialogue state
+            CheckAndUpdateTimers(npc);
+
             // Determine starting node with first_greeting/repeat_greeting support
+            // Reset deprecated "greeting" node from old saves
+            if (npc.CurrentDialogueNode == "greeting" && !npc.Dialogue.ContainsKey("greeting"))
+            {
+                npc.CurrentDialogueNode = null;
+            }
+
             if (!string.IsNullOrEmpty(npc.CurrentDialogueNode) &&
                 npc.Dialogue.ContainsKey(npc.CurrentDialogueNode))
             {
@@ -179,6 +188,20 @@ namespace GuildMaster.Managers
             // Substitute placeholders in dialogue text
             string displayText = SubstituteDialogueText(node.Text);
             TextHelper.DisplayTextWithPaging(displayText, "#90FF90");
+
+            // Show party member interjections if any are present
+            if (node.PartyInterjections != null && node.PartyInterjections.Count > 0)
+            {
+                foreach (var partyMember in player.ActiveParty)
+                {
+                    if (node.PartyInterjections.ContainsKey(partyMember.Name))
+                    {
+                        AnsiConsole.MarkupLine("");
+                        string interjection = SubstituteDialogueText(node.PartyInterjections[partyMember.Name]);
+                        TextHelper.DisplayTextWithPaging($"[bold]{partyMember.Name}:[/bold] {interjection}", "#FFD700");
+                    }
+                }
+            }
 
             // Execute any dialogue actions
             if (node.Action != null)
@@ -490,8 +513,17 @@ namespace GuildMaster.Managers
                     break;
 
                 case "trigger_combat":
-                    npc.IsHostile = true;
-                    AnsiConsole.MarkupLine($"\n[#FF0000]{npc.Name} attacks![/]");
+                    // For NPC dialogue, mark the NPC as hostile
+                    if (npc != null)
+                    {
+                        npc.IsHostile = true;
+                        AnsiConsole.MarkupLine($"\n[#FF0000]{npc.Name} attacks![/]");
+                    }
+                    else
+                    {
+                        // For event dialogue, hostile NPCs are spawned separately
+                        AnsiConsole.MarkupLine($"\n[#FF0000]Combat begins![/]");
+                    }
                     // Combat will be triggered when conversation ends
                     break;
 
@@ -509,6 +541,79 @@ namespace GuildMaster.Managers
                     }
                     // Update Marcus to use "after_quest" dialogue from now on
                     npc.CurrentDialogueNode = "after_quest";
+                    break;
+
+                case "start_timer":
+                    if (action.Parameters.ContainsKey("timer_id") && action.Parameters.ContainsKey("duration_hours"))
+                    {
+                        string timerId = action.Parameters["timer_id"].ToString();
+                        float durationHours = float.Parse(action.Parameters["duration_hours"].ToString());
+
+                        var timer = new GameTimer
+                        {
+                            TimerId = timerId,
+                            StartDay = player.CurrentDay,
+                            StartHour = player.CurrentHour,
+                            DurationHours = durationHours
+                        };
+
+                        if (context.ActiveTimers == null)
+                            context.ActiveTimers = new Dictionary<string, GameTimer>();
+
+                        context.ActiveTimers[timerId] = timer;
+                    }
+                    break;
+
+                case "force_travel":
+                    if (action.Parameters.ContainsKey("room_id"))
+                    {
+                        int roomId = int.Parse(action.Parameters["room_id"].ToString());
+                        player.CurrentRoom = roomId;
+                        AnsiConsole.MarkupLine($"\n[#00FFFF]You travel to a new location...[/]");
+
+                        // Special cleanup for guild council meeting -> Aevoria travel
+                        // Remove Quintus from town hall so player can't trigger old dialogue
+                        if (roomId == 200 && player.QuestFlags.ContainsKey("guild_council_ready") && player.QuestFlags["guild_council_ready"])
+                        {
+                            if (context.Rooms.ContainsKey(91))
+                            {
+                                var townHall = context.Rooms[91];
+                                var quintus = townHall.NPCs.FirstOrDefault(n => n.Name == "Senator Quintus");
+                                if (quintus != null)
+                                {
+                                    townHall.NPCs.Remove(quintus);
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                case "set_quest_flag":
+                    if (action.Parameters.ContainsKey("flag") && action.Parameters.ContainsKey("value"))
+                    {
+                        string flag = action.Parameters["flag"].ToString();
+                        bool value = bool.Parse(action.Parameters["value"].ToString());
+                        player.QuestFlags[flag] = value;
+                    }
+                    break;
+
+                case "remove_npc":
+                    if (action.Parameters.ContainsKey("npc_name") && action.Parameters.ContainsKey("room_id"))
+                    {
+                        string npcName = action.Parameters["npc_name"].ToString();
+                        int roomId = int.Parse(action.Parameters["room_id"].ToString());
+
+                        // Find the room and remove the NPC
+                        if (context.Rooms.ContainsKey(roomId))
+                        {
+                            var targetRoom = context.Rooms[roomId];
+                            var npcToRemove = targetRoom.NPCs.FirstOrDefault(n => n.Name == npcName);
+                            if (npcToRemove != null)
+                            {
+                                targetRoom.NPCs.Remove(npcToRemove);
+                            }
+                        }
+                    }
                     break;
             }
         }
@@ -585,6 +690,20 @@ namespace GuildMaster.Managers
             // Substitute placeholders in event dialogue text
             string displayText = SubstituteDialogueText(node.Text);
             TextHelper.DisplayTextWithPaging(displayText, "#90FF90");
+
+            // Show party member interjections if any are present
+            if (node.PartyInterjections != null && node.PartyInterjections.Count > 0)
+            {
+                foreach (var partyMember in player.ActiveParty)
+                {
+                    if (node.PartyInterjections.ContainsKey(partyMember.Name))
+                    {
+                        AnsiConsole.MarkupLine("");
+                        string interjection = SubstituteDialogueText(node.PartyInterjections[partyMember.Name]);
+                        TextHelper.DisplayTextWithPaging($"[bold]{partyMember.Name}:[/bold] {interjection}", "#FFD700");
+                    }
+                }
+            }
 
             // Execute any dialogue actions
             if (node.Action != null)
@@ -671,6 +790,55 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("");
 
             ShowEventDialogueNode(dialogueTreeId);
+        }
+
+        private void CheckAndUpdateTimers(NPC npc)
+        {
+            var player = context.Player;
+
+            if (context.ActiveTimers == null || context.ActiveTimers.Count == 0)
+                return;
+
+            // Check for Quintus letter translation timer
+            if (npc.Name == "Senator Quintus" && context.ActiveTimers.ContainsKey("quintus_translation"))
+            {
+                var timer = context.ActiveTimers["quintus_translation"];
+                if (timer.IsComplete(player.CurrentDay, player.CurrentHour))
+                {
+                    // Timer complete - update dialogue to translation_ready
+                    npc.CurrentDialogueNode = "translation_ready";
+                    // Remove the timer
+                    context.ActiveTimers.Remove("quintus_translation");
+                }
+                else
+                {
+                    // Timer still running - show waiting dialogue
+                    npc.CurrentDialogueNode = "waiting";
+                }
+            }
+
+            // Check for Quintus examination timer (cultist documents)
+            if (npc.Name == "Senator Quintus" && context.ActiveTimers.ContainsKey("quintus_examination"))
+            {
+                var timer = context.ActiveTimers["quintus_examination"];
+                if (timer.IsComplete(player.CurrentDay, player.CurrentHour))
+                {
+                    // Timer complete - set flag to trigger guild council meeting event
+                    if (!player.QuestFlags.ContainsKey("guild_council_ready") || !player.QuestFlags["guild_council_ready"])
+                    {
+                        player.QuestFlags["guild_council_ready"] = true;
+                    }
+                    // Remove the timer
+                    context.ActiveTimers.Remove("quintus_examination");
+                    // Show dialogue directing player to guild study
+                    npc.CurrentDialogueNode = "examination_complete";
+                }
+                else
+                {
+                    // Timer still running - show waiting dialogue
+                    npc.CurrentDialogueNode = "waiting_examination";
+                }
+            }
         }
     }
 

@@ -322,6 +322,14 @@ namespace GuildMaster.Data
                         }
                     }
                     break;
+
+                case ActionType.DisplayMessage:
+                    if (Parameters.ContainsKey("message"))
+                    {
+                        string message = Parameters["message"].ToString();
+                        Services.AnsiConsole.MarkupLine(message);
+                    }
+                    break;
             }
         }
     }
@@ -346,6 +354,7 @@ namespace GuildMaster.Data
         AllyWithFaction,    // Form an alliance with a faction
         BreakAlliance,      // Break an alliance with a faction
         UnlockRegion,       // Unlock a region for access
-        LockRegion          // Lock a region (remove access)
+        LockRegion,         // Lock a region (remove access)
+        DisplayMessage      // Display a message to the player
     }
 }

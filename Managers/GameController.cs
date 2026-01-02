@@ -356,10 +356,19 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine($"\n[A new day dawns - Day {player.CurrentDay}]");
                 }
 
+                // Check respawning, but prevent farm bandits from respawning after warlord is defeated
+                bool isFarmRoom = player.CurrentRoom == 10 || player.CurrentRoom == 11;  // Gaius' Farm rooms
+                bool warlordDefeated = player.QuestFlags.ContainsKey("bandit_warlord_defeated") &&
+                                      player.QuestFlags["bandit_warlord_defeated"];
+
                 if (newRoom.ShouldRespawn(player.CurrentDay, player.CurrentHour))
                 {
-                    newRoom.RespawnEnemies();
-                    AnsiConsole.MarkupLine("[#FFFF00][The area has been reoccupied by enemies!][/]");
+                    // Don't respawn farm bandits if warlord is defeated
+                    if (!(isFarmRoom && warlordDefeated))
+                    {
+                        newRoom.RespawnEnemies();
+                        AnsiConsole.MarkupLine("[#FFFF00][The area has been reoccupied by enemies!][/]");
+                    }
                 }
 
                 // Spawn recruit NPCs in new room
@@ -600,6 +609,42 @@ namespace GuildMaster.Managers
         {
             var player = context.Player;
 
+            // Special handling for Aevoria Villa - resting triggers the celebration
+            if (player.QuestFlags.ContainsKey("in_aevoria_villa") &&
+                player.QuestFlags["in_aevoria_villa"] &&
+                player.QuestFlags.ContainsKey("emperor_warned") &&
+                player.QuestFlags["emperor_warned"])
+            {
+                AnsiConsole.MarkupLine("\nExhausted from the journey and the weight of tomorrow's task, you return to your guest quarters and fall into a deep sleep.");
+                player.FullRestore();
+
+                foreach (var member in player.ActiveParty)
+                {
+                    member.FullRestore();
+                }
+
+                // Advance time by 48 hours (2 days)
+                player.CurrentHour += 48.0f;
+                while (player.CurrentHour >= 24.0f)
+                {
+                    player.CurrentHour -= 24.0f;
+                    player.CurrentDay++;
+                }
+
+                AnsiConsole.MarkupLine("\nExhausted from the journey and the weight of tomorrow's task, you return to your guest quarters and fall into a deep sleep.");
+                AnsiConsole.MarkupLine("\nYou sleep through the night and the following day, recovering fully. Tomorrow, the celebration begins.");
+
+                // Set the celebration ready flag
+                player.QuestFlags["celebration_ready"] = true;
+
+                // Move player to guest quarters - they'll wake up to the celebration event
+                player.CurrentRoom = 202;
+
+                AnsiConsole.MarkupLine("");
+                return;
+            }
+
+            // Normal rest behavior
             AnsiConsole.MarkupLine("\nYou begin setting up a small camp and rest for a bit.");
             // Note: Thread.Sleep removed for web compatibility
             player.FullRestore();
@@ -832,6 +877,12 @@ namespace GuildMaster.Managers
             var player = context.Player;
             var currentRoom = context.Rooms[player.CurrentRoom];
 
+            // Debug output
+            if (player.DebugLogsEnabled)
+            {
+                AnsiConsole.MarkupLine($"[dim]DEBUG: HandleGatePuzzle called. Room {player.CurrentRoom}, PuzzleId: '{currentRoom.PuzzleId ?? "null"}'[/]");
+            }
+
             // Check if we're in a room with the gate puzzle
             if (currentRoom.PuzzleId != "warlord_chamber_gates")
             {
@@ -926,6 +977,10 @@ namespace GuildMaster.Managers
             {
                 HandleFogPuzzle(passphrase, currentRoom);
             }
+            else if (currentRoom.PuzzleId == "ritual_chamber_cipher")
+            {
+                HandleRitualCipherPuzzle(passphrase, currentRoom);
+            }
             else
             {
                 AnsiConsole.MarkupLine($"\nYou speak the words '{passphrase}' aloud. Nothing happens.");
@@ -957,8 +1012,8 @@ namespace GuildMaster.Managers
                 // Update room description permanently
                 room.Description = "A clearing in the forest. The oppressive fog that once shrouded this place has lifted, revealing moss-covered stones arranged in a peculiar pattern. To the east, a narrow path winds deeper into the woods, previously concealed by the magical mist.";
 
-                // Open the east exit to the cultist lair (Room 63)
-                room.Exits["east"] = 63;
+                // Open the east exit to the cultist lair (Room 100)
+                room.Exits["east"] = 100;
 
                 // Mark puzzle as solved
                 puzzleState.IsSolved = true;
@@ -967,6 +1022,53 @@ namespace GuildMaster.Managers
             else
             {
                 AnsiConsole.MarkupLine($"\nYou speak the words '{passphrase}' into the fog. The mist swirls slightly but does not dissipate. Perhaps these aren't the right words...");
+            }
+        }
+
+        private void HandleRitualCipherPuzzle(string answer, Room room)
+        {
+            var puzzleState = puzzleManager?.GetPuzzleState("ritual_chamber_cipher");
+            if (puzzleState == null)
+            {
+                AnsiConsole.MarkupLine("\nSomething seems wrong here...");
+                return;
+            }
+
+            if (puzzleState.IsSolved)
+            {
+                AnsiConsole.MarkupLine("\nThe iron gate has already been opened. The passage south is accessible.");
+                return;
+            }
+
+            // Check if the answer is correct
+            string correctAnswer = puzzleState.CurrentState["correct_answer"]?.ToString() ?? "nihil";
+            if (answer.Trim().ToLower() == correctAnswer)
+            {
+                // Correct answer! Open the gate
+                AnsiConsole.MarkupLine("\n[#90FF90]As you speak the word 'Nihil,' the air in the chamber seems to shudder. The symbols on the pedestals pulse with dark light, and the iron gate groans as ancient mechanisms activate. With a grinding sound of metal on stone, the gate swings open, revealing a passage to the south.[/]");
+
+                // Update room description
+                room.Description = "A circular room with symbols painted on the floor in ash and charcoal. Six stone pedestals ring the chamber, each bearing carved symbols that now glow faintly with residual energy. The iron gate that once blocked the southern passage now stands open, its mechanisms unlocked by speaking the word that unmakes all things.";
+
+                // Open the south exit to the library (Room 108)
+                room.Exits["south"] = 108;
+
+                // Mark puzzle as solved
+                puzzleState.IsSolved = true;
+                puzzleState.CurrentState["gate_unlocked"] = true;
+            }
+            else
+            {
+                // Wrong answer
+                string[] wrongPhrases = new string[]
+                {
+                    $"\nYou speak the word '{answer}' clearly and firmly. The symbols flicker briefly, but the gate remains shut. That's not the answer.",
+                    $"\nYou try '{answer},' but nothing happens. The gate stays locked. What truly unmakes all things?",
+                    $"\nThe word '{answer}' echoes in the chamber, but the gate doesn't respond. You need to think more carefully about the riddle."
+                };
+
+                var random = new Random();
+                AnsiConsole.MarkupLine(wrongPhrases[random.Next(wrongPhrases.Length)]);
             }
         }
     }

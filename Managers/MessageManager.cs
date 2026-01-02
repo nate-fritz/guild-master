@@ -65,7 +65,7 @@ namespace GuildMaster.Managers
                      MessageType.Tutorial),
 
                 "first_movement_tutorial" =>
-                    ("To move into another room, type the direction ([cyan]north[/] or [cyan]n[/], [cyan]east[/] or [cyan]e[/], [cyan]south[/] or [cyan]s[/], [cyan]west[/] or [cyan]w[/]).<br><br>To look around the room for other items or exits, type [cyan]look around[/], [cyan]look[/], or just [cyan]l[/] <br><br>To see a list of other available commands, type [cyan]/help[/]",
+                    ("To move into another room, type the direction ([cyan]north[/] or [cyan]n[/], [cyan]east[/] or [cyan]e[/], [cyan]south[/] or [cyan]s[/], [cyan]west[/] or [cyan]w[/]).<br><br>To look around the room for other items or exits, type [cyan]look around[/], [cyan]look[/], or just [cyan]l[/] <br><br>To see a list of other available commands, type [cyan]help[/]",
                      MessageType.Tutorial),
 
                 "talk_tutorial" =>
@@ -108,6 +108,10 @@ namespace GuildMaster.Managers
 
                 "quest_system_unlock" =>
                     ("With recruits not in your active party, you can now send them on quests! Use the guild menu to assign quests and earn passive rewards.",
+                     MessageType.Tutorial),
+
+                "guild_quest_ledger" =>
+                    ("Quintus has provided a ledger of guild quests to fight the Unbound! Access it through the [cyan]guild[/] or [cyan]g[/] menu, then select 'Quest Ledger' to assign missions to your recruits.",
                      MessageType.Tutorial),
 
                 "autocombat_tutorial" =>
@@ -178,11 +182,11 @@ namespace GuildMaster.Managers
                     break;
 
                 case MessageType.Achievement:
-                    AnsiConsole.MarkupLine("[#90FF90]★ ═══════════════════════ ACHIEVEMENT ══════════════════════ ★[/]");
+                    AnsiConsole.MarkupLine("[#90FF90]  ═══════════════════════ ACHIEVEMENT ══════════════════════  [/]");
                     AnsiConsole.MarkupLine("");
                     WrapAndDisplay(text, "#90FF90");
                     AnsiConsole.MarkupLine("");
-                    AnsiConsole.MarkupLine("[#90FF90]★ ═══════════════════════════════════════════════════════════ ★[/]");
+                    AnsiConsole.MarkupLine("[#90FF90]  ═══════════════════════════════════════════════════════════  [/]");
                     break;
 
                 case MessageType.Hint:

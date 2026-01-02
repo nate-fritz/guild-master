@@ -19,6 +19,9 @@ namespace GuildMaster.Models
         // Puzzle system
         public Dictionary<string, PuzzleState> PuzzleStates { get; set; }
 
+        // Timer system
+        public Dictionary<string, GameTimer> ActiveTimers { get; set; }
+
         public GameContext()
         {
             NPCs = new Dictionary<string, NPC>();
@@ -28,6 +31,7 @@ namespace GuildMaster.Models
             CompletedMilestones = new HashSet<string>();
             RoomStateOverrides = new Dictionary<int, string>();
             PuzzleStates = new Dictionary<string, PuzzleState>();
+            ActiveTimers = new Dictionary<string, GameTimer>();
         }
 
         /// <summary>

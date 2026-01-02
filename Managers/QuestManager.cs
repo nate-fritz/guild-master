@@ -378,7 +378,7 @@ namespace GuildMaster.Managers
                     // Check for level up
                     if (quest.AssignedRecruit.CheckLevelUp())
                     {
-                        AnsiConsole.MarkupLine($"\n[#FFD700]★ LEVEL UP! {quest.AssignedRecruit.Name} is now level {quest.AssignedRecruit.Level}! ★[/]");
+                        AnsiConsole.MarkupLine($"\n[#FFD700]  LEVEL UP! {quest.AssignedRecruit.Name} is now level {quest.AssignedRecruit.Level}!  [/]");
                         quest.AssignedRecruit.ApplyLevelUpBonuses();
                         AnsiConsole.MarkupLine($"HP: {quest.AssignedRecruit.MaxHealth} | EP: {quest.AssignedRecruit.MaxEnergy} | ATK: {quest.AssignedRecruit.AttackDamage} | DEF: {quest.AssignedRecruit.Defense}");
                     }
@@ -455,7 +455,7 @@ namespace GuildMaster.Managers
                     // Check for level up even on failure
                     if (quest.AssignedRecruit.CheckLevelUp())
                     {
-                        AnsiConsole.MarkupLine($"\n[#FFD700]★ LEVEL UP! {quest.AssignedRecruit.Name} is now level {quest.AssignedRecruit.Level}! ★[/]");
+                        AnsiConsole.MarkupLine($"\n[#FFD700]  LEVEL UP! {quest.AssignedRecruit.Name} is now level {quest.AssignedRecruit.Level}!  [/]");
                         quest.AssignedRecruit.ApplyLevelUpBonuses();
                         AnsiConsole.MarkupLine($"HP: {quest.AssignedRecruit.MaxHealth} | EP: {quest.AssignedRecruit.MaxEnergy} | ATK: {quest.AssignedRecruit.AttackDamage} | DEF: {quest.AssignedRecruit.Defense}");
                     }

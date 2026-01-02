@@ -312,6 +312,58 @@ namespace GuildMaster.Data
                             EffectId = "energy_restore"
                         }}
                     }
+                },
+
+                {102, new Dictionary<string, Item>()  // supplyCache - Cultist hideout supply room
+                    {
+                        {"greater potion", new Item {
+                            Description = "A crystalline vial filled with shimmering red liquid. This greater potion can restore significant health.",
+                            ShortName = "greater potion",
+                            IsLootable = true,
+                            IsConsumable = true
+                        }},
+                        {"energy potion", new Item {
+                            Description = "A small vial filled with glowing blue liquid. This potion restores energy.",
+                            ShortName = "energy potion",
+                            IsLootable = true,
+                            IsConsumable = true
+                        }}
+                    }
+                },
+
+                {120, new Dictionary<string, Item>()  // archonChamber - Cultist boss loot and documents
+                    {
+                        {"ritual dagger", new Item {
+                            Description = "A wickedly curved ceremonial dagger with an obsidian blade. Strange runes are etched along its length, and it seems to drink in the light around it. The weapon feels wrong in your hands, as if it yearns to unmake rather than cut.",
+                            ShortName = "dagger",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }},
+                        {"cultist orders", new Item {
+                            Description = "A sealed letter bearing no signature, written in a precise, cold hand:\n\n\"Proceed as planned. The great work continues during festival week. When the celebrations reach their peak and the masses gather, strike at the heart. Remove the pillar and the structure will collapse. The gathered faithful will ensure maximum effect. Let entropy take what order cannot hold. Ordo Dissolutus.\"\n\nThe vague language is chilling in its implications.",
+                            ShortName = "orders",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }},
+                        {"ritual notes", new Item {
+                            Description = "A collection of parchments covered in diagrams and notes:\n\n\"The seals continue to weaken. Our brothers in Aevoria report similar progress. The old barriers were meant to contain what should never have been bound. When enough seals fail, the cascade will be irreversible. Focus efforts on population centers during gatherings - the energy released accelerates our work.\"\n\nThe pages include crude drawings of seal locations and ritual circles.",
+                            ShortName = "notes",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }},
+                        {"philosophical tract", new Item {
+                            Description = "A small leather-bound book filled with unsettling philosophy:\n\n\"All that is built will crumble. All that is ordered will dissolve. We do not destroy - we merely hasten the inevitable return to primordial chaos. Creation is the aberration. The universe yearns for silence, for stillness, for the void before thought. We are its willing instruments. Ordo Dissolutus - the Dissolved Order - we unmake so that nothing may suffer the illusion of permanence.\"\n\nThe text continues for dozens of pages in this vein.",
+                            ShortName = "tract",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }},
+                        {"cell key", new Item {
+                            Description = "A heavy iron key with intricate teeth. It bears the mark of the Ordo Dissolutus - a dissolving spiral. This must be the key to Althea's cell.",
+                            ShortName = "key",
+                            IsLootable = true,
+                            IsConsumable = false
+                        }}
+                    }
                 }
             };
         }

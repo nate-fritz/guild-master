@@ -17,6 +17,10 @@ namespace GuildMaster.Models
         // If false (default), conversation resets to greeting when it ends
         public bool PermanentlyEndsDialogue { get; set; } = false;
 
+        // Party member interjections - key is party member name, value is their comment
+        // These will be displayed after the main text if the party member is present
+        public Dictionary<string, string> PartyInterjections { get; set; } = new Dictionary<string, string>();
+
         public class Choice
         {
             public string choiceText { get; set; }

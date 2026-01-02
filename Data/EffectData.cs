@@ -90,7 +90,7 @@ namespace GuildMaster.Data
             // Scroll of Fireball - combat damage
             effects.Add("scroll_fireball", new Effect
             {
-                Type = EffectType.Heal, // Note: Using Heal type, but will need combat handling
+                Type = EffectType.Damage,
                 DiceCount = 3,
                 DiceSides = 6,
                 Bonus = 6,

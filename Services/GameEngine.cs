@@ -200,6 +200,7 @@ namespace GuildMaster.Services
             eventManager = new EventManager(gameContext);
             ProgramStatics.eventManager = eventManager;
             eventManager.LoadEvents();
+            combatManager.SetManagers(eventManager, dialogueManager);
             endingEvaluator = new EndingEvaluator(gameContext);
 
             // Restore shown messages and triggered events from loaded state
@@ -292,6 +293,7 @@ namespace GuildMaster.Services
             eventManager = new EventManager(gameContext);
             ProgramStatics.eventManager = eventManager;
             eventManager.LoadEvents();
+            combatManager.SetManagers(eventManager, dialogueManager);
             endingEvaluator = new EndingEvaluator(gameContext);
 
             // Register event dialogue trees
@@ -419,6 +421,35 @@ namespace GuildMaster.Services
                             }
                             combatManager.StartCombat(hostileNPCs, currentRoom);
                         }
+                        else if (eventManager != null)
+                        {
+                            // Check for events after dialogue ends (handles force_travel events)
+                            EventData triggeredEvent = eventManager.CheckForEvent(player.CurrentRoom);
+
+                            if (triggeredEvent != null)
+                            {
+                                // Execute event actions first
+                                eventManager.ExecuteActions(triggeredEvent);
+
+                                // Trigger associated dialogue tree (if specified)
+                                if (!string.IsNullOrEmpty(triggeredEvent.DialogueTreeId))
+                                {
+                                    dialogueManager.StartEventDialogue(triggeredEvent.DialogueTreeId);
+                                }
+
+                                // Mark event as triggered if one-time
+                                if (triggeredEvent.IsOneTime)
+                                {
+                                    eventManager.MarkEventTriggered(triggeredEvent.EventId);
+                                }
+
+                                // Show guild quest ledger tutorial after Act Two intro
+                                if (triggeredEvent.EventId == "act_two_intro" && ProgramStatics.messageManager != null)
+                                {
+                                    ProgramStatics.messageManager.CheckAndShowMessage("guild_quest_ledger");
+                                }
+                            }
+                        }
                         // Status bar will be shown by Home.razor after command completes
                     }
                 }
@@ -532,7 +563,12 @@ namespace GuildMaster.Services
 
                 if (hasKeyReference && hasGateReference)
                 {
-                    gameController?.HandleGatePuzzle(input);
+                    if (gameController == null)
+                    {
+                        AnsiConsole.MarkupLine("\n[#FF0000]ERROR: Game controller not initialized.[/]");
+                        return;
+                    }
+                    gameController.HandleGatePuzzle(input);
                 }
                 else
                 {
@@ -595,6 +631,33 @@ namespace GuildMaster.Services
             else if (input == "rest")
             {
                 gameController?.HandleRest();
+            }
+            else if (input == "recall")
+            {
+                // Teleport player to guild hall common area
+                if (player.CurrentRoom == 1)
+                {
+                    AnsiConsole.MarkupLine("[#FFFF00]You're already in the guild hall![/]");
+                }
+                else
+                {
+                    player.CurrentRoom = 1;
+                    var guildHall = gameContext.Rooms[1];
+
+                    AnsiConsole.MarkupLine("\n[#00FFFF]You concentrate and feel the familiar pull of the guild hall...[/]");
+                    AnsiConsole.MarkupLine("[#00FFFF]The world blurs around you, and in an instant, you're standing in the guild hall common area.[/]\n");
+
+                    // Display room title
+                    string roomTitle = guildHall.Title;
+                    if (player.RoomNumbersEnabled)
+                    {
+                        roomTitle = $"{guildHall.Title} [RoomID: 1]";
+                    }
+                    AnsiConsole.MarkupLine($"\n<span class='room-title'>[{roomTitle}]</span>");
+
+                    // Display room description
+                    TextHelper.DisplayTextWithPaging(guildHall.Description, "#FA935F");
+                }
             }
             else if (input == "stats")
             {

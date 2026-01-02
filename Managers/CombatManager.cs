@@ -30,6 +30,7 @@ namespace GuildMaster.Managers
             SelectingAbility,
             SelectingAbilityTarget,
             SelectingItem,
+            SelectingItemTarget,
             ChangingRow,
             ProcessingTurn,
             DeathMenu,
@@ -57,12 +58,19 @@ namespace GuildMaster.Managers
         private Ability? pendingAbility;
         private Character? abilityCharacter;
         private NPC? preselectedTarget;  // For passing target to ability executors
+
+        // Pending item state (for damage scrolls that need targeting)
+        private string? pendingItem;
+        private Effect? pendingItemEffect;
+        private Character? itemUser;
         private Recruit? currentActingPartyMember;  // Track which party member is currently taking their turn
 
         private GameContext context;
         private Random random => ProgramStatics.Random;
         private AbilityExecutor? abilityExecutor;
         private Combat.CombatUIDisplay? uiDisplay;
+        private EventManager? eventManager;
+        private DialogueManager? dialogueManager;
 
         // Turn delay configuration (in milliseconds)
         private const int TURN_DELAY_MS = 1000;
@@ -92,6 +100,28 @@ namespace GuildMaster.Managers
             this.onStateChanged = stateChangedCallback;
             this.abilityExecutor = new AbilityExecutor(gameContext, this, ProgramStatics.messageManager);
             this.uiDisplay = new Combat.CombatUIDisplay(gameContext);
+
+            // Initialize AbilityExecutor with shared state dictionaries
+            this.abilityExecutor.InitializeSharedState(
+                statusEffects,
+                taunters,
+                battleCryTurns,
+                buffedAttack,
+                buffedDefense,
+                warCryDamageBoost,
+                abilityCooldowns,
+                evasiveFireActive,
+                barrierAbsorption
+            );
+        }
+
+        /// <summary>
+        /// Sets the event and dialogue managers for post-combat event triggering
+        /// </summary>
+        public void SetManagers(EventManager evtManager, DialogueManager dlgManager)
+        {
+            this.eventManager = evtManager;
+            this.dialogueManager = dlgManager;
         }
 
         /// <summary>
@@ -117,7 +147,8 @@ namespace GuildMaster.Managers
                 ShouldStartNewGame = false;
 
                 // Initialize combat state
-                activeEnemies = enemies;
+                // IMPORTANT: Clone all enemies to ensure independent HP tracking
+                activeEnemies = enemies.Select(e => e.Clone()).ToList();
                 combatRoom = currentRoom;
                 currentState = CombatState.ProcessingTurn;
                 currentTurnIndex = 0;
@@ -126,7 +157,7 @@ namespace GuildMaster.Managers
                 combatActive = true;
 
                 // Ensure all enemies start at full health and energy
-                foreach (var enemy in enemies)
+                foreach (var enemy in activeEnemies)
                 {
                     enemy.Health = enemy.MaxHealth;
                     enemy.Energy = enemy.MaxEnergy;
@@ -204,11 +235,12 @@ namespace GuildMaster.Managers
 
                 DebugLog($"DEBUG: turnOrder.Count={turnOrder.Count}, currentTurnIndex={currentTurnIndex}");
 
-                // Check if combat should end
-                if (!combatActive || !player.IsAlive || !activeEnemies.Any(e => e.Health > 0))
+                // Check if combat should end (all party members knocked out OR all enemies dead)
+                bool allPartyKnockedOut = player.Health <= 0 && player.ActiveParty.All(r => r.Health <= 0);
+                if (!combatActive || allPartyKnockedOut || !activeEnemies.Any(e => e.Health > 0))
                 {
                     DebugLog("DEBUG: Combat should end");
-                    HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
+                    HandleCombatEnd(player, activeEnemies, combatRoom, combatActive, allPartyKnockedOut);
                     // Only set to CombatEnded if we're not in recruitment or death menu
                     if (currentState != CombatState.RecruitmentPrompt && currentState != CombatState.DeathMenu)
                     {
@@ -232,10 +264,11 @@ namespace GuildMaster.Managers
                     }
 
                     // Check if combat should continue
-                    if (!player.IsAlive || !activeEnemies.Any(e => e.Health > 0) || !combatActive)
+                    bool allPartyKnockedOut2 = player.Health <= 0 && player.ActiveParty.All(r => r.Health <= 0);
+                    if (allPartyKnockedOut2 || !activeEnemies.Any(e => e.Health > 0) || !combatActive)
                     {
                         DebugLog("DEBUG: Combat should end (mid-turn check)");
-                        HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
+                        HandleCombatEnd(player, activeEnemies, combatRoom, combatActive, allPartyKnockedOut2);
                         currentState = CombatState.CombatEnded;
                         return;
                     }
@@ -263,11 +296,22 @@ namespace GuildMaster.Managers
 
                             if (player.Health <= 0)
                             {
-                                AnsiConsole.MarkupLine($"[#FF0000]You have been defeated![/]");
-                                combatActive = false;
-                                HandleCombatEnd(player, activeEnemies, combatRoom, combatActive);
-                                currentState = CombatState.CombatEnded;
-                                return;
+                                // Check if entire party is knocked out
+                                bool allPartyKnockedOut3 = player.ActiveParty.All(r => r.Health <= 0);
+                                if (allPartyKnockedOut3)
+                                {
+                                    AnsiConsole.MarkupLine($"[#FF0000]💀 You have been knocked unconscious![/]");
+                                    AnsiConsole.MarkupLine($"[#FF0000]The entire party has fallen...[/]");
+                                    combatActive = false;
+                                    HandleCombatEnd(player, activeEnemies, combatRoom, combatActive, true);
+                                    currentState = CombatState.CombatEnded;
+                                    return;
+                                }
+                                else
+                                {
+                                    AnsiConsole.MarkupLine($"[#FF0000]💀 You have been knocked unconscious![/]");
+                                    AnsiConsole.MarkupLine($"[#FFFF00]Your party members continue fighting![/]");
+                                }
                             }
                         }
                     }
@@ -280,13 +324,35 @@ namespace GuildMaster.Managers
                         return;
                     }
 
+                    // Class-based EP regeneration at turn start (player)
+                    if (player.Class != null && player.Class.EpPerTurnStart > 0)
+                    {
+                        int epGain = (int)Math.Ceiling(player.MaxEnergy * player.Class.EpPerTurnStart);
+                        player.Energy = Math.Min(player.MaxEnergy, player.Energy + epGain);
+                        if (epGain > 0)
+                        {
+                            AnsiConsole.MarkupLine($"<span style='color:#00FFFF'>You regenerate {epGain} EP! (EP: {player.Energy}/{player.MaxEnergy})</span>");
+                        }
+                    }
+
                     // Show player action menu and wait for input
                     ShowPlayerActionMenu();
                     return;
                 }
-                else if (combatant.IsPlayer && combatant.Character is Recruit)
+                else if (combatant.IsPlayer && combatant.Character is Recruit recruit)
                 {
-                    HandlePartyMemberTurn(combatant.Character as Recruit, activeEnemies);
+                    // Class-based EP regeneration at turn start (party member)
+                    if (recruit.Class != null && recruit.Class.EpPerTurnStart > 0)
+                    {
+                        int epGain = (int)Math.Ceiling(recruit.MaxEnergy * recruit.Class.EpPerTurnStart);
+                        recruit.Energy = Math.Min(recruit.MaxEnergy, recruit.Energy + epGain);
+                        if (epGain > 0)
+                        {
+                            AnsiConsole.MarkupLine($"<span style='color:#00FFFF'>{recruit.Name} regenerates {epGain} EP! (EP: {recruit.Energy}/{recruit.MaxEnergy})</span>");
+                        }
+                    }
+
+                    HandlePartyMemberTurn(recruit, activeEnemies);
                     return; // Wait for player input, don't advance turn automatically
                 }
                 else
@@ -481,6 +547,10 @@ namespace GuildMaster.Managers
                     HandleItemSelection(input);
                     break;
 
+                case CombatState.SelectingItemTarget:
+                    HandleItemTargetSelection(input);
+                    break;
+
                 case CombatState.DeathMenu:
                     HandleDeathMenuSelection(input);
                     break;
@@ -652,10 +722,10 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
             target.Health -= damage;
 
-            // Legionnaires generate EP from basic attacks (25% of max EP)
-            if (currentActingPartyMember.Class is Legionnaire)
+            // Class-based EP regeneration from basic attacks
+            if (currentActingPartyMember.Class != null && currentActingPartyMember.Class.EpPerBasicAttack > 0)
             {
-                int epGain = Math.Max(1, currentActingPartyMember.MaxEnergy / 4); // 25% of max EP, minimum 1
+                int epGain = (int)Math.Ceiling(currentActingPartyMember.MaxEnergy * currentActingPartyMember.Class.EpPerBasicAttack);
                 currentActingPartyMember.Energy = Math.Min(currentActingPartyMember.MaxEnergy, currentActingPartyMember.Energy + epGain);
                 AnsiConsole.MarkupLine($"<span style='color:#00FFFF'>{currentActingPartyMember.Name} gains {epGain} EP! (EP: {currentActingPartyMember.Energy}/{currentActingPartyMember.MaxEnergy})</span>");
             }
@@ -699,8 +769,25 @@ namespace GuildMaster.Managers
             for (int i = 0; i < abilities.Count; i++)
             {
                 var ability = abilities[i];
-                string energyColor = currentActingPartyMember.Energy >= ability.EnergyCost ? "#FFFF00" : "#808080";
-                AnsiConsole.MarkupLine($"{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description}");
+                int cooldownRemaining = GetAbilityCooldown(currentActingPartyMember, ability.Name);
+                bool onCooldown = cooldownRemaining > 0;
+                bool hasEnoughEnergy = currentActingPartyMember.Energy >= ability.EnergyCost;
+
+                // Determine if ability is usable (not on cooldown and has enough energy)
+                bool isUsable = !onCooldown && hasEnoughEnergy;
+                string abilityColor = isUsable ? "" : "dim";
+                string energyColor = hasEnoughEnergy ? "#FFFF00" : "#808080";
+
+                string cooldownText = onCooldown ? $" [dim]({cooldownRemaining} turn{(cooldownRemaining > 1 ? "s" : "")} remaining)[/]" : "";
+
+                if (isUsable)
+                {
+                    AnsiConsole.MarkupLine($"{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description}{cooldownText}");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[{abilityColor}]{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description}{cooldownText}[/]");
+                }
             }
             AnsiConsole.MarkupLine("0. Back");
             AnsiConsole.MarkupLine("\n[dim](Enter ability number)[/]");
@@ -864,10 +951,10 @@ namespace GuildMaster.Managers
 
             target.Health -= damageRoll;
 
-            // Legionnaires generate EP from basic attacks (25% of max EP)
-            if (player.Class is Legionnaire)
+            // Class-based EP regeneration from basic attacks
+            if (player.Class != null && player.Class.EpPerBasicAttack > 0)
             {
-                int epGain = Math.Max(1, player.MaxEnergy / 4); // 25% of max EP, minimum 1
+                int epGain = (int)Math.Ceiling(player.MaxEnergy * player.Class.EpPerBasicAttack);
                 player.Energy = Math.Min(player.MaxEnergy, player.Energy + epGain);
                 AnsiConsole.MarkupLine($"<span style='color:#00FFFF'>You gain {epGain} EP from your attack! (EP: {player.Energy}/{player.MaxEnergy})</span>");
             }
@@ -907,8 +994,25 @@ namespace GuildMaster.Managers
             for (int i = 0; i < abilities.Count; i++)
             {
                 var ability = abilities[i];
-                string energyColor = player.Energy >= ability.EnergyCost ? "#FFFF00" : "#808080";
-                AnsiConsole.MarkupLine($"{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description}");
+                int cooldownRemaining = GetAbilityCooldown(player, ability.Name);
+                bool onCooldown = cooldownRemaining > 0;
+                bool hasEnoughEnergy = player.Energy >= ability.EnergyCost;
+
+                // Determine if ability is usable (not on cooldown and has enough energy)
+                bool isUsable = !onCooldown && hasEnoughEnergy;
+                string abilityColor = isUsable ? "" : "dim";
+                string energyColor = hasEnoughEnergy ? "#FFFF00" : "#808080";
+
+                string cooldownText = onCooldown ? $" [dim]({cooldownRemaining} turn{(cooldownRemaining > 1 ? "s" : "")} remaining)[/]" : "";
+
+                if (isUsable)
+                {
+                    AnsiConsole.MarkupLine($"{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description}{cooldownText}");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[{abilityColor}]{i + 1}. {ability.Name} ([{energyColor}]{ability.EnergyCost} EP[/]) - {ability.Description}{cooldownText}[/]");
+                }
             }
             AnsiConsole.MarkupLine("0. Back");
             AnsiConsole.MarkupLine("\n[dim](Enter ability number)[/]");
@@ -963,6 +1067,22 @@ namespace GuildMaster.Managers
             {
                 var ability = abilities[abilityIndex - 1];
                 DebugLog($"DEBUG: Selected ability '{ability.Name}', energyCost={ability.EnergyCost}");
+
+                // Check cooldown
+                int cooldownRemaining = GetAbilityCooldown(actingCharacter, ability.Name);
+                if (cooldownRemaining > 0)
+                {
+                    AnsiConsole.MarkupLine($"\n{ability.Name} is on cooldown for {cooldownRemaining} more turn{(cooldownRemaining > 1 ? "s" : "")}!");
+                    if (currentActingPartyMember != null)
+                    {
+                        ShowPartyMemberAbilityMenu();
+                    }
+                    else
+                    {
+                        ShowAbilityMenu();
+                    }
+                    return;
+                }
 
                 // Check energy cost
                 if (actingCharacter.Energy < ability.EnergyCost)
@@ -1116,6 +1236,67 @@ namespace GuildMaster.Managers
             DebugLog($"DEBUG: CompleteTurn returned");
         }
 
+        private void HandleItemTargetSelection(string input)
+        {
+            if (currentTargetList == null || pendingItem == null || pendingItemEffect == null || itemUser == null)
+            {
+                AnsiConsole.MarkupLine("[#FF0000]Error: Invalid combat state![/]");
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberActionMenu();
+                }
+                else
+                {
+                    ShowPlayerActionMenu();
+                }
+                return;
+            }
+
+            if (!int.TryParse(input, out int targetIndex) || targetIndex < 1 || targetIndex > currentTargetList.Count)
+            {
+                AnsiConsole.MarkupLine("[#FF0000]Invalid target! Please choose again.[/]");
+
+                // Re-show target selection
+                AnsiConsole.MarkupLine("\n[#90FF90]Choose target:[/]");
+                for (int i = 0; i < currentTargetList.Count; i++)
+                {
+                    var enemy = currentTargetList[i];
+                    AnsiConsole.MarkupLine($"{i + 1}. {enemy.Name} (HP: {enemy.Health}/{enemy.MaxHealth})");
+                }
+                ShowStatusBar();
+                AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
+                return;
+            }
+
+            // Apply damage to selected target
+            var target = currentTargetList[targetIndex - 1];
+            int damage = RollDice(pendingItemEffect.DiceCount, pendingItemEffect.DiceSides, pendingItemEffect.Bonus);
+
+            AnsiConsole.MarkupLine($"\n[#FF6600]{itemUser.Name} hurls the {pendingItem} at {target.Name}![/]");
+            AnsiConsole.MarkupLine($"(Rolled {pendingItemEffect.DiceCount}d{pendingItemEffect.DiceSides}+{pendingItemEffect.Bonus} for [#FA8A8A]{damage} damage[/]!)");
+
+            target.Health -= damage;
+
+            if (target.Health <= 0)
+            {
+                string flavorText = GetKillFlavorText(itemUser.Name, target.Name, null, context.Player.GoreEnabled);
+                AnsiConsole.MarkupLine(flavorText);
+            }
+
+            // Remove item from inventory and consume
+            context.Player.Inventory.Remove(pendingItem);
+            AnsiConsole.MarkupLine($"The {pendingItem} has been consumed.");
+
+            // Clear pending item state
+            pendingItem = null;
+            pendingItemEffect = null;
+            itemUser = null;
+            currentTargetList = null;
+            currentActingPartyMember = null;
+
+            CompleteTurn();
+        }
+
         private void ShowItemMenu()
         {
             currentState = CombatState.SelectingItem;
@@ -1189,6 +1370,40 @@ namespace GuildMaster.Managers
                 {
                     var effect = context.Effects[itemData.EffectId];
 
+                    // Handle damage items - need enemy targeting
+                    if (effect.Type == EffectType.Damage)
+                    {
+                        var aliveEnemies = activeEnemies.Where(e => e.Health > 0).ToList();
+                        if (aliveEnemies.Count == 0)
+                        {
+                            AnsiConsole.MarkupLine("[#FF0000]No enemies to target![/]");
+                            if (currentActingPartyMember != null)
+                            {
+                                ShowPartyMemberActionMenu();
+                            }
+                            else
+                            {
+                                ShowPlayerActionMenu();
+                            }
+                            return;
+                        }
+
+                        // Store item info and enter target selection
+                        pendingItem = item;
+                        pendingItemEffect = effect;
+                        itemUser = actingCharacter;
+                        currentTargetList = aliveEnemies;
+                        currentState = CombatState.SelectingItemTarget;
+
+                        AnsiConsole.MarkupLine("\n[#90FF90]Choose target:[/]");
+                        for (int i = 0; i < aliveEnemies.Count; i++)
+                        {
+                            AnsiConsole.MarkupLine($"{i + 1}. {aliveEnemies[i].Name} (HP: {aliveEnemies[i].Health}/{aliveEnemies[i].MaxHealth})");
+                        }
+                        AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
+                        return;
+                    }
+
                     // Handle party-wide effects
                     if (effect.TargetsParty)
                     {
@@ -1196,7 +1411,7 @@ namespace GuildMaster.Managers
                     }
                     else
                     {
-                        // Handle single-target effects
+                        // Handle single-target effects (healing/energy)
                         ApplyCombatSingleEffect(item, effect, actingCharacter);
                     }
 
@@ -1404,7 +1619,7 @@ namespace GuildMaster.Managers
 
                     if (ally.Health <= 0)
                     {
-                        AnsiConsole.MarkupLine($"[#FF0000]{ally.Name} has been defeated![/]");
+                        AnsiConsole.MarkupLine($"\n[#FF0000]💀 {ally.Name} has been knocked unconscious![/]");
                         return;
                     }
                 }
@@ -1563,7 +1778,14 @@ namespace GuildMaster.Managers
 
                     if (target.Health <= 0)
                     {
-                        AnsiConsole.MarkupLine($"[#90FF90]{targetName} is defeated![/]");
+                        if (target == player)
+                        {
+                            AnsiConsole.MarkupLine($"[#FF0000]💀 You have been knocked unconscious![/]");
+                        }
+                        else
+                        {
+                            AnsiConsole.MarkupLine($"[#FF0000]💀 {targetName} has been knocked unconscious![/]");
+                        }
                     }
                     return true;
 
@@ -1588,7 +1810,14 @@ namespace GuildMaster.Managers
 
                         if (aoeTarget.Health <= 0)
                         {
-                            AnsiConsole.MarkupLine($"  [#90FF90]{aoeTargetName} {(aoeTarget == player ? "are" : "is")} defeated![/]");
+                            if (aoeTarget == player)
+                            {
+                                AnsiConsole.MarkupLine($"  [#FF0000]💀 You have been knocked unconscious![/]");
+                            }
+                            else
+                            {
+                                AnsiConsole.MarkupLine($"  [#FF0000]💀 {aoeTargetName} has been knocked unconscious![/]");
+                            }
                         }
                     }
                     return true;
@@ -1825,12 +2054,38 @@ namespace GuildMaster.Managers
                         {
                             target.TakeDamage(remaining);
                             AnsiConsole.MarkupLine($"[#FA8A8A]{remaining} damage gets through![/]");
+
+                            // Check if target was knocked out by barrier damage
+                            if (target.Health <= 0)
+                            {
+                                if (target == player)
+                                {
+                                    AnsiConsole.MarkupLine($"[#FF0000]💀 You have been knocked unconscious![/]");
+                                }
+                                else
+                                {
+                                    AnsiConsole.MarkupLine($"[#FF0000]💀 {target.Name} has been knocked unconscious![/]");
+                                }
+                            }
                         }
                     }
                     else
                     {
                         // Normal damage
                         target.TakeDamage(actualDamage);
+                    }
+
+                    // Check if target was knocked out
+                    if (target.Health <= 0)
+                    {
+                        if (target == player)
+                        {
+                            AnsiConsole.MarkupLine($"[#FF0000]💀 You have been knocked unconscious![/]");
+                        }
+                        else
+                        {
+                            AnsiConsole.MarkupLine($"[#FF0000]💀 {target.Name} has been knocked unconscious![/]");
+                        }
                     }
 
                     // Regenerate energy at end of turn
@@ -1841,9 +2096,10 @@ namespace GuildMaster.Managers
             }
         }
 
-        private void HandleCombatEnd(Player player, List<NPC> enemies, Room? currentRoom, bool combatActive)
+        private void HandleCombatEnd(Player player, List<NPC> enemies, Room? currentRoom, bool combatActive, bool allPartyKnockedOut = false)
         {
-            if (!player.IsAlive)
+            // Game over only if ALL party members are knocked out
+            if (allPartyKnockedOut)
             {
                 ShowDeathMenu();
             }
@@ -1941,7 +2197,7 @@ namespace GuildMaster.Managers
         private void HandleVictory(Player player, List<NPC> enemies, Room? currentRoom)
         {
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine("<span class='victory-glow' style='font-size: 1.3em;'>⚔ ✦ VICTORY ✦ ⚔</span>");
+            AnsiConsole.MarkupLine("<span class='victory-glow' style='font-size: 1.3em;'>⚔   VICTORY   ⚔</span>");
             AnsiConsole.MarkupLine($"\n<span class='victory-text'>You defeated all enemies!</span>");
 
             ClearCombatStatusEffects(player);
@@ -2056,6 +2312,16 @@ namespace GuildMaster.Managers
 
         private void FinishVictory(Player player, List<NPC> enemies, Room? currentRoom)
         {
+            // Check if Bandit Warlord was defeated
+            if (enemies.Any(e => e.Name == "Bandit Warlord"))
+            {
+                player.QuestFlags["bandit_warlord_defeated"] = true;
+                AnsiConsole.MarkupLine("\n[bold yellow]The Bandit Warlord has fallen![/]");
+                AnsiConsole.MarkupLine("[dim]With their leader defeated, the bandits plaguing Gaius' farm will scatter...[/]");
+            }
+
+            // Track if Imperial Assassin was defeated (aftermath event will trigger after loot)
+            bool imperialAssassinDefeated = enemies.Any(e => e.Name == "Imperial Assassin");
 
             // Loot from all enemies
             int totalGold = 0;
@@ -2110,7 +2376,7 @@ namespace GuildMaster.Managers
             // Check for level ups
             if (player.CheckLevelUp())
             {
-                AnsiConsole.MarkupLine($"\n[#FFD700]★ LEVEL UP! You are now level {player.Level}! ★[/]");
+                AnsiConsole.MarkupLine($"\n[#FFD700]  LEVEL UP! You are now level {player.Level}!  [/]");
                 player.ApplyLevelUpBonuses();
                 DisplayLevelUpStats(player);
             }
@@ -2119,7 +2385,7 @@ namespace GuildMaster.Managers
             {
                 if (ally.CheckLevelUp())
                 {
-                    AnsiConsole.MarkupLine($"\n[#FFD700]★ LEVEL UP! {ally.Name} is now level {ally.Level}! ★[/]");
+                    AnsiConsole.MarkupLine($"\n[#FFD700]  LEVEL UP! {ally.Name} is now level {ally.Level}!  [/]");
                     ally.ApplyLevelUpBonuses();
                     DisplayLevelUpStats(ally);
                 }
@@ -2139,6 +2405,40 @@ namespace GuildMaster.Managers
                 if (player.ThreeMemberCombatCount == 2)
                 {
                     ProgramStatics.messageManager.CheckAndShowMessage("autocombat_tutorial");
+                }
+            }
+
+            // Check if Imperial Assassin was defeated - trigger aftermath event immediately
+            if (imperialAssassinDefeated && eventManager != null && dialogueManager != null)
+            {
+                AnsiConsole.MarkupLine(""); // Add spacing before event
+
+                // Check for the aftermath event in the current room
+                EventData aftermathEvent = eventManager.CheckForEvent(player.CurrentRoom);
+
+                if (aftermathEvent != null)
+                {
+                    // Execute event actions first
+                    eventManager.ExecuteActions(aftermathEvent);
+
+                    // Trigger the aftermath dialogue
+                    if (!string.IsNullOrEmpty(aftermathEvent.DialogueTreeId))
+                    {
+                        // Clean up combat state BEFORE starting dialogue
+                        CleanupCombat(player);
+
+                        // Start the aftermath dialogue
+                        dialogueManager.StartEventDialogue(aftermathEvent.DialogueTreeId);
+
+                        // Mark event as triggered if one-time
+                        if (aftermathEvent.IsOneTime)
+                        {
+                            eventManager.MarkEventTriggered(aftermathEvent.EventId);
+                        }
+
+                        // Return early since we already called CleanupCombat
+                        return;
+                    }
                 }
             }
 
@@ -3391,41 +3691,41 @@ namespace GuildMaster.Managers
                 ["sword"] = (
                     new List<string>
                     {
-                        $"[#90FF90]{victimName} falls to {killerName}'s blade![/]",
-                        $"[#90FF90]{killerName}'s sword finds its mark. {victimName} collapses![/]",
+                        $"[#90FF90]{victimName} falls to {(killerName == "You" ? "Your" : killerName + "'s")} blade![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} sword finds its mark. {victimName} collapses![/]",
                         $"[#90FF90]With a swift strike, {killerName} defeats {victimName}![/]",
-                        $"[#90FF90]{victimName} crumples under {killerName}'s assault![/]",
-                        $"[#90FF90]{killerName}'s blade cuts through {victimName}'s defenses![/]",
+                        $"[#90FF90]{victimName} crumples under {(killerName == "You" ? "Your" : killerName + "'s")} assault![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} blade cuts through {victimName}'s defenses![/]",
                         $"[#90FF90]A decisive blow from {killerName} ends the fight![/]",
                         $"[#90FF90]{victimName} staggers and falls, defeated![/]",
                         $"[#90FF90]{killerName} strikes true! {victimName} is vanquished![/]",
                         $"[#90FF90]The clash of steel ends with {victimName} on the ground![/]",
-                        $"[#90FF90]{victimName} falls before {killerName}'s superior swordplay![/]",
-                        $"[#90FF90]{killerName}'s blade carves through {victimName}'s defense![/]",
+                        $"[#90FF90]{victimName} falls before {(killerName == "You" ? "Your" : killerName + "'s")} superior swordplay![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} blade carves through {victimName}'s defense![/]",
                         $"[#90FF90]{victimName} staggers and falls to the sword![/]",
                         $"[#90FF90]A swift strike finishes {victimName}![/]",
                         $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} {GetWeaponName(weapon)} finds a gap in {victimName}'s defense, striking a killing blow![/]",
-                        $"[#90FF90]{victimName} crumples before {killerName}'s steel![/]",
+                        $"[#90FF90]{victimName} crumples before {(killerName == "You" ? "Your" : killerName + "'s")} steel![/]",
                         $"[#90FF90]The final thrust drops {victimName} to the ground![/]",
-                        $"[#90FF90]{killerName}'s blade sings {victimName}'s death song![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} blade sings {victimName}'s death song![/]",
                         $"[#90FF90]Steel flashes and {victimName} falls![/]",
-                        $"[#90FF90]{victimName} can't match {killerName}'s skill with a blade![/]",
+                        $"[#90FF90]{victimName} can't match {(killerName == "You" ? "Your" : killerName + "'s")} skill with a blade![/]",
                         $"[#90FF90]A masterful cut ends {victimName}'s resistance![/]"
                     },
                     new List<string>
                     {
-                        $"[#FA8A8A]{killerName}'s blade cleaves through {victimName}, spraying crimson![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} blade cleaves through {victimName}, spraying crimson![/]",
                         $"[#FA8A8A]{victimName}'s head flies from their shoulders![/]",
                         $"[#FA8A8A]{killerName} runs {victimName} through! Blood pools on the ground![/]",
                         $"[#FA8A8A]With a vicious slash, {killerName} disembowels {victimName}![/]",
                         $"[#FA8A8A]{victimName}'s blood paints the battlefield as they fall![/]",
-                        $"[#FA8A8A]{killerName}'s blade cuts deep! {victimName} dies choking on blood![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} blade cuts deep! {victimName} dies choking on blood![/]",
                         $"[#FA8A8A]A arterial spray erupts as {killerName} cuts down {victimName}![/]",
                         $"[#FA8A8A]{victimName}'s entrails spill out from the mortal wound![/]",
                         $"[#FA8A8A]{killerName} hacks {victimName} apart in a gory display![/]",
                         $"[#FA8A8A]{victimName}'s body crumples, soaked in their own blood![/]",
                         $"[#FA8A8A]The sword opens {victimName}'s throat in a crimson gush![/]",
-                        $"[#FA8A8A]{killerName}'s blade pierces {victimName}'s heart, blood erupting![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} blade pierces {victimName}'s heart, blood erupting![/]",
                         $"[#FA8A8A]{victimName}'s severed arm hits the ground before they do![/]",
                         $"[#FA8A8A]Steel bites deep into {victimName}'s neck, nearly decapitating them![/]",
                         $"[#FA8A8A]{victimName} collapses in a widening pool of their own blood![/]",
@@ -3439,43 +3739,43 @@ namespace GuildMaster.Managers
                 ["bow"] = (
                     new List<string>
                     {
-                        $"[#90FF90]{killerName}'s arrow strikes true! {victimName} falls![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} arrow strikes true! {victimName} falls![/]",
                         $"[#90FF90]An arrow pierces {victimName}'s heart. They collapse![/]",
-                        $"[#90FF90]{killerName}'s shot finds its mark. {victimName} is defeated![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} shot finds its mark. {victimName} is defeated![/]",
                         $"[#90FF90]A perfect shot from {(killerName == "You" ? "your" : killerName + "'s")} bow ends {victimName}'s life![/]",
                         $"[#90FF90]{victimName} crumples with an arrow in their chest![/]",
-                        $"[#90FF90]{killerName}'s arrow flies swift and deadly![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} arrow flies swift and deadly![/]",
                         $"[#90FF90]The arrow finds a gap in {victimName}'s armor![/]",
                         $"[#90FF90]{victimName} falls with a strangled gasp![/]",
-                        $"[#90FF90]{killerName}'s marksmanship proves superior![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} marksmanship proves superior![/]",
                         $"[#90FF90]A fatal shot brings {victimName} down![/]",
-                        $"[#90FF90]{killerName}'s arrow finds its mark with deadly precision![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} arrow finds its mark with deadly precision![/]",
                         $"[#90FF90]{victimName} falls with an arrow through them![/]",
                         $"[#90FF90]A perfectly placed shot ends {victimName}![/]",
-                        $"[#90FF90]{killerName}'s bowstring sings {victimName}'s death knell![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} bowstring sings {victimName}'s death knell![/]",
                         $"[#90FF90]The arrow strikes a vital point! {victimName} collapses![/]",
                         $"[#90FF90]{victimName} drops as the arrow hits home![/]",
-                        $"[#90FF90]Swift and silent, {killerName}'s arrow fells {victimName}![/]",
+                        $"[#90FF90]Swift and silent, {(killerName == "You" ? "Your" : killerName + "'s")} arrow fells {victimName}![/]",
                         $"[#90FF90]The shot flies true and {victimName} is no more![/]",
-                        $"[#90FF90]{killerName}'s archery skills prove lethal![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} archery skills prove lethal![/]",
                         $"[#90FF90]One arrow is all it takes to end {victimName}![/]"
                     },
                     new List<string>
                     {
-                        $"[#FA8A8A]{killerName}'s arrow punches through {victimName}'s throat in a spray of blood![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} arrow punches through {victimName}'s throat in a spray of blood![/]",
                         $"[#FA8A8A]The arrow pins {victimName} to the ground, blood gurgling from the wound![/]",
                         $"[#FA8A8A]{victimName}'s eye socket becomes a bloody crater![/]",
-                        $"[#FA8A8A]{killerName}'s arrow severs {victimName}'s spine! They drop like a puppet![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} arrow severs {victimName}'s spine! They drop like a puppet![/]",
                         $"[#FA8A8A]Blood erupts from {victimName}'s chest as the arrow pierces clean through![/]",
                         $"[#FA8A8A]The arrow shatters {victimName}'s skull in a crimson explosion![/]",
                         $"[#FA8A8A]{victimName} convulses violently as the arrow finds their heart![/]",
-                        $"[#FA8A8A]{killerName}'s shot rips through {victimName}'s neck, nearly decapitating them![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} shot rips through {victimName}'s neck, nearly decapitating them![/]",
                         $"[#FA8A8A]Blood pours from {victimName}'s mouth as they collapse, arrow-riddled![/]",
                         $"[#FA8A8A]The arrow punches through ribs and organs! {victimName} dies screaming![/]",
                         $"[#FA8A8A]The arrow impales {victimName}'s windpipe, blood streaming![/]",
                         $"[#FA8A8A]{victimName} chokes on blood as the arrow punctures their lung![/]",
                         $"[#FA8A8A]The arrowhead tears through {victimName}'s jugular in a crimson fountain![/]",
-                        $"[#FA8A8A]{killerName}'s arrow splits {victimName}'s skull like ripe fruit![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} arrow splits {victimName}'s skull like ripe fruit![/]",
                         $"[#FA8A8A]Blood sprays as the arrow rips clean through {victimName}![/]",
                         $"[#FA8A8A]The arrow pierces {victimName}'s heart, blood gushing from the wound![/]",
                         $"[#FA8A8A]{victimName} dies with three arrows buried in their chest![/]",
@@ -3487,46 +3787,46 @@ namespace GuildMaster.Managers
                 ["staff"] = (
                     new List<string>
                     {
-                        $"[#90FF90]{killerName}'s magic overwhelms {victimName}![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} magic overwhelms {victimName}![/]",
                         $"[#90FF90]Arcane energy consumes {victimName}![/]",
-                        $"[#90FF90]{victimName} falls to {killerName}'s sorcery![/]",
+                        $"[#90FF90]{victimName} falls to {(killerName == "You" ? "Your" : killerName + "'s")} sorcery![/]",
                         $"[#90FF90]Mystical forces end {victimName}'s life![/]",
-                        $"[#90FF90]{killerName}'s spell proves fatal![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} spell proves fatal![/]",
                         $"[#90FF90]Magic energy crackles as {victimName} collapses![/]",
                         $"[#90FF90]The staff's power strikes down {victimName}![/]",
                         $"[#90FF90]Ethereal flames engulf {victimName}![/]",
-                        $"[#90FF90]{victimName} succumbs to {killerName}'s magic![/]",
+                        $"[#90FF90]{victimName} succumbs to {(killerName == "You" ? "Your" : killerName + "'s")} magic![/]",
                         $"[#90FF90]A surge of power ends {victimName}'s resistance![/]",
                         $"[#90FF90]Arcane power surges through {victimName}![/]",
                         $"[#90FF90]{victimName} is overwhelmed by magical force![/]",
-                        $"[#90FF90]{killerName}'s staff channels devastating energy into {victimName}![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} staff channels devastating energy into {victimName}![/]",
                         $"[#90FF90]Magic crackles as {victimName} falls![/]",
                         $"[#90FF90]Mystical energy tears through {victimName}![/]",
                         $"[#90FF90]The arcane blast drops {victimName} instantly![/]",
-                        $"[#90FF90]{victimName} cannot withstand {killerName}'s sorcery![/]",
+                        $"[#90FF90]{victimName} cannot withstand {(killerName == "You" ? "Your" : killerName + "'s")} sorcery![/]",
                         $"[#90FF90]Eldritch power ends {victimName}![/]",
-                        $"[#90FF90]{killerName}'s magic proves too strong for {victimName}![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} magic proves too strong for {victimName}![/]",
                         $"[#90FF90]The final spell seals {victimName}'s fate![/]"
                     },
                     new List<string>
                     {
-                        $"[#FA8A8A]{victimName}'s flesh melts from their bones under {killerName}'s spell![/]",
+                        $"[#FA8A8A]{victimName}'s flesh melts from their bones under {(killerName == "You" ? "Your" : killerName + "'s")} spell![/]",
                         $"[#FA8A8A]Arcane fire immolates {victimName}! They scream as they burn![/]",
-                        $"[#FA8A8A]{killerName}'s magic tears {victimName} apart from the inside![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} magic tears {victimName} apart from the inside![/]",
                         $"[#FA8A8A]Blood boils and skin peels as magic consumes {victimName}![/]",
                         $"[#FA8A8A]{victimName}'s body explodes in a shower of gore![/]",
                         $"[#FA8A8A]Dark magic withers {victimName} into a husk![/]",
                         $"[#FA8A8A]Lightning chars {victimName}'s corpse black![/]",
                         $"[#FA8A8A]{victimName}'s organs liquefy from the magical assault![/]",
                         $"[#FA8A8A]Frost shatters {victimName}'s frozen body into bloody chunks![/]",
-                        $"[#FA8A8A]{killerName}'s spell rips {victimName} apart at the seams![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} spell rips {victimName} apart at the seams![/]",
                         $"[#FA8A8A]Magical flames reduce {victimName} to ash and charred bone![/]",
                         $"[#FA8A8A]{victimName}'s eyes burst from arcane pressure![/]",
                         $"[#FA8A8A]The spell causes {victimName}'s blood to ignite from within![/]",
                         $"[#FA8A8A]Arcane energy flays the flesh from {victimName}'s body![/]",
                         $"[#FA8A8A]{victimName} screams as magic boils them alive![/]",
                         $"[#FA8A8A]Dark power turns {victimName}'s insides to mush![/]",
-                        $"[#FA8A8A]{killerName}'s spell ruptures {victimName}'s organs one by one![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} spell ruptures {victimName}'s organs one by one![/]",
                         $"[#FA8A8A]Mystic force tears {victimName} limb from limb![/]",
                         $"[#FA8A8A]{victimName} convulses violently as magic ravages their body![/]",
                         $"[#FA8A8A]The curse causes {victimName} to hemorrhage from every orifice![/]"
@@ -3537,24 +3837,24 @@ namespace GuildMaster.Managers
                     {
                         $"[#90FF90]{killerName} strikes a vital point! {victimName} falls![/]",
                         $"[#90FF90]A swift stab ends {victimName}![/]",
-                        $"[#90FF90]{killerName}'s blade finds the gap in {victimName}'s armor![/]",
-                        $"[#90FF90]{victimName} collapses from {killerName}'s precise strike![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} blade finds the gap in {victimName}'s armor![/]",
+                        $"[#90FF90]{victimName} collapses from {(killerName == "You" ? "Your" : killerName + "'s")} precise strike![/]",
                         $"[#90FF90]Quick and deadly, {killerName} defeats {victimName}![/]",
                         $"[#90FF90]The dagger's edge proves lethal![/]",
                         $"[#90FF90]{killerName} delivers the killing blow![/]",
                         $"[#90FF90]{victimName} staggers back and falls![/]",
                         $"[#90FF90]A flash of steel ends the fight![/]",
-                        $"[#90FF90]{killerName}'s speed overwhelms {victimName}![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} speed overwhelms {victimName}![/]",
                         $"[#90FF90]A quick thrust to a vital spot fells {victimName}![/]",
-                        $"[#90FF90]{killerName}'s dagger strikes like a viper![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} dagger strikes like a viper![/]",
                         $"[#90FF90]Precision and speed bring {victimName} down![/]",
                         $"[#90FF90]The blade finds its mark between the ribs![/]",
                         $"[#90FF90]{victimName} never saw the strike coming![/]",
                         $"[#90FF90]Silent and swift, the dagger ends {victimName}![/]",
-                        $"[#90FF90]{killerName}'s lethal precision defeats {victimName}![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} lethal precision defeats {victimName}![/]",
                         $"[#90FF90]One well-placed stab is all it takes![/]",
                         $"[#90FF90]The dagger slips past {victimName}'s defenses![/]",
-                        $"[#90FF90]{victimName} falls to {killerName}'s quick blade![/]"
+                        $"[#90FF90]{victimName} falls to {(killerName == "You" ? "Your" : killerName + "'s")} quick blade![/]"
                     },
                     new List<string>
                     {
@@ -3583,7 +3883,7 @@ namespace GuildMaster.Managers
                 ["axe"] = (
                     new List<string>
                     {
-                        $"[#90FF90]{killerName}'s axe brings {victimName} down![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} axe brings {victimName} down![/]",
                         $"[#90FF90]A crushing blow defeats {victimName}![/]",
                         $"[#90FF90]{killerName} cleaves through {victimName}![/]",
                         $"[#90FF90]The axe splits {victimName}'s defenses![/]",
@@ -3591,22 +3891,22 @@ namespace GuildMaster.Managers
                         $"[#90FF90]With brutal force, {killerName} ends {victimName}![/]",
                         $"[#90FF90]The heavy blade finds its mark![/]",
                         $"[#90FF90]{victimName} crumples under the axe's weight![/]",
-                        $"[#90FF90]{killerName}'s savage strike is decisive![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} savage strike is decisive![/]",
                         $"[#90FF90]A powerful chop ends the battle![/]",
                         $"[#90FF90]The battle axe cleaves {victimName} in two![/]",
-                        $"[#90FF90]{killerName}'s overhead swing fells {victimName}![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} overhead swing fells {victimName}![/]",
                         $"[#90FF90]Brutal strength overpowers {victimName}![/]",
                         $"[#90FF90]The axe's heavy blade crushes through![/]",
                         $"[#90FF90]{victimName} cannot withstand the mighty blow![/]",
                         $"[#90FF90]A devastating chop ends {victimName}![/]",
                         $"[#90FF90]{killerName} splits {victimName}'s guard with raw power![/]",
                         $"[#90FF90]The weighty axe proves unstoppable![/]",
-                        $"[#90FF90]{victimName} falls before {killerName}'s brutal assault![/]",
+                        $"[#90FF90]{victimName} falls before {(killerName == "You" ? "Your" : killerName + "'s")} brutal assault![/]",
                         $"[#90FF90]One mighty swing ends the fight![/]"
                     },
                     new List<string>
                     {
-                        $"[#FA8A8A]{killerName}'s axe splits {victimName}'s skull like firewood![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} axe splits {victimName}'s skull like firewood![/]",
                         $"[#FA8A8A]The axe blade buries itself in {victimName}'s chest, spraying blood![/]",
                         $"[#FA8A8A]{killerName} cleaves {victimName} nearly in two![/]",
                         $"[#FA8A8A]Bone and flesh yield to the brutal axe blow![/]",
@@ -3615,7 +3915,7 @@ namespace GuildMaster.Managers
                         $"[#FA8A8A]{killerName} hacks {victimName} apart with savage chops![/]",
                         $"[#FA8A8A]Ribs shatter and organs burst from the axe's impact![/]",
                         $"[#FA8A8A]{victimName}'s body splits open, innards spilling out![/]",
-                        $"[#FA8A8A]Blood and viscera fly as {killerName}'s axe strikes home![/]",
+                        $"[#FA8A8A]Blood and viscera fly as {(killerName == "You" ? "Your" : killerName + "'s")} axe strikes home![/]",
                         $"[#FA8A8A]The axe embeds in {victimName}'s ribcage with a sickening crunch![/]",
                         $"[#FA8A8A]{killerName} splits {victimName} from collarbone to navel![/]",
                         $"[#FA8A8A]The brutal chop opens {victimName} like a slaughtered pig![/]",
@@ -3631,7 +3931,7 @@ namespace GuildMaster.Managers
                 ["hammer"] = (
                     new List<string>
                     {
-                        $"[#90FF90]{killerName}'s hammer strikes true! {victimName} falls![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} hammer strikes true! {victimName} falls![/]",
                         $"[#90FF90]A crushing blow ends {victimName}![/]",
                         $"[#90FF90]{victimName} crumples under the hammer's weight![/]",
                         $"[#90FF90]The mighty hammer brings {victimName} down![/]",
@@ -3640,11 +3940,11 @@ namespace GuildMaster.Managers
                         $"[#90FF90]The hammer blow proves fatal![/]",
                         $"[#90FF90]{victimName} staggers and collapses![/]",
                         $"[#90FF90]Brutal strength wins the day![/]",
-                        $"[#90FF90]{killerName}'s mace shatters {victimName}![/]"
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} mace shatters {victimName}![/]"
                     },
                     new List<string>
                     {
-                        $"[#FA8A8A]{killerName}'s hammer caves in {victimName}'s skull![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} hammer caves in {victimName}'s skull![/]",
                         $"[#FA8A8A]Bones shatter as the hammer pulverizes {victimName}![/]",
                         $"[#FA8A8A]{victimName}'s ribcage collapses inward, puncturing organs![/]",
                         $"[#FA8A8A]The hammer crushes {victimName} into a bloody pulp![/]",
@@ -3659,7 +3959,7 @@ namespace GuildMaster.Managers
                 ["spear"] = (
                     new List<string>
                     {
-                        $"[#90FF90]{killerName}'s spear pierces through {victimName}![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} spear pierces through {victimName}![/]",
                         $"[#90FF90]A thrust ends {victimName}'s resistance![/]",
                         $"[#90FF90]{victimName} falls to the spear's reach![/]",
                         $"[#90FF90]The spear finds its mark! {victimName} is defeated![/]",
@@ -3668,11 +3968,11 @@ namespace GuildMaster.Managers
                         $"[#90FF90]The spear's point proves deadly![/]",
                         $"[#90FF90]{victimName} collapses, impaled![/]",
                         $"[#90FF90]A calculated thrust ends the fight![/]",
-                        $"[#90FF90]{killerName}'s reach advantage wins the day![/]"
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} reach advantage wins the day![/]"
                     },
                     new List<string>
                     {
-                        $"[#FA8A8A]{killerName}'s spear bursts through {victimName}'s back![/]",
+                        $"[#FA8A8A]{(killerName == "You" ? "Your" : killerName + "'s")} spear bursts through {victimName}'s back![/]",
                         $"[#FA8A8A]The spear skewers {victimName}, blood running down the shaft![/]",
                         $"[#FA8A8A]{victimName} writhes on the spear, choking on blood![/]",
                         $"[#FA8A8A]{killerName} impales {victimName}, lifting them off the ground![/]",
@@ -3689,20 +3989,20 @@ namespace GuildMaster.Managers
                     {
                         $"[#90FF90]{killerName} strikes down {victimName} with bare hands![/]",
                         $"[#90FF90]A powerful blow defeats {victimName}![/]",
-                        $"[#90FF90]{victimName} falls to {killerName}'s martial prowess![/]",
+                        $"[#90FF90]{victimName} falls to {(killerName == "You" ? "Your" : killerName + "'s")} martial prowess![/]",
                         $"[#90FF90]{killerName} overpowers {victimName}![/]",
                         $"[#90FF90]Superior technique wins the day![/]",
                         $"[#90FF90]{victimName} crumples under the assault![/]",
-                        $"[#90FF90]{killerName}'s fists prove deadly![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} fists prove deadly![/]",
                         $"[#90FF90]A decisive strike ends {victimName}![/]",
                         $"[#90FF90]{victimName} falls, overwhelmed![/]",
-                        $"[#90FF90]{killerName}'s raw strength prevails![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} raw strength prevails![/]",
                         $"[#90FF90]A devastating punch drops {victimName}![/]",
                         $"[#90FF90]{killerName} pummels {victimName} into submission![/]",
                         $"[#90FF90]Bare-knuckle fury ends {victimName}![/]",
-                        $"[#90FF90]{victimName} cannot match {killerName}'s fighting skill![/]",
+                        $"[#90FF90]{victimName} cannot match {(killerName == "You" ? "Your" : killerName + "'s")} fighting skill![/]",
                         $"[#90FF90]A crushing blow brings {victimName} down![/]",
-                        $"[#90FF90]{killerName}'s martial arts prove superior![/]",
+                        $"[#90FF90]{(killerName == "You" ? "Your" : killerName + "'s")} martial arts prove superior![/]",
                         $"[#90FF90]{victimName} falls to a powerful strike![/]",
                         $"[#90FF90]Fist meets flesh and {victimName} crumples![/]",
                         $"[#90FF90]{killerName} defeats {victimName} with pure combat skill![/]",
@@ -3711,7 +4011,7 @@ namespace GuildMaster.Managers
                     new List<string>
                     {
                         $"[#FA8A8A]{killerName} snaps {victimName}'s neck with a brutal twist![/]",
-                        $"[#FA8A8A]Ribs crack and splinter under {killerName}'s assault![/]",
+                        $"[#FA8A8A]Ribs crack and splinter under {(killerName == "You" ? "Your" : killerName + "'s")} assault![/]",
                         $"[#FA8A8A]{killerName} crushes {victimName}'s windpipe with bare hands![/]",
                         $"[#FA8A8A]{victimName} chokes on blood as their jaw is shattered![/]",
                         $"[#FA8A8A]{killerName} pounds {victimName}'s face into pulp![/]",
@@ -3719,7 +4019,7 @@ namespace GuildMaster.Managers
                         $"[#FA8A8A]{victimName}'s skull fractures under the brutal blows![/]",
                         $"[#FA8A8A]{killerName} tears {victimName} apart with savage violence![/]",
                         $"[#FA8A8A]Blood sprays from {victimName}'s ruptured organs![/]",
-                        $"[#FA8A8A]{victimName}'s spine snaps like a twig in {killerName}'s grip![/]",
+                        $"[#FA8A8A]{victimName}'s spine snaps like a twig in {(killerName == "You" ? "Your" : killerName + "'s")} grip![/]",
                         $"[#FA8A8A]{killerName} caves in {victimName}'s chest with a brutal strike![/]",
                         $"[#FA8A8A]Bone shatters as {killerName} pummels {victimName}![/]",
                         $"[#FA8A8A]{victimName}'s face becomes an unrecognizable bloody mess![/]",

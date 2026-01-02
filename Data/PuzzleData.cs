@@ -71,10 +71,41 @@ namespace GuildMaster.Data
                         IsSolved = false,
                         MaxAttempts = 0,  // Unlimited attempts to speak the passphrase
                         OnSolveMessage = "The fog clears, revealing a path to the east.",
-                        UnlockedExits = new List<string> { "east" },  // Opens east to Room 63
+                        UnlockedExits = new List<string> { "east" },  // Opens east to Room 100
                         CurrentState = new Dictionary<string, object>
                         {
                             { "fog_cleared", false }
+                        }
+                    }
+                },
+                {
+                    "ritual_chamber_cipher", new PuzzleState
+                    {
+                        PuzzleId = "ritual_chamber_cipher",
+                        RoomId = 105,
+                        IsSolved = false,
+                        MaxAttempts = 0,  // Unlimited attempts
+                        OnSolveMessage = "The iron gate shudders and swings open with a grinding sound. The passage south is now accessible.",
+                        UnlockedExits = new List<string> { "south" },  // Opens south to Room 108
+                        CurrentState = new Dictionary<string, object>
+                        {
+                            { "gate_unlocked", false },
+                            { "correct_answer", "nihil" }  // The word that unmakes all things (nothing/void)
+                        }
+                    }
+                },
+                {
+                    "library_book_puzzle", new PuzzleState
+                    {
+                        PuzzleId = "library_book_puzzle",
+                        RoomId = 108,
+                        IsSolved = false,
+                        MaxAttempts = 0,  // No puzzle mechanics yet, just lore/flavor
+                        OnSolveMessage = null,
+                        UnlockedExits = new List<string>(),
+                        CurrentState = new Dictionary<string, object>
+                        {
+                            { "books_examined", false }
                         }
                     }
                 }

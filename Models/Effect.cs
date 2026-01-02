@@ -19,6 +19,7 @@ namespace GuildMaster.Models
         Heal,
         RestoreEnergy,
         PartyRestore,
+        Damage,        // For offensive scrolls/items
         BuffAttack,    // For future scrolls
         BuffDefense    // For future scrolls
     }

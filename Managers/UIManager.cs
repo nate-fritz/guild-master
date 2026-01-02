@@ -240,6 +240,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("Party Status:         party or p");
             AnsiConsole.MarkupLine("Guild Management:     guild or g");
             AnsiConsole.MarkupLine("Rest:                 rest");
+            AnsiConsole.MarkupLine("Return to guild:      recall");
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Settings:");
             AnsiConsole.MarkupLine("Settings menu:        settings");

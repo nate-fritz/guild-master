@@ -23,8 +23,72 @@ namespace GuildMaster.Data
             townGuard.Dialogue.Add("greeting", new DialogueNode()
             {
                 Text = "The guard glances at you briefly and says \"Move along, citizen. Keep your nose clean and we won't have any problems.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Can you give me directions?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Understood.\"", nextNodeID = "end" }
+                }
+            });
+
+            townGuard.Dialogue.Add("ask_directions", new DialogueNode()
+            {
+                Text = "The guard nods. \"What are you looking for?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Where is the Town Hall?\"", nextNodeID = "dir_town_hall" },
+                    new DialogueNode.Choice { choiceText = "\"Where is the Temple District?\"", nextNodeID = "dir_temple" },
+                    new DialogueNode.Choice { choiceText = "\"Where can I find the tavern?\"", nextNodeID = "dir_tavern" },
+                    new DialogueNode.Choice { choiceText = "\"Where's the blacksmith?\"", nextNodeID = "dir_blacksmith" },
+                    new DialogueNode.Choice { choiceText = "\"Never mind.\"", nextNodeID = "end" }
+                }
+            });
+
+            townGuard.Dialogue.Add("dir_town_hall", new DialogueNode()
+            {
+                Text = "\"The Town Hall is in the western part of Belum. Head to the town square and go west through the residential area. You can't miss it - big marble columns and bronze doors.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Anything else?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you.\"", nextNodeID = "end" }
+                }
+            });
+
+            townGuard.Dialogue.Add("dir_temple", new DialogueNode()
+            {
+                Text = "\"The Temple District is northwest of the town square. Head north to the residential area, then west. The temples surround a central plaza.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Anything else?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you.\"", nextNodeID = "end" }
+                }
+            });
+
+            townGuard.Dialogue.Add("dir_tavern", new DialogueNode()
+            {
+                Text = "\"The Golden Grape? Popular place. It's in the eastern part of town. From the town square, head east and you'll find it in the poor quarter area. Can't miss the golden grape sign.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Anything else?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you.\"", nextNodeID = "end" }
+                }
+            });
+
+            townGuard.Dialogue.Add("dir_blacksmith", new DialogueNode()
+            {
+                Text = "\"The Iron Anvil is in the southern market district. From the south gate, head north through the market and you'll hear the forges. Big place, can't miss it.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Anything else?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you.\"", nextNodeID = "end" }
+                }
+            });
+
+            townGuard.Dialogue.Add("end", new DialogueNode()
+            {
+                Text = "The guard nods and returns to his duties.",
                 Choices = { }
             });
+
             npcs.Add(townGuard.Name, townGuard);
 
             NPC villager = new NPC();
@@ -35,8 +99,72 @@ namespace GuildMaster.Data
             villager.Dialogue.Add("greeting", new DialogueNode()
             {
                 Text = "The villager greets you with a friendly smile. \"Good day to you, traveler. Welcome to Belum!\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Can you help me find my way around?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Good day to you as well.\"", nextNodeID = "end" }
+                }
+            });
+
+            villager.Dialogue.Add("ask_directions", new DialogueNode()
+            {
+                Text = "\"Of course! I'd be happy to help. What are you looking for?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Where is the Town Hall?\"", nextNodeID = "dir_town_hall" },
+                    new DialogueNode.Choice { choiceText = "\"Where is the Temple District?\"", nextNodeID = "dir_temple" },
+                    new DialogueNode.Choice { choiceText = "\"Where can I get a drink?\"", nextNodeID = "dir_tavern" },
+                    new DialogueNode.Choice { choiceText = "\"Where's the blacksmith?\"", nextNodeID = "dir_blacksmith" },
+                    new DialogueNode.Choice { choiceText = "\"I'm all set, thank you.\"", nextNodeID = "end" }
+                }
+            });
+
+            villager.Dialogue.Add("dir_town_hall", new DialogueNode()
+            {
+                Text = "\"The Town Hall? That's on the western side of town. Go to the town square and head west through the nice residential area. You'll see it - big impressive building with marble columns!\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"What else is there?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you!\"", nextNodeID = "end" }
+                }
+            });
+
+            villager.Dialogue.Add("dir_temple", new DialogueNode()
+            {
+                Text = "\"Ah, the temples! Northwest of the town square. Head north from the square to the residential area, then west. There's a whole plaza surrounded by temples to the different gods.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"What else is there?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you!\"", nextNodeID = "end" }
+                }
+            });
+
+            villager.Dialogue.Add("dir_tavern", new DialogueNode()
+            {
+                Text = "\"The Golden Grape is the best tavern in Belum! It's in the eastern part of town. From the square, head east and you'll find it. Look for the golden grape on the sign - can't miss it!\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"What else is there?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you!\"", nextNodeID = "end" }
+                }
+            });
+
+            villager.Dialogue.Add("dir_blacksmith", new DialogueNode()
+            {
+                Text = "\"The Iron Anvil is the best smithy around! It's in the southern part of town near the market. If you're coming from the south gate, head north through the market district and follow your ears - you'll hear the hammers on the anvils!\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"What else is there?\"", nextNodeID = "ask_directions" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you!\"", nextNodeID = "end" }
+                }
+            });
+
+            villager.Dialogue.Add("end", new DialogueNode()
+            {
+                Text = "The villager waves cheerfully and continues on their way.",
                 Choices = { }
             });
+
             npcs.Add(villager.Name, villager);
 
             NPC merchant = new NPC();
@@ -290,9 +418,10 @@ namespace GuildMaster.Data
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "\"Senator Quintus sent me. He needs your help with some symbols.\"",
-                        nextNodeID = "quintus_symbols",
-                        IsAvailable = (inventory) => (inventory.Contains("cultist orders") || inventory.Contains("ritual notes") || inventory.Contains("philosophical tract"))
+                        choiceText = "\"I have a passphrase - 'Ordo Dissolutus'. Do you know where it might be used?\"",
+                        nextNodeID = "ask_about_passphrase",
+                        IsAvailable = (inventory) => inventory.Contains("translated letter"),
+                        RequireNotDiscussedNode = "ask_about_passphrase"
                     },
                     new DialogueNode.Choice { choiceText = "\"Tell me about Keius.\"", nextNodeID = "about_keius" },
                     new DialogueNode.Choice { choiceText = "\"Just passing through.\"", nextNodeID = "end" }
@@ -308,48 +437,21 @@ namespace GuildMaster.Data
                 }
             });
 
-            // Quest dialogue - examining the symbols
-            priestess.Dialogue.Add("quintus_symbols", new DialogueNode()
+            priestess.Dialogue.Add("ask_about_passphrase", new DialogueNode()
             {
-                Text = "Caelia's expression becomes serious. \"Quintus mentioned you might come. He sent a messenger ahead with the documents you discovered.\" She produces the cultist papers from a nearby table.<br><br>\"These symbols...\" Her voice drops. \"They're old. Older than the Empire. They reference the Five Seals - ancient bindings created to contain primordial chaos. Most believe them to be myth, but...\" She looks directly at you. \"I know they are real.\"",
+                Text = "Caelia's expression darkens, her luminous eyes growing more intense. \"'Ordo Dissolutus'... The Dissolved Order. That is not a name spoken lightly.\" She steps closer, her voice dropping to a near whisper.<br><br>\"They are a cult that worships entropy and decay. For years, they've operated in secret, hidden from the Empire's eyes.\" She pauses, her gaze distant as if seeing something beyond the present moment.<br><br>\"There is a place in the Hircinian Forest - an old smuggler's den repurposed for darker purposes. The entrance is concealed, guarded by those who would keep others out.\" Her eyes refocus on you. \"If you have their passphrase, you may be able to enter. But be warned - what you find within will be dangerous.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"What do the symbols say?\"", nextNodeID = "explain_symbols" }
+                    new DialogueNode.Choice { choiceText = "\"Where exactly in the forest is this entrance?\"", nextNodeID = "forest_location" }
                 }
             });
 
-            priestess.Dialogue.Add("explain_symbols", new DialogueNode()
+            priestess.Dialogue.Add("forest_location", new DialogueNode()
             {
-                Text = "\"They're ritual markers,\" Caelia explains, tracing the symbols with one elegant finger. \"The cult isn't just planning an assassination - they're planning to use the deaths, the chaos, the fear generated during the festival as fuel. Fuel to weaken the seals.\"<br><br>She looks up, and for the first time you see genuine concern in her ageless eyes. \"If they succeed, if even one seal fails completely, the cascade effect could unravel all five. The things that were bound...\" She trails off. \"We need to discuss this properly. Somewhere more secure.\"",
+                Text = "\"Deep in the eastern reaches of the Hircinian Forest. You'll know it when you see it - a cave entrance with guards posted. They'll challenge anyone who approaches.\" She places a hand on your shoulder, her touch surprisingly warm. \"Speak the passphrase, and they'll let you pass. But once inside... you'll be on your own.\"<br><br>\"May Keius light your path through the darkness ahead. You'll need all the light you can get.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"Where do you suggest?\"", nextNodeID = "suggest_guild" }
-                }
-            });
-
-            priestess.Dialogue.Add("suggest_guild", new DialogueNode()
-            {
-                Text = "Caelia considers for a moment. \"Your guild hall. The study there would be appropriate - private, yet neutral ground.\" A slight smile crosses her features. \"Besides, I've been curious about the one rebuilding the old Adventurer's Guild. This will give me a chance to meet you properly.\"<br><br>She gathers the documents. \"I'll inform Quintus. We'll meet you there shortly. I have... preparations to make first.\"",
-                Action = new DialogueAction { Type = "set_quest_flag", Parameters = { {"flag", "guild_council_ready"}, {"value", "true"} } },
-                Choices =
-                {
-                    new DialogueNode.Choice { choiceText = "\"I'll see you there.\"", nextNodeID = "end_council" }
-                }
-            });
-
-            priestess.Dialogue.Add("end_council", new DialogueNode()
-            {
-                Text = "Caelia inclines her head gracefully. \"Until then, guild master.\"",
-                Choices = { }
-            });
-
-            // Keep original greeting for backward compatibility
-            priestess.Dialogue.Add("greeting", new DialogueNode()
-            {
-                Text = "The priestess turns towards you with a smile. \"Welcome. I am Caelia, Priestess of Keius. What brings you to his temple?\"",
-                Choices =
-                {
-                    new DialogueNode.Choice { choiceText = "\"Just looking around, thank you.\"", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"Thank you, Caelia. I'll be careful.\"", nextNodeID = "end" }
                 }
             });
 
@@ -382,6 +484,11 @@ namespace GuildMaster.Data
                 Text = "Gaius looks up from arranging his wares and greets you with a familiar smile.<br><br>\"Good to see you again, {player.name}. What can I do for you?\"",
                 Choices =
                 {
+                    new DialogueNode.Choice {
+                        choiceText = "\"I cleared out the bandits from your farm.\"",
+                        nextNodeID = "bandits_cleared",
+                        RequireNotDiscussedNode = "bandits_cleared"  // Only show once
+                    },
                     new DialogueNode.Choice {
                         choiceText = "\"Could you tell me more about this forest and the people you've seen going into it?\"",
                         nextNodeID = "ask_about_forest",
@@ -476,6 +583,19 @@ namespace GuildMaster.Data
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"Thank you. With luck, you'll see me coming back through here soon.\"", nextNodeID = "end"}
+                }
+            });
+
+            farmer.Dialogue.Add("bandits_cleared", new DialogueNode()
+            {
+                Text = "Gaius' eyes widen in amazement. \"You what?! The bandits are gone?\" He rushes around the stand and grips your shoulders with both hands. \"{player.name}, you have no idea what this means to me! Those bastards have been terrorizing my farm for weeks!\"<br><br>He releases you and reaches into his coin purse. \"Here, please take this. It's all I can offer right now, but you've saved my livelihood. My family can finally return home safely!\"",
+                Action = new DialogueAction {
+                    Type = "give_gold",
+                    Parameters = { { "amount", "100" } }
+                },
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Happy to help, Gaius. Your farm is safe now.\"", nextNodeID = "end" }
                 }
             });
 
@@ -1521,37 +1641,63 @@ namespace GuildMaster.Data
 
             quintus.Dialogue.Add("about_sender", new DialogueNode()
             {
-                Text = "Quintus shakes his head. \"The letter is unsigned, but whoever wrote it was no common criminal. The cipher itself suggests education and resources. Given the context, I'd wager you're dealing with something more organized than simple bandits.\" He pauses thoughtfully. \"Be careful out there. If this passphrase opens something, it may lead you somewhere dangerous.\"",
+                Text = "Quintus shakes his head. \"The letter is unsigned, but whoever wrote it was no common criminal. The cipher itself suggests education and resources. Given the context, I'd wager you're dealing with something more organized than simple bandits.\" He pauses thoughtfully. \"Be careful out there. If this passphrase opens something, it may lead you somewhere dangerous.\"<br><br>He strokes his chin. \"If you're looking for answers about where to use this passphrase... you might want to speak with Caelia, the High Priestess at the Temple of Keius. She has knowledge of hidden places and ancient secrets. If anyone would know about secretive groups operating in the area, it would be her.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"Thank you for your help, Senator.\"", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"I'll seek her out. Thank you for your help, Senator.\"", nextNodeID = "end" }
                 }
             });
 
             // Post-hideout dialogue - player returns with cultist documents
             quintus.Dialogue.Add("hideout_discovered", new DialogueNode()
             {
-                Text = "Quintus's eyes widen as he examines the documents you've brought. \"By the gods... 'Strike at the heart,' 'remove the pillar,' references to the anniversary festival...\"<br><br>He spreads the papers across his desk, his expression growing darker. \"This is worse than I feared. This isn't just bandits or common criminals. This is an organized cult planning something catastrophic.\"<br><br>He points to symbols at the bottom of one document. \"These markings here - I can't decipher them. They appear to be religious in nature, but not from any faith I recognize.\"",
+                Text = "Quintus's eyes widen as he examines the documents you've brought. \"By the gods... 'Strike at the heart,' 'remove the pillar,' references to the anniversary festival...\"<br><br>He spreads the papers across his desk, his expression growing darker. \"This is worse than I feared. This isn't just bandits or common criminals. This is an organized cult planning something catastrophic.\"<br><br>He points to symbols at the bottom of one document. \"These markings here - I can't decipher them alone. They appear to be religious in nature, but not from any faith I recognize.\"",
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"Do you know anyone who could help with those symbols?\"", nextNodeID = "introduce_caelia" }
+                    new DialogueNode.Choice { choiceText = "\"What do you need to figure this out?\"", nextNodeID = "examination_time" }
                 }
             });
 
-            quintus.Dialogue.Add("introduce_caelia", new DialogueNode()
+            quintus.Dialogue.Add("examination_time", new DialogueNode()
             {
-                Text = "Quintus nods thoughtfully. \"There is someone. Caelia, High Priestess of Keius at the temple here in Belum. She's... remarkably knowledgeable about ancient faiths and forgotten symbols. If anyone can decipher these markings, it's her.\"<br><br>He gathers the documents. \"The temple is in the northwestern part of town. Meet me there - I'll bring these documents and we'll see what Caelia can tell us. This is too important to ignore.\"",
-                Action = new DialogueAction { Type = "set_quest_flag", Parameters = { {"flag", "quintus_temple_meeting"}, {"value", "true"} } },
+                Text = "Quintus gathers the documents carefully. \"I'll need to consult with High Priestess Caelia at the temple - she's an expert in ancient faiths and forgotten symbols. Together, we should be able to decipher these markings and understand the full scope of this threat.\"<br><br>He looks at you seriously. \"Give us two days to examine everything thoroughly. Meet me back at your guild hall study in 48 hours - I'll bring Caelia and we'll discuss what we've learned. This is too important for rushed work.\"",
+                Action = new DialogueAction {
+                    Type = "start_timer",
+                    Parameters = {
+                        {"timer_id", "quintus_examination"},
+                        {"duration_hours", "48"}
+                    }
+                },
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"I'll head there now.\"", nextNodeID = "end_temple_quest" }
+                    new DialogueNode.Choice { choiceText = "\"I'll be there. Two days.\"", nextNodeID = "end_examination_start" }
                 }
             });
 
-            quintus.Dialogue.Add("end_temple_quest", new DialogueNode()
+            quintus.Dialogue.Add("end_examination_start", new DialogueNode()
             {
-                Text = "\"Good. I'll gather what we need and meet you there shortly.\"",
+                Text = "\"Good. Use this time to prepare yourself - I have a feeling whatever we uncover will require action.\" He returns to studying the documents, already deep in thought.",
                 Choices = { }
+            });
+
+            // Waiting dialogue - player returns before 48 hours for examination
+            quintus.Dialogue.Add("waiting_examination", new DialogueNode()
+            {
+                Text = "Quintus is surrounded by scrolls and ancient texts, working alongside several temple scribes. He looks up briefly. \"Still working on these documents. Caelia and I need more time. Meet us at your guild hall study when the two days are up.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I'll return later.\"", nextNodeID = "end" }
+                }
+            });
+
+            // Examination complete - directs player to guild study
+            quintus.Dialogue.Add("examination_complete", new DialogueNode()
+            {
+                Text = "Quintus looks up with urgency as you approach. \"We've finished our analysis. Caelia and I are heading to your guild hall study now - what we've discovered is... concerning. Meet us there as soon as you can. This can't wait.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"I'll head there immediately.\"", nextNodeID = "end" }
+                }
             });
 
             quintus.Dialogue.Add("end", new DialogueNode()
@@ -1561,6 +1707,182 @@ namespace GuildMaster.Data
             });
 
             npcs.Add(quintus.Name, quintus);
+
+            // ===== EMPEROR CERTIUS - Ruler of the Empire =====
+            NPC emperor = new NPC();
+            emperor.Name = "Emperor Certius";
+            emperor.Description = "Emperor Certius Rex Maximus stands before you - a man in his sixties with commanding presence despite his age. His silver hair is crowned with a simple golden circlet, and his purple robes bear the imperial eagle. Kind eyes and laugh lines speak to a benevolent ruler, while his bearing shows the confidence of one who has shaped an empire. He exudes warmth and pride, clearly in excellent spirits.";
+            emperor.ShortDescription = "Emperor Certius";
+            emperor.IsHostile = false;
+
+            // First greeting
+            emperor.Dialogue.Add("first_greeting", new DialogueNode()
+            {
+                Text = "The Emperor rises from his throne as you enter, a warm smile crossing his weathered face. \"Ah, you must be the one Quintus spoke so highly of!\" His voice carries the weight of authority tempered with genuine friendliness. \"The guild master who uncovered this cult business. Come, come - let us speak as equals. Any friend of Quintus is a friend of mine.\"<br><br>He gestures to a chair. \"I must confess, I'm far more excited about the anniversary celebration than worried about some doomsday cult, but Quintus assures me you have urgent information. Before we discuss such grim matters, tell me - what would you like to know about your Emperor?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Your Majesty, we must discuss the cult threat immediately.\"", nextNodeID = "cult_warning" },
+                    new DialogueNode.Choice { choiceText = "\"Tell me about your conquests, Emperor. Your legacy is legendary.\"", nextNodeID = "about_conquests" },
+                    new DialogueNode.Choice { choiceText = "\"What are your plans for the Empire's future?\"", nextNodeID = "future_plans" },
+                    new DialogueNode.Choice { choiceText = "\"If I may ask, Your Majesty, tell me about yourself personally.\"", nextNodeID = "personal_questions" }
+                }
+            });
+
+            // Repeat greeting
+            emperor.Dialogue.Add("repeat_greeting", new DialogueNode()
+            {
+                Text = "Emperor Certius greets you warmly. \"Ah, guild master! Back again? I enjoy our conversations. What would you like to discuss?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Your Majesty, about the cult threat...\"", nextNodeID = "cult_warning" },
+                    new DialogueNode.Choice { choiceText = "\"Tell me more about your conquests.\"", nextNodeID = "about_conquests" },
+                    new DialogueNode.Choice { choiceText = "\"What are your plans for the future?\"", nextNodeID = "future_plans" },
+                    new DialogueNode.Choice { choiceText = "\"I'd like to know more about you personally, if that's appropriate.\"", nextNodeID = "personal_questions" },
+                    new DialogueNode.Choice { choiceText = "\"Just paying my respects, Your Majesty.\"", nextNodeID = "end" }
+                }
+            });
+
+            // About conquests
+            emperor.Dialogue.Add("about_conquests", new DialogueNode()
+            {
+                Text = "Certius's eyes light up with pride. \"Ah, the campaigns! Where to begin?\" He walks to a map on the wall. \"When I took the throne forty years ago, the Empire was half its current size. The northern tribes raided our borders with impunity. The eastern kingdoms refused to acknowledge our sovereignty.\"<br><br>He traces routes on the map. \"The Northern Campaign lasted eight years. I led the Sixth and Eighth Legions personally - young and foolish, my advisors said, but we crushed the tribal alliance at the Battle of Frozen River. Twenty thousand warriors, and we routed them with only four thousand casualties.\"<br><br>\"The eastern kingdoms fell like dominoes after that. They saw our strength and chose diplomacy over destruction. Wise of them.\" He smiles. \"Fifteen kingdoms now pay tribute and enjoy imperial protection. Peace through strength - that's been my philosophy.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Impressive. And the southern expansion?\"", nextNodeID = "southern_campaign" },
+                    new DialogueNode.Choice { choiceText = "\"You led legions personally? That's remarkable.\"", nextNodeID = "personal_combat" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you for sharing, Your Majesty.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            emperor.Dialogue.Add("southern_campaign", new DialogueNode()
+            {
+                Text = "\"Ah yes, the south!\" Certius chuckles. \"That was... complicated. The Southern Kingdoms were more civilized, you see. Great cities, rich culture, formidable armies. We couldn't simply conquer them - we had to win them over.\"<br><br>\"I spent five years in diplomatic missions, arranging marriages between their nobles and ours, establishing trade agreements, cultural exchanges. My daughter married the Crown Prince of Solaria - creating the strongest alliance in imperial history.\"<br><br>\"Only two kingdoms refused to negotiate. They fell quickly when they realized they stood alone. Now all of the south prospers under the Pax Romana. Trade has tripled, banditry has been eliminated, and the people are safer than ever.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Diplomacy and strength - a wise combination.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            emperor.Dialogue.Add("personal_combat", new DialogueNode()
+            {
+                Text = "The Emperor grins. \"Oh, in my youth I fancied myself quite the warrior! Trained since childhood in the imperial martial traditions. My father insisted that every emperor should be able to defend Rome with sword as well as decree.\"<br><br>\"I've scars to prove I wasn't just a figurehead at Frozen River - took an axe to the shoulder that still aches in winter. But I learned my lesson after that. A dead emperor helps no one. I left the frontline fighting to younger, more expendable commanders.\"<br><br>He laughs heartily. \"Though I'll admit, some nights I miss the simplicity of battle. Politics is far more treacherous than any battlefield.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"A warrior-emperor. The people are fortunate.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            // Future plans
+            emperor.Dialogue.Add("future_plans", new DialogueNode()
+            {
+                Text = "Certius settles back into his throne, expression thoughtful. \"The Empire is vast, but there's always more to accomplish. My immediate focus is the anniversary celebration - 1500 years of continuous civilization! We're hosting games at the Colosseum, feasts throughout the city, diplomatic envoys from every corner of the known world.\"<br><br>\"Beyond that?\" He leans forward. \"I want to establish the Imperial Academy - a center of learning to rival the ancient schools of philosophy. Knowledge preserved and expanded for future generations.\"<br><br>\"I'm also funding expeditions beyond our borders. There are lands to the far west none have explored. Imagine - expanding human knowledge itself! That would be a legacy worth leaving.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"The Imperial Academy sounds magnificent.\"", nextNodeID = "academy_details" },
+                    new DialogueNode.Choice { choiceText = "\"Exploration beyond the known world is ambitious.\"", nextNodeID = "exploration_details" },
+                    new DialogueNode.Choice { choiceText = "\"Noble goals, Your Majesty.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            emperor.Dialogue.Add("academy_details", new DialogueNode()
+            {
+                Text = "\"Isn't it though?\" The Emperor's enthusiasm is infectious. \"I've already commissioned the building - it will be the largest library in the world. Scholars from every discipline will teach there: mathematics, philosophy, natural sciences, engineering, medicine.\"<br><br>\"Free admission for any citizen with the aptitude, regardless of birth. Can you imagine? A farmer's son could become the Empire's greatest mathematician! That's true progress.\"<br><br>His eyes shine with excitement. \"Construction begins after the anniversary celebration. It's my gift to future generations - a foundation of knowledge that will outlast any military conquest.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"A lasting legacy indeed.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            emperor.Dialogue.Add("exploration_details", new DialogueNode()
+            {
+                Text = "\"My cartographers say there are entire continents we've never mapped!\" Certius gestures excitedly. \"The western ocean may lead to new lands, new peoples, new knowledge. I've funded three expeditions already - two returned with fascinating discoveries, one is still at sea.\"<br><br>\"Think of it - what if there's an empire equal to ours across that ocean? What could we learn from them? What could we teach them? The possibilities are endless!\"<br><br>He chuckles. \"My advisors think I'm mad, spending the treasury on ships that might never return. But what's the point of empire if not to push the boundaries of what's possible?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"An inspiring vision, Your Majesty.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            // Personal questions
+            emperor.Dialogue.Add("personal_questions", new DialogueNode()
+            {
+                Text = "Certius laughs warmly. \"Most people are too intimidated to ask! I like your boldness. What would you like to know? I'm an open book - well, mostly.\"<br><br>\"I'm sixty-two years old, married to Empress Livia for forty-three wonderful years. Three children: my son Marcus commands the Tenth Legion in the north, my daughter Julia is married to the King of Solaria, and my youngest, Titus, studies philosophy and drives me mad with his abstract questions.\"<br><br>\"I wake at dawn every day, review reports from across the Empire over breakfast, hold court until midday, then spend afternoons on whatever project captures my interest. Simple pleasures - good wine, interesting conversation, watching the sunset from the palace gardens.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"You sound like a happy man, Your Majesty.\"", nextNodeID = "happy_emperor" },
+                    new DialogueNode.Choice { choiceText = "\"Tell me about the Empress.\"", nextNodeID = "about_empress" },
+                    new DialogueNode.Choice { choiceText = "\"Thank you for your candor.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            emperor.Dialogue.Add("happy_emperor", new DialogueNode()
+            {
+                Text = "\"I am!\" Certius beams. \"Not every emperor can say that. The crown is a burden, certainly, but it's also a privilege. I've seen the Empire prosper, watched millions of people live better lives because of decisions I've made.\"<br><br>\"Yes, there are always problems - there always will be. But look at what we've built! Fifteen hundred years of continuous civilization. Roads connecting every corner of the empire. Cities where art and knowledge flourish. Common people living in peace and prosperity.\"<br><br>He spreads his hands. \"How could I not be happy? I'm the luckiest man alive.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"The Empire is fortunate to have you.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            emperor.Dialogue.Add("about_empress", new DialogueNode()
+            {
+                Text = "The Emperor's expression softens. \"Livia is the steel behind the throne. Where I'm all grand visions and bold declarations, she's practical wisdom and careful planning. We balance each other perfectly.\"<br><br>\"We met when I was crown prince - she was daughter of a general, brilliant and beautiful. My father approved the match for political reasons, but I fell genuinely in love. Forty-three years later, I still do.\"<br><br>\"She'll join us for the anniversary celebration. You'll meet her - though I warn you, she's far more skeptical of your cult warnings than I am. She thinks we're both being paranoid.\" He chuckles. \"She's probably right.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"A true partnership. That's wonderful.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            // Cult warning (main quest)
+            emperor.Dialogue.Add("cult_warning", new DialogueNode()
+            {
+                Text = "Certius's jovial expression becomes more serious, though you can tell he's humoring you. \"Yes, yes - Quintus briefed me on your discoveries. A cult planning to assassinate me during the celebration, break some ancient seals, end the world. Quite dramatic!\"<br><br>He leans back. \"Look, I appreciate your concern. Truly. And I'll have the Imperial Guard increase security during the games. But...\" He smiles gently. \"I've been emperor for forty years. There's always someone plotting assassination. The guard is the best in the world - they'll handle it.\"<br><br>\"More importantly, I can't cancel or modify the celebration. Fifteen hundred years! Diplomatic envoys from every kingdom will be there. To show fear would be to show weakness. The Empire doesn't cower before threats.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Your Majesty, the Five Seals are real. This is apocalyptic.\"", nextNodeID = "cult_insistence" },
+                    new DialogueNode.Choice { choiceText = "\"I understand your position, but please be careful.\"", nextNodeID = "cult_acceptance" }
+                }
+            });
+
+            emperor.Dialogue.Add("cult_insistence", new DialogueNode()
+            {
+                Text = "Certius regards you kindly but skeptically. \"The Five Seals are mythology, friend. Old legends from before the Empire. I respect that you believe otherwise - and I respect Caelia's scholarship on ancient faiths - but I cannot make decisions based on myths.\"<br><br>He stands, placing a hand on your shoulder. \"I tell you what - I'll let you attend the celebration. You and your party can watch for these cultists yourselves. Consider yourselves... unofficial imperial guards for the day. If you spot a genuine threat, raise the alarm. Fair enough?\"",
+                Action = new DialogueAction { Type = "set_quest_flag", Parameters = { {"flag", "emperor_warned"}, {"value", "true"} } },
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Thank you, Your Majesty. We'll be vigilant.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            emperor.Dialogue.Add("cult_acceptance", new DialogueNode()
+            {
+                Text = "\"I will be careful, you have my word.\" Certius nods appreciatively. \"And I'm grateful you made the journey to warn me. That shows character.\"<br><br>He considers for a moment. \"Tell you what - attend the celebration as my guests. You can keep watch for these cultists, and if you see anything suspicious, you'll have direct access to me. How's that?\"",
+                Action = new DialogueAction { Type = "set_quest_flag", Parameters = { {"flag", "emperor_warned"}, {"value", "true"} } },
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"We'd be honored, Your Majesty.\"", nextNodeID = "return_to_greeting" }
+                }
+            });
+
+            // Return to greeting options
+            emperor.Dialogue.Add("return_to_greeting", new DialogueNode()
+            {
+                Text = "\"Was there anything else you wished to discuss?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"Tell me more about your conquests.\"", nextNodeID = "about_conquests" },
+                    new DialogueNode.Choice { choiceText = "\"What are your plans for the future?\"", nextNodeID = "future_plans" },
+                    new DialogueNode.Choice { choiceText = "\"I'd like to know more about you personally.\"", nextNodeID = "personal_questions" },
+                    new DialogueNode.Choice { choiceText = "\"That's all for now, Your Majesty.\"", nextNodeID = "end" }
+                }
+            });
+
+            emperor.Dialogue.Add("end", new DialogueNode()
+            {
+                Text = "\"Excellent conversation! Feel free to explore the villa - the gardens are particularly lovely this time of year. I'll see you at the celebration!\"",
+                Choices = { }
+            });
+
+            npcs.Add(emperor.Name, emperor);
 
             // Caelia - High Priestess of Keius at temple
             // ===== CULTIST ENEMIES - Forest Hideout (Level 6-8) =====
@@ -1781,6 +2103,38 @@ namespace GuildMaster.Data
                 {"scroll of protection", 35}
             };
 
+            // Imperial Assassin - Boss (Level 9) - Emperor's killer
+            NPC imperialAssassin = new NPC();
+            imperialAssassin.Name = "Imperial Assassin";
+            imperialAssassin.Description = "The assassin has discarded their imperial guard helmet, revealing a face covered in cultist tattoos. Their eyes burn with fanatic zeal. Blood - the Emperor's blood - still drips from the ornate dagger in their hand. This is a true believer, willing to die for the Unbound's cause.";
+            imperialAssassin.ShortDescription = "The Imperial Assassin";
+            imperialAssassin.PreCombatDialogue = "The assassin laughs, a sound of pure madness. \"Feel it? The first crack in the seal! Ten thousand witnesses saw him fall! Their terror, their despair - it feeds the breach!\" Blood-flecked spittle flies from their lips. \"You think killing me matters? The work is done! The Empire's pillar has fallen! Soon the others will follow, and the Bound Ones will reshape this broken world!\"";
+            imperialAssassin.IsHostile = true;
+            imperialAssassin.Health = 110;
+            imperialAssassin.MaxHealth = 110;
+            imperialAssassin.Energy = 55;
+            imperialAssassin.MaxEnergy = 55;
+            imperialAssassin.AttackDamage = 15;
+            imperialAssassin.Defense = 9;
+            imperialAssassin.Speed = 16;
+            imperialAssassin.DamageCount = 2;
+            imperialAssassin.DamageDie = 12;
+            imperialAssassin.DamageBonus = 13;
+            imperialAssassin.MinGold = 75;
+            imperialAssassin.MaxGold = 150;
+            imperialAssassin.ExperienceReward = 350;
+            imperialAssassin.Role = EnemyRole.Melee;
+            imperialAssassin.AbilityNames = new List<string> { "Void Touch", "Corrosive Strike", "Backstab", "Entropy Bolt" };
+            imperialAssassin.LootTable = new Dictionary<string, int>
+            {
+                {"emperor's blood dagger", 100},  // Quest item - the assassination weapon
+                {"greater potion", 100},
+                {"greater energy potion", 100},
+                {"elixir of vigor", 80},
+                {"scroll of haste", 60},
+                {"scroll of protection", 50}
+            };
+
             npcs.Add(cultistScout.Name, cultistScout);
             npcs.Add(cultistZealot.Name, cultistZealot);
             npcs.Add(cultistDefacer.Name, cultistDefacer);
@@ -1790,6 +2144,7 @@ namespace GuildMaster.Data
             npcs.Add(cultistLieutenant.Name, cultistLieutenant);
             npcs.Add(cultistUnraveler.Name, cultistUnraveler);
             npcs.Add(archonMalachar.Name, archonMalachar);
+            npcs.Add(imperialAssassin.Name, imperialAssassin);
 
             // Althea - Oracle recruit found in cultist prison (Room 115)
             NPC althea = new NPC();
@@ -1809,6 +2164,10 @@ namespace GuildMaster.Data
             althea.Dialogue.Add("first_greeting", new DialogueNode()
             {
                 Text = "The woman in the cell rises slowly, gripping the bars for support. Her eyes - glowing with an otherworldly light - study you intensely.<br><br>\"You... you're not one of them,\" she says, her voice hoarse from disuse. \"I didn't foresee this. My visions showed only darkness and spirals... but you're here. How?\"<br><br>She seems to catch herself, taking a shaky breath. \"Forgive me. I am Althea. An oracle... or I was, before they took me.\"",
+                PartyInterjections = new Dictionary<string, string>
+                {
+                    { "Braxus", "Braxus freezes, his face going pale. \"Althea...\" His voice cracks. \"By the gods, I found you.\" He grips the cell bars beside you, knuckles white. \"I got your letter. I've been searching for weeks. I thought... I thought you were dead.\"" }
+                },
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"Who took you? The cultists?\"", nextNodeID = "ask_about_cultists" },
@@ -1828,8 +2187,9 @@ namespace GuildMaster.Data
                         RequireNotDiscussedNode = "explain_cult_plan"
                     },
                     new DialogueNode.Choice {
-                        choiceText = "\"I want to help you. Will you join my guild?\"",
-                        nextNodeID = "offer_recruitment"
+                        choiceText = "\"I have the cell key. Let me get you out of here.\"",
+                        nextNodeID = "offer_recruitment",
+                        IsAvailable = (inventory) => inventory.Contains("cell key")
                     },
                     new DialogueNode.Choice { choiceText = "\"I need to go for now.\"", nextNodeID = "end" }
                 }
@@ -1838,6 +2198,10 @@ namespace GuildMaster.Data
             althea.Dialogue.Add("ask_about_cultists", new DialogueNode()
             {
                 Text = "Althea's expression darkens. \"The Ordo Dissolutus. The Dissolved Order. They call themselves philosophers, but they're fanatics. They worship entropy, decay, the unmaking of all things.\"<br><br>She grips the bars tighter. \"They took me because of my visions. They wanted to know about the seals - the ancient barriers that hold back chaos. When I wouldn't help them... they locked me here.\"",
+                PartyInterjections = new Dictionary<string, string>
+                {
+                    { "Braxus", "Althea's eyes find Braxus through the bars, and tears well up. \"I'm so sorry I left. I tried to protect you by disappearing, but...\" Her voice breaks. \"I should have trusted you. You always said we'd face danger together.\"" }
+                },
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"What are they planning?\"", nextNodeID = "explain_cult_plan" }
@@ -1856,6 +2220,10 @@ namespace GuildMaster.Data
             althea.Dialogue.Add("explain_cult_plan", new DialogueNode()
             {
                 Text = "Althea's eyes unfocus slightly, as if seeing something far away. \"They're planning something during the anniversary festival in Aevoria. When the empire celebrates, when crowds gather at the capital...\"<br><br>\"In my visions, I saw fire and screaming. The cult intends to strike at 'the pillar' - they speak in metaphors, but I believe they mean someone important. Perhaps... perhaps the Emperor himself.\"<br><br>She shudders. \"If they weaken the seals at the same time, the chaos released by so many deaths could cascade. The barriers could fail. Ancient things that were bound long ago... they could break free.\"",
+                PartyInterjections = new Dictionary<string, string>
+                {
+                    { "Braxus", "Braxus steps closer to the bars, his voice urgent. \"An assassination attempt on the Emperor? Althea, we can stop this together - like we should have done from the start.\" He looks at you. \"Boss, we need to get her out of here. Then we warn Aevoria. We'll need proof, but if anyone can help us, it's her.\"" }
+                },
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"We need to warn the Emperor. But first, let me get you out of here.\"", nextNodeID = "offer_rescue" }
@@ -1873,17 +2241,61 @@ namespace GuildMaster.Data
 
             althea.Dialogue.Add("offer_recruitment", new DialogueNode()
             {
-                Text = "Althea straightens despite her weakened state, determination replacing the fear in her eyes.<br><br>\"Yes. I will join you. My visions may be clouded, but I can see that our paths are meant to cross. Together, we can stop the Ordo Dissolutus.\"<br><br>She reaches through the bars. \"Once you defeat their leader, you should be able to find a key to this cell. Then we can leave this place and warn Aevoria.\"",
+                Text = "You unlock the cell door with the iron key, and it swings open with a rusty creak. Althea steps out hesitantly, as if unsure her legs will hold her weight.<br><br>She straightens despite her weakened state, determination replacing the fear in her eyes. \"Yes. I will join you. My visions may be clouded, but I can see that our paths are meant to cross. Together, we can stop the Ordo Dissolutus and warn Aevoria.\"",
+                Action = new DialogueAction {
+                    Type = "give_item",
+                    Parameters = { { "item", "cell key" } }
+                },
                 Choices =
                 {
-                    new DialogueNode.Choice { choiceText = "\"I'll find that key and get you out of here.\"", nextNodeID = "end" }
+                    new DialogueNode.Choice { choiceText = "\"Welcome to the guild.\"", nextNodeID = "recruit_althea" }
                 }
+            });
+
+            althea.Dialogue.Add("recruit_althea", new DialogueNode()
+            {
+                Text = "Althea takes a deep breath of free air, her eyes glowing brighter. \"Thank you. I won't forget this. Together, we'll stop the cult and save the Empire.\"",
+                Action = new DialogueAction {
+                    Type = "add_recruit",
+                    Parameters = { { "class", "Oracle" } }
+                },
+                Choices = new List<DialogueNode.Choice>()
             });
 
             althea.Dialogue.Add("end", new DialogueNode()
             {
                 Text = "Althea nods gratefully. \"Thank you. Be careful - the cultists are dangerous, and their leader is even more so.\"",
                 Choices = { } // Conversation ends
+            });
+
+            // Guild hall dialogue (after recruitment) - Add simple interaction for now
+            althea.Dialogue.Add("guild_hall_greeting", new DialogueNode()
+            {
+                Text = "Althea looks up from her meditation, her eyes glowing softly. \"Ah, Guild Master. The visions have been clearer since joining you. It's... comforting to have purpose again.\"",
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"How are you settling in?\"", nextNodeID = "guild_settling" },
+                    new DialogueNode.Choice { choiceText = "\"I'll leave you to your meditation.\"", nextNodeID = "guild_end" }
+                }
+            });
+
+            althea.Dialogue.Add("guild_settling", new DialogueNode()
+            {
+                Text = "Althea smiles faintly. \"Better than I expected. The guild feels... safe. Though I must admit, some of the others are... intense.\"<br><br>She glances across the hall. \"Braxus, for instance. He's still suspicious of me, I think. But his caution is understandable. Perhaps in time, he'll see I mean no harm.\"",
+                PartyInterjections = new Dictionary<string, string>
+                {
+                    { "Braxus", "From across the hall, Braxus grunts. \"I can hear you, oracle. And yeah, I'm keeping an eye on you. Nothing personal - just don't trust magic I can't punch.\" He pauses. \"But... you fought well in that last battle. Keep that up and we'll get along fine.\"" }
+                },
+                Choices =
+                {
+                    new DialogueNode.Choice { choiceText = "\"You'll both fit in here just fine.\"", nextNodeID = "guild_end" }
+                }
+            });
+
+            althea.Dialogue.Add("guild_end", new DialogueNode()
+            {
+                Text = "Althea nods and returns to her meditation, a peaceful expression on her face.",
+                Choices = { }
             });
 
             npcs.Add(althea.Name, althea);

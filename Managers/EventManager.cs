@@ -92,6 +92,19 @@ namespace GuildMaster.Managers
         /// </summary>
         private bool EvaluateConditions(EventData evt)
         {
+            // Special handling for guild council meeting event
+            // Auto-set flag if timer is complete (allows event to trigger even if player didn't talk to Quintus)
+            if (evt.EventId == "guild_council_meeting" && context.ActiveTimers.ContainsKey("quintus_examination"))
+            {
+                var timer = context.ActiveTimers["quintus_examination"];
+                if (timer.IsComplete(context.Player.CurrentDay, context.Player.CurrentHour))
+                {
+                    // Timer complete - auto-set flag and remove timer
+                    context.Player.QuestFlags["guild_council_ready"] = true;
+                    context.ActiveTimers.Remove("quintus_examination");
+                }
+            }
+
             // No conditions means event always triggers (if not already triggered)
             if (evt.Conditions == null || evt.Conditions.Count == 0)
                 return true;

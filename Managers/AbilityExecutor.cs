@@ -44,7 +44,7 @@ namespace GuildMaster.Managers
             combatManager = manager;
             messageManager = msgManager;
 
-            // Initialize tracking dictionaries
+            // Initialize tracking dictionaries (will be replaced by shared dictionaries)
             statusEffects = new Dictionary<Character, Dictionary<CombatManager.StatusEffect, int>>();
             taunters = new Dictionary<Character, Character>();
             battleCryTurns = new Dictionary<Character, int>();
@@ -54,6 +54,32 @@ namespace GuildMaster.Managers
             abilityCooldowns = new Dictionary<Character, Dictionary<string, int>>();
             evasiveFireActive = new Dictionary<Character, bool>();
             barrierAbsorption = new Dictionary<Character, int>();
+        }
+
+        /// <summary>
+        /// Initialize shared state dictionaries from CombatManager
+        /// This ensures cooldowns and other state are synchronized
+        /// </summary>
+        public void InitializeSharedState(
+            Dictionary<Character, Dictionary<CombatManager.StatusEffect, int>> sharedStatusEffects,
+            Dictionary<Character, Character> sharedTaunters,
+            Dictionary<Character, int> sharedBattleCryTurns,
+            Dictionary<Character, int> sharedBuffedAttack,
+            Dictionary<Character, int> sharedBuffedDefense,
+            Dictionary<Character, int> sharedWarCryDamageBoost,
+            Dictionary<Character, Dictionary<string, int>> sharedAbilityCooldowns,
+            Dictionary<Character, bool> sharedEvasiveFireActive,
+            Dictionary<Character, int> sharedBarrierAbsorption)
+        {
+            statusEffects = sharedStatusEffects;
+            taunters = sharedTaunters;
+            battleCryTurns = sharedBattleCryTurns;
+            buffedAttack = sharedBuffedAttack;
+            buffedDefense = sharedBuffedDefense;
+            warCryDamageBoost = sharedWarCryDamageBoost;
+            abilityCooldowns = sharedAbilityCooldowns;
+            evasiveFireActive = sharedEvasiveFireActive;
+            barrierAbsorption = sharedBarrierAbsorption;
         }
 
         // PUBLIC METHODS - Called by CombatManager
@@ -524,73 +550,106 @@ namespace GuildMaster.Managers
 
                 character.Energy -= ability.EnergyCost;
 
+                bool abilitySuccess;
                 switch (ability.Name)
             {
                 // Legionnaire Abilities
                 case "Shield Bash":
-                    return ExecuteShieldBashGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteShieldBashGeneric(ability, character, enemies);
+                    break;
                 case "Taunt":
                 case "Battle Cry":
-                    return ExecuteTauntGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteTauntGeneric(ability, character, enemies);
+                    break;
                 case "Shield Wall":
-                    return ExecuteShieldWallGeneric(ability, character, player);
+                    abilitySuccess = ExecuteShieldWallGeneric(ability, character, player);
+                    break;
                 case "Cleave":
-                    return ExecuteCleaveGeneric(ability, character, enemies);
-                case "Rending Strike":  
-                    return ExecuteRendingStrikeGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteCleaveGeneric(ability, character, enemies);
+                    break;
+                case "Rending Strike":
+                    abilitySuccess = ExecuteRendingStrikeGeneric(ability, character, enemies);
+                    break;
 
-                // Venator Abilities  
+                // Venator Abilities
                 case "Multi-Shot":
-                    return ExecuteMultiShotGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteMultiShotGeneric(ability, character, enemies);
+                    break;
                 case "Piercing Arrow":
-                    return ExecutePiercingArrowGeneric(ability, character, enemies);
+                    abilitySuccess = ExecutePiercingArrowGeneric(ability, character, enemies);
+                    break;
                 case "Evasive Fire":
-                    return ExecuteEvasiveFireGeneric(ability, character);
+                    abilitySuccess = ExecuteEvasiveFireGeneric(ability, character);
+                    break;
                 case "Covering Shot":
-                    return ExecuteCoveringShotGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteCoveringShotGeneric(ability, character, enemies);
+                    break;
 
                 // Oracle Abilities
                 case "Heal":
-                    return ExecuteHealGeneric(ability, character, player);
+                    abilitySuccess = ExecuteHealGeneric(ability, character, player);
+                    break;
                 case "Lightning Bolt":
-                    return ExecuteLightningBoltGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteLightningBoltGeneric(ability, character, enemies);
+                    break;
                 case "Blessing":
-                    return ExecuteBlessingGeneric(ability, character, player);
+                    abilitySuccess = ExecuteBlessingGeneric(ability, character, player);
+                    break;
                 case "Flame Strike":
-                    return ExecuteFlameStrikeGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteFlameStrikeGeneric(ability, character, enemies);
+                    break;
 
                 // Level 5 Abilities
                 case "Barbed Arrow":
-                    return ExecuteBarbedArrowGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteBarbedArrowGeneric(ability, character, enemies);
+                    break;
                 case "Frostbolt":
-                    return ExecuteFrostboltGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteFrostboltGeneric(ability, character, enemies);
+                    break;
 
                 // Level 10 Abilities
                 case "Sunder Armor":
-                    return ExecuteSunderArmorGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteSunderArmorGeneric(ability, character, enemies);
+                    break;
                 case "Frost Arrow":
-                    return ExecuteFrostArrowGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteFrostArrowGeneric(ability, character, enemies);
+                    break;
                 case "Venom":
-                    return ExecuteVenomGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteVenomGeneric(ability, character, enemies);
+                    break;
 
                 // Level 15 Abilities
                 case "Devastating Slam":
-                    return ExecuteDevastingSlamGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteDevastingSlamGeneric(ability, character, enemies);
+                    break;
                 case "Thunder Volley":
-                    return ExecuteThunderVolleyGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteThunderVolleyGeneric(ability, character, enemies);
+                    break;
                 case "Divine Wrath":
-                    return ExecuteDivineWrathGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteDivineWrathGeneric(ability, character, enemies);
+                    break;
 
                 // Level 20 Abilities
                 case "Whirlwind":
-                    return ExecuteWhirlwindGeneric(ability, character, enemies);
+                    abilitySuccess = ExecuteWhirlwindGeneric(ability, character, enemies);
+                    break;
                 case "War Cry":
-                    return ExecuteWarCryGeneric(ability, character, enemies, player);
+                    abilitySuccess = ExecuteWarCryGeneric(ability, character, enemies, player);
+                    break;
 
                 default:
                     AnsiConsole.MarkupLine($"[#FF0000]Ability '{ability.Name}' not yet implemented for {character.Name}![/]");
-                    return false;
+                    abilitySuccess = false;
+                    break;
                 }
+
+                // If ability failed, refund the EP cost
+                if (!abilitySuccess)
+                {
+                    character.Energy += ability.EnergyCost;
+                }
+
+                return abilitySuccess;
             }
             finally
             {

@@ -522,6 +522,12 @@ namespace GuildMaster.Managers
                 }
             }
             // ExaminedObjects is already restored as part of ExaminedItems above
+
+            // Restore active timers
+            if (state.ActiveTimers != null)
+            {
+                context.ActiveTimers = state.ActiveTimers;
+            }
         }
 
         public async Task<bool> SaveExistsAsync(int slot)
@@ -897,6 +903,9 @@ namespace GuildMaster.Managers
             // Puzzle system
             gameState.PuzzleStates = context.PuzzleStates ?? new Dictionary<string, PuzzleState>();
             gameState.ExaminedObjects = player.ExaminedItems;  // Reuse existing ExaminedItems for now
+
+            // Timer system
+            gameState.ActiveTimers = context.ActiveTimers ?? new Dictionary<string, GameTimer>();
 
             // Time
             gameState.CurrentDay = player.CurrentDay;

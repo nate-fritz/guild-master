@@ -249,15 +249,12 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
             AnsiConsole.MarkupLine("");
 
-            // Get unique items and filter to only equipment (items that exist in EquipmentData)
+            // Get ALL unique items from inventory (equipment, potions, consumables, etc.)
             var allUniqueItems = context.Player.Inventory.Distinct().ToList();
-            var equipmentItems = allUniqueItems
-                .Where(item => EquipmentData.AllEquipment.ContainsKey(item.ToLower()))
-                .ToList();
 
-            if (equipmentItems.Count == 0)
+            if (allUniqueItems.Count == 0)
             {
-                AnsiConsole.MarkupLine(" [dim]You have no equipment to sell.[/]");
+                AnsiConsole.MarkupLine(" [dim]You have no items to sell.[/]");
                 AnsiConsole.MarkupLine("");
                 AnsiConsole.MarkupLine(" Press Enter to return");
                 AnsiConsole.MarkupLine("═══════════════════════════════════════════════════════════════════");
@@ -267,7 +264,7 @@ namespace GuildMaster.Managers
 
             // Build the sell list with unique items grouped properly
             var itemGroups = new Dictionary<string, int>();
-            foreach (var item in equipmentItems)
+            foreach (var item in allUniqueItems)
             {
                 if (!itemGroups.ContainsKey(item))
                 {
@@ -275,16 +272,22 @@ namespace GuildMaster.Managers
                 }
             }
 
-            // Display equipment items
+            // Display all items
             int index = 1;
             currentSellList = itemGroups.Keys.ToList();
             foreach (var itemName in currentSellList)
             {
                 int count = itemGroups[itemName];
-                var equipment = EquipmentData.GetEquipment(itemName);
+                int sellPrice = CalculateSellPriceForItem(itemName);
 
-                string displayName = equipment != null ? equipment.Name : itemName;
-                int sellPrice = CalculateSellPrice(equipment);
+                // Get display name
+                string displayName = TextHelper.CapitalizeFirst(itemName);
+                if (EquipmentData.AllEquipment.ContainsKey(itemName.ToLower()))
+                {
+                    var equipment = EquipmentData.GetEquipment(itemName);
+                    displayName = equipment.Name;
+                }
+
                 string priceText = $"{sellPrice} gold (you have: {count})";
                 string dottedLine = GetDottedLine(displayName, priceText);
 
@@ -328,15 +331,51 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            var equipment = EquipmentData.GetEquipment(itemName);
-            int sellPrice = CalculateSellPrice(equipment);
+            int sellPrice = CalculateSellPriceForItem(itemName);
 
             context.Player.Inventory.Remove(itemName);
             context.Player.Gold += sellPrice;
 
-            string displayName = equipment.Name;
+            // Get display name
+            string displayName = TextHelper.CapitalizeFirst(itemName);
+            if (EquipmentData.AllEquipment.ContainsKey(itemName.ToLower()))
+            {
+                var equipment = EquipmentData.GetEquipment(itemName);
+                displayName = equipment.Name;
+            }
+
             AnsiConsole.MarkupLine($"\n[#00FF00]You sold {displayName} for {sellPrice}g![/]");
             AnsiConsole.MarkupLine($"[dim]Gold: {context.Player.Gold}g[/]");
+        }
+
+        private int CalculateSellPriceForItem(string itemName)
+        {
+            // Check if it's equipment
+            if (EquipmentData.AllEquipment.ContainsKey(itemName.ToLower()))
+            {
+                var equipment = EquipmentData.GetEquipment(itemName);
+                return CalculateSellPrice(equipment);
+            }
+
+            // Handle consumables and other items
+            // Default sell prices for common items
+            switch (itemName.ToLower())
+            {
+                case "potion":
+                case "health potion":
+                    return 5; // 50% of typical 10g purchase price
+
+                case "greater potion":
+                case "greater health potion":
+                    return 15; // 50% of typical 30g purchase price
+
+                case "elixir":
+                    return 25; // 50% of typical 50g purchase price
+
+                default:
+                    // For unknown items, default to 1 gold minimum
+                    return 1;
+            }
         }
 
         private int CalculateSellPrice(Equipment equipment)

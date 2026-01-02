@@ -77,7 +77,7 @@ namespace GuildMaster.Data
             portalRoom.Exits.Add("down", 61);   // Portal to Eastern Forest Exit (Hircinian Forest)
 
             // Updated
-            Room guildPath = CreateRoom(6, "guildPath", "A Dirt Path", "You're on a wide dirt path that runs roughly north to south. Rolling grass covered hills flank either side of the path, with the occasional tree breaking up the sea of green.  To the south you can still see the guild hall.  The wilderness stretches for as far as you can see to the north.");
+            Room guildPath = CreateRoom(6, "guildPath", "A Dirt Path", "You're on a wide dirt path that runs roughly north to south. Rolling grass covered hills flank either side of the path, with the occasional tree breaking up the sea of green.  To the south you can still see the guild hall.  Further north, it looks like another road intersects with the one that you're on.");
             guildPath.Exits.Add("south", 5);
             guildPath.Exits.Add("north", 7);
 
@@ -628,8 +628,7 @@ namespace GuildMaster.Data
             shadowyCorner.Exits.Add("north", 87);
             shadowyCorner.Exits.Add("east", 85);
 
-            // Needs update
-            Room townHall = CreateRoom(87, "townHall", "Belum - Town Hall", "The administrative center of Belum. An imposing building with marble columns and bronze doors. Guards stand at attention. A notice board displays official proclamations.");
+            Room townHall = CreateRoom(87, "townHall", "Belum - Town Hall", "The administrative center of Belum. An imposing romanesque building with tall marble columns and bronze doors stands before you. Guards stand at attention near the entrance. A notice board displays official proclamations. The bronze doors to the west lead inside the building.");
             townHall.Exits.Add("north", 88);
             townHall.Exits.Add("south", 86);
             townHall.Exits.Add("east", 84);
@@ -653,6 +652,179 @@ namespace GuildMaster.Data
             Room townHallInterior = CreateRoom(91, "townHallInterior", "Belum - Town Hall Interior", "You step into the interior of an ancient romanesque administrative building. Tall marble columns rise to support a vaulted ceiling decorated with frescoes depicting the founding of Belum. Rows of wooden benches face a raised platform where officials conduct town business. Scrolls, ledgers, and official documents are neatly organized on shelves along the walls. The air smells of parchment and wax seals. To the east is the exit back to the town square.");
             townHallInterior.Exits.Add("east", 87);
             townHallInterior.NPCs.Add(npcs["Senator Quintus"]);
+
+            // ===== CULTIST HIDEOUT (100-120) - Forest hideout of Ordo Dissolutus =====
+
+            // Room 100 - Hideout Entrance (accessed via fog puzzle in Room 53)
+            Room hideoutEntrance = CreateRoom(100, "hideoutEntrance", "Cultist Hideout - Entrance", "Beyond the dissipated fog, a hidden path leads to a clearing dominated by a crude wooden structure built against the base of an enormous hollow tree. The bark has been carved with disturbing symbols - spirals that seem to unravel the longer you look at them, and texts that fade and blur as if rejecting coherence. The entrance yawns open like a wound. To the west, the fog-cleared path leads back to the forest. To the east, darkness beckons.");
+            hideoutEntrance.Exits.Add("west", 53);
+            hideoutEntrance.Exits.Add("east", 101);
+
+            // Room 101 - Guard Post
+            Room guardPost = CreateRoom(101, "guardPost", "Cultist Hideout - Guard Post", "This chamber serves as a watchtower for the cultists. Simple wooden furniture has been deliberately broken and left in disarray - not from violence, but as a statement. A lookout post faces the entrance. Cultist guards patrol here, their eyes cold and fanatical. Passages lead east and south deeper into the hideout.");
+            guardPost.Exits.Add("west", 100);
+            guardPost.Exits.Add("east", 102);
+            guardPost.Exits.Add("south", 105);
+            guardPost.NPCs.Add(npcs["Cultist Scout"].Clone());
+            guardPost.NPCs.Add(npcs["Cultist Zealot"].Clone());
+
+            // Room 102 - Supply Cache
+            Room supplyCache = CreateRoom(102, "supplyCache", "Cultist Hideout - Supply Cache", "Crates and barrels are stacked here, though many have been deliberately damaged - grain spilled, water barrels cracked open. The cultists seem to take only what they need and destroy the rest. A few intact containers remain that you could loot. The only exit is back west.");
+            supplyCache.Exits.Add("west", 101);
+            supplyCache.Items.Add("greater potion");
+            supplyCache.Items.Add("energy potion");
+
+            // Room 105 - Ritual Chamber (cipher puzzle)
+            Room ritualChamber = CreateRoom(105, "ritualChamber", "Cultist Hideout - Ritual Chamber", "A circular room with symbols painted on the floor in ash and charcoal. The air feels wrong here, as if reality itself is slightly unstable. Six stone pedestals ring the chamber, each bearing a carved symbol. In the center, a locked iron gate blocks passage to the south - but there's no visible keyhole, only a phrase carved above: 'Speak the word that unmakes all things.' The symbols on the pedestals seem to be parts of a puzzle.");
+            ritualChamber.Exits.Add("north", 101);
+            ritualChamber.PuzzleId = "ritual_chamber_cipher";
+
+            ritualChamber.Objects.Add(new RoomObject
+            {
+                Id = "stone_pedestals",
+                Name = "pedestals",
+                Aliases = new[] { "stone pedestals", "pedestal", "symbols", "carved symbols" },
+                DefaultDescription = "Six stone pedestals arranged in a circle, each carved with a different symbol.",
+                LookedAtDescription = "Each pedestal bears a symbol and a word beneath it:\n1. A flame - 'IGNIS' (Fire)\n2. A droplet - 'AQUA' (Water)\n3. A skull - 'MORTIS' (Death)\n4. A spiral - 'VORAGO' (Abyss)\n5. A shattered circle - 'FRACTUS' (Broken)\n6. An empty void - 'NIHIL' (Nothing)\n\nThe phrase above the gate reads: 'Speak the word that unmakes all things.' What could it mean?",
+                IsInteractable = false
+            });
+
+            ritualChamber.Objects.Add(new RoomObject
+            {
+                Id = "iron_gate",
+                Name = "gate",
+                Aliases = new[] { "iron gate", "locked gate", "southern gate" },
+                DefaultDescription = "A heavy iron gate blocks the southern passage. Above it is carved: 'Speak the word that unmakes all things.'",
+                LookedAtDescription = "The gate has no lock or handle - only the carved phrase. It seems to require a spoken answer to open.",
+                IsInteractable = false
+            });
+
+            // Room 108 - Defaced Library (book puzzle)
+            Room defacedLibrary = CreateRoom(108, "defacedLibrary", "Cultist Hideout - Defaced Library", "What was once a repository of knowledge has been systematically destroyed. Bookshelves line the walls, but most books have been torn apart, their pages scattered like snow. Some books have been burned, others unraveled thread by thread. Yet a few volumes remain intact on a central reading table - perhaps they contain something the cultists found useful. A passage leads north, and a narrow hallway continues east.");
+            defacedLibrary.Exits.Add("north", 105);
+            defacedLibrary.Exits.Add("east", 110);
+            defacedLibrary.PuzzleId = "library_book_puzzle";
+
+            defacedLibrary.Objects.Add(new RoomObject
+            {
+                Id = "reading_table",
+                Name = "table",
+                Aliases = new[] { "reading table", "central table", "books", "intact books" },
+                DefaultDescription = "A reading table with several intact books that survived the destruction.",
+                LookedAtDescription = "Three books remain intact:\n\n'Principles of Order' - A philosophical text. The cultists have annotated it heavily with contemptuous notes in the margins: 'All order is temporary,' 'Entropy claims all,' 'Why preserve what will inevitably fall?'\n\n'The Founding of Aevoria' - A historical text. One passage is circled in red: 'The five seals were placed to contain the ancient chaos. Should they fail, the empire itself would unravel.'\n\n'Rituals of Unbinding' - A dangerous tome. Instructions for breaking magical seals and disrupting protective wards. A bookmark marks a page titled 'The Festival Convergence - When barriers are weakest.'",
+                IsInteractable = false
+            });
+
+            defacedLibrary.Objects.Add(new RoomObject
+            {
+                Id = "scattered_pages",
+                Name = "pages",
+                Aliases = new[] { "scattered pages", "torn pages", "paper", "destroyed books" },
+                DefaultDescription = "Thousands of torn pages cover the floor like autumn leaves.",
+                LookedAtDescription = "Most are illegible, but you spot a few fragments:\n'...the old empire knew what we have forgotten...'\n'...containing rather than destroying was their mistake...'\n'...when enough seals break, the cascade cannot be stopped...'\n\nThe destruction here was methodical and purposeful.",
+                IsInteractable = false
+            });
+
+            // Room 110 - Monument of Unmaking (environmental puzzle)
+            Room monumentRoom = CreateRoom(110, "monumentRoom", "Cultist Hideout - Monument of Unmaking", "A large chamber dominated by what was once a beautiful marble statue of an ancient emperor. The cultists have defaced it systematically - chipping away features, carving spirals into the stone, covering it in ash. Around the statue, offerings have been placed: broken tools, shredded documents, snapped weapons. This is a shrine to destruction itself. Passages lead west back to the library and south deeper into the complex.");
+            monumentRoom.Exits.Add("west", 108);
+            monumentRoom.Exits.Add("south", 115);
+            monumentRoom.NPCs.Add(npcs["Cultist Defacer"].Clone());
+            monumentRoom.NPCs.Add(npcs["Cultist Philosopher"].Clone());
+
+            monumentRoom.Objects.Add(new RoomObject
+            {
+                Id = "defaced_statue",
+                Name = "statue",
+                Aliases = new[] { "marble statue", "emperor statue", "defaced statue", "monument" },
+                DefaultDescription = "A marble statue of an ancient emperor, systematically defaced and covered in disturbing symbols.",
+                LookedAtDescription = "The statue once depicted Emperor Valerius the First, founder of the empire. The cultists have carved away his face, replaced his scepter with a spiral symbol, and inscribed across the base: 'Even stone crumbles. Even empires fall. We hasten the inevitable.' The workmanship of the defacement is almost artistic in its precision - this wasn't vandalism, but ritual.",
+                IsInteractable = false
+            });
+
+            monumentRoom.Objects.Add(new RoomObject
+            {
+                Id = "offerings",
+                Name = "offerings",
+                Aliases = new[] { "broken tools", "shredded documents", "offerings", "shrine" },
+                DefaultDescription = "Various destroyed objects arranged around the statue like offerings at a shrine.",
+                LookedAtDescription = "Broken hammers, split anvils, torn maps, shredded legal documents, snapped swords - each carefully placed. You recognize some of the documents: property deeds, marriage certificates, trade agreements. The cultists are collecting symbols of order and civilization to ritually destroy them. It's deeply unsettling.",
+                IsInteractable = false
+            });
+
+            // Room 115 - Prison Cells (Althea's location)
+            Room prisonCells = CreateRoom(115, "prisonCells", "Cultist Hideout - Prison Cells", "A row of crude iron cages lines the wall of this chamber. Most are empty, their doors hanging open, but one cell in the far corner is locked. Inside, you can see a figure huddled in the shadows - a young woman in tattered robes, her eyes glowing faintly with an eerie light even in the darkness. She looks up as you enter, hope flickering across her gaunt face. Passages lead north and east.");
+            prisonCells.Exits.Add("north", 110);
+            prisonCells.Exits.Add("east", 118);
+            prisonCells.NPCs.Add(npcs["Cultist Lieutenant"].Clone());
+            prisonCells.NPCs.Add(npcs["Althea"]);  // Doesn't clone - she's unique
+
+            prisonCells.Objects.Add(new RoomObject
+            {
+                Id = "prison_cells",
+                Name = "cells",
+                Aliases = new[] { "cages", "iron cages", "prison", "locked cell" },
+                DefaultDescription = "A row of iron cages. Most are empty, but one in the corner is locked with a figure inside.",
+                LookedAtDescription = "The cells are crudely constructed but effective. The locked cell contains a young woman who watches you with a mixture of hope and suspicion. She appears weak but alert. A key ring hangs on the wall nearby - the lieutenant probably carries the actual key.",
+                IsInteractable = false
+            });
+
+            // Room 118 - Antechamber
+            Room antechamber = CreateRoom(118, "antechamber", "Cultist Hideout - Antechamber", "This chamber serves as a waiting area before the inner sanctum. The walls are covered in elaborate murals depicting the fall of civilizations - towers crumbling, books burning, monuments sinking into the earth. The artistry is disturbing in its beauty. To the west are the prison cells, and to the east, heavy double doors lead to what must be the leader's chamber. Cultist guards stand watch.");
+            antechamber.Exits.Add("west", 115);
+            antechamber.Exits.Add("east", 120);
+            antechamber.NPCs.Add(npcs["Cultist Breaker"].Clone());
+            antechamber.NPCs.Add(npcs["Cultist Archivist"].Clone());
+
+            antechamber.Objects.Add(new RoomObject
+            {
+                Id = "murals",
+                Name = "murals",
+                Aliases = new[] { "wall murals", "paintings", "artwork", "walls" },
+                DefaultDescription = "Elaborate murals covering the walls, depicting the fall of civilizations.",
+                LookedAtDescription = "The murals are masterfully painted, showing:\n- The Library of Alexandria burning, scholars weeping\n- The Tower of Babel collapsing as people scatter\n- Great monuments being swallowed by sand and time\n- Cities crumbling as nature reclaims them\n\nAt the bottom of each scene is written: 'Ordo Dissolutus' - the Dissolved Order. These cultists don't just destroy - they philosophically embrace entropy itself.",
+                IsInteractable = false
+            });
+
+            antechamber.Objects.Add(new RoomObject
+            {
+                Id = "double_doors",
+                Name = "doors",
+                Aliases = new[] { "heavy doors", "double doors", "eastern doors", "sanctum doors" },
+                DefaultDescription = "Heavy wooden doors reinforced with iron bands, leading east to the inner sanctum.",
+                LookedAtDescription = "The doors are carved with a massive spiral symbol that seems to draw your eye inward. Above them, an inscription reads: 'Beyond this threshold, the Archon of Unmaking awaits. Enter and witness the inevitable.'",
+                IsInteractable = false
+            });
+
+            // Room 120 - Boss Chamber (Archon Malachar)
+            Room archonChamber = CreateRoom(120, "archonChamber", "Cultist Hideout - The Archon's Sanctum", "A vast circular chamber at the heart of the hideout. The walls are carved with spiraling symbols that seem to move in the corner of your vision. In the center, ritual circles have been drawn in ash and blood, and the air itself seems to shimmer with wrongness. This is clearly the cult's inner sanctum - a place of dark rituals and forbidden practices.");
+            archonChamber.Exits.Add("west", 118);
+            archonChamber.NPCs.Add(npcs["Archon Malachar"].Clone());
+            archonChamber.Items.Add("ritual dagger");
+            archonChamber.Items.Add("cultist orders");
+            archonChamber.Items.Add("ritual notes");
+            archonChamber.Items.Add("philosophical tract");
+            archonChamber.Items.Add("cell key");
+
+            archonChamber.Objects.Add(new RoomObject
+            {
+                Id = "ritual_circles",
+                Name = "circles",
+                Aliases = new[] { "ritual circles", "ash circles", "blood circles", "symbols" },
+                DefaultDescription = "Complex ritual circles drawn on the floor in ash and blood.",
+                LookedAtDescription = "The circles are incredibly intricate, with symbols you don't recognize interwoven with mathematical formulae and arcane sigils. At specific points around the circles, small offerings have been placed - broken seals, torn documents, shattered amulets. This ritual appears designed to break or weaken something, though you can't tell what.",
+                IsInteractable = false
+            });
+
+            archonChamber.Objects.Add(new RoomObject
+            {
+                Id = "archon_throne",
+                Name = "throne",
+                Aliases = new[] { "chair", "seat", "throne" },
+                DefaultDescription = "A simple stone chair at the far end of the chamber, deliberately plain and unadorned.",
+                LookedAtDescription = "Unlike the elaborate thrones of rulers, this is just a plain stone seat. The message is clear: the Archon has no need for the trappings of power or authority. He sees himself as merely an instrument of entropy, not a king. Somehow, that makes him more dangerous.",
+                IsInteractable = false
+            });
 
             // Guild Hall
             rooms.Add(1, bedroom);
@@ -750,6 +922,17 @@ namespace GuildMaster.Data
             rooms.Add(90, belumNorthGate);
             rooms.Add(91, townHallInterior);
 
+            // Cultist Hideout
+            rooms.Add(100, hideoutEntrance);
+            rooms.Add(101, guardPost);
+            rooms.Add(102, supplyCache);
+            rooms.Add(105, ritualChamber);
+            rooms.Add(108, defacedLibrary);
+            rooms.Add(110, monumentRoom);
+            rooms.Add(115, prisonCells);
+            rooms.Add(118, antechamber);
+            rooms.Add(120, archonChamber);
+
             // ===== TESTING ROOMS (999-991) - Hidden recruit testing area =====
             // Test Room 999 - Valeria (Legionnaire, Female, Conversational)
             Room testRoom999 = CreateRoom(999, "testRoom999", "[TEST] Recruit Testing Area 1", "[TEST ROOM] A simple testing chamber. Use 'teleport 999' to get here.");
@@ -813,6 +996,199 @@ namespace GuildMaster.Data
             rooms.Add(993, testRoom993);
             rooms.Add(992, testRoom992);
             rooms.Add(991, testRoom991);
+
+            // ===== AEVORIA - IMPERIAL VILLA =====
+            // Room 200: Imperial Villa - Main Hall (arrival point from guild council meeting)
+            Room imperialVillaHall = CreateRoom(200, "imperialVillaHall", "Imperial Villa - Grand Hall",
+                "You stand in the magnificent grand hall of the Emperor's private villa. Soaring marble columns support a vaulted ceiling painted with scenes of imperial conquest. Sunlight streams through tall windows, casting patterns across the polished floor. Rich tapestries depicting the Empire's 1500-year history line the walls.<br><br>Senator Quintus and High Priestess Caelia stand nearby, speaking in low tones. Imperial guards in ceremonial armor stand at attention throughout the hall.");
+            imperialVillaHall.Exits.Add("north", 201);  // Throne Room
+            imperialVillaHall.Exits.Add("east", 202);   // Guest Quarters
+            imperialVillaHall.Exits.Add("south", 203);  // Gardens
+            imperialVillaHall.Exits.Add("west", 204);   // Library
+
+            // Room 201: Imperial Villa - Throne Room (Emperor is here)
+            Room throneRoom = CreateRoom(201, "imperialVillaThroneRoom", "Imperial Villa - Throne Room",
+                "An opulent throne room fit for the ruler of an empire. The throne itself is carved from a single piece of black marble, inlaid with gold depicting the imperial eagle. Banners of the legions that conquered the known world hang from the ceiling. Despite the grandeur, the room has an intimate quality - this is the Emperor's private audience chamber, not the vast public throne room of the palace.<br><br>Emperor Certius awaits here, ready to receive visitors.");
+            throneRoom.Exits.Add("south", 200);  // Back to Grand Hall
+            if (npcs.ContainsKey("Emperor Certius"))
+            {
+                throneRoom.NPCs.Add(npcs["Emperor Certius"].Clone());
+            }
+
+            // Room 202: Imperial Villa - Guest Quarters
+            Room guestQuarters = CreateRoom(202, "imperialVillaGuestQuarters", "Imperial Villa - Guest Quarters",
+                "Luxurious guest quarters have been prepared for you and your companions. The room features plush beds with silk sheets, a writing desk of polished mahogany, and a balcony overlooking the city. Fresh fruit and wine have been laid out on a side table.<br><br>A bronze plaque reads: 'Guests of the Emperor are granted the Empire's hospitality.'");
+            guestQuarters.Exits.Add("west", 200);  // Back to Grand Hall
+
+            // Room 203: Imperial Villa - Gardens
+            Room villaGardens = CreateRoom(203, "imperialVillaGardens", "Imperial Villa - Gardens",
+                "Meticulously maintained gardens surround a central fountain depicting the goddess Victoria. Rare flowers from every corner of the Empire bloom in carefully arranged beds. Stone paths wind between sculpted hedges, and the scent of jasmine fills the air. Servants tend the plants with quiet efficiency.<br><br>This is a place of peace, though the weight of impending crisis makes relaxation difficult.");
+            villaGardens.Exits.Add("north", 200);  // Back to Grand Hall
+
+            // Room 204: Imperial Villa - Library
+            Room villaLibrary = CreateRoom(204, "imperialVillaLibrary", "Imperial Villa - Imperial Library",
+                "Floor-to-ceiling shelves hold thousands of scrolls and bound volumes - the personal collection of Emperor Certius himself. You spot texts on military strategy, philosophy, history, and governance. A large table in the center holds maps of the Empire and its frontiers.<br><br>Several scholars work quietly at desks, cataloging and preserving this knowledge for future generations.");
+            villaLibrary.Exits.Add("east", 200);  // Back to Grand Hall
+
+            // Add Imperial Villa rooms
+            rooms.Add(200, imperialVillaHall);
+            rooms.Add(201, throneRoom);
+            rooms.Add(202, guestQuarters);
+            rooms.Add(203, villaGardens);
+            rooms.Add(204, villaLibrary);
+
+            // ===== AEVORIA - COLOSSEUM (Anniversary Celebration) =====
+            // Room 220: Colosseum - Lower Gallery (entrance, first encounter)
+            Room colosseumLowerGallery = CreateRoom(220, "colosseumLowerGallery", "Colosseum - Lower Gallery",
+                "The lower gallery of the Colosseum is packed with spectators. Banners in imperial purple hang from the stone arches. The roar of the crowd echoes off the walls as gladiatorial games unfold in the arena below. Vendors hawk wine and food, and the air is thick with excitement.<br><br>Ahead, you notice several figures in hooded robes moving against the crowd flow - heading deeper into the structure. Their movements are too purposeful, too synchronized. Cultists.");
+            colosseumLowerGallery.Exits.Add("north", 221);  // To mid gallery
+            // Add 2 cultist scouts (level 6-7)
+            if (npcs.ContainsKey("Cultist Scout"))
+            {
+                colosseumLowerGallery.NPCs.Add(npcs["Cultist Scout"].Clone());
+                colosseumLowerGallery.NPCs.Add(npcs["Cultist Scout"].Clone());
+            }
+
+            // Room 221: Colosseum - Mid Gallery (second encounter)
+            Room colosseumMidGallery = CreateRoom(221, "colosseumMidGallery", "Colosseum - Mid Gallery",
+                "You've climbed to the mid-level gallery, where wealthier citizens watch the games from cushioned seats. The view of the arena is spectacular from here, but you have no time for spectacle. More cultists block your path - these ones are armored and ready for combat. They've abandoned all pretense of blending in.");
+            colosseumMidGallery.Exits.Add("south", 220);  // Back to lower gallery
+            colosseumMidGallery.Exits.Add("north", 222);  // To upper gallery
+            // Add 3 mid-level cultists (zealot + defacer + scout)
+            if (npcs.ContainsKey("Cultist Zealot") && npcs.ContainsKey("Cultist Defacer"))
+            {
+                colosseumMidGallery.NPCs.Add(npcs["Cultist Zealot"].Clone());
+                colosseumMidGallery.NPCs.Add(npcs["Cultist Defacer"].Clone());
+                colosseumMidGallery.NPCs.Add(npcs["Cultist Scout"].Clone());
+            }
+
+            // Room 222: Colosseum - Upper Gallery (third encounter)
+            Room colosseumUpperGallery = CreateRoom(222, "colosseumUpperGallery", "Colosseum - Upper Gallery",
+                "The upper gallery is reserved for senators and high nobility. The seats here are empty - the elite are all in private viewing boxes. You're close to the Emperor's box now. A group of cultists has taken position here as a final line of defense. These are veteran fighters arrayed in defensive formation, weapons drawn and ready.");
+            colosseumUpperGallery.Exits.Add("south", 221);  // Back to mid gallery
+            colosseumUpperGallery.Exits.Add("north", 223);  // To Emperor's seat box
+            // Add 4 high-level cultists (lieutenant + philosopher + zealot + defacer)
+            if (npcs.ContainsKey("Cultist Lieutenant") && npcs.ContainsKey("Cultist Philosopher") &&
+                npcs.ContainsKey("Cultist Zealot") && npcs.ContainsKey("Cultist Defacer"))
+            {
+                colosseumUpperGallery.NPCs.Add(npcs["Cultist Lieutenant"].Clone());
+                colosseumUpperGallery.NPCs.Add(npcs["Cultist Philosopher"].Clone());
+                colosseumUpperGallery.NPCs.Add(npcs["Cultist Zealot"].Clone());
+                colosseumUpperGallery.NPCs.Add(npcs["Cultist Defacer"].Clone());
+            }
+
+            // Room 223: Colosseum - Emperor's Seat Box (assassination scene)
+            Room emperorSeatBox = CreateRoom(223, "emperorSeatBox", "Colosseum - Emperor's Seat Box",
+                "The Emperor's private viewing box offers an unobstructed view of the arena floor. Rich purple tapestries bearing the imperial eagle frame the space. This is where rulers of the Empire have watched gladiatorial games for fifteen centuries.<br><br>The box is currently empty except for imperial guards... and one figure moving with deadly intent.");
+            emperorSeatBox.Exits.Add("south", 222);  // Back to upper gallery
+            // No NPCs initially - assassination event spawns the assassin
+
+            // Add Colosseum rooms
+            rooms.Add(220, colosseumLowerGallery);
+            rooms.Add(221, colosseumMidGallery);
+            rooms.Add(222, colosseumUpperGallery);
+            rooms.Add(223, emperorSeatBox);
+
+            // ===== IMPERIAL HIGHWAY (Belum to Aevoria) =====
+            // Journey progression: Belum North → Steppes → Shrublands → Quarry → Ruins → Marshlands → Aevoria
+
+            // SEGMENT 1: Starting from west of Belum North Gate
+            Room highway121 = CreateRoom(121, "imperialHighway121", "Imperial Highway - Western Approach",
+                "The Imperial Highway stretches before you - a marvel of engineering paved with fitted stone that has endured for centuries. To your south, you can see the northern walls of Belum rising in the distance. The road is wide enough for four wagons to travel abreast, with drainage ditches on either side. Mile markers bearing the imperial eagle show the distance to major cities.");
+
+            Room highway122 = CreateRoom(122, "imperialHighway122", "Imperial Highway - Belum Outskirts",
+                "You're still within sight of Belum's north gate to the south, though the city is beginning to fade behind you. Small farms and homesteads dot the landscape here - this close to a major town, the roads are safe and settlement thrives. Smoke rises from chimneys, and you can hear the distant sound of cattle lowing in their pens.");
+
+            // SEGMENT 2: Northern Steppes
+            Room highway123 = CreateRoom(123, "imperialHighway123", "Imperial Highway - Edge of the Steppes",
+                "The landscape begins to change as the road leads you northward. To the north, vast grasslands stretch to the horizon - the legendary Northern Steppes where tribal horsemen once ruled before the Empire pacified them. The wind carries the scent of wild grass and distant rain. Civilization feels far away here.");
+
+            Room highway124 = CreateRoom(124, "imperialHighway124", "Imperial Highway - Steppe Overlook",
+                "The highway runs along a ridge here, offering a commanding view of the steppes to the north. Endless waves of grass ripple in the wind like a green ocean. You can see herds of wild horses in the distance, running free across the plains. This is the frontier - beautiful, vast, and untamed.");
+
+            Room highway125 = CreateRoom(125, "imperialHighway125", "Imperial Highway - Steppe Crossing",
+                "The road cuts directly through the steppes here. The landscape is deceptively flat - you can see for miles in every direction, which is both reassuring and unsettling. Imperial watchtowers dot the horizon at regular intervals, remnants of the campaigns that brought these lands under control. The wind never stops.");
+
+            // SEGMENT 3: Shrublands transition
+            Room highway126 = CreateRoom(126, "imperialHighway126", "Imperial Highway - Shrubland Border",
+                "The terrain shifts as you continue north. To the north, the open steppes give way to dense shrubland - thick bushes and small twisted trees that grow in stubborn clusters. The Imperial Highway remains immaculate, but the wild country presses close on either side. You notice game trails crossing the road - deer, perhaps, or something larger.");
+
+            Room highway127 = CreateRoom(127, "imperialHighway127", "Imperial Highway - Through the Shrublands",
+                "Dense shrubland flanks the highway to the north, creating a wall of thorny vegetation that would be impassable without the road. The bushes are thick with berries - some edible, some poisonous, if you know which is which. Bird calls echo through the thickets, and you catch glimpses of movement in the shadows.");
+
+            Room highway128 = CreateRoom(128, "imperialHighway128", "Imperial Highway - Shrubland Heights",
+                "The road climbs slightly here, and you can look down on the shrublands spreading to the north like a rumpled green carpet. In the distance to the south, you can still make out Belum's walls - a reassuring sight of civilization in this wild country. The highway continues its inexorable march northward toward the capital.");
+
+            // SEGMENT 4: Quarry region (east)
+            Room highway129 = CreateRoom(129, "imperialHighway129", "Imperial Highway - Quarry Road Junction",
+                "A side road branches off the highway here, leading east toward what appears to be an active quarry. You can hear the distant sound of hammers on stone and see dust rising from the excavation site. Wagons loaded with cut stone occasionally join the main highway here, their wheels worn deep into the road from years of heavy use. The quarry must supply stone for imperial construction projects.");
+
+            Room highway130 = CreateRoom(130, "imperialHighway130", "Imperial Highway - Past the Quarry",
+                "The quarry is clearly visible to the east now - a massive scar in the hillside where workers have been extracting limestone and marble for generations. You can see tiny figures moving among the cut stone, hear the rhythmic striking of tools. This is where the Empire's grandeur is literally carved from the earth. The highway continues north, paved with the very stone mined from these hills.");
+
+            Room highway131 = CreateRoom(131, "imperialHighway131", "Imperial Highway - Beyond the Quarry",
+                "The sounds of the quarry fade behind you as the road continues northward. The landscape here is scarred by old excavation sites - places where the stone was exhausted decades or centuries ago and nature is slowly reclaiming the land. Wildflowers grow in the abandoned pits, and trees sprout from cracks in discarded stone. Progress marches on, leaving ruins in its wake.");
+
+            // SEGMENT 5: Ancient Ruins (west)
+            Room highway132 = CreateRoom(132, "imperialHighway132", "Imperial Highway - Ruins Approach",
+                "To the west, massive stone structures rise from the landscape - ruins far older than the Empire itself. These are pre-imperial constructions, built by civilizations whose very names have been forgotten. The Imperial Highway runs alongside these ancient monuments, a newer road beside a far older mystery. Scholars sometimes camp here, studying the weathered stones.");
+
+            Room highway133 = CreateRoom(133, "imperialHighway133", "Imperial Highway - Shadow of the Ancients",
+                "The ruins loom to the west - cyclopean walls built from stones so massive it's hard to imagine how they were moved. No mortar holds them together; they're fitted with such precision that a knife blade couldn't slip between them. The Empire claims these lands, but these structures predate imperial history by millennia. What empire fell here? What catastrophe reduced them to ruins?");
+
+            Room highway134 = CreateRoom(134, "imperialHighway134", "Imperial Highway - Ancient Gateway",
+                "A massive archway stands to the west - part of the ruins, still standing after countless centuries. The Imperial Highway passes directly beside it, as if the road builders deliberately positioned the route to acknowledge these ancient works. Strange symbols are carved into the arch's keystone - not imperial script, not any language you recognize. Some mysteries endure.");
+
+            Room highway135 = CreateRoom(135, "imperialHighway135", "Imperial Highway - Leaving the Ruins",
+                "The ancient ruins gradually fade behind you to the west as the highway continues its northern march. You take one last look at those massive stones, those impossible walls. The Empire is powerful, yes - but it stands on the bones of older powers. The road ahead is well-maintained, paved by imperial engineers who perhaps never wondered what came before.");
+
+            // SEGMENT 6: Marshlands (east)
+            Room highway136 = CreateRoom(136, "imperialHighway136", "Imperial Highway - Marsh Border",
+                "The air grows thick and humid as marshlands appear to the east. You can smell the wetlands - a mix of rotting vegetation, stagnant water, and rich mud. The Imperial Highway is raised here, built on a causeway to keep it above the flood plain. This must have been an incredible engineering feat, creating a solid road through swampland.");
+
+            Room highway137 = CreateRoom(137, "imperialHighway137", "Imperial Highway - Through the Marshes",
+                "Marshland stretches to the east - pools of dark water, stands of reeds, twisted trees draped with moss. The Imperial Highway cuts straight through it all, an arrow of civilization through the wild. You can hear frogs croaking, insects buzzing, and the occasional splash of something moving through the water. The road beneath your feet is solid, but the world on either side is uncertain, shifting.");
+
+            Room highway138 = CreateRoom(138, "imperialHighway138", "Imperial Highway - Marsh Causeway",
+                "The raised causeway continues through the marshlands to the east. Imperial engineering at its finest - drainage channels on both sides keep water from undermining the road, and stone abutments support the structure where the ground is softest. Birds wade in the shallow waters, hunting for fish. The marsh is beautiful in its own way, but you're grateful for the solid road.");
+
+            // SEGMENT 7: Approaching Aevoria
+            Room highway139 = CreateRoom(139, "imperialHighway139", "Imperial Highway - Northern Reaches",
+                "The marshlands finally give way to firmer ground as you continue north. The landscape here is well-cultivated - farms and estates owned by wealthy nobles who enjoy proximity to the capital without living in the city itself. The highway is busier here; you pass other travelers, merchants, imperial messengers on fast horses. Civilization thickens with every mile northward.");
+
+            Room highway140 = CreateRoom(140, "imperialHighway140", "Imperial Highway - Aevoria Approaches",
+                "The traffic increases steadily as you travel north. Wagons laden with goods, nobles in carriages, pilgrims on foot - all making their way to or from the Eternal City. To the far north, you can just make out a change in the horizon - something massive and white that must be Aevoria itself. The capital, heart of the Empire, draws near.");
+
+            Room highway141 = CreateRoom(141, "imperialHighway141", "Imperial Highway - Capital Road",
+                "Aevoria is clearly visible now to the north - white marble buildings gleaming in the distance, the Colosseum's massive arches rising above the city walls. The highway here is immaculate, swept daily by work crews who maintain the approaches to the capital. Imperial banners flutter from posts along the road. You're in the heart of the Empire now.");
+
+            // Final room connecting to Aevoria
+            Room highway142 = CreateRoom(142, "imperialHighway142", "Imperial Highway - Aevoria Gates",
+                "The Imperial Highway terminates at the massive western gates of Aevoria. The city walls rise fifty feet high, built from gleaming white marble that seems to glow in the sunlight. Guards in ceremonial armor stand at attention, checking travelers entering the capital. Beyond the gates, you can see the city itself - the Eternal City, fifteen centuries old, seat of imperial power. You've arrived.");
+
+            // Add Imperial Highway rooms
+            rooms.Add(121, highway121);
+            rooms.Add(122, highway122);
+            rooms.Add(123, highway123);
+            rooms.Add(124, highway124);
+            rooms.Add(125, highway125);
+            rooms.Add(126, highway126);
+            rooms.Add(127, highway127);
+            rooms.Add(128, highway128);
+            rooms.Add(129, highway129);
+            rooms.Add(130, highway130);
+            rooms.Add(131, highway131);
+            rooms.Add(132, highway132);
+            rooms.Add(133, highway133);
+            rooms.Add(134, highway134);
+            rooms.Add(135, highway135);
+            rooms.Add(136, highway136);
+            rooms.Add(137, highway137);
+            rooms.Add(138, highway138);
+            rooms.Add(139, highway139);
+            rooms.Add(140, highway140);
+            rooms.Add(141, highway141);
+            rooms.Add(142, highway142);
 
             return rooms;
         }

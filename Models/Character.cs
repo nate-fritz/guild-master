@@ -85,7 +85,18 @@ namespace GuildMaster.Models
         public void FullRestore()
         {
             Health = TotalMaxHealth;
-            Energy = TotalMaxEnergy;
+
+            // Check class-specific EP rest behavior
+            if (Class != null && Class.ResetEpOnRest)
+            {
+                // Reset EP to 0 (for classes like Legionnaire)
+                Energy = 0;
+            }
+            else
+            {
+                // Restore EP to max (for classes like Venator and Oracle)
+                Energy = TotalMaxEnergy;
+            }
         }
 
         public int GetXPForNextLevel(int level)
