@@ -894,6 +894,16 @@ namespace GuildMaster.Managers
             return HealTarget(ability, caster, target, targetName);
         }
 
+        public bool ExecuteHealAbility(Ability ability, Character caster, Character target, Player player)
+        {
+            // Simplified heal execution for state-machine-based target selection
+            // This is called from CombatManager after the target has been selected
+            string targetName = target == player ? "You" : target.Name;
+            string casterName = caster == player ? "You" : caster.Name;
+
+            return HealTarget(ability, caster, target, targetName);
+        }
+
         private bool ExecuteLightningBoltGeneric(Ability ability, Character character, List<NPC> enemies)
         {
             var target = SelectEnemyTarget(enemies);

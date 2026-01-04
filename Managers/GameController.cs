@@ -310,24 +310,92 @@ namespace GuildMaster.Managers
                 }
                 else
                 {
-                    NPC targetNPC = currentRoomObj.NPCs.FirstOrDefault(npc =>
-                        npc.Name.ToLower() == itemToExamine ||
-                        npc.ShortDescription.ToLower() == itemToExamine ||
-                        npc.ShortDescription.ToLower().Replace("a ", "").Replace("an ", "") == itemToExamine
-                    );
+                    // Check if item is in player's inventory
+                    string inventoryMatch = player.Inventory.FirstOrDefault(item =>
+                        item.ToLower() == itemToExamine ||
+                        item.ToLower().Contains(itemToExamine));
 
-                    if (targetNPC != null)
+                    if (inventoryMatch != null)
                     {
-                        TextHelper.DisplayTextWithPaging(targetNPC.Description);
+                        // Search all rooms for item description (items can originate from any room)
+                        Item? foundItem = null;
+                        foreach (var roomItems in itemDescriptions.Values)
+                        {
+                            if (roomItems.ContainsKey(inventoryMatch))
+                            {
+                                foundItem = roomItems[inventoryMatch];
+                                break;
+                            }
+                        }
+
+                        if (foundItem != null)
+                        {
+                            TextHelper.DisplayTextWithPaging(foundItem.Description);
+                        }
+                        else
+                        {
+                            // Generic description for items without specific data
+                            AnsiConsole.MarkupLine($"You examine the {inventoryMatch}. Nothing particularly notable.");
+                        }
                     }
                     else
                     {
-                        AnsiConsole.MarkupLine($"You don't see a {itemToExamine} here.");
+                        // Check for NPCs
+                        NPC targetNPC = currentRoomObj.NPCs.FirstOrDefault(npc =>
+                            npc.Name.ToLower() == itemToExamine ||
+                            npc.ShortDescription.ToLower() == itemToExamine ||
+                            npc.ShortDescription.ToLower().Replace("a ", "").Replace("an ", "") == itemToExamine
+                        );
+
+                        if (targetNPC != null)
+                        {
+                            TextHelper.DisplayTextWithPaging(targetNPC.Description);
+                        }
+                        else
+                        {
+                            AnsiConsole.MarkupLine($"You don't see a {itemToExamine} here.");
+                        }
                     }
                 }
 
                 AnsiConsole.MarkupLine("");
             }
+        }
+
+        public void HandleDropCommand(string input)
+        {
+            var player = context.Player;
+            var rooms = context.Rooms;
+            Room currentRoom = rooms[player.CurrentRoom];
+
+            // Parse the item name from input (handle both "drop item" and "d item")
+            string[] parts = input.Split(' ', 2);
+            if (parts.Length < 2)
+            {
+                AnsiConsole.MarkupLine("Drop what? Specify an item to drop.");
+                return;
+            }
+
+            string itemName = parts[1].ToLower().Trim();
+
+            // Find the item in inventory (exact match or partial match)
+            string matchedItem = player.Inventory.FirstOrDefault(item =>
+                item.ToLower() == itemName ||
+                item.ToLower().Contains(itemName));
+
+            if (matchedItem == null)
+            {
+                AnsiConsole.MarkupLine($"You don't have '{itemName}' in your inventory.");
+                return;
+            }
+
+            // Remove from inventory
+            player.Inventory.Remove(matchedItem);
+
+            // Add to room
+            currentRoom.Items.Add(matchedItem);
+
+            AnsiConsole.MarkupLine($"\nYou drop the {matchedItem}.");
         }
 
         public void MovePlayer(string direction)

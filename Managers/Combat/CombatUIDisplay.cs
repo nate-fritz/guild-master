@@ -37,6 +37,9 @@ namespace GuildMaster.Managers.Combat
 
             float percentage = (float)current / max;
             int filledSegments = (int)Math.Round(percentage * 10);
+
+            // Clamp filledSegments to prevent negative emptySegments (can happen if current > max)
+            filledSegments = Math.Clamp(filledSegments, 0, 10);
             int emptySegments = 10 - filledSegments;
 
             // Original colors with CSS glow effect
@@ -77,6 +80,9 @@ namespace GuildMaster.Managers.Combat
 
             float percentage = (float)current / max;
             int filledSegments = (int)Math.Round(percentage * 10);
+
+            // Clamp filledSegments to prevent negative emptySegments (can happen if current > max)
+            filledSegments = Math.Clamp(filledSegments, 0, 10);
             int emptySegments = 10 - filledSegments;
 
             // When EP is 0, show all empty segments

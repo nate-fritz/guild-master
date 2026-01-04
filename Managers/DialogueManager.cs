@@ -471,8 +471,9 @@ namespace GuildMaster.Managers
                         Recruit newRecruit = new Recruit(npc.Name, recruitClass, player.CurrentDay);
                         player.Recruits.Add(newRecruit);
 
-                        // Remove NPC from room
+                        // Remove NPC from room (both current NPCs and original list to prevent respawn)
                         currentRoom.NPCs.Remove(npc);
+                        currentRoom.OriginalNPCs.RemoveAll(n => n.Name == npc.Name);
 
                         // AUTO-JOIN PARTY for first 2 recruits
                         if (player.Recruits.Count <= 2 && player.ActiveParty.Count < 3)

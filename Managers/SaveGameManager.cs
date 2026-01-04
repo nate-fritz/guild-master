@@ -182,6 +182,9 @@ namespace GuildMaster.Managers
                 // Apply loaded state
                 ApplyLoadedState(loadedState);
 
+                // Remove recruited NPCs from their original rooms (they're in the guild now)
+                RemoveRecruitedNPCsFromRooms();
+
                 AnsiConsole.MarkupLine($"Save file loaded successfully from slot {slot}!");
                 return true;
             }
@@ -533,6 +536,28 @@ namespace GuildMaster.Managers
         public async Task<bool> SaveExistsAsync(int slot)
         {
             return await storageService.ExistsAsync(GetSaveFileName(slot));
+        }
+
+        /// <summary>
+        /// Removes recruited NPCs from their original rooms to prevent them from respawning
+        /// </summary>
+        private void RemoveRecruitedNPCsFromRooms()
+        {
+            var player = context.Player;
+            var rooms = context.Rooms;
+
+            // Get list of all recruited NPC names
+            var recruitedNames = new HashSet<string>(player.Recruits.Select(r => r.Name));
+
+            // Remove recruited NPCs from all rooms
+            foreach (var room in rooms.Values)
+            {
+                // Remove from current NPCs list
+                room.NPCs.RemoveAll(npc => recruitedNames.Contains(npc.Name));
+
+                // Remove from OriginalNPCs list to prevent respawning
+                room.OriginalNPCs.RemoveAll(npc => recruitedNames.Contains(npc.Name));
+            }
         }
 
         public async Task<bool> SaveExistsAsync()

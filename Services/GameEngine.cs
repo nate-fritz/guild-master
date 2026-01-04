@@ -580,6 +580,10 @@ namespace GuildMaster.Services
                 // Allow "examine" as an alias for "look"
                 gameController?.HandleLookCommand(input.Replace("examine", "look"));
             }
+            else if (input.StartsWith("drop ") || input.StartsWith("d "))
+            {
+                gameController?.HandleDropCommand(input);
+            }
             else if (input.StartsWith("pull "))
             {
                 gameController?.HandleInteractionCommand("pull", input);

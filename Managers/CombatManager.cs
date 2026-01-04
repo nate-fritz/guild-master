@@ -58,6 +58,7 @@ namespace GuildMaster.Managers
         private Ability? pendingAbility;
         private Character? abilityCharacter;
         private NPC? preselectedTarget;  // For passing target to ability executors
+        private List<Character>? pendingHealTargets;  // For heal abilities that need ally targeting
 
         // Pending item state (for damage scrolls that need targeting)
         private string? pendingItem;
@@ -1134,6 +1135,35 @@ namespace GuildMaster.Managers
                         AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
                     }
                 }
+                else if (NeedsAllyTarget(ability))
+                {
+                    // Ability needs to select a party member (e.g., Heal)
+                    var targets = new List<Character> { context.Player };
+                    targets.AddRange(context.Player.ActiveParty.Where(a => a.Health > 0));
+
+                    if (targets.Count == 1)
+                    {
+                        // Only one target available (just the player), execute directly
+                        abilityExecutor.ExecuteHealAbility(ability, actingCharacter, targets[0], context.Player);
+                        currentActingPartyMember = null;
+                        CompleteTurn();
+                    }
+                    else
+                    {
+                        // Show party member selection
+                        currentState = CombatState.SelectingAbilityTarget;
+                        AnsiConsole.MarkupLine("\n[#90FF90]Who do you want to heal?[/]");
+                        for (int i = 0; i < targets.Count; i++)
+                        {
+                            string name = targets[i] == context.Player ? "Player" : targets[i].Name;
+                            AnsiConsole.MarkupLine($"{i + 1}. {name} (HP: {targets[i].Health}/{targets[i].MaxHealth})");
+                        }
+                        // Store targets for later selection
+                        pendingHealTargets = targets;
+                        ShowStatusBar();
+                        AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
+                    }
+                }
                 else
                 {
                     // No target needed, execute directly
@@ -1182,10 +1212,55 @@ namespace GuildMaster.Managers
             };
         }
 
+        private bool NeedsAllyTarget(Ability ability)
+        {
+            // Check if ability needs to select a party member as target
+            return ability.Name switch
+            {
+                "Heal" => true,
+                _ => false
+            };
+        }
+
         private void HandleAbilityTargetSelection(string input)
         {
             DebugLog($"DEBUG: HandleAbilityTargetSelection called with input='{input}'");
 
+            // Check if we're selecting a heal target (ally) or enemy target
+            if (pendingHealTargets != null && pendingAbility != null && abilityCharacter != null)
+            {
+                // Heal target selection
+                if (!int.TryParse(input, out int targetIndex) || targetIndex < 1 || targetIndex > pendingHealTargets.Count)
+                {
+                    AnsiConsole.MarkupLine("[#FF0000]Invalid target! Please choose again.[/]");
+
+                    // Re-show target selection
+                    AnsiConsole.MarkupLine("\n[#90FF90]Who do you want to heal?[/]");
+                    for (int i = 0; i < pendingHealTargets.Count; i++)
+                    {
+                        string name = pendingHealTargets[i] == context.Player ? "Player" : pendingHealTargets[i].Name;
+                        AnsiConsole.MarkupLine($"{i + 1}. {name} (HP: {pendingHealTargets[i].Health}/{pendingHealTargets[i].MaxHealth})");
+                    }
+                    ShowStatusBar();
+                    AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
+                    return;
+                }
+
+                // Execute heal ability with selected target
+                var target = pendingHealTargets[targetIndex - 1];
+                abilityExecutor.ExecuteHealAbility(pendingAbility, abilityCharacter, target, context.Player);
+
+                // Clear pending state
+                pendingAbility = null;
+                abilityCharacter = null;
+                pendingHealTargets = null;
+                currentActingPartyMember = null;
+
+                CompleteTurn();
+                return;
+            }
+
+            // Enemy target selection (existing logic)
             if (currentTargetList == null || pendingAbility == null || abilityCharacter == null || activeEnemies == null)
             {
                 AnsiConsole.MarkupLine("[#FF0000]Error: Invalid combat state![/]");
@@ -1200,7 +1275,7 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            if (!int.TryParse(input, out int targetIndex) || targetIndex < 1 || targetIndex > currentTargetList.Count)
+            if (!int.TryParse(input, out int enemyTargetIndex) || enemyTargetIndex < 1 || enemyTargetIndex > currentTargetList.Count)
             {
                 AnsiConsole.MarkupLine("[#FF0000]Invalid target! Please choose again.[/]");
 
@@ -1219,7 +1294,7 @@ namespace GuildMaster.Managers
             DebugLog($"DEBUG: Valid target selected, executing ability");
 
             // Execute ability with selected target
-            preselectedTarget = currentTargetList[targetIndex - 1];
+            preselectedTarget = currentTargetList[enemyTargetIndex - 1];
             DebugLog($"DEBUG: About to execute ability '{pendingAbility?.Name}' on {preselectedTarget?.Name}");
             abilityExecutor.ExecuteAbilityForCharacter(pendingAbility, abilityCharacter, activeEnemies, context.Player, preselectedTarget);
             DebugLog($"DEBUG: Ability executed, clearing state");
@@ -2251,6 +2326,13 @@ namespace GuildMaster.Managers
             {
                 Recruit newRecruit = new Recruit(npc.Name, npc.RecruitClass, player.CurrentDay);
                 player.Recruits.Add(newRecruit);
+
+                // Remove the NPC from the room (they're joining the guild)
+                if (combatRoom != null)
+                {
+                    combatRoom.NPCs.Remove(npc);
+                    combatRoom.OriginalNPCs.RemoveAll(n => n.Name == npc.Name);
+                }
 
                 // AUTO-JOIN PARTY for first 2 recruits
                 if (player.Recruits.Count <= 2 && player.ActiveParty.Count < 3)
