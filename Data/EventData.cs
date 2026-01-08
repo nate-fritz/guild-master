@@ -247,9 +247,9 @@ namespace GuildMaster.Data
 
                         if (context.NPCs.ContainsKey(npcName) && context.Rooms.ContainsKey(roomId))
                         {
-                            var npc = context.NPCs[npcName];
                             var room = context.Rooms[roomId];
-                            room.NPCs.Remove(npc);
+                            // Remove by name to ensure removal works
+                            room.NPCs.RemoveAll(n => n.Name == npcName);
                         }
                     }
                     break;

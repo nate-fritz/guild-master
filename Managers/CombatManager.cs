@@ -157,6 +157,9 @@ namespace GuildMaster.Managers
                 isDefending = false;
                 combatActive = true;
 
+                // Decrement ability cooldowns from previous combat
+                DecrementAllCooldowns();
+
                 // Ensure all enemies start at full health and energy
                 foreach (var enemy in activeEnemies)
                 {
@@ -188,8 +191,8 @@ namespace GuildMaster.Managers
 
                 DebugLog("DEBUG: About to roll initiative");
 
-                // Roll initiative
-                turnOrder = RollInitiative(player, enemies);
+                // Roll initiative using CLONED enemies (activeEnemies) so turn order matches combat state
+                turnOrder = RollInitiative(player, activeEnemies);
 
                 DebugLog("DEBUG: Initiative rolled");
 
@@ -2330,7 +2333,8 @@ namespace GuildMaster.Managers
                 // Remove the NPC from the room (they're joining the guild)
                 if (combatRoom != null)
                 {
-                    combatRoom.NPCs.Remove(npc);
+                    // Remove by name since 'npc' is a clone
+                    combatRoom.NPCs.RemoveAll(n => n.Name == npc.Name);
                     combatRoom.OriginalNPCs.RemoveAll(n => n.Name == npc.Name);
                 }
 
@@ -2411,7 +2415,9 @@ namespace GuildMaster.Managers
             {
                 int goldDrop = random.Next(enemy.MinGold, enemy.MaxGold + 1);
                 totalGold += goldDrop;
-                currentRoom.NPCs.Remove(enemy);
+                // Remove by name since 'enemy' is a clone
+                currentRoom.NPCs.RemoveAll(n => n.Name == enemy.Name);
+                currentRoom.OriginalNPCs.RemoveAll(n => n.Name == enemy.Name);
             }
             player.Gold += totalGold;
             AnsiConsole.MarkupLine($"\nYou looted [#FCBA03]{totalGold} gold pieces[/] total!");
@@ -2801,6 +2807,42 @@ namespace GuildMaster.Managers
                 return 0;
 
             return abilityCooldowns[character][abilityName];
+        }
+
+        private void DecrementAllCooldowns()
+        {
+            var player = context.Player;
+
+            // Decrement cooldowns for player
+            if (abilityCooldowns.ContainsKey(player))
+            {
+                var cooldownsCopy = abilityCooldowns[player].Keys.ToList();
+                foreach (var abilityName in cooldownsCopy)
+                {
+                    abilityCooldowns[player][abilityName]--;
+                    if (abilityCooldowns[player][abilityName] <= 0)
+                    {
+                        abilityCooldowns[player].Remove(abilityName);
+                    }
+                }
+            }
+
+            // Decrement cooldowns for party members
+            foreach (var recruit in player.ActiveParty)
+            {
+                if (abilityCooldowns.ContainsKey(recruit))
+                {
+                    var cooldownsCopy = abilityCooldowns[recruit].Keys.ToList();
+                    foreach (var abilityName in cooldownsCopy)
+                    {
+                        abilityCooldowns[recruit][abilityName]--;
+                        if (abilityCooldowns[recruit][abilityName] <= 0)
+                        {
+                            abilityCooldowns[recruit].Remove(abilityName);
+                        }
+                    }
+                }
+            }
         }
 
         private void ApplyStatusEffect(Character target, StatusEffect effect, int duration, Character source = null)

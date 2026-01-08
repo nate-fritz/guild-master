@@ -472,7 +472,7 @@ namespace GuildMaster.Managers
                         player.Recruits.Add(newRecruit);
 
                         // Remove NPC from room (both current NPCs and original list to prevent respawn)
-                        currentRoom.NPCs.Remove(npc);
+                        currentRoom.NPCs.RemoveAll(n => n.Name == npc.Name);
                         currentRoom.OriginalNPCs.RemoveAll(n => n.Name == npc.Name);
 
                         // AUTO-JOIN PARTY for first 2 recruits
@@ -540,6 +540,8 @@ namespace GuildMaster.Managers
                             AnsiConsole.MarkupLine($"\n[#00FF00]You hear the sound of the great gate creaking open...[/]");
                         }
                     }
+                    // Set permanent flag so gate stays unlocked
+                    player.QuestFlags["town_gate_unlocked"] = true;
                     // Update Marcus to use "after_quest" dialogue from now on
                     npc.CurrentDialogueNode = "after_quest";
                     break;
@@ -579,11 +581,8 @@ namespace GuildMaster.Managers
                             if (context.Rooms.ContainsKey(91))
                             {
                                 var townHall = context.Rooms[91];
-                                var quintus = townHall.NPCs.FirstOrDefault(n => n.Name == "Senator Quintus");
-                                if (quintus != null)
-                                {
-                                    townHall.NPCs.Remove(quintus);
-                                }
+                                // Remove by name to ensure removal works
+                                townHall.NPCs.RemoveAll(n => n.Name == "Senator Quintus");
                             }
                         }
                     }
@@ -608,11 +607,8 @@ namespace GuildMaster.Managers
                         if (context.Rooms.ContainsKey(roomId))
                         {
                             var targetRoom = context.Rooms[roomId];
-                            var npcToRemove = targetRoom.NPCs.FirstOrDefault(n => n.Name == npcName);
-                            if (npcToRemove != null)
-                            {
-                                targetRoom.NPCs.Remove(npcToRemove);
-                            }
+                            // Remove by name to ensure removal works
+                            targetRoom.NPCs.RemoveAll(n => n.Name == npcName);
                         }
                     }
                     break;
@@ -839,6 +835,12 @@ namespace GuildMaster.Managers
                     // Timer still running - show waiting dialogue
                     npc.CurrentDialogueNode = "waiting_examination";
                 }
+            }
+
+            // Check for Marcus (gate guard) - if gate is unlocked, use after_quest dialogue
+            if (npc.Name == "Marcus" && player.QuestFlags.ContainsKey("town_gate_unlocked") && player.QuestFlags["town_gate_unlocked"])
+            {
+                npc.CurrentDialogueNode = "after_quest";
             }
         }
     }

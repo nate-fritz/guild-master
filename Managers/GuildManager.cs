@@ -268,6 +268,12 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($" Defense: {recruit.Defense,-28} ");
             AnsiConsole.MarkupLine($" Speed:   {recruit.Speed,-28} ");
             AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($" Equipment:                            ");
+            AnsiConsole.MarkupLine($" Weapon:  {recruit.EquippedWeapon?.Name ?? "None",-28} ");
+            AnsiConsole.MarkupLine($" Armor:   {recruit.EquippedArmor?.Name ?? "None",-28} ");
+            AnsiConsole.MarkupLine($" Helm:    {recruit.EquippedHelm?.Name ?? "None",-28} ");
+            AnsiConsole.MarkupLine($" Ring:    {recruit.EquippedRing?.Name ?? "None",-28} ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
             AnsiConsole.MarkupLine($" Recruited: Day {recruit.RecruitedDay,-22} ");
             AnsiConsole.MarkupLine($"═══════════════════════════════════════");
 
@@ -290,6 +296,191 @@ namespace GuildMaster.Managers
                 return "In Party";
             else
                 return "At Guild";
+        }
+
+        public void DisplayRecruitActionsMenu(Recruit recruit)
+        {
+            // Display character sheet first
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($"         CHARACTER SHEET               ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($" Name:    {recruit.Name,-28} ");
+            AnsiConsole.MarkupLine($" Class:   {recruit.Class?.Name ?? "Unknown",-28} ");
+            AnsiConsole.MarkupLine($" Status:  {GetRecruitStatus(recruit),-28} ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($" Health:  {recruit.Health,3}/{recruit.MaxHealth,-28} ");
+            AnsiConsole.MarkupLine($" Energy:  {recruit.Energy,3}/{recruit.MaxEnergy,-28} ");
+            AnsiConsole.MarkupLine($" Attack:  1d4+{recruit.AttackDamage,-24} ");
+            AnsiConsole.MarkupLine($" Defense: {recruit.Defense,-28} ");
+            AnsiConsole.MarkupLine($" Speed:   {recruit.Speed,-28} ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($" Equipment:                            ");
+            AnsiConsole.MarkupLine($" Weapon:  {recruit.EquippedWeapon?.Name ?? "None",-28} ");
+            AnsiConsole.MarkupLine($" Armor:   {recruit.EquippedArmor?.Name ?? "None",-28} ");
+            AnsiConsole.MarkupLine($" Helm:    {recruit.EquippedHelm?.Name ?? "None",-28} ");
+            AnsiConsole.MarkupLine($" Ring:    {recruit.EquippedRing?.Name ?? "None",-28} ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+            AnsiConsole.MarkupLine($" Recruited: Day {recruit.RecruitedDay,-22} ");
+            AnsiConsole.MarkupLine($"═══════════════════════════════════════");
+
+            // Show action options
+            AnsiConsole.MarkupLine("\n=== Actions ===");
+            AnsiConsole.MarkupLine("1. Manage Equipment");
+            AnsiConsole.MarkupLine("0. Back");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+        }
+
+        public void DisplayRecruitEquipmentMenu(Recruit recruit)
+        {
+            var player = context.Player;
+
+            AnsiConsole.MarkupLine($"\n=== Managing Equipment for {recruit.Name} ===");
+            AnsiConsole.MarkupLine("\nCurrent Equipment:");
+            AnsiConsole.MarkupLine($" Weapon: {recruit.EquippedWeapon?.Name ?? "None"}");
+            AnsiConsole.MarkupLine($" Armor:  {recruit.EquippedArmor?.Name ?? "None"}");
+            AnsiConsole.MarkupLine($" Helm:   {recruit.EquippedHelm?.Name ?? "None"}");
+            AnsiConsole.MarkupLine($" Ring:   {recruit.EquippedRing?.Name ?? "None"}");
+
+            // Get equipment from player inventory
+            var equipmentItems = player.Inventory
+                .Where(item => Data.EquipmentData.AllEquipment.ContainsKey(item.ToLower()))
+                .ToList();
+
+            AnsiConsole.MarkupLine("\nAvailable Equipment in Inventory:");
+            if (equipmentItems.Count == 0)
+            {
+                AnsiConsole.MarkupLine(" [dim]No equipment available[/]");
+            }
+            else
+            {
+                for (int i = 0; i < equipmentItems.Count; i++)
+                {
+                    var eq = Data.EquipmentData.GetEquipment(equipmentItems[i]);
+                    AnsiConsole.MarkupLine($" {i + 1}. {eq.Name} ({eq.Slot})");
+                }
+            }
+
+            AnsiConsole.MarkupLine("\nActions:");
+            if (equipmentItems.Count > 0)
+            {
+                AnsiConsole.MarkupLine(" Enter number to equip item");
+            }
+            AnsiConsole.MarkupLine(" Type 'unequip weapon/armor/helm/ring' to unequip");
+            AnsiConsole.MarkupLine(" 0. Back");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a choice)[/]");
+        }
+
+        public void ProcessRecruitEquipmentAction(Recruit recruit, string input)
+        {
+            var player = context.Player;
+
+            // Check if unequip command
+            if (input.ToLower().StartsWith("unequip "))
+            {
+                string slot = input.Substring(8).Trim().ToLower();
+                HandleRecruitUnequip(recruit, slot);
+                return;
+            }
+
+            // Try to parse as equipment index
+            var equipmentItems = player.Inventory
+                .Where(item => Data.EquipmentData.AllEquipment.ContainsKey(item.ToLower()))
+                .ToList();
+
+            if (int.TryParse(input, out int idx) && idx >= 1 && idx <= equipmentItems.Count)
+            {
+                string itemName = equipmentItems[idx - 1];
+                HandleRecruitEquip(recruit, itemName);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
+            }
+        }
+
+        private void HandleRecruitEquip(Recruit recruit, string itemName)
+        {
+            var player = context.Player;
+            var equipment = Data.EquipmentData.GetEquipment(itemName);
+
+            if (equipment == null)
+            {
+                AnsiConsole.MarkupLine($"\n[dim]Cannot equip {itemName}.[/]");
+                return;
+            }
+
+            // Equip the item and get the old equipment back
+            var oldEquipment = recruit.EquipItem(equipment);
+
+            // Remove new equipment from player inventory
+            player.Inventory.Remove(itemName);
+
+            // Add old equipment back to player inventory if there was one
+            if (oldEquipment != null)
+            {
+                player.Inventory.Add(oldEquipment.Name);
+                AnsiConsole.MarkupLine($"\n[#90FF90]{recruit.Name} equipped {equipment.Name}. Returned {oldEquipment.Name} to inventory.[/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"\n[#90FF90]{recruit.Name} equipped {equipment.Name}.[/]");
+            }
+        }
+
+        private void HandleRecruitUnequip(Recruit recruit, string slotName)
+        {
+            var player = context.Player;
+            EquipmentSlot slot;
+
+            switch (slotName)
+            {
+                case "weapon":
+                    slot = EquipmentSlot.Weapon;
+                    break;
+                case "armor":
+                    slot = EquipmentSlot.Armor;
+                    break;
+                case "helm":
+                    slot = EquipmentSlot.Helm;
+                    break;
+                case "ring":
+                    slot = EquipmentSlot.Ring;
+                    break;
+                default:
+                    AnsiConsole.MarkupLine($"\n[dim]Unknown slot: {slotName}. Use weapon, armor, helm, or ring.[/]");
+                    return;
+            }
+
+            var equipment = recruit.GetEquipmentInSlot(slot);
+            if (equipment == null)
+            {
+                AnsiConsole.MarkupLine($"\n[dim]{recruit.Name} has nothing equipped in {slotName} slot.[/]");
+                return;
+            }
+
+            // Unequip by equipping null
+            switch (slot)
+            {
+                case EquipmentSlot.Weapon:
+                    recruit.EquippedWeapon = null;
+                    break;
+                case EquipmentSlot.Armor:
+                    recruit.EquippedArmor = null;
+                    break;
+                case EquipmentSlot.Helm:
+                    recruit.EquippedHelm = null;
+                    break;
+                case EquipmentSlot.Ring:
+                    recruit.EquippedRing = null;
+                    break;
+            }
+
+            // Add to player inventory
+            player.Inventory.Add(equipment.Name);
+            AnsiConsole.MarkupLine($"\n[#90FF90]Unequipped {equipment.Name} from {recruit.Name}. Added to inventory.[/]");
         }
     }
 }

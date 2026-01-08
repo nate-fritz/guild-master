@@ -1,4 +1,5 @@
 using GuildMaster.Services;
+using AnsiConsole = GuildMaster.Services.AnsiConsole;
 using GuildMaster.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace GuildMaster.Managers
             GuildManagePartyAdd,
             GuildManagePartyRemove,
             GuildRecruitDetails,
+            GuildRecruitActions,
+            GuildRecruitEquipment,
             WarRoomMain,
             Stats,
             Inventory,
@@ -27,6 +30,7 @@ namespace GuildMaster.Managers
         }
 
         private MenuState currentMenu = MenuState.None;
+        private Recruit selectedRecruit = null;
         private GameContext context;
         private GuildManager guildManager;
         private UIManager uiManager;
@@ -131,6 +135,12 @@ namespace GuildMaster.Managers
                     break;
                 case MenuState.GuildRecruitDetails:
                     ProcessGuildRecruitDetailsInput(input);
+                    break;
+                case MenuState.GuildRecruitActions:
+                    ProcessGuildRecruitActionsInput(input);
+                    break;
+                case MenuState.GuildRecruitEquipment:
+                    ProcessGuildRecruitEquipmentInput(input);
                     break;
                 case MenuState.WarRoomMain:
                     ProcessWarRoomMainInput(input);
@@ -294,15 +304,53 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            if (guildManager.ProcessRecruitDetails(input))
+            var player = context.Player;
+            if (int.TryParse(input, out int idx) && idx >= 1 && idx <= player.Recruits.Count)
             {
-                // Stay in the same menu
-                guildManager.DisplayRecruitDetailsMenu();
+                selectedRecruit = player.Recruits[idx - 1];
+                currentMenu = MenuState.GuildRecruitActions;
+                guildManager.DisplayRecruitActionsMenu(selectedRecruit);
             }
             else
             {
+                AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
                 guildManager.DisplayRecruitDetailsMenu();
             }
+        }
+
+        private void ProcessGuildRecruitActionsInput(string input)
+        {
+            if (input == "0")
+            {
+                currentMenu = MenuState.GuildRecruitDetails;
+                selectedRecruit = null;
+                guildManager.DisplayRecruitDetailsMenu();
+                return;
+            }
+
+            if (input == "1")
+            {
+                currentMenu = MenuState.GuildRecruitEquipment;
+                guildManager.DisplayRecruitEquipmentMenu(selectedRecruit);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
+                guildManager.DisplayRecruitActionsMenu(selectedRecruit);
+            }
+        }
+
+        private void ProcessGuildRecruitEquipmentInput(string input)
+        {
+            if (input == "0")
+            {
+                currentMenu = MenuState.GuildRecruitActions;
+                guildManager.DisplayRecruitActionsMenu(selectedRecruit);
+                return;
+            }
+
+            guildManager.ProcessRecruitEquipmentAction(selectedRecruit, input);
+            guildManager.DisplayRecruitEquipmentMenu(selectedRecruit);
         }
 
         private async Task ProcessSaveInputAsync(string input)

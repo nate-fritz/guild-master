@@ -1632,7 +1632,7 @@ namespace GuildMaster.Data
             quintus.Dialogue.Add("translation_ready", new DialogueNode()
             {
                 Text = "Quintus rises as you approach, holding both the original letter and a fresh parchment with his translation. \"Ah, excellent timing. I've finished the translation.\" He hands you the documents.<br><br>\"The letter has two parts - one asking 'How soon can you deliver on your part of the plan?' and the Warlord's unsent response saying he's no longer interested.\"<br><br>He taps the bottom of the page. \"There's a passphrase at the end: 'Ordo Dissolutus.' If someone is using passphrases, they're protecting something valuable.\"",
-                Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "translated letter"} } },
+                Action = new DialogueAction { Type = "receive_item", Parameters = { {"item", "translated letter"} } },
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"Do you know who sent the original message?\"", nextNodeID = "about_sender" }

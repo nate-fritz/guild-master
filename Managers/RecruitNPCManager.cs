@@ -154,10 +154,10 @@ namespace GuildMaster.Managers
             var room = gameContext.Rooms[roomId];
             var npcsToRemove = dynamicNPCs[roomId];
 
-            // Remove each dynamic NPC from the room
+            // Remove each dynamic NPC from the room by name
             foreach (var npc in npcsToRemove)
             {
-                room.NPCs.Remove(npc);
+                room.NPCs.RemoveAll(n => n.Name == npc.Name);
             }
 
             // Clear the tracking list
