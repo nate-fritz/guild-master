@@ -81,6 +81,9 @@ namespace GuildMaster.Models
         // War Room (Act III)
         public WarRoomState? WarRoomState { get; set; }
 
+        // Room respawn tracking
+        public Dictionary<int, RoomRespawnData> RoomRespawnStates { get; set; }
+
         public GameState()
         {
             PlayerInventory = new List<string>();
@@ -104,7 +107,14 @@ namespace GuildMaster.Models
             PuzzleStates = new Dictionary<string, PuzzleState>();
             ExaminedObjects = new HashSet<string>();
             ActiveTimers = new Dictionary<string, GameTimer>();
+            RoomRespawnStates = new Dictionary<int, RoomRespawnData>();
         }
+    }
+
+    public class RoomRespawnData
+    {
+        public int LastClearedDay { get; set; }
+        public float LastClearedHour { get; set; }
     }
 
     public class GameTimer

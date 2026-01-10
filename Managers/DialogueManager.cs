@@ -198,7 +198,7 @@ namespace GuildMaster.Managers
                     {
                         AnsiConsole.MarkupLine("");
                         string interjection = SubstituteDialogueText(node.PartyInterjections[partyMember.Name]);
-                        TextHelper.DisplayTextWithPaging($"[bold]{partyMember.Name}:[/bold] {interjection}", "#FFD700");
+                        TextHelper.DisplayTextWithPaging($"{partyMember.Name}: {interjection}", "#87CEEB");
                     }
                 }
             }
@@ -572,7 +572,16 @@ namespace GuildMaster.Managers
                     {
                         int roomId = int.Parse(action.Parameters["room_id"].ToString());
                         player.CurrentRoom = roomId;
-                        AnsiConsole.MarkupLine($"\n[#00FFFF]You travel to a new location...[/]");
+
+                        // Only show travel message if not suppressed by "silent" parameter
+                        bool silent = action.Parameters.ContainsKey("silent") &&
+                                     bool.TryParse(action.Parameters["silent"].ToString(), out bool isSilent) &&
+                                     isSilent;
+
+                        if (!silent)
+                        {
+                            AnsiConsole.MarkupLine($"\n[#00FFFF]You travel to a new location...[/]");
+                        }
 
                         // Special cleanup for guild council meeting -> Aevoria travel
                         // Remove Quintus from town hall so player can't trigger old dialogue
@@ -609,6 +618,17 @@ namespace GuildMaster.Managers
                             var targetRoom = context.Rooms[roomId];
                             // Remove by name to ensure removal works
                             targetRoom.NPCs.RemoveAll(n => n.Name == npcName);
+                        }
+                    }
+                    break;
+
+                case "show_tutorial":
+                    if (action.Parameters.ContainsKey("tutorial_id"))
+                    {
+                        string tutorialId = action.Parameters["tutorial_id"].ToString();
+                        if (ProgramStatics.messageManager != null)
+                        {
+                            ProgramStatics.messageManager.CheckAndShowMessage(tutorialId);
                         }
                     }
                     break;
@@ -697,7 +717,7 @@ namespace GuildMaster.Managers
                     {
                         AnsiConsole.MarkupLine("");
                         string interjection = SubstituteDialogueText(node.PartyInterjections[partyMember.Name]);
-                        TextHelper.DisplayTextWithPaging($"[bold]{partyMember.Name}:[/bold] {interjection}", "#FFD700");
+                        TextHelper.DisplayTextWithPaging($"{partyMember.Name}: {interjection}", "#87CEEB");
                     }
                 }
             }
@@ -744,7 +764,7 @@ namespace GuildMaster.Managers
                     AnsiConsole.MarkupLine($"[#00FFFF]   {choiceLines[j]}[/]");
                 }
             }
-            AnsiConsole.MarkupLine("[#808080]0. Continue[/]");
+            // Note: No "0. Continue" option for event dialogues - they must complete to prevent softlocks
             AnsiConsole.MarkupLine("");
             ShowStatusBar();
             AnsiConsole.MarkupLine("[dim](Enter a number to respond)[/]");
@@ -762,16 +782,9 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            if (choice == 0)
-            {
-                AnsiConsole.MarkupLine("\n[#808080]You continue...[/]");
-                EndDialogue();
-                return;
-            }
-
             if (choice < 1 || choice > currentChoices.Count)
             {
-                AnsiConsole.MarkupLine($"[#FF0000]Please choose a number between 1 and {currentChoices.Count}, or 0 to continue.[/]");
+                AnsiConsole.MarkupLine($"[#FF0000]Please choose a number between 1 and {currentChoices.Count}.[/]");
                 return;
             }
 
@@ -792,6 +805,13 @@ namespace GuildMaster.Managers
         private void CheckAndUpdateTimers(NPC npc)
         {
             var player = context.Player;
+
+            // Check for Marcus (gate guard) - if gate is unlocked, use after_quest dialogue
+            // This check doesn't depend on timers, so do it first
+            if (npc.Name == "Marcus" && player.QuestFlags.ContainsKey("town_gate_unlocked") && player.QuestFlags["town_gate_unlocked"])
+            {
+                npc.CurrentDialogueNode = "after_quest";
+            }
 
             if (context.ActiveTimers == null || context.ActiveTimers.Count == 0)
                 return;
@@ -835,12 +855,6 @@ namespace GuildMaster.Managers
                     // Timer still running - show waiting dialogue
                     npc.CurrentDialogueNode = "waiting_examination";
                 }
-            }
-
-            // Check for Marcus (gate guard) - if gate is unlocked, use after_quest dialogue
-            if (npc.Name == "Marcus" && player.QuestFlags.ContainsKey("town_gate_unlocked") && player.QuestFlags["town_gate_unlocked"])
-            {
-                npc.CurrentDialogueNode = "after_quest";
             }
         }
     }

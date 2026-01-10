@@ -628,7 +628,7 @@ namespace GuildMaster.Data
             shadowyCorner.Exits.Add("north", 87);
             shadowyCorner.Exits.Add("east", 85);
 
-            Room townHall = CreateRoom(87, "townHall", "Belum - Town Hall", "The administrative center of Belum. An imposing romanesque building with tall marble columns and bronze doors stands before you. Guards stand at attention near the entrance. A notice board displays official proclamations. The bronze doors to the west lead inside the building.");
+            Room townHall = CreateRoom(87, "townHall", "Belum - Town Hall", "The administrative center of Belum. An imposing classical building with tall marble columns and bronze doors stands before you. Guards stand at attention near the entrance. A notice board displays official proclamations. The bronze doors to the west lead inside the building.");
             townHall.Exits.Add("north", 88);
             townHall.Exits.Add("south", 86);
             townHall.Exits.Add("east", 84);
@@ -649,7 +649,7 @@ namespace GuildMaster.Data
             Room belumNorthGate = CreateRoom(90, "belumNorthGate", "Belum - North Gate", "A large wooden and iron gate stands open here, stone towers on either side. Armed guards stand at attention, watching for any sign of trouble.  To the south is the residential district, and the road north leads out of town.");
             belumNorthGate.Exits.Add("south", 81);
 
-            Room townHallInterior = CreateRoom(91, "townHallInterior", "Belum - Town Hall Interior", "You step into the interior of an ancient romanesque administrative building. Tall marble columns rise to support a vaulted ceiling decorated with frescoes depicting the founding of Belum. Rows of wooden benches face a raised platform where officials conduct town business. Scrolls, ledgers, and official documents are neatly organized on shelves along the walls. The air smells of parchment and wax seals. To the east is the exit back to the town square.");
+            Room townHallInterior = CreateRoom(91, "townHallInterior", "Belum - Town Hall Interior", "You step into the interior of an ancient classical administrative building. Tall marble columns rise to support a vaulted ceiling decorated with frescoes depicting the founding of Belum. Rows of wooden benches face a raised platform where officials conduct town business. Scrolls, ledgers, and official documents are neatly organized on shelves along the walls. The air smells of parchment and wax seals. To the east is the exit back to the town square.");
             townHallInterior.Exits.Add("east", 87);
             townHallInterior.NPCs.Add(npcs["Senator Quintus"]);
 

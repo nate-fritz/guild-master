@@ -52,6 +52,8 @@ namespace GuildMaster.Managers
         private bool isDefending = false;
         private bool combatActive = true;
         private List<string>? currentConsumables;
+        private Dictionary<string, int>? groupedConsumables; // For display: item name -> count
+        private List<string>? uniqueConsumableNames; // For indexing: unique item names
         private List<NPC>? currentTargetList;
         private List<NPC>? recruitableNPCs;
         private int currentRecruitIndex = 0;
@@ -701,6 +703,7 @@ namespace GuildMaster.Managers
                 {
                     AnsiConsole.MarkupLine($"{i + 1}. {aliveEnemies[i].Name} (HP: {aliveEnemies[i].Health}/{aliveEnemies[i].MaxHealth})");
                 }
+                AnsiConsole.MarkupLine("0. Back");
                 AnsiConsole.MarkupLine("\n[dim](Enter target number)[/]");
             }
         }
@@ -899,6 +902,7 @@ namespace GuildMaster.Managers
                 {
                     AnsiConsole.MarkupLine($"{i + 1}. {aliveEnemies[i].Name} (HP: {aliveEnemies[i].Health}/{aliveEnemies[i].MaxHealth})");
                 }
+                AnsiConsole.MarkupLine("0. Back");
                 AnsiConsole.MarkupLine("\n[dim](Enter target number)[/]");
             }
         }
@@ -907,6 +911,21 @@ namespace GuildMaster.Managers
         {
             if (currentTargetList == null)
                 return;
+
+            // Check for back option
+            if (int.TryParse(input, out int choice) && choice == 0)
+            {
+                // Player wants to go back to action menu
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberActionMenu();
+                }
+                else
+                {
+                    ShowPlayerActionMenu();
+                }
+                return;
+            }
 
             if (int.TryParse(input, out int targetIndex) && targetIndex > 0 && targetIndex <= currentTargetList.Count)
             {
@@ -1134,6 +1153,7 @@ namespace GuildMaster.Managers
                         {
                             AnsiConsole.MarkupLine($"{i + 1}. {aliveEnemies[i].Name} (HP: {aliveEnemies[i].Health}/{aliveEnemies[i].MaxHealth})");
                         }
+                        AnsiConsole.MarkupLine("0. Back");
                         ShowStatusBar();
                         AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
                     }
@@ -1278,6 +1298,25 @@ namespace GuildMaster.Managers
                 return;
             }
 
+            // Check for back option
+            if (int.TryParse(input, out int choice) && choice == 0)
+            {
+                // Player wants to go back to ability menu
+                pendingAbility = null;
+                abilityCharacter = null;
+                preselectedTarget = null;
+
+                if (currentActingPartyMember != null)
+                {
+                    ShowPartyMemberAbilityMenu();
+                }
+                else
+                {
+                    ShowAbilityMenu();
+                }
+                return;
+            }
+
             if (!int.TryParse(input, out int enemyTargetIndex) || enemyTargetIndex < 1 || enemyTargetIndex > currentTargetList.Count)
             {
                 AnsiConsole.MarkupLine("[#FF0000]Invalid target! Please choose again.[/]");
@@ -1289,6 +1328,7 @@ namespace GuildMaster.Managers
                     var enemy = currentTargetList[i];
                     AnsiConsole.MarkupLine($"{i + 1}. {enemy.Name} (HP: {enemy.Health}/{enemy.MaxHealth})");
                 }
+                AnsiConsole.MarkupLine("0. Back");
                 ShowStatusBar();
                 AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
                 return;
@@ -1330,6 +1370,17 @@ namespace GuildMaster.Managers
                 return;
             }
 
+            // Check for back option
+            if (int.TryParse(input, out int choice) && choice == 0)
+            {
+                // Player wants to go back to item menu
+                pendingItem = null;
+                pendingItemEffect = null;
+                itemUser = null;
+                ShowItemMenu();
+                return;
+            }
+
             if (!int.TryParse(input, out int targetIndex) || targetIndex < 1 || targetIndex > currentTargetList.Count)
             {
                 AnsiConsole.MarkupLine("[#FF0000]Invalid target! Please choose again.[/]");
@@ -1341,6 +1392,7 @@ namespace GuildMaster.Managers
                     var enemy = currentTargetList[i];
                     AnsiConsole.MarkupLine($"{i + 1}. {enemy.Name} (HP: {enemy.Health}/{enemy.MaxHealth})");
                 }
+                AnsiConsole.MarkupLine("0. Back");
                 ShowStatusBar();
                 AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
                 return;
@@ -1392,10 +1444,32 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            AnsiConsole.MarkupLine("\n[#90FF90]== Your Items ==[/]");
-            for (int i = 0; i < currentConsumables.Count; i++)
+            // Group items by name and count them
+            groupedConsumables = new Dictionary<string, int>();
+            foreach (var item in currentConsumables)
             {
-                AnsiConsole.MarkupLine($"{i + 1}. {TextHelper.CapitalizeFirst(currentConsumables[i])}");
+                if (groupedConsumables.ContainsKey(item))
+                    groupedConsumables[item]++;
+                else
+                    groupedConsumables[item] = 1;
+            }
+
+            // Create list of unique item names for indexing
+            uniqueConsumableNames = groupedConsumables.Keys.ToList();
+
+            AnsiConsole.MarkupLine("\n[#90FF90]== Your Items ==[/]");
+            for (int i = 0; i < uniqueConsumableNames.Count; i++)
+            {
+                string itemName = TextHelper.CapitalizeFirst(uniqueConsumableNames[i]);
+                int count = groupedConsumables[uniqueConsumableNames[i]];
+                if (count > 1)
+                {
+                    AnsiConsole.MarkupLine($"{i + 1}. {itemName} ({count})");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"{i + 1}. {itemName}");
+                }
             }
             AnsiConsole.MarkupLine("0. Back");
             AnsiConsole.MarkupLine("\n[dim](Enter item number)[/]");
@@ -1416,7 +1490,8 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            if (currentConsumables == null || currentConsumables.Count == 0)
+            if (currentConsumables == null || currentConsumables.Count == 0 ||
+                uniqueConsumableNames == null || uniqueConsumableNames.Count == 0)
             {
                 if (currentActingPartyMember != null)
                 {
@@ -1429,10 +1504,10 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            if (int.TryParse(input, out int itemIndex) && itemIndex > 0 && itemIndex <= currentConsumables.Count)
+            if (int.TryParse(input, out int itemIndex) && itemIndex > 0 && itemIndex <= uniqueConsumableNames.Count)
             {
                 var player = context.Player;
-                var item = currentConsumables[itemIndex - 1];
+                var item = uniqueConsumableNames[itemIndex - 1];
                 var itemDescriptions = context.ItemDescriptions;
 
                 // Determine who is using the item
@@ -1478,6 +1553,7 @@ namespace GuildMaster.Managers
                         {
                             AnsiConsole.MarkupLine($"{i + 1}. {aliveEnemies[i].Name} (HP: {aliveEnemies[i].Health}/{aliveEnemies[i].MaxHealth})");
                         }
+                        AnsiConsole.MarkupLine("0. Back");
                         AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
                         return;
                     }

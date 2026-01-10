@@ -64,12 +64,9 @@ namespace GuildMaster.Managers
         {
             AnsiConsole.MarkupLine("");
 
-            AnsiConsole.MarkupLine("[#03C9D7]       ██████╗██╗  ██╗ █████╗ ██████╗  █████╗  ██████╗████████╗███████╗██████╗   [/]");
-            AnsiConsole.MarkupLine("[#03B6C3]      ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗  [/]");
-            AnsiConsole.MarkupLine("[#0399A4]      ██║     ███████║███████║██████╔╝███████║██║        ██║   █████╗  ██████╔╝  [/]");
-            AnsiConsole.MarkupLine("[#01838D]      ██║     ██╔══██║██╔══██║██╔══██╗██╔══██║██║        ██║   ██╔══╝  ██╔══██╗  [/]");
-            AnsiConsole.MarkupLine("[#017077]      ╚██████╗██║  ██║██║  ██║██║  ██║██║  ██║╚██████╗   ██║   ███████╗██║  ██║  [/]");
-            AnsiConsole.MarkupLine("[#015C62]       ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝  [/]");
+            AnsiConsole.MarkupLine("[#75C8FF]═══════════════════════════════════════════════════════════════════[/]");
+            AnsiConsole.MarkupLine("[#75C8FF]                       CHARACTER SHEET                              [/]");
+            AnsiConsole.MarkupLine("[#75C8FF]═══════════════════════════════════════════════════════════════════[/]");
         }
 
         public void DisplayStats()
@@ -272,7 +269,9 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("Toggle room numbers:  roomnumbers");
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Debug:");
+            AnsiConsole.MarkupLine("View game state:      state");
             AnsiConsole.MarkupLine("View quest flags:     flags");
+            AnsiConsole.MarkupLine("Set quest flag:       setflag [flag_name] [true/false]");
             AnsiConsole.MarkupLine("Toggle debug logs:    showdebug");
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Development/Testing:");

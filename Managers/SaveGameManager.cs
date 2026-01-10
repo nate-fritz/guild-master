@@ -531,6 +531,46 @@ namespace GuildMaster.Managers
             {
                 context.ActiveTimers = state.ActiveTimers;
             }
+
+            // Restore room states based on quest flags and respawn data
+            RestoreRoomStates(player, state);
+        }
+
+        /// <summary>
+        /// Restores dynamic room states (exits, descriptions) based on quest flags and respawn tracking
+        /// </summary>
+        private void RestoreRoomStates(Player player, GameState state)
+        {
+            // Restore Belum gate state if unlocked
+            if (player.QuestFlags.ContainsKey("town_gate_unlocked") && player.QuestFlags["town_gate_unlocked"])
+            {
+                if (context.Rooms.ContainsKey(69))
+                {
+                    // Add north exit to Belum if not already present
+                    if (!context.Rooms[69].Exits.ContainsKey("north"))
+                    {
+                        context.Rooms[69].Exits.Add("north", 70);
+                    }
+                    // Update description to show gate is open
+                    context.Rooms[69].Description = "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands open, its heavy iron portcullis raised. A veteran guard named Marcus stands watch, nodding respectfully as you approach.";
+                }
+            }
+
+            // Restore room respawn tracking data
+            if (state.RoomRespawnStates != null)
+            {
+                foreach (var kvp in state.RoomRespawnStates)
+                {
+                    int roomId = kvp.Key;
+                    var respawnData = kvp.Value;
+
+                    if (context.Rooms.ContainsKey(roomId))
+                    {
+                        context.Rooms[roomId].LastClearedDay = respawnData.LastClearedDay;
+                        context.Rooms[roomId].LastClearedHour = respawnData.LastClearedHour;
+                    }
+                }
+            }
         }
 
         public async Task<bool> SaveExistsAsync(int slot)
@@ -961,6 +1001,16 @@ namespace GuildMaster.Managers
                     {
                         gameState.RemovedNPCs[room.NumericId].Add(npc.Name);
                     }
+                }
+
+                // Save room respawn tracking data
+                if (room.CanRespawn && room.LastClearedDay >= 0)
+                {
+                    gameState.RoomRespawnStates[room.NumericId] = new RoomRespawnData
+                    {
+                        LastClearedDay = room.LastClearedDay,
+                        LastClearedHour = room.LastClearedHour
+                    };
                 }
             }
         }

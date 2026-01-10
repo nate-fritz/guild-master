@@ -27,18 +27,9 @@ namespace GuildMaster.Managers
             var player = context.Player;
 
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine("[#90FF90]                                    ██████╗ ██╗   ██╗██╗██╗     ██████╗                             [/]");
-            AnsiConsole.MarkupLine("[#7FE67F]                                   ██╔════╝ ██║   ██║██║██║     ██╔══██╗                            [/]");
-            AnsiConsole.MarkupLine("[#7FE67F]                                   ██║  ███╗██║   ██║██║██║     ██║  ██║                            [/]");
-            AnsiConsole.MarkupLine("[#6FCC6F]                                   ██║   ██║██║   ██║██║██║     ██║  ██║                            [/]");
-            AnsiConsole.MarkupLine("[#6FCC6F]                                   ╚██████╔╝╚██████╔╝██║███████╗██████╔╝                            [/]");
-            AnsiConsole.MarkupLine("[#5FB35F]                                    ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝                             [/]");
-            AnsiConsole.MarkupLine("[#5FB35F]      ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗███╗   ███╗███████╗███╗   ██╗████████╗  [/]");
-            AnsiConsole.MarkupLine("[#4F994F]      ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝████╗ ████║██╔════╝████╗  ██║╚══██╔══╝  [/]");
-            AnsiConsole.MarkupLine("[#4F994F]      ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██╔████╔██║█████╗  ██╔██╗ ██║   ██║     [/]");
-            AnsiConsole.MarkupLine("[#3F7F3F]      ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║     [/]");
-            AnsiConsole.MarkupLine("[#3F7F3F]      ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║ ╚═╝ ██║███████╗██║ ╚████║   ██║     [/]");
-            AnsiConsole.MarkupLine("[#2F662F]      ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝     [/]");
+            AnsiConsole.MarkupLine("[#90FF90]═══════════════════════════════════════════════════════════════════[/]");
+            AnsiConsole.MarkupLine("[#90FF90]                         GUILD MANAGEMENT                            [/]");
+            AnsiConsole.MarkupLine("[#90FF90]═══════════════════════════════════════════════════════════════════[/]");
 
             int daysRemaining = 365 - player.CurrentDay;
             AnsiConsole.MarkupLine($"\n=== Progress Report ===");

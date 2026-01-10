@@ -339,7 +339,7 @@ namespace GuildMaster.Data
 
             sentry.Dialogue.Add("offer_help", new DialogueNode()
             {
-                Text = "He sizes you up. \"You?\" He pauses, then continues, \"...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I'll convince the council to open the gate. The caves are south of the lower mountain slopes, room 12 if you're keeping track.\"",
+                Text = "He sizes you up. \"You?\" He pauses, then continues, \"...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I'll convince the council to open the gate.\"",
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"I'll do it. The Warlord will fall.\"", nextNodeID = "quest_accepted" },
@@ -403,9 +403,15 @@ namespace GuildMaster.Data
             // First greeting
             priestess.Dialogue.Add("first_greeting", new DialogueNode()
             {
-                Text = "The priestess regards you with eyes that seem to see more than most. \"Welcome to the Temple of Keius, traveler. I am Caelia, High Priestess of this sanctuary.\" Her voice is melodious, almost musical. \"You carry yourself like one who has seen battle. Come seeking guidance, or merely respite?\"",
+                Text = "The priestess regards you with eyes that seem to see more than most. \"Welcome to the Temple of Keius, traveler. I am Caelia, High Priestess of this sanctuary.\" Her voice is melodious, almost musical.<br><br>She tilts her head slightly, studying you. \"You carry yourself like one who has seen battle. A guild master, perhaps?\" A knowing smile touches her lips. \"My old friend Quintus mentioned that the guild might be reformed. Come seeking guidance, or merely respite?\"",
                 Choices =
                 {
+                    new DialogueNode.Choice {
+                        choiceText = "\"Quintus said I could trust you. I found a translated letter with strange words - 'Ordo Dissolutus'. What does it mean?\"",
+                        nextNodeID = "ask_about_passphrase",
+                        IsAvailable = (inventory) => inventory.Contains("translated letter"),
+                        RequireNotDiscussedNode = "ask_about_passphrase"
+                    },
                     new DialogueNode.Choice { choiceText = "\"Just looking around. Beautiful temple.\"", nextNodeID = "end" },
                     new DialogueNode.Choice { choiceText = "\"Tell me about Keius.\"", nextNodeID = "about_keius" }
                 }
@@ -414,11 +420,11 @@ namespace GuildMaster.Data
             // Repeat greeting
             priestess.Dialogue.Add("repeat_greeting", new DialogueNode()
             {
-                Text = "Caelia's luminous eyes find yours as you approach. \"Welcome back.\" There's a hint of warmth in her smile. \"How may I assist you today?\"",
+                Text = "Caelia's luminous eyes find yours as you approach. \"Welcome back, guild master.\" There's a hint of warmth in her smile. \"Quintus speaks highly of you. How may I assist you today?\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
-                        choiceText = "\"I have a passphrase - 'Ordo Dissolutus'. Do you know where it might be used?\"",
+                        choiceText = "\"Quintus said I could trust you. I found a translated letter with strange words - 'Ordo Dissolutus'. What does it mean?\"",
                         nextNodeID = "ask_about_passphrase",
                         IsAvailable = (inventory) => inventory.Contains("translated letter"),
                         RequireNotDiscussedNode = "ask_about_passphrase"
@@ -439,7 +445,7 @@ namespace GuildMaster.Data
 
             priestess.Dialogue.Add("ask_about_passphrase", new DialogueNode()
             {
-                Text = "Caelia's expression darkens, her luminous eyes growing more intense. \"'Ordo Dissolutus'... The Dissolved Order. That is not a name spoken lightly.\" She steps closer, her voice dropping to a near whisper.<br><br>\"They are a cult that worships entropy and decay. For years, they've operated in secret, hidden from the Empire's eyes.\" She pauses, her gaze distant as if seeing something beyond the present moment.<br><br>\"There is a place in the Hircinian Forest - an old smuggler's den repurposed for darker purposes. The entrance is concealed, guarded by those who would keep others out.\" Her eyes refocus on you. \"If you have their passphrase, you may be able to enter. But be warned - what you find within will be dangerous.\"",
+                Text = "Caelia's expression shifts immediately - surprise gives way to grim satisfaction. \"'Ordo Dissolutus'...\" She exhales slowly. \"Then Quintus was right. You found his research.\"<br><br>She takes your arm gently, guiding you to a quieter corner of the temple. \"Quintus and I have been tracking this cult for decades - since before the guild fell. He was once a member himself, you know. Before politics called him to Aevoria.\" Her luminous eyes bore into yours.<br><br>\"The Dissolved Order worships entropy and decay. They believe the Empire is a corruption that must be... undone. For years, we've gathered fragments - intercepted letters, translated texts, whispers in the dark. Quintus handles the political intelligence from the capital. I use the temple's network to track their movements in the provinces.\"<br><br>She lowers her voice. \"We found their hideout months ago. An old smuggler's cave in the Hircinian Forest, repurposed for darker purposes. But we needed proof, evidence we could bring before the Emperor.\" She meets your eyes. \"That's where you come in. If you have the passphrase, you can infiltrate their sanctuary and find what we need.\"",
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"Where exactly in the forest is this entrance?\"", nextNodeID = "forest_location" }
@@ -448,7 +454,7 @@ namespace GuildMaster.Data
 
             priestess.Dialogue.Add("forest_location", new DialogueNode()
             {
-                Text = "\"Deep in the eastern reaches of the Hircinian Forest. You'll know it when you see it - a cave entrance with guards posted. They'll challenge anyone who approaches.\" She places a hand on your shoulder, her touch surprisingly warm. \"Speak the passphrase, and they'll let you pass. But once inside... you'll be on your own.\"<br><br>\"May Keius light your path through the darkness ahead. You'll need all the light you can get.\"",
+                Text = "\"Deep in the eastern reaches of the Hircinian Forest. You'll know it when you see it - a cave entrance with guards posted. They'll challenge anyone who approaches.\" She places a hand on your shoulder, her touch surprisingly warm.<br><br>\"Speak the passphrase, and they'll let you pass. But once inside...\" She pauses, her expression grave. \"Quintus and I have lost agents trying to infiltrate them. You'll be on your own, but you're a guild master. You have resources we never did.\"<br><br>She squeezes your shoulder. \"When you find evidence of their plans - documents, correspondence, anything - bring it to Quintus in Aevoria. He'll know what to do with it. Together, we'll finally expose this threat.\" Her voice drops to a whisper. \"May Keius light your path through the darkness ahead. You'll need all the light you can get.\"",
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"Thank you, Caelia. I'll be careful.\"", nextNodeID = "end" }
@@ -1568,10 +1574,32 @@ namespace GuildMaster.Data
             quintus.ShortDescription = "Senator Quintus";
             quintus.IsHostile = false;
 
-            // Initial greeting - general conversation about his role
-            quintus.Dialogue.Add("greeting", new DialogueNode()
+            // First greeting - full introduction
+            quintus.Dialogue.Add("first_greeting", new DialogueNode()
             {
                 Text = "The senator looks up from his work and offers a polite nod. \"Greetings, traveler. I am Senator Quintus. While I serve in the capital city of Aevoria, I am native to Belum and return here often to handle administrative matters for the town.\" He gestures to the documents on his desk. \"How may I assist you today?\"",
+                Choices =
+                {
+                    new DialogueNode.Choice {
+                        choiceText = "\"Senator, I found these documents in a cultist hideout. You should see this.\"",
+                        nextNodeID = "hideout_discovered",
+                        IsAvailable = (inventory) => (inventory.Contains("cultist orders") || inventory.Contains("ritual notes") || inventory.Contains("philosophical tract"))
+                    },
+                    new DialogueNode.Choice {
+                        choiceText = "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
+                        nextNodeID = "give_letter",
+                        IsAvailable = (inventory) => inventory.Contains("indecipherable letter"),
+                        Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "indecipherable letter"} } }
+                    },
+                    new DialogueNode.Choice { choiceText = "\"Tell me about yourself.\"", nextNodeID = "about_quintus" },
+                    new DialogueNode.Choice { choiceText = "\"Just looking around. Thank you.\"", nextNodeID = "end" }
+                }
+            });
+
+            // Repeat greeting - shorter for subsequent visits
+            quintus.Dialogue.Add("greeting", new DialogueNode()
+            {
+                Text = "Senator Quintus looks up from his paperwork. \"Ah, back again. How can I help you?\"",
                 Choices =
                 {
                     new DialogueNode.Choice {
@@ -1756,7 +1784,7 @@ namespace GuildMaster.Data
 
             emperor.Dialogue.Add("southern_campaign", new DialogueNode()
             {
-                Text = "\"Ah yes, the south!\" Certius chuckles. \"That was... complicated. The Southern Kingdoms were more civilized, you see. Great cities, rich culture, formidable armies. We couldn't simply conquer them - we had to win them over.\"<br><br>\"I spent five years in diplomatic missions, arranging marriages between their nobles and ours, establishing trade agreements, cultural exchanges. My daughter married the Crown Prince of Solaria - creating the strongest alliance in imperial history.\"<br><br>\"Only two kingdoms refused to negotiate. They fell quickly when they realized they stood alone. Now all of the south prospers under the Pax Romana. Trade has tripled, banditry has been eliminated, and the people are safer than ever.\"",
+                Text = "\"Ah yes, the south!\" Certius chuckles. \"That was... complicated. The Southern Kingdoms were more civilized, you see. Great cities, rich culture, formidable armies. We couldn't simply conquer them - we had to win them over.\"<br><br>\"I spent five years in diplomatic missions, arranging marriages between their nobles and ours, establishing trade agreements, cultural exchanges. My daughter married the Crown Prince of Solaria - creating the strongest alliance in imperial history.\"<br><br>\"Only two kingdoms refused to negotiate. They fell quickly when they realized they stood alone. Now all of the south prospers under the Imperial Peace. Trade has tripled, banditry has been eliminated, and the people are safer than ever.\"",
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"Diplomacy and strength - a wise combination.\"", nextNodeID = "return_to_greeting" }
@@ -1765,7 +1793,7 @@ namespace GuildMaster.Data
 
             emperor.Dialogue.Add("personal_combat", new DialogueNode()
             {
-                Text = "The Emperor grins. \"Oh, in my youth I fancied myself quite the warrior! Trained since childhood in the imperial martial traditions. My father insisted that every emperor should be able to defend Rome with sword as well as decree.\"<br><br>\"I've scars to prove I wasn't just a figurehead at Frozen River - took an axe to the shoulder that still aches in winter. But I learned my lesson after that. A dead emperor helps no one. I left the frontline fighting to younger, more expendable commanders.\"<br><br>He laughs heartily. \"Though I'll admit, some nights I miss the simplicity of battle. Politics is far more treacherous than any battlefield.\"",
+                Text = "The Emperor grins. \"Oh, in my youth I fancied myself quite the warrior! Trained since childhood in the imperial martial traditions. My father insisted that every emperor should be able to defend the Empire with sword as well as decree.\"<br><br>\"I've scars to prove I wasn't just a figurehead at Frozen River - took an axe to the shoulder that still aches in winter. But I learned my lesson after that. A dead emperor helps no one. I left the frontline fighting to younger, more expendable commanders.\"<br><br>He laughs heartily. \"Though I'll admit, some nights I miss the simplicity of battle. Politics is far more treacherous than any battlefield.\"",
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"A warrior-emperor. The people are fortunate.\"", nextNodeID = "return_to_greeting" }

@@ -439,7 +439,7 @@ namespace GuildMaster.Data
                     Action = new DialogueAction
                     {
                         Type = "force_travel",
-                        Parameters = { { "room_id", "200" } }
+                        Parameters = { { "room_id", "200" }, { "silent", "true" } }
                     },
                     Choices = new List<DialogueNode.Choice>() // No choices - dialogue ends and travels to Aevoria
                 }
@@ -652,6 +652,11 @@ namespace GuildMaster.Data
                 ["commitment"] = new DialogueNode
                 {
                     Text = "Quintus nods with satisfaction. \"I knew I could count on you. Caelia is monitoring the seals from her temple, I'm watching the political situation, and you...\" He places a hand on your shoulder. \"You're building the force that will actually stop them.\"<br><br>\"The ledger will update as new threats emerge. Check it regularly through your guild management menu. May the gods guide your decisions, guild master. The Empire's survival depends on them.\"<br><br>He gathers his things to leave, pausing at the door. \"And rest when you can. The darkness ahead is long.\"",
+                    Action = new DialogueAction
+                    {
+                        Type = "show_tutorial",
+                        Parameters = { { "tutorial_id", "guild_quest_ledger" } }
+                    },
                     Choices = new List<DialogueNode.Choice>()
                 }
             };

@@ -443,11 +443,8 @@ namespace GuildMaster.Services
                                     eventManager.MarkEventTriggered(triggeredEvent.EventId);
                                 }
 
-                                // Show guild quest ledger tutorial after Act Two intro
-                                if (triggeredEvent.EventId == "act_two_intro" && ProgramStatics.messageManager != null)
-                                {
-                                    ProgramStatics.messageManager.CheckAndShowMessage("guild_quest_ledger");
-                                }
+                                // Note: Tutorial messages are now triggered via dialogue actions
+                                // This ensures they appear AFTER dialogue completes, not during it
                             }
                         }
                         // Status bar will be shown by Home.razor after command completes
@@ -568,7 +565,15 @@ namespace GuildMaster.Services
                         AnsiConsole.MarkupLine("\n[#FF0000]ERROR: Game controller not initialized.[/]");
                         return;
                     }
-                    gameController.HandleGatePuzzle(input);
+                    try
+                    {
+                        gameController.HandleGatePuzzle(input);
+                    }
+                    catch (Exception ex)
+                    {
+                        AnsiConsole.MarkupLine($"\n[#FF0000]Error processing gate puzzle: {ex.Message}[/]");
+                        AnsiConsole.MarkupLine($"[dim]{ex.StackTrace}[/]");
+                    }
                 }
                 else
                 {
@@ -809,6 +814,91 @@ namespace GuildMaster.Services
                 }
                 AnsiConsole.MarkupLine("");
             }
+            else if (input == "state")
+            {
+                AnsiConsole.MarkupLine("\n[#FFD700]═══ GAME STATE ═══[/]");
+
+                // Time
+                AnsiConsole.MarkupLine($"\n[#FFA500]Time:[/] Day {gameContext.Player.CurrentDay}, Hour {gameContext.Player.CurrentHour:F1}");
+
+                // Active Party
+                AnsiConsole.MarkupLine($"\n[#FFA500]Active Party:[/]");
+                AnsiConsole.MarkupLine($"  {gameContext.Player.Name} (Level {gameContext.Player.Level} {gameContext.Player.Class?.Name ?? "Unknown"})");
+                if (gameContext.Player.ActiveParty.Count > 0)
+                {
+                    foreach (var member in gameContext.Player.ActiveParty)
+                    {
+                        AnsiConsole.MarkupLine($"  {member.Name} (Level {member.Level} {member.Class?.Name ?? "Unknown"})");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("  [dim]No party members[/]");
+                }
+
+                // All Recruits
+                AnsiConsole.MarkupLine($"\n[#FFA500]All Recruits:[/] ({gameContext.Player.Recruits.Count} total)");
+                if (gameContext.Player.Recruits.Count > 0)
+                {
+                    foreach (var recruit in gameContext.Player.Recruits)
+                    {
+                        string inParty = gameContext.Player.ActiveParty.Contains(recruit) ? " [#00FF00](In Party)[/]" : "";
+                        AnsiConsole.MarkupLine($"  {recruit.Name} - Level {recruit.Level} {recruit.Class?.Name ?? "Unknown"} (recruited Day {recruit.RecruitedDay}){inParty}");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("  [dim]No recruits[/]");
+                }
+
+                // Active Quests
+                AnsiConsole.MarkupLine($"\n[#FFA500]Active Quests:[/] {gameContext.Player.ActiveQuests.Count}");
+                if (gameContext.Player.ActiveQuests.Count > 0)
+                {
+                    foreach (var quest in gameContext.Player.ActiveQuests)
+                    {
+                        AnsiConsole.MarkupLine($"  - {quest.Name}");
+                    }
+                }
+
+                // Quest Flags Summary
+                AnsiConsole.MarkupLine($"\n[#FFA500]Quest Flags:[/] {gameContext.Player.QuestFlags.Count} set");
+                AnsiConsole.MarkupLine("  [dim](Use 'flags' command to see all flags)[/]");
+
+                // Met NPCs
+                AnsiConsole.MarkupLine($"\n[#FFA500]Met NPCs:[/] {gameContext.Player.MetNPCs.Count}");
+                if (gameContext.Player.MetNPCs.Count > 0)
+                {
+                    AnsiConsole.MarkupLine($"  {string.Join(", ", gameContext.Player.MetNPCs.OrderBy(n => n))}");
+                }
+
+                AnsiConsole.MarkupLine("");
+            }
+            else if (input.StartsWith("setflag "))
+            {
+                string[] parts = input.Substring(8).Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 2)
+                {
+                    string flagName = parts[0];
+                    string flagValueStr = parts[1].ToLower();
+
+                    if (flagValueStr == "true" || flagValueStr == "false")
+                    {
+                        bool flagValue = flagValueStr == "true";
+                        gameContext.Player.QuestFlags[flagName] = flagValue;
+                        string valueColor = flagValue ? "#00FF00" : "#FF0000";
+                        AnsiConsole.MarkupLine($"\n[#00FF00]Set quest flag '{flagName}' to[/] [{valueColor}]{flagValue.ToString().ToUpper()}[/]");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[#FF0000]Value must be 'true' or 'false'[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[#FF0000]Usage: setflag <flag_name> <true/false>[/]");
+                }
+            }
             else if (input == "showdebug")
             {
                 gameContext.Player.DebugLogsEnabled = !gameContext.Player.DebugLogsEnabled;
@@ -971,7 +1061,7 @@ namespace GuildMaster.Services
 
             // Show continuation prompt
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine("Press Enter to continue");
+            AnsiConsole.MarkupLine("[#FF6B6B]Press Enter to begin combat[/]");
         }
 
         public void ProcessPreCombatDialogueInput(string input)

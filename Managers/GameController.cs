@@ -62,7 +62,7 @@ namespace GuildMaster.Managers
 
                 if (currentRoomObj.NPCs.Count > 0)
                 {
-                    AnsiConsole.MarkupLine($"\n{currentRoomObj.NPCs[0].ShortDescription}, {currentRoomObj.NPCs[0].Name} is here.");
+                    AnsiConsole.MarkupLine($"\n{currentRoomObj.NPCs[0].ShortDescription} is here.");
                 }
 
                 // Display items
@@ -435,7 +435,7 @@ namespace GuildMaster.Managers
                     if (!(isFarmRoom && warlordDefeated))
                     {
                         newRoom.RespawnEnemies();
-                        AnsiConsole.MarkupLine("[#FFFF00][The area has been reoccupied by enemies!][/]");
+                        AnsiConsole.MarkupLine("[#FFFF00]The area has been reoccupied by enemies![/]");
                     }
                 }
 
@@ -699,7 +699,6 @@ namespace GuildMaster.Managers
                     player.CurrentDay++;
                 }
 
-                AnsiConsole.MarkupLine("\nExhausted from the journey and the weight of tomorrow's task, you return to your guest quarters and fall into a deep sleep.");
                 AnsiConsole.MarkupLine("\nYou sleep through the night and the following day, recovering fully. Tomorrow, the celebration begins.");
 
                 // Set the celebration ready flag
@@ -707,6 +706,29 @@ namespace GuildMaster.Managers
 
                 // Move player to guest quarters - they'll wake up to the celebration event
                 player.CurrentRoom = 202;
+
+                // Trigger celebration event immediately
+                if (eventManager != null && dialogueManager != null)
+                {
+                    EventData celebrationEvent = eventManager.CheckForEvent(player.CurrentRoom);
+                    if (celebrationEvent != null)
+                    {
+                        // Execute event actions first
+                        eventManager.ExecuteActions(celebrationEvent);
+
+                        // Then start the dialogue
+                        if (!string.IsNullOrEmpty(celebrationEvent.DialogueTreeId))
+                        {
+                            dialogueManager.StartEventDialogue(celebrationEvent.DialogueTreeId);
+                        }
+
+                        // Mark event as triggered
+                        if (celebrationEvent.IsOneTime)
+                        {
+                            eventManager.MarkEventTriggered(celebrationEvent.EventId);
+                        }
+                    }
+                }
 
                 AnsiConsole.MarkupLine("");
                 return;
@@ -862,9 +884,9 @@ namespace GuildMaster.Managers
             // Handle pushing branches (west path)
             if (obj.Id == "thick_branches")
             {
-                bool examinedBones = (bool)(state.CurrentState["examined_bones"] ?? false);
-                bool examinedTracks = (bool)(state.CurrentState["examined_tracks"] ?? false);
-                bool westRevealed = (bool)(state.CurrentState["west_path_revealed"] ?? false);
+                bool examinedBones = GetPuzzleStateBool(state, "examined_bones");
+                bool examinedTracks = GetPuzzleStateBool(state, "examined_tracks");
+                bool westRevealed = GetPuzzleStateBool(state, "west_path_revealed");
 
                 if (westRevealed)
                 {
@@ -891,7 +913,7 @@ namespace GuildMaster.Managers
                 state.CurrentState["west_path_revealed"] = true;
 
                 // Check if puzzle is fully solved (both paths revealed)
-                bool northRevealed = (bool)(state.CurrentState["north_path_revealed"] ?? false);
+                bool northRevealed = GetPuzzleStateBool(state, "north_path_revealed");
                 if (northRevealed)
                 {
                     state.IsSolved = true;
@@ -900,9 +922,9 @@ namespace GuildMaster.Managers
             // Handle moving vines (north path)
             else if (obj.Id == "thick_vines")
             {
-                bool examinedBootprints = (bool)(state.CurrentState["examined_bootprints"] ?? false);
-                bool examinedVines = (bool)(state.CurrentState["examined_vines"] ?? false);
-                bool northRevealed = (bool)(state.CurrentState["north_path_revealed"] ?? false);
+                bool examinedBootprints = GetPuzzleStateBool(state, "examined_bootprints");
+                bool examinedVines = GetPuzzleStateBool(state, "examined_vines");
+                bool northRevealed = GetPuzzleStateBool(state, "north_path_revealed");
 
                 if (northRevealed)
                 {
@@ -928,7 +950,7 @@ namespace GuildMaster.Managers
                 state.CurrentState["north_path_revealed"] = true;
 
                 // Check if puzzle is fully solved (both paths revealed)
-                bool westRevealed = (bool)(state.CurrentState["west_path_revealed"] ?? false);
+                bool westRevealed = GetPuzzleStateBool(state, "west_path_revealed");
                 if (westRevealed)
                 {
                     state.IsSolved = true;
@@ -943,13 +965,20 @@ namespace GuildMaster.Managers
         public void HandleGatePuzzle(string input)
         {
             var player = context.Player;
-            var currentRoom = context.Rooms[player.CurrentRoom];
 
-            // Debug output
-            if (player.DebugLogsEnabled)
+            if (player == null)
             {
-                AnsiConsole.MarkupLine($"[dim]DEBUG: HandleGatePuzzle called. Room {player.CurrentRoom}, PuzzleId: '{currentRoom.PuzzleId ?? "null"}'[/]");
+                AnsiConsole.MarkupLine("\n[#FF0000]ERROR: Player is null[/]");
+                return;
             }
+
+            if (!context.Rooms.ContainsKey(player.CurrentRoom))
+            {
+                AnsiConsole.MarkupLine($"\n[#FF0000]ERROR: Room {player.CurrentRoom} not found[/]");
+                return;
+            }
+
+            var currentRoom = context.Rooms[player.CurrentRoom];
 
             // Check if we're in a room with the gate puzzle
             if (currentRoom.PuzzleId != "warlord_chamber_gates")
@@ -958,18 +987,24 @@ namespace GuildMaster.Managers
                 return;
             }
 
-            var puzzleState = puzzleManager?.GetPuzzleState("warlord_chamber_gates");
+            if (puzzleManager == null)
+            {
+                AnsiConsole.MarkupLine("\n[#FF0000]ERROR: Puzzle manager is null![/]");
+                return;
+            }
+
+            var puzzleState = puzzleManager.GetPuzzleState("warlord_chamber_gates");
             if (puzzleState == null)
             {
-                AnsiConsole.MarkupLine("\nSomething seems wrong here...");
+                AnsiConsole.MarkupLine("\n[#FF0000]ERROR: Puzzle state for 'warlord_chamber_gates' not found![/]");
                 return;
             }
 
             // Check if this gate is already unlocked
             bool isRoom18 = player.CurrentRoom == 18;
             bool isRoom20 = player.CurrentRoom == 20;
-            bool ironGateUnlocked = (bool)(puzzleState.CurrentState["iron_gate_unlocked"] ?? false);
-            bool bronzeGateUnlocked = (bool)(puzzleState.CurrentState["bronze_gate_unlocked"] ?? false);
+            bool ironGateUnlocked = GetPuzzleStateBool(puzzleState, "iron_gate_unlocked");
+            bool bronzeGateUnlocked = GetPuzzleStateBool(puzzleState, "bronze_gate_unlocked");
 
             if ((isRoom18 && ironGateUnlocked) || (isRoom20 && bronzeGateUnlocked))
             {
@@ -1012,8 +1047,8 @@ namespace GuildMaster.Managers
             }
 
             // Check if both gates are unlocked (puzzle fully solved)
-            if ((bool)(puzzleState.CurrentState["iron_gate_unlocked"] ?? false) &&
-                (bool)(puzzleState.CurrentState["bronze_gate_unlocked"] ?? false))
+            if (GetPuzzleStateBool(puzzleState, "iron_gate_unlocked") &&
+                GetPuzzleStateBool(puzzleState, "bronze_gate_unlocked"))
             {
                 puzzleState.IsSolved = true;
             }
@@ -1022,6 +1057,44 @@ namespace GuildMaster.Managers
             player.Inventory.Remove("iron key");
             player.Inventory.Remove("bronze key");
             AnsiConsole.MarkupLine("[dim]The keys remain in the locks.[/]");
+        }
+
+        /// <summary>
+        /// Safely extracts a boolean value from puzzle state CurrentState dictionary.
+        /// Handles both fresh initialization (where values are bool) and loaded saves (where values might be JsonElement).
+        /// </summary>
+        private bool GetPuzzleStateBool(PuzzleState puzzleState, string key)
+        {
+            if (!puzzleState.CurrentState.ContainsKey(key))
+                return false;
+
+            var value = puzzleState.CurrentState[key];
+
+            if (value == null)
+                return false;
+
+            // Handle native bool (fresh initialization)
+            if (value is bool boolValue)
+                return boolValue;
+
+            // Handle JsonElement (loaded from save)
+            if (value is System.Text.Json.JsonElement jsonElement)
+            {
+                if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.True)
+                    return true;
+                if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.False)
+                    return false;
+            }
+
+            // Handle string conversion as fallback
+            if (value is string stringValue)
+            {
+                if (bool.TryParse(stringValue, out bool result))
+                    return result;
+            }
+
+            // Default to false if we can't determine the value
+            return false;
         }
 
         public void HandleSpeakCommand(string input)
