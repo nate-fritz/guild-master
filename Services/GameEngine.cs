@@ -665,9 +665,23 @@ namespace GuildMaster.Services
             {
                 uiManager?.ShowHelp();
             }
-            else if (input == "rest")
+            else if (input == "rest" || input.StartsWith("rest "))
             {
-                gameController?.HandleRest();
+                float hours = 8.0f; // Default
+                if (input.StartsWith("rest "))
+                {
+                    string[] parts = input.Split(' ', 2);
+                    if (parts.Length == 2 && float.TryParse(parts[1], out float parsedHours))
+                    {
+                        hours = parsedHours;
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[red]Invalid hours specified. Usage: rest [hours][/]");
+                        return;
+                    }
+                }
+                gameController?.HandleRest(hours);
             }
             else if (input == "recall")
             {

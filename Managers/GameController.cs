@@ -311,9 +311,33 @@ namespace GuildMaster.Managers
                 else
                 {
                     // Check if item is in player's inventory
+                    // First, try exact match
                     string inventoryMatch = player.Inventory.FirstOrDefault(item =>
-                        item.ToLower() == itemToExamine ||
-                        item.ToLower().Contains(itemToExamine));
+                        item.ToLower() == itemToExamine);
+
+                    // If no exact match, try partial match and collect all matches
+                    if (inventoryMatch == null)
+                    {
+                        var partialMatches = player.Inventory.Where(item =>
+                            item.ToLower().Contains(itemToExamine)).ToList();
+
+                        if (partialMatches.Count == 1)
+                        {
+                            inventoryMatch = partialMatches[0];
+                        }
+                        else if (partialMatches.Count > 1)
+                        {
+                            // Multiple matches - show disambiguation
+                            AnsiConsole.MarkupLine($"[yellow]Multiple items match '{itemToExamine}':[/]");
+                            for (int i = 0; i < partialMatches.Count; i++)
+                            {
+                                AnsiConsole.MarkupLine($"  {i + 1}. {partialMatches[i]}");
+                            }
+                            AnsiConsole.MarkupLine($"\n[dim]Use the full item name to look at a specific item.[/]");
+                            AnsiConsole.MarkupLine("");
+                            return;
+                        }
+                    }
 
                     if (inventoryMatch != null)
                     {
@@ -708,7 +732,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"[#FFFF00]Stats:[/] HP: {player.MaxHealth} | EP: {player.MaxEnergy} | ATK: {player.AttackDamage} | DEF: {player.Defense} | SPD: {player.Speed}");
         }
 
-        public void HandleRest()
+        public void HandleRest(float hours = 8.0f)
         {
             var player = context.Player;
 
@@ -770,7 +794,8 @@ namespace GuildMaster.Managers
             }
 
             // Normal rest behavior
-            AnsiConsole.MarkupLine("\nYou begin setting up a small camp and rest for a bit.");
+            int totalDays = 0;
+            AnsiConsole.MarkupLine($"\nYou begin setting up camp and rest for {hours} hours.");
             // Note: Thread.Sleep removed for web compatibility
             player.FullRestore();
 
@@ -780,14 +805,24 @@ namespace GuildMaster.Managers
                 AnsiConsole.MarkupLine($"{member.Name} also rests and recovers.");
             }
 
-            player.CurrentHour += 8.0f;
-            if (player.CurrentHour >= 24.0f)
+            player.CurrentHour += hours;
+            while (player.CurrentHour >= 24.0f)
             {
                 player.CurrentHour -= 24.0f;
                 player.CurrentDay++;
-                AnsiConsole.MarkupLine($"\n[A new day dawns - Day {player.CurrentDay}]");
+                totalDays++;
             }
-            AnsiConsole.MarkupLine("\nYou wake up 8 hours later feeling very refreshed. Your wounds have fully healed.");
+
+            if (totalDays > 0)
+            {
+                AnsiConsole.MarkupLine($"\n[A new day dawns - Day {player.CurrentDay}]");
+                if (totalDays > 1)
+                {
+                    AnsiConsole.MarkupLine($"[dim]({totalDays} days have passed)[/]");
+                }
+            }
+
+            AnsiConsole.MarkupLine($"\nYou wake up {hours} hours later feeling very refreshed. Your wounds have fully healed.");
             AnsiConsole.MarkupLine("");
         }
 

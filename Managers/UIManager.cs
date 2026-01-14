@@ -236,7 +236,7 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine("Character Sheet:      stats");
             AnsiConsole.MarkupLine("Party Status:         party or p");
             AnsiConsole.MarkupLine("Guild Management:     guild or g");
-            AnsiConsole.MarkupLine("Rest:                 rest");
+            AnsiConsole.MarkupLine("Rest:                 rest [hours] (default: 8)");
             AnsiConsole.MarkupLine("Return to guild:      recall");
             AnsiConsole.MarkupLine("");
             AnsiConsole.MarkupLine("Settings:");
