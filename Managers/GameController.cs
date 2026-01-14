@@ -56,9 +56,9 @@ namespace GuildMaster.Managers
                 {
                     roomTitle = $"{currentRoomObj.Title} [RoomID: {player.CurrentRoom}]";
                 }
-                AnsiConsole.MarkupLine($"[#FA935F][[{Markup.Escape(roomTitle)}]][/]");
+                AnsiConsole.MarkupLine($"[#F05D1B][[{Markup.Escape(roomTitle)}]][/]");
 
-                TextHelper.DisplayTextWithPaging(GetRoomDescription(currentRoomObj), "#FA935F");
+                TextHelper.DisplayTextWithPaging(GetRoomDescription(currentRoomObj), "#FC8E6B");
 
                 if (currentRoomObj.NPCs.Count > 0)
                 {
@@ -484,9 +484,9 @@ namespace GuildMaster.Managers
                 {
                     roomTitle = $"{newRoom.Title} [RoomID: {player.CurrentRoom}]";
                 }
-                AnsiConsole.MarkupLine($"[#FA935F][[{Markup.Escape(roomTitle)}]][/]");
+                AnsiConsole.MarkupLine($"[#F05D1B][[{Markup.Escape(roomTitle)}]][/]");
 
-                TextHelper.DisplayTextWithPaging(GetRoomDescription(newRoom), "#FA935F");
+                TextHelper.DisplayTextWithPaging(GetRoomDescription(newRoom), "#FC8E6B");
 
                 // Check for events AFTER showing room description
                 if (eventManager != null)
@@ -670,8 +670,8 @@ namespace GuildMaster.Managers
 
             AnsiConsole.MarkupLine($"\n[#00FFFF]You teleport to {Markup.Escape(newRoom.Title)}.[/]");
             AnsiConsole.MarkupLine("\n");
-            AnsiConsole.MarkupLine($"[#FA935F][[{Markup.Escape(newRoom.Title)}]][/]");
-            TextHelper.DisplayTextWithPaging(GetRoomDescription(newRoom), "#FA935F");
+            AnsiConsole.MarkupLine($"[#F05D1B][[{Markup.Escape(newRoom.Title)}]][/]");
+            TextHelper.DisplayTextWithPaging(GetRoomDescription(newRoom), "#FC8E6B");
 
             if (newRoom.Exits.Count > 0)
             {
