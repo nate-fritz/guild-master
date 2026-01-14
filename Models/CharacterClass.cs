@@ -142,14 +142,18 @@ namespace GuildMaster.Models
         {
             return new List<Ability>
             {
-                AbilityData.Heal,
-                AbilityData.Lightning,
-                AbilityData.Blessing,
-                AbilityData.Barrier,
-                AbilityData.FlameStrike,
-                AbilityData.Frostbolt,
-                AbilityData.Venom,
-                AbilityData.DivineWrath
+                AbilityData.Heal,              // Level 1
+                AbilityData.Lightning,         // Level 2
+                AbilityData.Befuddle,          // Level 2 (NEW)
+                AbilityData.Blessing,          // Level 3
+                AbilityData.Rejuvenation,      // Level 4 (NEW)
+                AbilityData.FlameStrike,       // Level 5
+                AbilityData.IceShards,         // Level 8 (NEW)
+                AbilityData.Barrier,           // Level 10
+                AbilityData.ProtectiveWard,    // Level 13 (NEW)
+                AbilityData.Frostbolt,         // Level 15
+                AbilityData.DivineWrath,       // Level 15
+                AbilityData.Venom              // Level 20
             };
         }
 

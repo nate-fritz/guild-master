@@ -1597,7 +1597,7 @@ namespace GuildMaster.Data
             });
 
             // Repeat greeting - shorter for subsequent visits
-            quintus.Dialogue.Add("greeting", new DialogueNode()
+            quintus.Dialogue.Add("repeat_greeting", new DialogueNode()
             {
                 Text = "Senator Quintus looks up from his paperwork. \"Ah, back again. How can I help you?\"",
                 Choices =
@@ -1853,7 +1853,7 @@ namespace GuildMaster.Data
 
             emperor.Dialogue.Add("about_empress", new DialogueNode()
             {
-                Text = "The Emperor's expression softens. \"Livia is the steel behind the throne. Where I'm all grand visions and bold declarations, she's practical wisdom and careful planning. We balance each other perfectly.\"<br><br>\"We met when I was crown prince - she was daughter of a general, brilliant and beautiful. My father approved the match for political reasons, but I fell genuinely in love. Forty-three years later, I still do.\"<br><br>\"She'll join us for the anniversary celebration. You'll meet her - though I warn you, she's far more skeptical of your cult warnings than I am. She thinks we're both being paranoid.\" He chuckles. \"She's probably right.\"",
+                Text = "The Emperor's expression softens. \"Aurelia is the steel behind the throne. Where I'm all grand visions and bold declarations, she's practical wisdom and careful planning. We balance each other perfectly.\"<br><br>\"We met when I was crown prince - she was daughter of a general, brilliant and beautiful. My father approved the match for political reasons, but I fell genuinely in love. Forty-three years later, I still do.\"<br><br>\"She'll join us for the anniversary celebration. You'll meet her - though I warn you, she's far more skeptical of your cult warnings than I am. She thinks we're both being paranoid.\" He chuckles. \"She's probably right.\"",
                 Choices =
                 {
                     new DialogueNode.Choice { choiceText = "\"A true partnership. That's wonderful.\"", nextNodeID = "return_to_greeting" }
@@ -2327,6 +2327,409 @@ namespace GuildMaster.Data
             });
 
             npcs.Add(althea.Name, althea);
+
+            // ===== MYTHOLOGICAL ENEMIES FOR DUNGEON TEST AREA =====
+
+            // Floor 1 Enemies (Level 1-5)
+            NPC satyr = new NPC();
+            satyr.Name = "Satyr";
+            satyr.Description = "A wild creature with goat legs and curved horns, wielding a crude wooden club.";
+            satyr.ShortDescription = "A hostile satyr";
+            satyr.IsHostile = true;
+            satyr.Health = 10;
+            satyr.MaxHealth = 10;
+            satyr.Energy = 5;
+            satyr.MaxEnergy = 5;
+            satyr.AttackDamage = 3;
+            satyr.DamageCount = 1;
+            satyr.DamageDie = 4;
+            satyr.DamageBonus = 1;
+            satyr.Defense = 0;
+            satyr.Speed = 3;
+            satyr.IsBackRow = false;
+            satyr.MinGold = 25;
+            satyr.MaxGold = 35;
+            satyr.ExperienceReward = 5;
+            satyr.Role = EnemyRole.Melee;
+            satyr.LootTable = new Dictionary<string, int> { {"potion", 20} };
+            npcs.Add(satyr.Name, satyr);
+
+            NPC harpy = new NPC();
+            harpy.Name = "Harpy";
+            harpy.Description = "A screeching winged creature with the body of a bird and the face of a woman.";
+            harpy.ShortDescription = "A hostile harpy";
+            harpy.IsHostile = true;
+            harpy.Health = 12;
+            harpy.MaxHealth = 12;
+            harpy.Energy = 8;
+            harpy.MaxEnergy = 8;
+            harpy.AttackDamage = 4;
+            harpy.DamageCount = 1;
+            harpy.DamageDie = 4;
+            harpy.DamageBonus = 2;
+            harpy.Defense = 1;
+            harpy.Speed = 5;
+            harpy.IsBackRow = true;
+            harpy.MinGold = 30;
+            harpy.MaxGold = 40;
+            harpy.ExperienceReward = 6;
+            harpy.Role = EnemyRole.Ranged;
+            harpy.EnergyRegenPerTurn = 2;
+            harpy.LootTable = new Dictionary<string, int> { {"potion", 25} };
+            npcs.Add(harpy.Name, harpy);
+
+            NPC giantScorpion = new NPC();
+            giantScorpion.Name = "Giant Scorpion";
+            giantScorpion.Description = "A massive scorpion with gleaming black armor and a venomous stinger.";
+            giantScorpion.ShortDescription = "A hostile giant scorpion";
+            giantScorpion.IsHostile = true;
+            giantScorpion.Health = 15;
+            giantScorpion.MaxHealth = 15;
+            giantScorpion.Energy = 0;
+            giantScorpion.MaxEnergy = 0;
+            giantScorpion.AttackDamage = 4;
+            giantScorpion.DamageCount = 1;
+            giantScorpion.DamageDie = 4;
+            giantScorpion.DamageBonus = 2;
+            giantScorpion.Defense = 2;
+            giantScorpion.Speed = 2;
+            giantScorpion.IsBackRow = false;
+            giantScorpion.MinGold = 35;
+            giantScorpion.MaxGold = 45;
+            giantScorpion.ExperienceReward = 7;
+            giantScorpion.Role = EnemyRole.Melee;
+            giantScorpion.LootTable = new Dictionary<string, int> { {"potion", 30} };
+            npcs.Add(giantScorpion.Name, giantScorpion);
+
+            NPC skeletonWarrior = new NPC();
+            skeletonWarrior.Name = "Skeleton Warrior";
+            skeletonWarrior.Description = "An animated skeleton wielding a rusty sword and shield.";
+            skeletonWarrior.ShortDescription = "A hostile skeleton warrior";
+            skeletonWarrior.IsHostile = true;
+            skeletonWarrior.Health = 14;
+            skeletonWarrior.MaxHealth = 14;
+            skeletonWarrior.Energy = 0;
+            skeletonWarrior.MaxEnergy = 0;
+            skeletonWarrior.AttackDamage = 4;
+            skeletonWarrior.DamageCount = 1;
+            skeletonWarrior.DamageDie = 4;
+            skeletonWarrior.DamageBonus = 2;
+            skeletonWarrior.Defense = 1;
+            skeletonWarrior.Speed = 2;
+            skeletonWarrior.IsBackRow = false;
+            skeletonWarrior.MinGold = 30;
+            skeletonWarrior.MaxGold = 40;
+            skeletonWarrior.ExperienceReward = 5;
+            skeletonWarrior.Role = EnemyRole.Melee;
+            skeletonWarrior.LootTable = new Dictionary<string, int> { {"potion", 25} };
+            npcs.Add(skeletonWarrior.Name, skeletonWarrior);
+
+            // Floor 2 Enemies (Level 6-10)
+            NPC centaurScout = new NPC();
+            centaurScout.Name = "Centaur Scout";
+            centaurScout.Description = "A proud centaur warrior with bow drawn, hooves pawing the ground.";
+            centaurScout.ShortDescription = "A hostile centaur scout";
+            centaurScout.IsHostile = true;
+            centaurScout.Health = 45;
+            centaurScout.MaxHealth = 45;
+            centaurScout.Energy = 20;
+            centaurScout.MaxEnergy = 20;
+            centaurScout.AttackDamage = 8;
+            centaurScout.DamageCount = 1;
+            centaurScout.DamageDie = 6;
+            centaurScout.DamageBonus = 4;
+            centaurScout.Defense = 3;
+            centaurScout.Speed = 6;
+            centaurScout.IsBackRow = false;
+            centaurScout.MinGold = 100;
+            centaurScout.MaxGold = 120;
+            centaurScout.ExperienceReward = 18;
+            centaurScout.Role = EnemyRole.Melee;
+            centaurScout.EnergyRegenPerTurn = 2;
+            centaurScout.AbilityNames.Add("Piercing Arrow");
+            centaurScout.LootTable = new Dictionary<string, int> { {"potion", 35}, {"bronze gladius", 10} };
+            npcs.Add(centaurScout.Name, centaurScout);
+
+            NPC gorgon = new NPC();
+            gorgon.Name = "Gorgon";
+            gorgon.Description = "A serpentine woman with writhing snakes for hair and a petrifying gaze.";
+            gorgon.ShortDescription = "A hostile gorgon";
+            gorgon.IsHostile = true;
+            gorgon.Health = 50;
+            gorgon.MaxHealth = 50;
+            gorgon.Energy = 25;
+            gorgon.MaxEnergy = 25;
+            gorgon.AttackDamage = 9;
+            gorgon.DamageCount = 1;
+            gorgon.DamageDie = 6;
+            gorgon.DamageBonus = 5;
+            gorgon.Defense = 4;
+            gorgon.Speed = 4;
+            gorgon.IsBackRow = true;
+            gorgon.MinGold = 110;
+            gorgon.MaxGold = 130;
+            gorgon.ExperienceReward = 22;
+            gorgon.Role = EnemyRole.Ranged;
+            gorgon.EnergyRegenPerTurn = 2;
+            gorgon.AbilityNames.Add("Entropy Bolt");
+            gorgon.LootTable = new Dictionary<string, int> { {"potion", 40}, {"bronze bow", 10} };
+            npcs.Add(gorgon.Name, gorgon);
+
+            NPC bronzeAutomaton = new NPC();
+            bronzeAutomaton.Name = "Bronze Automaton";
+            bronzeAutomaton.Description = "A towering mechanical construct of bronze, eyes glowing with arcane energy.";
+            bronzeAutomaton.ShortDescription = "A hostile bronze automaton";
+            bronzeAutomaton.IsHostile = true;
+            bronzeAutomaton.Health = 60;
+            bronzeAutomaton.MaxHealth = 60;
+            bronzeAutomaton.Energy = 10;
+            bronzeAutomaton.MaxEnergy = 10;
+            bronzeAutomaton.AttackDamage = 10;
+            bronzeAutomaton.DamageCount = 1;
+            bronzeAutomaton.DamageDie = 8;
+            bronzeAutomaton.DamageBonus = 5;
+            bronzeAutomaton.Defense = 7;
+            bronzeAutomaton.Speed = 3;
+            bronzeAutomaton.IsBackRow = false;
+            bronzeAutomaton.MinGold = 120;
+            bronzeAutomaton.MaxGold = 140;
+            bronzeAutomaton.ExperienceReward = 25;
+            bronzeAutomaton.Role = EnemyRole.Melee;
+            bronzeAutomaton.EnergyRegenPerTurn = 1;
+            bronzeAutomaton.LootTable = new Dictionary<string, int> { {"potion", 45}, {"bronze plate", 15} };
+            npcs.Add(bronzeAutomaton.Name, bronzeAutomaton);
+
+            NPC fury = new NPC();
+            fury.Name = "Fury";
+            fury.Description = "A winged demon wreathed in flames, shrieking curses from the depths of Tartarus.";
+            fury.ShortDescription = "A hostile fury";
+            fury.IsHostile = true;
+            fury.Health = 48;
+            fury.MaxHealth = 48;
+            fury.Energy = 30;
+            fury.MaxEnergy = 30;
+            fury.AttackDamage = 10;
+            fury.DamageCount = 1;
+            fury.DamageDie = 6;
+            fury.DamageBonus = 6;
+            fury.Defense = 3;
+            fury.Speed = 7;
+            fury.IsBackRow = true;
+            fury.MinGold = 105;
+            fury.MaxGold = 125;
+            fury.ExperienceReward = 20;
+            fury.Role = EnemyRole.Ranged;
+            fury.EnergyRegenPerTurn = 2;
+            fury.AbilityNames.Add("Flame Bolt");
+            fury.LootTable = new Dictionary<string, int> { {"potion", 40}, {"bronze staff", 10} };
+            npcs.Add(fury.Name, fury);
+
+            // Floor 3 Enemies (Level 11-15)
+            NPC minotaur = new NPC();
+            minotaur.Name = "Minotaur";
+            minotaur.Description = "A massive bull-headed warrior wielding a great axe, snorting with rage.";
+            minotaur.ShortDescription = "A hostile minotaur";
+            minotaur.IsHostile = true;
+            minotaur.Health = 75;
+            minotaur.MaxHealth = 75;
+            minotaur.Energy = 15;
+            minotaur.MaxEnergy = 15;
+            minotaur.AttackDamage = 13;
+            minotaur.DamageCount = 1;
+            minotaur.DamageDie = 10;
+            minotaur.DamageBonus = 7;
+            minotaur.Defense = 5;
+            minotaur.Speed = 5;
+            minotaur.IsBackRow = false;
+            minotaur.MinGold = 160;
+            minotaur.MaxGold = 180;
+            minotaur.ExperienceReward = 40;
+            minotaur.Role = EnemyRole.Melee;
+            minotaur.EnergyRegenPerTurn = 2;
+            minotaur.AbilityNames.Add("Crushing Blow");
+            minotaur.LootTable = new Dictionary<string, int> { {"potion", 50}, {"enchanted greataxe", 12} };
+            npcs.Add(minotaur.Name, minotaur);
+
+            NPC medusa = new NPC();
+            medusa.Name = "Medusa";
+            medusa.Description = "The legendary gorgon queen with serpents writhing atop her head, her gaze deadly.";
+            medusa.ShortDescription = "A hostile medusa";
+            medusa.IsHostile = true;
+            medusa.Health = 65;
+            medusa.MaxHealth = 65;
+            medusa.Energy = 40;
+            medusa.MaxEnergy = 40;
+            medusa.AttackDamage = 11;
+            medusa.DamageCount = 1;
+            medusa.DamageDie = 8;
+            medusa.DamageBonus = 6;
+            medusa.Defense = 4;
+            medusa.Speed = 6;
+            medusa.IsBackRow = true;
+            medusa.MinGold = 155;
+            medusa.MaxGold = 175;
+            medusa.ExperienceReward = 42;
+            medusa.Role = EnemyRole.Ranged;
+            medusa.EnergyRegenPerTurn = 3;
+            medusa.AbilityNames.Add("Entropy Bolt");
+            medusa.AbilityNames.Add("Void Touch");
+            medusa.LootTable = new Dictionary<string, int> { {"potion", 55}, {"enchanted bow", 12} };
+            npcs.Add(medusa.Name, medusa);
+
+            NPC cyclops = new NPC();
+            cyclops.Name = "Cyclops";
+            cyclops.Description = "A towering one-eyed giant wielding a massive club carved from a tree trunk.";
+            cyclops.ShortDescription = "A hostile cyclops";
+            cyclops.IsHostile = true;
+            cyclops.Health = 85;
+            cyclops.MaxHealth = 85;
+            cyclops.Energy = 10;
+            cyclops.MaxEnergy = 10;
+            cyclops.AttackDamage = 15;
+            cyclops.DamageCount = 1;
+            cyclops.DamageDie = 12;
+            cyclops.DamageBonus = 8;
+            cyclops.Defense = 6;
+            cyclops.Speed = 4;
+            cyclops.IsBackRow = false;
+            cyclops.MinGold = 170;
+            cyclops.MaxGold = 190;
+            cyclops.ExperienceReward = 45;
+            cyclops.Role = EnemyRole.Melee;
+            cyclops.EnergyRegenPerTurn = 2;
+            cyclops.AbilityNames.Add("Power Attack");
+            cyclops.LootTable = new Dictionary<string, int> { {"potion", 60}, {"enchanted plate", 15} };
+            npcs.Add(cyclops.Name, cyclops);
+
+            NPC lamia = new NPC();
+            lamia.Name = "Lamia";
+            lamia.Description = "A serpentine sorceress with a woman's torso and a snake's lower body, eyes glowing with dark magic.";
+            lamia.ShortDescription = "A hostile lamia";
+            lamia.IsHostile = true;
+            lamia.Health = 60;
+            lamia.MaxHealth = 60;
+            lamia.Energy = 45;
+            lamia.MaxEnergy = 45;
+            lamia.AttackDamage = 9;
+            lamia.DamageCount = 1;
+            lamia.DamageDie = 6;
+            lamia.DamageBonus = 5;
+            lamia.Defense = 3;
+            lamia.Speed = 8;
+            lamia.IsBackRow = true;
+            lamia.MinGold = 150;
+            lamia.MaxGold = 170;
+            lamia.ExperienceReward = 38;
+            lamia.Role = EnemyRole.Ranged;
+            lamia.EnergyRegenPerTurn = 3;
+            lamia.AbilityNames.Add("Void Touch");
+            lamia.AbilityNames.Add("Flame Bolt");
+            lamia.LootTable = new Dictionary<string, int> { {"potion", 55}, {"enchanted staff", 12} };
+            npcs.Add(lamia.Name, lamia);
+
+            // Floor 4 Enemies (Level 16-20)
+            NPC hydra = new NPC();
+            hydra.Name = "Hydra";
+            hydra.Description = "A multi-headed serpent with five snapping heads, each dripping with venom.";
+            hydra.ShortDescription = "A hostile hydra";
+            hydra.IsHostile = true;
+            hydra.Health = 95;
+            hydra.MaxHealth = 95;
+            hydra.Energy = 30;
+            hydra.MaxEnergy = 30;
+            hydra.AttackDamage = 14;
+            hydra.DamageCount = 2;
+            hydra.DamageDie = 8;
+            hydra.DamageBonus = 6;
+            hydra.Defense = 7;
+            hydra.Speed = 6;
+            hydra.IsBackRow = false;
+            hydra.MinGold = 210;
+            hydra.MaxGold = 230;
+            hydra.ExperienceReward = 70;
+            hydra.Role = EnemyRole.Melee;
+            hydra.EnergyRegenPerTurn = 2;
+            hydra.AbilityNames.Add("Crushing Blow");
+            hydra.AbilityNames.Add("Power Attack");
+            hydra.LootTable = new Dictionary<string, int> { {"potion", 65}, {"legendary sword", 15} };
+            npcs.Add(hydra.Name, hydra);
+
+            NPC chimera = new NPC();
+            chimera.Name = "Chimera";
+            chimera.Description = "A monstrous hybrid with a lion's body, goat's head, and serpent's tail, breathing fire.";
+            chimera.ShortDescription = "A hostile chimera";
+            chimera.IsHostile = true;
+            chimera.Health = 90;
+            chimera.MaxHealth = 90;
+            chimera.Energy = 40;
+            chimera.MaxEnergy = 40;
+            chimera.AttackDamage = 13;
+            chimera.DamageCount = 2;
+            chimera.DamageDie = 8;
+            chimera.DamageBonus = 5;
+            chimera.Defense = 6;
+            chimera.Speed = 8;
+            chimera.IsBackRow = false;
+            chimera.MinGold = 205;
+            chimera.MaxGold = 225;
+            chimera.ExperienceReward = 68;
+            chimera.Role = EnemyRole.Melee;
+            chimera.EnergyRegenPerTurn = 3;
+            chimera.AbilityNames.Add("Flame Bolt");
+            chimera.AbilityNames.Add("Power Attack");
+            chimera.LootTable = new Dictionary<string, int> { {"potion", 65}, {"legendary bow", 15} };
+            npcs.Add(chimera.Name, chimera);
+
+            NPC cerberus = new NPC();
+            cerberus.Name = "Cerberus";
+            cerberus.Description = "The legendary three-headed hound of Hades, its jaws dripping with ichor.";
+            cerberus.ShortDescription = "A hostile cerberus";
+            cerberus.IsHostile = true;
+            cerberus.Health = 100;
+            cerberus.MaxHealth = 100;
+            cerberus.Energy = 25;
+            cerberus.MaxEnergy = 25;
+            cerberus.AttackDamage = 15;
+            cerberus.DamageCount = 3;
+            cerberus.DamageDie = 6;
+            cerberus.DamageBonus = 5;
+            cerberus.Defense = 8;
+            cerberus.Speed = 9;
+            cerberus.IsBackRow = false;
+            cerberus.MinGold = 220;
+            cerberus.MaxGold = 240;
+            cerberus.ExperienceReward = 75;
+            cerberus.Role = EnemyRole.Melee;
+            cerberus.EnergyRegenPerTurn = 2;
+            cerberus.AbilityNames.Add("Power Attack");
+            cerberus.LootTable = new Dictionary<string, int> { {"potion", 70}, {"legendary plate", 18} };
+            npcs.Add(cerberus.Name, cerberus);
+
+            NPC titan = new NPC();
+            titan.Name = "Titan";
+            titan.Description = "A colossal primordial being, towering above all others with godlike strength.";
+            titan.ShortDescription = "A hostile titan";
+            titan.IsHostile = true;
+            titan.Health = 110;
+            titan.MaxHealth = 110;
+            titan.Energy = 50;
+            titan.MaxEnergy = 50;
+            titan.AttackDamage = 16;
+            titan.DamageCount = 2;
+            titan.DamageDie = 10;
+            titan.DamageBonus = 8;
+            titan.Defense = 9;
+            titan.Speed = 7;
+            titan.IsBackRow = false;
+            titan.MinGold = 240;
+            titan.MaxGold = 260;
+            titan.ExperienceReward = 100;
+            titan.Role = EnemyRole.Melee;
+            titan.EnergyRegenPerTurn = 3;
+            titan.AbilityNames.Add("Power Attack");
+            titan.AbilityNames.Add("Crushing Blow");
+            titan.LootTable = new Dictionary<string, int> { {"potion", 75}, {"divine warhammer", 20} };
+            npcs.Add(titan.Name, titan);
 
             return npcs;
         }

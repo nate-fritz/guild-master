@@ -195,11 +195,11 @@
         public static Ability Heal = new Ability
         {
             Name = "Heal",
-            Description = "Restore health to target ally",
+            Description = "Restore health to target ally (scales with level)",
             EnergyCost = 3,
             DiceCount = 2,
             DiceSides = 4,
-            Bonus = 2,
+            Bonus = 0,  // Bonus now comes from caster level
             Type = AbilityType.Heal,
             IsRanged = true,
             UnlockLevel = 1
@@ -343,6 +343,66 @@
         };
 
         // ============================================
+        // NEW ORACLE ABILITIES (Ability Rework)
+        // ============================================
+
+        // Oracle Level 2
+        public static Ability Befuddle = new Ability
+        {
+            Name = "Befuddle",
+            Description = "Muddle an enemy's thoughts, causing confusion (2 turn cooldown)",
+            EnergyCost = 8,
+            DiceCount = 0,  // No damage
+            DiceSides = 0,
+            Bonus = 0,
+            Type = AbilityType.SingleTarget,
+            IsRanged = true,
+            UnlockLevel = 2
+        };
+
+        // Oracle Level 4
+        public static Ability Rejuvenation = new Ability
+        {
+            Name = "Rejuvenation",
+            Description = "Target ally regenerates 3 HP per turn for 3 turns",
+            EnergyCost = 2,
+            DiceCount = 3,  // 3 HP per turn
+            DiceSides = 1,  // For 3 turns
+            Bonus = 3,      // Total: 9 HP over 3 turns
+            Type = AbilityType.Heal,
+            IsRanged = true,
+            UnlockLevel = 4
+        };
+
+        // Oracle Level 8
+        public static Ability IceShards = new Ability
+        {
+            Name = "Ice Shards",
+            Description = "Launch frozen shards at up to 3 random enemies",
+            EnergyCost = 2,
+            DiceCount = 1,
+            DiceSides = 4,
+            Bonus = 1,
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = true,
+            UnlockLevel = 8
+        };
+
+        // Oracle Level 13
+        public static Ability ProtectiveWard = new Ability
+        {
+            Name = "Protective Ward",
+            Description = "Grant all party members an 8 HP shield for 3 turns",
+            EnergyCost = 4,
+            DiceCount = 8,  // Using DiceCount to store shield amount
+            DiceSides = 1,
+            Bonus = 3,      // Duration in turns
+            Type = AbilityType.Buff,
+            IsRanged = true,
+            UnlockLevel = 13
+        };
+
+        // ============================================
         // LEVEL 15 ABILITIES
         // ============================================
 
@@ -423,6 +483,10 @@
                 "Frostbolt" => Frostbolt,
                 "Venom" => Venom,
                 "Divine Wrath" => DivineWrath,
+                "Befuddle" => Befuddle,
+                "Rejuvenation" => Rejuvenation,
+                "Ice Shards" => IceShards,
+                "Protective Ward" => ProtectiveWard,
 
                 // Other
                 "Whirlwind Attack" => WhirlwindAttack,

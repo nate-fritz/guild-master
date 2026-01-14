@@ -1190,6 +1190,243 @@ namespace GuildMaster.Data
             rooms.Add(141, highway141);
             rooms.Add(142, highway142);
 
+            // ============================================
+            // DUNGEON TEST AREA (Rooms 900-920)
+            // ============================================
+
+            // Room 900: Hub/Entrance
+            Room dungeonHub = CreateRoom(900, "dungeonHub", "Ancient Ruins - Entrance",
+                "You stand before a massive stone archway, worn smooth by countless centuries. The stonework predates the Empire by millennia - cyclopean blocks fitted together with impossible precision. Strange symbols are carved into the arch's surface, their meaning lost to time. Beyond the archway, stone steps descend into darkness. The air that rises from below is cool and carries the faint scent of ancient dust and something else... something watchful.");
+            dungeonHub.Exits.Add("down", 901);  // To Floor 1
+
+            // FLOOR 1: Linear Layout (901-905) - Levels 1-5
+            Room floor1Room1 = CreateRoom(901, "dungeonF1R1", "Ancient Ruins - Entry Chamber",
+                "The stone steps lead down into a vast chamber lit by an eerie phosphorescent moss growing on the walls. Broken pottery and ancient weapons litter the floor. Two satyrs prowl among the rubble, their goat-like legs clicking on the stone. They turn toward you, yellow eyes gleaming with feral hunger.");
+            floor1Room1.Exits.Add("up", 900);   // Back to hub
+            floor1Room1.Exits.Add("east", 902);
+            floor1Room1.OriginalNPCs.Add(npcs["Satyr"].Clone());
+            floor1Room1.OriginalNPCs.Add(npcs["Satyr"].Clone());
+            floor1Room1.CanRespawn = false;  // Dungeon enemies don't respawn normally - only on full reset
+
+            Room floor1Room2 = CreateRoom(902, "dungeonF1R2", "Ancient Ruins - Weathered Corridor",
+                "A long corridor stretches eastward, its walls decorated with faded frescoes depicting long-forgotten battles. A harpy perches on a broken pillar, preening its bronze-feathered wings. At its feet, a satyr gnaws on old bones. Both creatures notice your presence.");
+            floor1Room2.Exits.Add("west", 901);
+            floor1Room2.Exits.Add("east", 903);
+            floor1Room2.OriginalNPCs.Add(npcs["Harpy"].Clone());
+            floor1Room2.OriginalNPCs.Add(npcs["Satyr"].Clone());
+            floor1Room2.CanRespawn = false;
+
+            Room floor1Room3 = CreateRoom(903, "dungeonF1R3", "Ancient Ruins - Grand Chamber",
+                "The corridor opens into a grand chamber with a vaulted ceiling supported by massive stone columns. Two giant scorpions, each as large as a cart, scuttle across the floor. Their chitinous armor gleams in the dim light, and their stingers drip with venom.");
+            floor1Room3.Exits.Add("west", 902);
+            floor1Room3.Exits.Add("east", 904);
+            floor1Room3.OriginalNPCs.Add(npcs["Giant Scorpion"].Clone());
+            floor1Room3.OriginalNPCs.Add(npcs["Giant Scorpion"].Clone());
+            floor1Room3.CanRespawn = false;
+
+            Room floor1Room4 = CreateRoom(904, "dungeonF1R4", "Ancient Ruins - Bone-Strewn Passage",
+                "This narrow passage is littered with ancient bones - human and otherwise. Three skeleton warriors stand in an eternal vigil, their empty eye sockets glowing with spectral blue light. As you enter, they raise their rusted weapons in unison.");
+            floor1Room4.Exits.Add("west", 903);
+            floor1Room4.Exits.Add("east", 905);
+            floor1Room4.OriginalNPCs.Add(npcs["Skeleton Warrior"].Clone());
+            floor1Room4.OriginalNPCs.Add(npcs["Skeleton Warrior"].Clone());
+            floor1Room4.OriginalNPCs.Add(npcs["Skeleton Warrior"].Clone());
+            floor1Room4.CanRespawn = false;
+
+            Room floor1Room5 = CreateRoom(905, "dungeonF1R5", "Ancient Ruins - Bronze Treasury",
+                "The passage opens into a circular chamber with a domed ceiling. Ancient bronze weapons and armor line the walls on racks and stands. A harpy roosts on a bronze chandelier above, while two satyrs guard a stone chest in the center of the room. Stone steps descend deeper into the ruins.");
+            floor1Room5.Exits.Add("west", 904);
+            // floor1Room5.Exits.Add("down", 906);  // Added dynamically on victory
+            floor1Room5.OriginalNPCs.Add(npcs["Harpy"].Clone());
+            floor1Room5.OriginalNPCs.Add(npcs["Satyr"].Clone());
+            floor1Room5.OriginalNPCs.Add(npcs["Satyr"].Clone());
+            floor1Room5.Items.Add("bronze gladius");
+            floor1Room5.Items.Add("reinforced bow");
+            floor1Room5.Items.Add("bronze staff");
+            floor1Room5.Items.Add("bronze breastplate");
+            floor1Room5.CanRespawn = false;
+
+            // FLOOR 2: Branching Layout (906-910) - Levels 6-10
+            Room floor2Room1 = CreateRoom(906, "dungeonF2R1", "Ancient Ruins - Enchanted Hall",
+                "The stairs lead into a vast hall whose walls shimmer with residual magic. A bronze automaton stands in the center of the room, its eyes glowing with arcane light. Ancient gears whir and click as it turns to face you.");
+            floor2Room1.Exits.Add("up", 905);  // Back to Floor 1
+            floor2Room1.Exits.Add("east", 907);
+            floor2Room1.OriginalNPCs.Add(npcs["Bronze Automaton"].Clone());
+            floor2Room1.CanRespawn = false;
+
+            Room floor2Room2 = CreateRoom(907, "dungeonF2R2", "Ancient Ruins - Central Crossroads",
+                "This chamber serves as a nexus point, with passages leading in three directions. Two centaur scouts patrol the area, their hooves echoing on the stone floor. They draw their bows as you approach.");
+            floor2Room2.Exits.Add("west", 906);
+            floor2Room2.Exits.Add("north", 908);
+            floor2Room2.Exits.Add("east", 909);
+            floor2Room2.OriginalNPCs.Add(npcs["Centaur Scout"].Clone());
+            floor2Room2.OriginalNPCs.Add(npcs["Centaur Scout"].Clone());
+            floor2Room2.CanRespawn = false;
+
+            Room floor2Room3 = CreateRoom(908, "dungeonF2R3", "Ancient Ruins - Northern Treasury",
+                "A side chamber filled with piles of ancient gold coins and gemstones. A gorgon stands guard over the treasure, her serpentine hair writhing. You feel her petrifying gaze upon you.");
+            floor2Room3.Exits.Add("south", 907);
+            floor2Room3.OriginalNPCs.Add(npcs["Gorgon"].Clone());
+            floor2Room3.Items.Add("potion");
+            floor2Room3.Items.Add("potion");
+            floor2Room3.CanRespawn = false;
+
+            Room floor2Room4 = CreateRoom(909, "dungeonF2R4", "Ancient Ruins - Eastern Passage",
+                "A long passage decorated with murals of ancient battles. Two furies hover in the air, their wings beating slowly. Flames flicker around their clawed hands.");
+            floor2Room4.Exits.Add("west", 907);
+            floor2Room4.Exits.Add("east", 910);
+            floor2Room4.OriginalNPCs.Add(npcs["Fury"].Clone());
+            floor2Room4.OriginalNPCs.Add(npcs["Fury"].Clone());
+            floor2Room4.CanRespawn = false;
+
+            Room floor2Room5 = CreateRoom(910, "dungeonF2R5", "Ancient Ruins - Enchanted Armory",
+                "A magnificent chamber whose walls are lined with enchanted weapons and armor that pulse with magical energy. A bronze automaton and a gorgon guard a large stone chest. Stairs descend to the depths below.");
+            floor2Room5.Exits.Add("west", 909);
+            // floor2Room5.Exits.Add("down", 911);  // Added dynamically on victory
+            floor2Room5.OriginalNPCs.Add(npcs["Bronze Automaton"].Clone());
+            floor2Room5.OriginalNPCs.Add(npcs["Gorgon"].Clone());
+            floor2Room5.Items.Add("enchanted spatha");
+            floor2Room5.Items.Add("stormbow");
+            floor2Room5.Items.Add("crystal staff");
+            floor2Room5.Items.Add("blessed cuirass");
+            floor2Room5.CanRespawn = false;
+
+            // FLOOR 3: Linear Layout (911-915) - Levels 11-15
+            Room floor3Room1 = CreateRoom(911, "dungeonF3R1", "Ancient Ruins - Minotaur's Domain",
+                "The stairs open into a massive circular arena. The floor is stained with ancient blood. A minotaur paces in the center, its massive axe resting on one shoulder. It bellows a challenge as you enter.");
+            floor3Room1.Exits.Add("up", 910);  // Back to Floor 2
+            floor3Room1.Exits.Add("east", 912);
+            floor3Room1.OriginalNPCs.Add(npcs["Minotaur"].Clone());
+            floor3Room1.CanRespawn = false;
+
+            Room floor3Room2 = CreateRoom(912, "dungeonF3R2", "Ancient Ruins - Serpent Corridor",
+                "A long corridor whose walls are carved with images of serpents and dark rituals. Two lamias slither through the shadows, their hypnotic eyes fixed on you.");
+            floor3Room2.Exits.Add("west", 911);
+            floor3Room2.Exits.Add("east", 913);
+            floor3Room2.OriginalNPCs.Add(npcs["Lamia"].Clone());
+            floor3Room2.OriginalNPCs.Add(npcs["Lamia"].Clone());
+            floor3Room2.CanRespawn = false;
+
+            Room floor3Room3 = CreateRoom(913, "dungeonF3R3", "Ancient Ruins - Grand Throne Hall",
+                "An enormous hall with a high vaulted ceiling. A single massive eye opens above you - a cyclops awakens from its slumber. At its feet, two skeleton warriors stand ready, their bones reinforced with dark magic.");
+            floor3Room3.Exits.Add("west", 912);
+            floor3Room3.Exits.Add("east", 914);
+            floor3Room3.OriginalNPCs.Add(npcs["Cyclops"].Clone());
+            floor3Room3.OriginalNPCs.Add(npcs["Skeleton Warrior"].Clone());
+            floor3Room3.OriginalNPCs.Add(npcs["Skeleton Warrior"].Clone());
+            floor3Room3.CanRespawn = false;
+
+            Room floor3Room4 = CreateRoom(914, "dungeonF3R4", "Ancient Ruins - Petrified Antechamber",
+                "This chamber is filled with dozens of stone statues - victims of the medusa who dwells here. The serpent-haired gorgon queen stands beside a massive minotaur. Both guardians turn toward you.");
+            floor3Room4.Exits.Add("west", 913);
+            floor3Room4.Exits.Add("east", 915);
+            floor3Room4.OriginalNPCs.Add(npcs["Medusa"].Clone());
+            floor3Room4.OriginalNPCs.Add(npcs["Minotaur"].Clone());
+            floor3Room4.CanRespawn = false;
+
+            Room floor3Room5 = CreateRoom(915, "dungeonF3R5", "Ancient Ruins - Legendary Vault",
+                "A treasure vault of legendary proportions. Weapons and armor of incredible craftsmanship line the walls. A cyclops and a medusa guard the central chest. Steps lead down to the final depths of the ruins.");
+            floor3Room5.Exits.Add("west", 914);
+            // floor3Room5.Exits.Add("down", 916);  // Added dynamically on victory
+            floor3Room5.OriginalNPCs.Add(npcs["Cyclops"].Clone());
+            floor3Room5.OriginalNPCs.Add(npcs["Medusa"].Clone());
+            floor3Room5.Items.Add("hero's blade");
+            floor3Room5.Items.Add("gorgon's bane");
+            floor3Room5.Items.Add("medusa's wand");
+            floor3Room5.Items.Add("griffon hide armor");
+            floor3Room5.CanRespawn = false;
+
+            // FLOOR 4: Branching Layout (916-920) - Levels 16-20
+            Room floor4Room1 = CreateRoom(916, "dungeonF4R1", "Ancient Ruins - Gates of the Divine",
+                "The deepest level of the ruins opens into a cathedral-like space. Divine light filters down from cracks in the ceiling far above. A chimera and a three-headed cerberus guard the way forward. This is the realm of legends.");
+            floor4Room1.Exits.Add("up", 915);  // Back to Floor 3
+            floor4Room1.Exits.Add("east", 917);
+            floor4Room1.OriginalNPCs.Add(npcs["Chimera"].Clone());
+            floor4Room1.OriginalNPCs.Add(npcs["Cerberus"].Clone());
+            floor4Room1.CanRespawn = false;
+
+            Room floor4Room2 = CreateRoom(917, "dungeonF4R2", "Ancient Ruins - Hydra's Lair",
+                "A vast chamber with a pool of dark water in the center. A massive hydra rises from the depths, its multiple heads swaying hypnotically. Each head breathes a different elemental attack.");
+            floor4Room2.Exits.Add("west", 916);
+            floor4Room2.Exits.Add("north", 918);
+            floor4Room2.Exits.Add("east", 919);
+            floor4Room2.OriginalNPCs.Add(npcs["Hydra"].Clone());
+            floor4Room2.CanRespawn = false;
+
+            Room floor4Room3 = CreateRoom(918, "dungeonF4R3", "Ancient Ruins - Divine Treasury",
+                "A sanctum filled with divine artifacts and treasures beyond mortal comprehension. Two chimeras stand eternal watch over the hoard. The very air thrums with divine power.");
+            floor4Room3.Exits.Add("south", 917);
+            floor4Room3.OriginalNPCs.Add(npcs["Chimera"].Clone());
+            floor4Room3.OriginalNPCs.Add(npcs["Chimera"].Clone());
+            floor4Room3.Items.Add("potion");
+            floor4Room3.Items.Add("potion");
+            floor4Room3.Items.Add("restoration scroll");
+            floor4Room3.CanRespawn = false;
+
+            Room floor4Room4 = CreateRoom(919, "dungeonF4R4", "Ancient Ruins - Titan's Approach",
+                "The passage opens to reveal a titanic statue that slowly begins to move. This is no statue - it's a titan, ancient guardian of this place. Its stone skin cracks as it takes its first step in centuries.");
+            floor4Room4.Exits.Add("west", 917);
+            floor4Room4.Exits.Add("east", 920);
+            floor4Room4.OriginalNPCs.Add(npcs["Titan"].Clone());
+            floor4Room4.CanRespawn = false;
+
+            Room floor4Room5 = CreateRoom(920, "dungeonF4R5", "Ancient Ruins - Chamber of the Gods",
+                "The heart of the ancient ruins - a chamber that predates the Empire by thousands of years. A titan and a hydra stand as final guardians before an altar laden with divine weapons and armor. Completing this challenge proves you worthy of legend. A shimmering portal stands ready to return you to the surface.");
+            floor4Room5.Exits.Add("west", 919);
+            floor4Room5.Exits.Add("up", 900);  // Portal back to hub
+            floor4Room5.OriginalNPCs.Add(npcs["Titan"].Clone());
+            floor4Room5.OriginalNPCs.Add(npcs["Hydra"].Clone());
+            floor4Room5.Items.Add("titan's maul");
+            floor4Room5.Items.Add("olympian greatbow");
+            floor4Room5.Items.Add("divine scepter");
+            floor4Room5.Items.Add("aegis of the gods");
+            floor4Room5.CanRespawn = false;
+
+            // Copy OriginalNPCs to NPCs for initial dungeon population
+            foreach (var npc in floor1Room1.OriginalNPCs) floor1Room1.NPCs.Add(npc.Clone());
+            foreach (var npc in floor1Room2.OriginalNPCs) floor1Room2.NPCs.Add(npc.Clone());
+            foreach (var npc in floor1Room3.OriginalNPCs) floor1Room3.NPCs.Add(npc.Clone());
+            foreach (var npc in floor1Room4.OriginalNPCs) floor1Room4.NPCs.Add(npc.Clone());
+            foreach (var npc in floor1Room5.OriginalNPCs) floor1Room5.NPCs.Add(npc.Clone());
+            foreach (var npc in floor2Room1.OriginalNPCs) floor2Room1.NPCs.Add(npc.Clone());
+            foreach (var npc in floor2Room2.OriginalNPCs) floor2Room2.NPCs.Add(npc.Clone());
+            foreach (var npc in floor2Room3.OriginalNPCs) floor2Room3.NPCs.Add(npc.Clone());
+            foreach (var npc in floor2Room4.OriginalNPCs) floor2Room4.NPCs.Add(npc.Clone());
+            foreach (var npc in floor2Room5.OriginalNPCs) floor2Room5.NPCs.Add(npc.Clone());
+            foreach (var npc in floor3Room1.OriginalNPCs) floor3Room1.NPCs.Add(npc.Clone());
+            foreach (var npc in floor3Room2.OriginalNPCs) floor3Room2.NPCs.Add(npc.Clone());
+            foreach (var npc in floor3Room3.OriginalNPCs) floor3Room3.NPCs.Add(npc.Clone());
+            foreach (var npc in floor3Room4.OriginalNPCs) floor3Room4.NPCs.Add(npc.Clone());
+            foreach (var npc in floor3Room5.OriginalNPCs) floor3Room5.NPCs.Add(npc.Clone());
+            foreach (var npc in floor4Room1.OriginalNPCs) floor4Room1.NPCs.Add(npc.Clone());
+            foreach (var npc in floor4Room2.OriginalNPCs) floor4Room2.NPCs.Add(npc.Clone());
+            foreach (var npc in floor4Room3.OriginalNPCs) floor4Room3.NPCs.Add(npc.Clone());
+            foreach (var npc in floor4Room4.OriginalNPCs) floor4Room4.NPCs.Add(npc.Clone());
+            foreach (var npc in floor4Room5.OriginalNPCs) floor4Room5.NPCs.Add(npc.Clone());
+
+            // Add all dungeon rooms to dictionary
+            rooms.Add(900, dungeonHub);
+            rooms.Add(901, floor1Room1);
+            rooms.Add(902, floor1Room2);
+            rooms.Add(903, floor1Room3);
+            rooms.Add(904, floor1Room4);
+            rooms.Add(905, floor1Room5);
+            rooms.Add(906, floor2Room1);
+            rooms.Add(907, floor2Room2);
+            rooms.Add(908, floor2Room3);
+            rooms.Add(909, floor2Room4);
+            rooms.Add(910, floor2Room5);
+            rooms.Add(911, floor3Room1);
+            rooms.Add(912, floor3Room2);
+            rooms.Add(913, floor3Room3);
+            rooms.Add(914, floor3Room4);
+            rooms.Add(915, floor3Room5);
+            rooms.Add(916, floor4Room1);
+            rooms.Add(917, floor4Room2);
+            rooms.Add(918, floor4Room3);
+            rooms.Add(919, floor4Room4);
+            rooms.Add(920, floor4Room5);
+
             return rooms;
         }
 

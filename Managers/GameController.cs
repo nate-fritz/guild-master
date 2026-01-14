@@ -56,7 +56,7 @@ namespace GuildMaster.Managers
                 {
                     roomTitle = $"{currentRoomObj.Title} [RoomID: {player.CurrentRoom}]";
                 }
-                AnsiConsole.MarkupLine($"\n<span class='room-title'>[{roomTitle}]</span>");
+                AnsiConsole.MarkupLine($"[#FA935F][[{Markup.Escape(roomTitle)}]][/]");
 
                 TextHelper.DisplayTextWithPaging(GetRoomDescription(currentRoomObj), "#FA935F");
 
@@ -409,6 +409,13 @@ namespace GuildMaster.Managers
             {
                 int destinationRoomId = currentRoomObj.Exits[direction];
 
+                // Check if player is leaving the dungeon
+                if (IsDungeonRoom(player.CurrentRoom) && direction == "up" && !IsDungeonRoom(destinationRoomId))
+                {
+                    ShowDungeonExitConfirmation();
+                    return; // Don't move yet - wait for confirmation
+                }
+
                 // Clear recruit NPCs from current room before leaving
                 recruitNPCManager.ClearDynamicNPCsInRoom(player.CurrentRoom);
 
@@ -442,7 +449,7 @@ namespace GuildMaster.Managers
                 // Spawn recruit NPCs in new room
                 recruitNPCManager.SpawnIdleRecruitsInRoom(player.CurrentRoom);
 
-                AnsiConsole.MarkupLine($"\nYou move {direction} to {newRoom.Title}.");
+                AnsiConsole.MarkupLine($"\nYou move {direction} to {Markup.Escape(newRoom.Title)}.");
 
                 // Display room description first
                 AnsiConsole.MarkupLine("\n");
@@ -453,7 +460,7 @@ namespace GuildMaster.Managers
                 {
                     roomTitle = $"{newRoom.Title} [RoomID: {player.CurrentRoom}]";
                 }
-                AnsiConsole.MarkupLine($"\n<span class='room-title'>[{roomTitle}]</span>");
+                AnsiConsole.MarkupLine($"[#FA935F][[{Markup.Escape(roomTitle)}]][/]");
 
                 TextHelper.DisplayTextWithPaging(GetRoomDescription(newRoom), "#FA935F");
 
@@ -563,6 +570,34 @@ namespace GuildMaster.Managers
             }
         }
 
+        private bool IsDungeonRoom(int roomId)
+        {
+            return roomId >= 901 && roomId <= 920;  // Excludes hub (900)
+        }
+
+        private void ShowDungeonExitConfirmation()
+        {
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[yellow]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[/]");
+            AnsiConsole.MarkupLine("[yellow]         LEAVE THE DUNGEON?           [/]");
+            AnsiConsole.MarkupLine("[yellow]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[/]");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Leaving the dungeon will reset all floors:");
+            AnsiConsole.MarkupLine("  [red]✗[/] All enemies will respawn");
+            AnsiConsole.MarkupLine("  [red]✗[/] Floor transitions will be locked");
+            AnsiConsole.MarkupLine("  [green]✓[/] Looted items will remain in your inventory");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("Are you sure you want to leave?");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter 'yes' to leave, or anything else to stay)[/]");
+
+            // Set flag in GameEngine to wait for confirmation
+            if (gameEngine != null)
+            {
+                gameEngine.SetWaitingForDungeonExit(true);
+            }
+        }
+
         /// <summary>
         /// Gets the appropriate room description based on game state (e.g., recruit count for guild rooms)
         /// </summary>
@@ -609,9 +644,9 @@ namespace GuildMaster.Managers
             // Spawn recruit NPCs in new room
             recruitNPCManager.SpawnIdleRecruitsInRoom(player.CurrentRoom);
 
-            AnsiConsole.MarkupLine($"\n[#00FFFF]You teleport to {newRoom.Title}.[/]");
+            AnsiConsole.MarkupLine($"\n[#00FFFF]You teleport to {Markup.Escape(newRoom.Title)}.[/]");
             AnsiConsole.MarkupLine("\n");
-            AnsiConsole.MarkupLine($"\n<span class='room-title'>[{newRoom.Title}]</span>");
+            AnsiConsole.MarkupLine($"[#FA935F][[{Markup.Escape(newRoom.Title)}]][/]");
             TextHelper.DisplayTextWithPaging(GetRoomDescription(newRoom), "#FA935F");
 
             if (newRoom.Exits.Count > 0)

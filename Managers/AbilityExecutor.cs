@@ -29,6 +29,9 @@ namespace GuildMaster.Managers
         private Dictionary<Character, Dictionary<string, int>> abilityCooldowns;
         private Dictionary<Character, bool> evasiveFireActive;
         private Dictionary<Character, int> barrierAbsorption;
+        private Dictionary<Character, int> frozenDefenseReduction;  // Defense reduction from Frozen status
+        private Dictionary<Character, int> regenerationAmount;      // HP to heal per turn (Rejuvenation)
+        private Dictionary<Character, int> protectiveWardShield;    // Shield HP (Protective Ward)
 
         // Additional state for ability execution
         private NPC? preselectedTarget;
@@ -54,6 +57,9 @@ namespace GuildMaster.Managers
             abilityCooldowns = new Dictionary<Character, Dictionary<string, int>>();
             evasiveFireActive = new Dictionary<Character, bool>();
             barrierAbsorption = new Dictionary<Character, int>();
+            frozenDefenseReduction = new Dictionary<Character, int>();
+            regenerationAmount = new Dictionary<Character, int>();
+            protectiveWardShield = new Dictionary<Character, int>();
         }
 
         /// <summary>
@@ -69,7 +75,8 @@ namespace GuildMaster.Managers
             Dictionary<Character, int> sharedWarCryDamageBoost,
             Dictionary<Character, Dictionary<string, int>> sharedAbilityCooldowns,
             Dictionary<Character, bool> sharedEvasiveFireActive,
-            Dictionary<Character, int> sharedBarrierAbsorption)
+            Dictionary<Character, int> sharedBarrierAbsorption,
+            Dictionary<Character, int> sharedFrozenDefenseReduction)
         {
             statusEffects = sharedStatusEffects;
             taunters = sharedTaunters;
@@ -80,6 +87,7 @@ namespace GuildMaster.Managers
             abilityCooldowns = sharedAbilityCooldowns;
             evasiveFireActive = sharedEvasiveFireActive;
             barrierAbsorption = sharedBarrierAbsorption;
+            frozenDefenseReduction = sharedFrozenDefenseReduction;
         }
 
         // PUBLIC METHODS - Called by CombatManager
@@ -150,12 +158,71 @@ namespace GuildMaster.Managers
             return statusEffects;
         }
 
+        /// <summary>
+        /// Get regeneration amount for a character (used by Rejuvenation ability)
+        /// </summary>
+        public int GetRegenerationAmount(Character character)
+        {
+            if (regenerationAmount.ContainsKey(character))
+                return regenerationAmount[character];
+            return 0;
+        }
+
+        /// <summary>
+        /// Clear regeneration amount for a character when Regenerating status expires
+        /// </summary>
+        public void ClearRegenerationAmount(Character character)
+        {
+            if (regenerationAmount.ContainsKey(character))
+                regenerationAmount.Remove(character);
+        }
+
+        /// <summary>
+        /// Check if character has Protective Ward shield active
+        /// </summary>
+        public bool HasProtectiveWardShield(Character character)
+        {
+            return protectiveWardShield.ContainsKey(character) && protectiveWardShield[character] > 0;
+        }
+
+        /// <summary>
+        /// Get Protective Ward shield amount for a character
+        /// </summary>
+        public int GetProtectiveWardShield(Character character)
+        {
+            if (protectiveWardShield.ContainsKey(character))
+                return protectiveWardShield[character];
+            return 0;
+        }
+
+        /// <summary>
+        /// Reduce Protective Ward shield by damage absorbed
+        /// </summary>
+        public void ReduceProtectiveWardShield(Character character, int amount)
+        {
+            if (protectiveWardShield.ContainsKey(character))
+            {
+                protectiveWardShield[character] -= amount;
+                if (protectiveWardShield[character] <= 0)
+                {
+                    protectiveWardShield.Remove(character);
+                    string name = character == context.Player ? "Your" : $"{character.Name}'s";
+                    AnsiConsole.MarkupLine($"[#808080]{name} protective ward fades![/]");
+                }
+            }
+        }
 
         /// <summary>
         /// Clear all status effects (called when combat ends)
         /// </summary>
         public void ClearStatusEffects()
         {
+            // Restore defense for any characters still frozen
+            foreach (var kvp in frozenDefenseReduction)
+            {
+                kvp.Key.Defense += kvp.Value;
+            }
+
             statusEffects.Clear();
             taunters.Clear();
             battleCryTurns.Clear();
@@ -165,6 +232,9 @@ namespace GuildMaster.Managers
             abilityCooldowns.Clear();
             evasiveFireActive.Clear();
             barrierAbsorption.Clear();
+            frozenDefenseReduction.Clear();
+            regenerationAmount.Clear();
+            protectiveWardShield.Clear();
         }
 
         // ABILITY EXECUTION METHODS
@@ -297,15 +367,23 @@ namespace GuildMaster.Managers
                     break;
             }
         }
+        private int CalculateHealingAmount(Character character, Ability ability)
+        {
+            // Healing scales with level: Ability Dice + Level
+            // This allows healing to remain relevant throughout the game
+            int healRoll = RollDice(ability.DiceCount, ability.DiceSides, 0);
+            return healRoll + character.Level;
+        }
+
         private bool HealTarget(Ability ability, Character caster, Character target, string targetName)
         {
-            int healAmount = RollDice(ability.DiceCount, ability.DiceSides, ability.Bonus);
+            int healAmount = CalculateHealingAmount(caster, ability);
             int actualHeal = Math.Min(healAmount, target.MaxHealth - target.Health);
 
             target.Health += actualHeal;
 
             AnsiConsole.MarkupLine($"\n[#90FF90]You cast healing magic on {targetName.ToLower()}![/]");
-            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{ability.Bonus} for [#90FF90]{healAmount} healing[/]!)");
+            AnsiConsole.MarkupLine($"(Rolled {ability.DiceCount}d{ability.DiceSides}+{caster.Level} for [#90FF90]{healAmount} healing[/]!)");
 
             if (actualHeal > 0)
             {
@@ -421,6 +499,8 @@ namespace GuildMaster.Managers
                 statusEffects[character].Remove(effect);
                 if (effect == CombatManager.StatusEffect.Taunted)
                     taunters.Remove(character);
+                if (effect == CombatManager.StatusEffect.Regenerating)
+                    regenerationAmount.Remove(character);
             }
 
             SyncStatusToCharacter(character);
@@ -514,6 +594,11 @@ namespace GuildMaster.Managers
                 effects.Add($"🔷 Barrier ({barrierAbsorption[character]})");
             }
 
+            if (protectiveWardShield.ContainsKey(character) && protectiveWardShield[character] > 0)
+            {
+                effects.Add($"🛡️ Ward ({protectiveWardShield[character]})");
+            }
+
             // Add DOT effects
             var dotNames = character.GetActiveDOTNames();
             effects.AddRange(dotNames);
@@ -597,6 +682,20 @@ namespace GuildMaster.Managers
                     break;
                 case "Flame Strike":
                     abilitySuccess = ExecuteFlameStrikeGeneric(ability, character, enemies);
+                    break;
+
+                // New Oracle Abilities
+                case "Befuddle":
+                    abilitySuccess = ExecuteBefuddleGeneric(ability, character, enemies);
+                    break;
+                case "Rejuvenation":
+                    abilitySuccess = ExecuteRejuvenationGeneric(ability, character, player);
+                    break;
+                case "Ice Shards":
+                    abilitySuccess = ExecuteIceShardsGeneric(ability, character, enemies);
+                    break;
+                case "Protective Ward":
+                    abilitySuccess = ExecuteProtectiveWardGeneric(ability, character, player);
                     break;
 
                 // Level 5 Abilities
@@ -904,6 +1003,15 @@ namespace GuildMaster.Managers
             return HealTarget(ability, caster, target, targetName);
         }
 
+        public bool ExecuteRejuvenationAbility(Ability ability, Character caster, Character target, Player player)
+        {
+            // Simplified Rejuvenation execution for state-machine-based target selection
+            // This is called from CombatManager after the target has been selected
+            string targetName = target == player ? "You" : target.Name;
+
+            return ApplyRejuvenation(ability, caster, target, targetName);
+        }
+
         private bool ExecuteLightningBoltGeneric(Ability ability, Character character, List<NPC> enemies)
         {
             var target = SelectEnemyTarget(enemies);
@@ -961,6 +1069,143 @@ namespace GuildMaster.Managers
                 string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
                 AnsiConsole.MarkupLine(flavorText);
             }
+            return true;
+        }
+
+        // ============================================
+        // NEW ORACLE ABILITIES (Ability Rework)
+        // ============================================
+
+        public bool ExecuteBefuddleGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            // Check cooldown
+            if (IsAbilityOnCooldown(character, "Befuddle"))
+            {
+                int cooldownRemaining = GetAbilityCooldown(character, "Befuddle");
+                AnsiConsole.MarkupLine($"\n[#9370DB]Befuddle is on cooldown for {cooldownRemaining} more turns![/]");
+                return false;
+            }
+
+            var target = SelectEnemyTarget(enemies);
+            if (target == null) return false;
+
+            AnsiConsole.MarkupLine($"\n[#9370DB]{character.Name} casts Befuddle on {target.Name}![/]");
+            AnsiConsole.MarkupLine($"[#9370DB]{target.Name}'s thoughts become muddled and confused...[/]");
+
+            // Apply confused status for 1 turn
+            ApplyStatusEffect(target, CombatManager.StatusEffect.Confused, 1);
+
+            // Set cooldown
+            SetAbilityCooldown(character, "Befuddle", 2);
+
+            return true;
+        }
+
+        public bool ExecuteRejuvenationGeneric(Ability ability, Character caster, Player player)
+        {
+            var targets = new List<Character> { player };
+            targets.AddRange(player.ActiveParty.Where(a => a.Health > 0));
+
+            if (targets.Count == 1)
+            {
+                return ApplyRejuvenation(ability, caster, player, caster == player ? "You" : player.Name);
+            }
+
+            AnsiConsole.MarkupLine("\n[#90FF90]Who do you want to cast Rejuvenation on?[/]");
+            for (int i = 0; i < targets.Count; i++)
+            {
+                string name = targets[i] == player ? "Player" : targets[i].Name;
+                AnsiConsole.MarkupLine($"{i + 1}. {name} (HP: {targets[i].Health}/{targets[i].MaxHealth})");
+            }
+
+            Console.Write("Target: ");
+            string choice = Console.ReadLine();
+
+            if (!int.TryParse(choice, out int index) || index < 1 || index > targets.Count)
+            {
+                AnsiConsole.MarkupLine("Invalid target!");
+                return false;
+            }
+
+            var target = targets[index - 1];
+            string targetName = target == player ? "You" : target.Name;
+
+            return ApplyRejuvenation(ability, caster, target, targetName);
+        }
+
+        private bool ApplyRejuvenation(Ability ability, Character caster, Character target, string targetName)
+        {
+            // Rejuvenation: 3 HP per turn for 3 turns
+            int healPerTurn = 3;
+            int duration = 3;
+
+            AnsiConsole.MarkupLine($"\n[#90FF90]{caster.Name} casts Rejuvenation on {targetName.ToLower()}![/]");
+            AnsiConsole.MarkupLine($"[#90FF90]{targetName} will regenerate {healPerTurn} HP per turn for {duration} turns.[/]");
+
+            // Apply regeneration status effect
+            ApplyStatusEffect(target, CombatManager.StatusEffect.Regenerating, duration);
+            regenerationAmount[target] = healPerTurn;
+
+            return true;
+        }
+
+        public bool ExecuteIceShardsGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            if (enemies.Count == 0)
+            {
+                AnsiConsole.MarkupLine("No enemies to target!");
+                return false;
+            }
+
+            // Hit up to 3 random enemies
+            int targetCount = Math.Min(3, enemies.Count);
+            var targets = enemies.OrderBy(x => random.Next()).Take(targetCount).ToList();
+
+            AnsiConsole.MarkupLine($"\n[#87CEEB]{character.Name} launches frozen shards at {targetCount} enem{(targetCount == 1 ? "y" : "ies")}![/]");
+
+            foreach (var target in targets)
+            {
+                int damage = CalculateAbilityDamage(character, ability);
+                string diceString = GetAbilityDiceString(character, ability);
+
+                AnsiConsole.MarkupLine($"  → {target.Name}: (Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Ice)})");
+
+                // Apply ice damage
+                ApplyDamageWithType(character, target, damage, DamageType.Ice);
+
+                if (target.Health <= 0)
+                {
+                    string flavorText = GetKillFlavorText(character.Name, target.Name, character.EquippedWeapon, context.Player.GoreEnabled);
+                    AnsiConsole.MarkupLine($"  {flavorText}");
+                }
+            }
+
+            return true;
+        }
+
+        public bool ExecuteProtectiveWardGeneric(Ability ability, Character caster, Player player)
+        {
+            // Protective Ward: Grant all party members 8 HP shield for 3 turns
+            int shieldAmount = 8;
+            int duration = 3;
+
+            var targets = new List<Character> { player };
+            targets.AddRange(player.ActiveParty.Where(a => a.Health > 0));
+
+            AnsiConsole.MarkupLine($"\n[#FFD700]{caster.Name} casts Protective Ward![/]");
+            AnsiConsole.MarkupLine($"[#FFD700]A shimmering barrier surrounds the party![/]");
+
+            foreach (var target in targets)
+            {
+                protectiveWardShield[target] = shieldAmount;
+                string targetName = target == player ? "You" : target.Name;
+                AnsiConsole.MarkupLine($"  [#FFD700]{targetName} gained an {shieldAmount} HP shield for {duration} turns![/]");
+            }
+
+            // Note: The shield duration will need to be tracked separately per character
+            // For now, we'll just track the shield amount. Duration tracking would require
+            // a separate Dictionary<Character, int> for shield durations
+
             return true;
         }
 
@@ -1061,8 +1306,11 @@ namespace GuildMaster.Managers
                     // Ice: Full damage + defense reduction
                     target.TakeDamage(actualDamage);
 
-                    // Reduce defense by 1 for 2 turns (we'll implement this with status effects)
-                    // TODO: Implement defense reduction status effect
+                    // Apply Frozen status and reduce defense by 1 for 2 turns
+                    int defenseReduction = 1;
+                    target.Defense = Math.Max(0, target.Defense - defenseReduction);
+                    frozenDefenseReduction[target] = defenseReduction;
+                    ApplyStatusEffect(target, CombatManager.StatusEffect.Frozen, 2);
 
                     string[] iceGradient = { "#B0E0E6", "#87CEEB", "#00FFFF" }; // Light to dark cyan
                     DisplayStatusEffect("FROZEN",
@@ -1119,6 +1367,40 @@ namespace GuildMaster.Managers
                         target == context.Player || context.Player.ActiveParty.Contains(target as Recruit),
                         "{TARGET} suffers a grievous wound!",
                         bleedGradient);
+                    break;
+
+                case DamageType.Crush:
+                    // Crush: Full damage + permanent defense reduction (for this combat)
+                    target.TakeDamage(actualDamage);
+
+                    // Permanently reduce defense for this combat (minimum 0)
+                    int crushDefenseReduction = 2;
+                    target.Defense = Math.Max(0, target.Defense - crushDefenseReduction);
+
+                    string[] crushGradient = { "#A0522D", "#8B4513", "#654321" }; // Brown tones
+                    DisplayStatusEffect("ARMOR SUNDERED",
+                        target == context.Player ? "You" : target.Name,
+                        target == context.Player || context.Player.ActiveParty.Contains(target as Recruit),
+                        "{TARGET}'s armor is crushed and weakened!",
+                        crushGradient);
+                    break;
+
+                case DamageType.Concussive:
+                    // Concussive: Full damage + stun chance
+                    target.TakeDamage(actualDamage);
+
+                    // 50% chance to stun for 1 turn
+                    if (random.Next(100) < 50)
+                    {
+                        ApplyStatusEffect(target, CombatManager.StatusEffect.Stunned, 1);
+
+                        string[] concussiveGradient = { "#A9A9A9", "#808080", "#696969" }; // Gray tones
+                        DisplayStatusEffect("STUNNED",
+                            target == context.Player ? "You" : target.Name,
+                            target == context.Player || context.Player.ActiveParty.Contains(target as Recruit),
+                            "The concussive force leaves {TARGET} dazed!",
+                            concussiveGradient);
+                    }
                     break;
             }
         }
@@ -1201,19 +1483,12 @@ namespace GuildMaster.Managers
             int damage = CalculateAbilityDamage(character, ability);
             string diceString = GetAbilityDiceString(character, ability);
 
-            AnsiConsole.MarkupLine($"\n[#FF0000]{character.Name} fires a barbed arrow at {target.Name}![/]");
-            string damageText = GetTypedDamageMarkup(damage, DamageType.Physical);
+            AnsiConsole.MarkupLine($"\n[#8B0000]{character.Name} fires a barbed arrow at {target.Name}![/]");
+            string damageText = GetTypedDamageMarkup(damage, DamageType.Bleed);
             AnsiConsole.MarkupLine($"(Rolled {diceString} for {damageText})");
 
-            // Apply physical damage with bleed DOT (higher than normal physical)
-            target.TakeDamage(damage);
-
-            // Apply strong bleed DOT (4 damage per turn for 3 turns)
-            int bleedDamage = Math.Max(4, damage / 2);
-            var bleedDOT = new DamageOverTime(DamageType.Physical, bleedDamage, 3, character.Name);
-            target.ApplyDOT(bleedDOT);
-
-            AnsiConsole.MarkupLine($"\n[#FF0000]{target.Name} is bleeding from the barbed arrow![/]");
+            // Apply bleed damage (full damage + strong DOT from ApplyDamageWithType)
+            ApplyDamageWithType(character, target, damage, DamageType.Bleed);
 
             if (target.Health <= 0)
             {
@@ -1315,14 +1590,11 @@ namespace GuildMaster.Managers
             var target = SelectEnemyTarget(enemies);
             if (target == null) return false;
 
-            AnsiConsole.MarkupLine($"\n<span class='poison-damage' style='font-size: 0.95em;'>{character.Name} curses {target.Name} with deadly venom!</span>");
+            AnsiConsole.MarkupLine($"\n[#00FF00]{character.Name} curses {target.Name} with deadly venom![/]");
 
-            // Pure poison DOT - strong damage over time (6 damage per turn for 4 turns)
-            int poisonDamage = 6;
-            var poisonDOT = new DamageOverTime(DamageType.Poison, poisonDamage, 4, character.Name);
-            target.ApplyDOT(poisonDOT);
-
-            AnsiConsole.MarkupLine($"<span class='poison-damage' style='font-size: 0.95em;'>{target.Name} is poisoned! They will take {poisonDamage} damage per turn for 4 turns!</span>");
+            // Pure poison DOT - use ApplyDamageWithType with 0 upfront damage
+            // Poison damage type applies strong DOT automatically
+            ApplyDamageWithType(character, target, 6, DamageType.Poison);
 
             return true;
         }

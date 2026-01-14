@@ -283,6 +283,89 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"[dim]Type 'stats' to see your updated character sheet.[/]");
         }
 
+        public void HandleEquipOnMemberCommand(string input)
+        {
+            var player = context.Player;
+
+            // Parse: "equip <item> on <member>"
+            var parts = input.Split(" on ", StringSplitOptions.None);
+            if (parts.Length != 2)
+            {
+                AnsiConsole.MarkupLine("\n[dim]Usage: equip <item> on <member>[/]");
+                AnsiConsole.MarkupLine("[dim]Example: equip bronze gladius on Valeria[/]");
+                return;
+            }
+
+            string itemPart = parts[0].Replace("equip ", "").Trim().ToLower();
+            string memberName = parts[1].Trim().ToLower();
+
+            // Find party member
+            var member = player.ActiveParty.FirstOrDefault(m =>
+                m.Name.ToLower() == memberName ||
+                m.Name.ToLower().Contains(memberName));
+
+            if (member == null)
+            {
+                AnsiConsole.MarkupLine($"\n[#FF9999]No party member named '{parts[1]}' found.[/]");
+                if (player.ActiveParty.Count > 0)
+                {
+                    AnsiConsole.MarkupLine($"[dim]Active party: {string.Join(", ", player.ActiveParty.Select(m => m.Name))}[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[dim]You have no party members. Recruit party members from the guild![/]");
+                }
+                return;
+            }
+
+            // Find equipment in inventory
+            var equipmentItems = player.Inventory
+                .Where(item => EquipmentData.AllEquipment.ContainsKey(item.ToLower()))
+                .ToList();
+
+            if (equipmentItems.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[#FF9999]You don't have any equipment in your inventory.[/]");
+                return;
+            }
+
+            string matchedItem = equipmentItems.FirstOrDefault(item =>
+                item.ToLower() == itemPart ||
+                item.ToLower().Contains(itemPart) ||
+                EquipmentData.GetEquipment(item)?.ShortName?.ToLower() == itemPart ||
+                EquipmentData.GetEquipment(item)?.ShortName?.ToLower().Contains(itemPart) == true);
+
+            if (matchedItem == null)
+            {
+                AnsiConsole.MarkupLine($"\n[#FF9999]No equipment matching '{itemPart}' found in inventory.[/]");
+                AnsiConsole.MarkupLine($"[dim]Available equipment: {string.Join(", ", equipmentItems)}[/]");
+                return;
+            }
+
+            // Get equipment data
+            var equipment = EquipmentData.GetEquipment(matchedItem);
+            if (equipment == null)
+            {
+                AnsiConsole.MarkupLine($"\n[#FF9999]Cannot equip {matchedItem}.[/]");
+                return;
+            }
+
+            // Equip item (reuse existing logic)
+            var oldEquipment = member.EquipItem(equipment);
+            player.Inventory.Remove(matchedItem);
+
+            if (oldEquipment != null)
+            {
+                player.Inventory.Add(oldEquipment.Name.ToLower());
+                AnsiConsole.MarkupLine($"\n[#90FF90]{member.Name} equipped {equipment.Name}.[/]");
+                AnsiConsole.MarkupLine($"[dim]Returned {oldEquipment.Name} to inventory.[/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"\n[#90FF90]{member.Name} equipped {equipment.Name}.[/]");
+            }
+        }
+
         public void HandleUseCommand(string input)
         {
             var player = context.Player;

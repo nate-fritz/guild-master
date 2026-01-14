@@ -1,469 +1,328 @@
-# Ability System Rework - Planning Document
+# Ability System Rework - Planning Document (REVISED)
 
-**Status:** Planning Phase
+**Status:** Planning Phase - Reorganized for Class Identity
 **Started:** 2026-01-08
-**Target Implementation:** TBD
+**Revised:** 2026-01-10
+**Target Implementation:** Batched (2-3 abilities at a time, one class at a time)
 
 ---
 
-## Executive Summary
+## Class Design Philosophy
 
-This document tracks the planned overhaul of the combat ability system. The goal is to:
-1. Fill massive level gaps (6-9, 11-14, 16-19) with new abilities
-2. Rebalance EP costs and regeneration rates
-3. Improve tactical depth with new ability types (CC, dispels, energy manipulation)
-4. Update autocombat AI to handle support abilities
-5. Fix UX issues (pre-combat warnings)
+### Legionnaire - The Unstoppable Vanguard
+**Resource Model:** Build/Spend (attack → attack → ability pattern)
+**Damage Profile:** High multi-target, lower single-target (until level 15+)
+**Survivability:** Tank with taunts and party protection
+**Weapon Strategy:** Strongest basic attacks via best weapons in game
+**Key Tool:** Shield Bash for single-target CC when needed
+
+### Venator - The Burst Marksman
+**Resource Model:** Burst/Reload (spend EP → recharge → repeat)
+**Damage Profile:** High single-target, moderate multi-target
+**Survivability:** Mobility and positioning
+**Combat Pattern:** Opens strong, needs to manage "ammunition"
+**Key Tools:** Covering Shot + one more EP recharge ability
+
+### Oracle - The Arcane Battery
+**Resource Model:** Sustained caster (abilities → potions → passive regen)
+**Basic Attacks:** Rarely used (only in very long fights when desperate)
+**Survivability:** Extremely fragile (0 def, 15 HP) - needs 1-2 defensive "oh shit" buttons
+**Dependency:** Relies on Legionnaire to peel threats
+**Key Tool:** Heal and support buffs
 
 ---
 
-## Current State Analysis
+## Pre-Combat UX Message
+**Status:** ✅ ALREADY FIXED - Skip this entirely
 
-### Existing Abilities by Class
+---
 
-See `ABILITY_ANALYSIS.csv` for complete breakdown of all 24 current abilities.
-
-**Distribution:**
-- Legionnaire: 9 abilities (levels 1, 2, 3, 5, 10, 10, 15, 20, 20)
-- Venator: 7 abilities (levels 1, 2, 3, 4, 5, 15, 20)
-- Oracle: 8 abilities (levels 1, 2, 3, 5, 10, 15, 15, 20)
-
-### Critical Issues
-
-#### 1. Massive Level Gaps
-**Problem:** Players go many levels without new tactical options.
-
-- **Levels 6-9:** No abilities for ANY class (4-level gap)
-- **Levels 11-14:** No abilities for ANY class (4-level gap)
-- **Levels 16-19:** No abilities for ANY class (4-level gap)
-- **Venator Specific:** 10-level gap between Barbed Arrow (5) and Frost Arrow (15)
-
-**Impact:**
-- Reduces tactical variety during mid-game
-- Makes leveling feel unrewarding
-- Limits player experimentation and strategy development
-
-#### 2. EP Economy Imbalance
-**Problem:** Oracle can spam Lightning Bolt indefinitely with no resource management.
-
-**Oracle EP Math:**
-```
-Max EP: 18
-EP Regen per turn: 20% of max = 3.6 EP/turn
-Lightning Bolt cost: 4 EP
-Lightning Bolt damage: 1d8+1 (avg 5.5, ignores armor)
-
-Result: Cast every ~1.1 turns with minimal downtime
-```
-
-**Comparison:**
-- Venator: 5% per turn + 5% per attack = slower regen, more management required
-- Legionnaire: 0% per turn, 20% per attack = forced to use basic attacks to build resources
-
-**Why This Is Broken:**
-- Lightning Bolt is one of the strongest single-target abilities (ignores armor)
-- No tactical decision-making required - just spam best ability
-- Other classes must manage resources carefully, Oracle doesn't
-
-#### 3. Autocombat AI Handicap
-**Problem:** AI filters out all support abilities, making it significantly weaker than manual combat.
-
-**Current AI Behavior (CombatManager.cs:1768-1771):**
-```csharp
-var affordableAbilities = ally.Abilities.Where(a =>
-    ally.Energy >= a.EnergyCost &&
-    !a.Name.ToLower().Contains("heal") &&
-    !a.Name.ToLower().Contains("barrier") &&
-    !a.Name.ToLower().Contains("blessing")).ToList();
-```
-
-**Filtered Out:**
-- Heal (Oracle's core survival tool)
-- Barrier (15 HP shield, free)
-- Blessing (+2 attack party buff)
-- Any future support abilities with these keywords
-
-**Impact:**
-- Oracle AI never heals injured allies (major handicap)
-- Party never receives defensive buffs during autocombat
-- Gap will widen as we add more support/CC abilities
-- One tester already reports autocombat feels inferior
-
-#### 4. Shield Wall Design Issue
-**Problem:** Prevents all attacks for 3 turns, making it nearly useless.
-
-**Current Design:**
-- Cost: 0 EP (free)
-- Effect: +Defense for party for 3 turns
-- Drawback: Cannot attack at all during effect
+## Shield Wall Redesign
+**New Design (Hybrid A+C):**
+- Duration: 1 turn (not 3)
+- Effect: Next incoming attack deals 0 damage
+- Cost: 0 EP
 - Cooldown: 10 turns
-
-**Why It's Problematic:**
-- 3 turns of no damage output is devastating to DPS
-- In most fights, offense > defense (kill faster = less damage taken)
-- Only useful in extreme niche scenarios (boss with huge AOE attack?)
-- Feels like a trap option that punishes players for using it
-
-#### 5. Pre-Combat UX Confusion
-**Problem:** Players don't realize combat is starting immediately after dialogue.
-
-**Current Message:**
-```
-"So, you've come to take all of this from me? Let's get this over with."
-
-Press Enter to continue
-
-⚔ COMBAT BEGINS ⚔
-```
-
-**Issue:** "Press Enter to continue" is ambiguous - continue to what? More dialogue? Movement?
-
-**Proposed Fix:**
-```
-"So, you've come to take all of this from me? Let's get this over with."
-
-Press Enter to begin combat
-
-⚔ COMBAT BEGINS ⚔
-```
+- Rationale: Reactive defensive tool, not a long commitment
 
 ---
 
-## Proposed Solutions
+## EP Economy Rebalance
 
-### 1. New Abilities - Fill the Gaps
-
-**Target Distribution:**
-- Add 3-5 new abilities per class
-- Focus on levels 6-9, 11-14, 16-19
-- Introduce new ability types for tactical depth
-
-**New Ability Types to Add:**
-- **Root/Immobilize:** Prevent enemy from acting but can still be hit (weaker than stun)
-- **Silence:** Prevent enemy ability usage (forces basic attacks only)
-- **Dispel:** Remove debuffs from allies OR buffs from enemies
-- **Energy Drain:** Reduce enemy EP, preventing ability usage
-- **Energy Share:** Transfer EP to ally (support utility)
-- **Revive:** Bring knocked out ally back to combat (resurrection)
-- **Damage Reflect:** Return % of damage taken back to attacker
-- **Counter Stance:** Automatic retaliation on next incoming attack
-- **Mark Target:** Debuff enemy to take increased damage from all sources
-
-**Design Philosophy by Class:**
-- **Legionnaire:** Protection, crowd control, party buffs. Tank who enables team.
-- **Venator:** Multi-target damage, resource efficiency, mobility. Consistent DPS.
-- **Oracle:** Healing, debuffs, magical damage, support utility. Keeps party alive.
-
-### 2. EP Economy Rebalance
-
-**Goals:**
-- Require tactical resource management from all classes
-- Prevent infinite ability spam
-- Make basic attacks feel valuable, not just filler
-
-**Proposed Changes:**
-
-**Oracle Adjustments:**
+### Oracle Adjustments (Option A)
 ```
 Current: 20% regen/turn (3.6 EP), 5% per attack (0.9 EP)
-Proposed Option A: 15% regen/turn (2.7 EP), 5% per attack
-Proposed Option B: 10% regen/turn (1.8 EP), 10% per attack
+New: 15% regen/turn (2.7 EP), 5% per attack (unchanged)
+
+Lightning Bolt: 4 EP → 5 EP (requires ~2 turns to recast)
+Blessing: 5 EP → 4 EP (more accessible)
 ```
 
-**Option A:** Reduces passive regen, forces more basic attacks to sustain Lightning Bolt spam
-**Option B:** Shifts to hybrid regen model, rewards mixing attacks with spells
-
-**Ability Cost Adjustments:**
-- Lightning Bolt: 4 EP → 5 EP (requires 2 turns to recast)
-- Blessing: 5 EP → 4 EP (makes it more accessible)
-- Heal: Consider 3 EP → 2 EP (encourage more frequent healing)
-
-**Alternative Approach - Cooldowns:**
-Instead of pure EP cost, add cooldowns to powerful spells:
-- Lightning Bolt: 4 EP + 2 turn cooldown
-- Divine Wrath: 6 EP + 3 turn cooldown
-- Forces ability rotation instead of spam
-
-### 3. Autocombat AI Overhaul
-
-**Current Problem:** Hardcoded exclusion list is brittle and incomplete.
-
-**Proposed Solution:** Context-aware ability selection.
-
-**New AI Logic:**
-```
-For each ally's turn:
-1. Check HP status:
-   - If ally below 40% HP → Prioritize Heal/Barrier on self
-   - If other ally below 30% HP → Prioritize Heal on them
-
-2. Check party buffs:
-   - If no attack buff active && can afford Blessing → Cast Blessing
-   - If taking heavy damage && can afford Shield Wall → Consider defensive buff
-
-3. Check enemy threats:
-   - If enemy has dangerous ability ready → Prioritize Silence/Stun
-   - If multiple enemies alive → Prioritize AOE abilities
-
-4. Default to damage:
-   - Select highest damage/EP ratio ability available
-   - Target lowest HP enemy
-```
-
-**Implementation Approach:**
-- Remove hardcoded filters
-- Add ability classification system (Damage, Healing, Buff, Debuff, CC)
-- Create priority queues based on combat state
-- Allow AI to use full toolkit intelligently
-
-### 4. Shield Wall Redesign
-
-**Option A - Reduce Duration:**
-- Duration: 3 turns → 1 turn
-- Makes it a tactical "oh shit" button instead of long commitment
-
-**Option B - Allow Attacks:**
-- Remove "cannot attack" restriction
-- Reduce defense bonus to compensate
-- Becomes pure defensive buff like Blessing but for defense
-
-**Option C - Emergency Block:**
-- New design: "Next incoming attack deals 0 damage and generates EP"
-- Single-use defensive counter
-- Rewards timing and prediction
-
-**Recommendation:** Option A or C. Option B makes it too similar to existing buffs.
-
-### 5. Pre-Combat Message Update
-
-**Implementation:**
-Search for all pre-combat dialogue triggers and update the input prompt.
-
-**Files to Check:**
-- `Data/NPCData.cs` - NPC combat dialogue
-- `Data/EventDataDefinitions.cs` - Event-triggered combat
-- `Managers/DialogueManager.cs` - Dialogue display system
-
-**Change:**
-```csharp
-// Before
-TextHelper.WaitForInput();
-
-// After
-TextHelper.WaitForInput("Press Enter to begin combat");
-```
-
-Or update at display level if centralized.
+**Rationale:** Oracle rarely basic attacks, so we reduce passive regen to require more tactical EP management without forcing them to mix in attacks like other classes.
 
 ---
 
-## New Ability Design (Draft Ideas)
+## New Abilities - Organized by Class
 
-### Legionnaire New Abilities
+## 🛡️ LEGIONNAIRE - The Unstoppable Vanguard
 
-**Level 6: Pommel Strike**
-- Cost: 2 EP
-- Damage: 1d4+1 (low)
-- Effect: Silence target for 2 turns (cannot use abilities)
-- Type: Single Target, Melee
-- Rationale: Cheap CC, tactical counter to enemy casters
+**Current Abilities:**
+- Level 1: Shield Bash (3 EP, 1d4+2, Stun 1 turn) ✅ Single-target CC
+- Level 2: Cleave (3 EP, 1d4+1, hits 3 enemies) ✅ Multi-target
+- Level 3: Battle Cry (2 EP, Taunt all + 50% EP regen, 5 turn CD) ✅ AOE taunt
+- Level 5: Rending Strike (3 EP, 1d6+2, Bleed) ✅ Single-target with DOT
+- Level 10: Sunder Armor (4 EP, 1d8+2, Crush) ✅ Single-target armor break
+- Level 10: Shield Wall (0 EP, +Defense 3 turns, can't attack, 10 turn CD) ⚠️ NEEDS REDESIGN
+- Level 15: Devastating Slam (5 EP, 1d6+3, AOE stun) ✅ Multi-target CC
+- Level 20: Whirlwind (24 EP, 2d10, hits all ignoring rows) ✅ Ultimate AOE
+- Level 20: War Cry (0 EP, Taunt all + 75% EP + 20% party damage, 5 turn CD) ✅ Ultimate buff
 
-**Level 8: Rallying Shout**
-- Cost: 3 EP
-- Effect: Remove one debuff from each party member + 10% max HP heal
-- Type: Party Buff
-- Rationale: Cleanse utility, gives tank support option
+**Gaps to Fill:** 4, 6-9, 11-14, 16-19
 
-**Level 12: Iron Will**
+### PROPOSED NEW ABILITIES
+
+#### ✅ Level 6: Provoke (Single-Target Taunt)
+**PRIORITY: HIGH - Requested by user for early Oracle protection**
 - Cost: 0 EP
-- Effect: Next attack that would reduce you to 0 HP instead leaves you at 1 HP
+- Effect: Taunt single enemy for 2 turns
+- Cooldown: 2 turns
+- Type: Single Target Debuff, Melee
+- **Rationale:** Simple early peel tool. No bonuses like Battle Cry. Gives Legionnaire ability to protect Oracle when Battle Cry is on cooldown or when you only need to taunt one threat.
+- **Fits Philosophy:** ✅ Tank/protection role
+
+#### ⚠️ Level 8: Rallying Shout (Party Support)
+- Cost: 3 EP
+- Effect: Remove one debuff from each party member + restore 10% max HP to each
+- Type: Party Buff
+- **Rationale:** Cleanse utility + minor healing. Gives tank a support option.
+- **Fits Philosophy:** ✅ Party protection, but competes with "high multi-target damage" identity
+- **QUESTION:** Does this feel too supporty for the "whirlwind of shield and gladius" fantasy? Or is party support part of tank identity?
+
+#### ❌ Level 12: Iron Will (Survival Tool)
+- Cost: 0 EP
+- Effect: Next attack that would reduce you to 0 HP leaves you at 1 HP instead
 - Cooldown: 15 turns
 - Type: Self Buff
-- Rationale: Emergency survival, rewards good timing
+- **Rationale:** Emergency survival, rewards timing
+- **Fits Philosophy:** ⚠️ Defensive but doesn't add to multi-target damage fantasy
+- **RECOMMENDATION:** Consider replacing with multi-target ability instead?
 
-**Level 14: Challenge**
-- Cost: 3 EP
-- Effect: Taunt single enemy for 3 turns, reduce their damage by 30%
-- Type: Single Target Debuff
-- Rationale: Single-target tank tool, different from AOE Battle Cry
+#### ❌ Level 14: Challenge (moved to Level 6 as Provoke)
+~~Original: 3 EP taunt + 30% damage reduction~~
+**Status:** Replaced by Provoke (level 6, simplified version)
 
-**Level 18: Vengeful Strike**
+#### 🔄 Level 16: Crushing Sweep (Multi-Target Damage)
 - Cost: 4 EP
-- Damage: 1d10 + (% of missing HP as bonus)
+- Damage: 1d6+2 to up to 4 enemies in melee range
+- Type: AOE, Melee
+- **Rationale:** Mid-tier AOE between Cleave (level 2) and Devastating Slam (level 15). Fills gap and reinforces multi-target identity.
+- **Fits Philosophy:** ✅ High multi-target damage
+
+#### ❌ Level 18: Vengeful Strike (Single-Target Comeback)
+- Cost: 4 EP
+- Damage: 1d10 + (bonus based on % missing HP)
 - Type: Single Target, Melee
-- Rationale: Comeback mechanic, rewards aggressive tanking
+- **Rationale:** Comeback mechanic when low HP
+- **Fits Philosophy:** ❌ Single-target damage doesn't fit "high multi-target" philosophy
+- **RECOMMENDATION:** Replace with another AOE or party support ability?
 
-### Venator New Abilities
+### LEGIONNAIRE SUMMARY
+**Fits Philosophy:** Provoke (6), Crushing Sweep (16)
+**Questionable Fit:** Rallying Shout (8), Iron Will (12)
+**Doesn't Fit:** Vengeful Strike (18)
+**Still Needed:** Abilities for levels 4, 7, 9, 11, 13, 14, 17, 19
 
-**Level 6: Crippling Shot**
+---
+
+## 🏹 VENATOR - The Burst Marksman
+
+**Current Abilities:**
+- Level 1: Multi-Shot (4 EP, 1d3+1, hits all enemies) ✅ AOE opener
+- Level 2: Piercing Arrow (3 EP, 1d6+2, ignores armor) ✅ High single-target
+- Level 3: Covering Shot (0 EP, 1d3, restores 2 EP) ✅ EP recharge
+- Level 4: Evasive Fire (0 EP, dodge + counter, 10 turn CD) ✅ Defensive utility
+- Level 5: Barbed Arrow (3 EP, 1d4+2, Bleed) ✅ Single-target + DOT
+- Level 15: Frost Arrow (4 EP, 1d6+3, Weaken attacks) ✅ Single-target + debuff
+- Level 20: Thunder Volley (6 EP, 1d8+2, AOE stun) ✅ Ultimate AOE
+
+**Gaps to Fill:** 6-14, 16-19
+
+### PROPOSED NEW ABILITIES
+
+#### ✅ Level 6: Crippling Shot (Single-Target CC)
 - Cost: 3 EP
 - Damage: 1d4+2
 - Effect: Root target for 2 turns (cannot move/act but can be hit)
 - Type: Single Target, Ranged
-- Rationale: CC without full stun, tactical positioning
+- **Rationale:** CC without full stun, tactical positioning
+- **Fits Philosophy:** ✅ Single-target damage + utility
 
-**Level 8: Volley**
+#### ✅ Level 8: Volley (Cheap Multi-Target)
 - Cost: 2 EP
 - Damage: 1d3+0 to 2 random enemies
 - Type: Multi-Target, Ranged
-- Rationale: Cheap multi-target, resource efficient
+- **Rationale:** Cheap multi-target option for reload phase
+- **Fits Philosophy:** ✅ Moderate multi-target, resource efficient
 
-**Level 11: Hunter's Mark**
+#### ✅ Level 11: Hunter's Mark (Support Debuff)
 - Cost: 2 EP
 - Effect: Marked target takes +30% damage from all sources for 4 turns
 - Type: Single Target Debuff, Ranged
-- Rationale: Support DPS, helps entire party
+- **Rationale:** Helps entire party, tactical choice vs direct damage
+- **Fits Philosophy:** ✅ Enhances single-target focus of entire team
 
-**Level 13: Explosive Arrow**
+#### ✅ Level 13: Explosive Arrow (Mid-Tier AOE)
 - Cost: 5 EP
 - Damage: 1d6+3 to target, 1d4+0 to adjacent enemies
 - Type: AOE, Ranged
-- Rationale: Mid-tier AOE, bridges gap to Thunder Volley
+- **Rationale:** Bridges gap between Multi-Shot and Thunder Volley
+- **Fits Philosophy:** ✅ Moderate multi-target damage
 
-**Level 17: Phase Shift**
+#### ✅ Level 17: Phase Shift (EP Recharge + Defense)
 - Cost: 0 EP
 - Effect: Become untargetable for 1 turn, restore 4 EP
 - Cooldown: 10 turns
 - Type: Self Buff
-- Rationale: Defensive utility + resource generation
+- **Rationale:** Second reload ability (alongside Covering Shot). Defensive + resource generation.
+- **Fits Philosophy:** ✅ PERFECT - This is the second recharge ability you wanted!
 
-### Oracle New Abilities
+### VENATOR SUMMARY
+**Fits Philosophy:** ✅ All 5 proposed abilities fit perfectly
+**Still Needed:** Abilities for levels 7, 9, 10, 12, 14, 16, 18, 19
 
-**Level 4: Rejuvenation**
+---
+
+## 🔮 ORACLE - The Arcane Battery
+
+**Current Abilities:**
+- Level 1: Heal (3 EP, 2d4+2 HP restore) ✅ Core healing
+- Level 2: Lightning Bolt (4 EP → 5 EP, 1d8+1, ignores armor) ✅ Best damage option
+- Level 3: Blessing (5 EP → 4 EP, +2 attack party for 4 turns) ✅ Party buff
+- Level 5: Flame Strike (4 EP, 1d6+2, Fire DOT) ✅ Damage + burn
+- Level 10: Barrier (0 EP, 15 HP shield + heal 10% blocked, 10 turn CD) ✅ DEFENSIVE "OH SHIT" BUTTON #1
+- Level 15: Frostbolt (3 EP, 1d6+3, Weaken attacks) ✅ Damage + debuff
+- Level 15: Divine Wrath (6 EP, 2d6+4, massive single-target) ✅ Burst finisher
+- Level 20: Venom (3 EP, 0 damage, strong Poison DOT) ✅ Pure DOT
+
+**Gaps to Fill:** 4, 6-9, 11-14, 16-19
+
+### PROPOSED NEW ABILITIES
+
+#### ✅ Level 4: Rejuvenation (Efficient Healing)
 - Cost: 2 EP
-- Effect: Target ally regenerates 3 HP per turn for 3 turns (9 total)
-- Type: Heal, Ranged
-- Rationale: Cheaper healing option, HoT instead of burst
+- Effect: Target ally regenerates 3 HP per turn for 3 turns (9 total healing)
+- Type: Heal Over Time, Ranged
+- **Rationale:** Cheaper healing option. HoT instead of burst.
+- **Fits Philosophy:** ✅ More healing options for sustained support
 
-**Level 6: Dispel Magic**
+#### ✅ Level 6: Dispel Magic (Utility Counter)
 - Cost: 3 EP
 - Effect: Remove all debuffs from ally OR all buffs from enemy
 - Type: Utility, Ranged
-- Rationale: Tactical counter, dual-purpose support
+- **Rationale:** Tactical counter, dual-purpose support
+- **Fits Philosophy:** ✅ Utility/support role
 
-**Level 8: Arcane Missiles**
+#### ✅ Level 8: Arcane Missiles (Multi-Target Damage)
 - Cost: 2 EP
 - Damage: 1d4+1 to 3 random enemies
 - Type: Multi-Target, Ranged
-- Rationale: Cheap AOE damage, fills Venator-style gap
+- **Rationale:** Cheap AOE damage option
+- **Fits Philosophy:** ✅ Cheap ability to avoid basic attacks
 
-**Level 11: Mind Spike**
+#### ✅ Level 11: Mind Spike (Energy Denial)
 - Cost: 3 EP
 - Damage: 1d4+1
 - Effect: Drain 4 EP from target
 - Type: Single Target, Ranged
-- Rationale: Energy denial, prevents enemy abilities
+- **Rationale:** Energy denial prevents enemy abilities
+- **Fits Philosophy:** ✅ Tactical utility, keeps Oracle casting
 
-**Level 13: Protective Ward**
+#### ⚠️ Level 13: Protective Ward (Party Shield)
 - Cost: 4 EP
 - Effect: All party members gain 8 HP shield for 3 turns
 - Type: Party Buff
-- Rationale: Proactive healing alternative
+- **Rationale:** Proactive healing alternative
+- **Fits Philosophy:** ✅ DEFENSIVE "OH SHIT" BUTTON #2 - Protects party when getting overwhelmed
+- **NOTE:** With Barrier (10) and this (13), Oracle has 2 defensive tools
 
-**Level 17: Resurrection**
+#### ✅ Level 17: Resurrection (Ultimate Support)
 - Cost: 8 EP
 - Effect: Revive knocked out ally with 50% HP
-- Cooldown: Combat once per combat
+- Cooldown: Once per combat
 - Type: Heal, Ranged
-- Rationale: Ultimate support, prevents party wipes
+- **Rationale:** Ultimate support, prevents party wipes
+- **Fits Philosophy:** ✅ Never wants to basic attack - this keeps them casting even when desperate
+
+### ORACLE SUMMARY
+**Fits Philosophy:** ✅ All 6 proposed abilities fit
+**Defensive "Oh Shit" Buttons:** Barrier (10), Protective Ward (13)
+**Still Needed:** Abilities for levels 7, 9, 12, 14, 16, 18, 19
 
 ---
 
-## Implementation Checklist
+## Summary of Changes Needed
 
-### Phase 1: Core Ability System
-- [ ] Design 3-5 new abilities per class (15 total minimum)
-- [ ] Add ability definitions to `Data/AbilityData.cs`
-- [ ] Update `GetAbilityByName()` switch statement
-- [ ] Update class ability lists in `Models/CharacterClass.cs`
-- [ ] Implement new ability types (Root, Silence, Dispel, etc.)
+### What Fits Current Design Philosophy
+**Legionnaire:** 2/6 proposals fit (Provoke, Crushing Sweep)
+**Venator:** 5/5 proposals fit perfectly ✅
+**Oracle:** 6/6 proposals fit perfectly ✅
 
-### Phase 2: EP Economy
-- [ ] Adjust Oracle EP regeneration rate
-- [ ] Rebalance ability costs (Lightning Bolt, Blessing, Heal)
-- [ ] Test resource management across all classes
-- [ ] Consider adding cooldowns to prevent ability spam
+### What Needs Replacement/Rethinking
+**Legionnaire:**
+- ❌ Rallying Shout (8) - Too supporty? Or is cleanse/heal part of tank identity?
+- ❌ Iron Will (12) - Defensive but doesn't add to "high multi-target damage"
+- ❌ Vengeful Strike (18) - Single-target doesn't fit philosophy
 
-### Phase 3: Combat Mechanics
-- [ ] Implement Root status effect (immobilize but vulnerable)
-- [ ] Implement Silence status effect (disable abilities)
-- [ ] Implement Mark/Vulnerability debuff (increase damage taken)
-- [ ] Implement Energy Drain mechanics
-- [ ] Implement Revive/Resurrection system
-- [ ] Add damage reflection system
+**Recommendation:** Legionnaire needs more multi-target damage abilities to fill the "whirlwind of shield and gladius" fantasy. Consider replacing questionable abilities with more AOE options.
 
-### Phase 4: Autocombat AI
-- [ ] Remove hardcoded ability filters
-- [ ] Add ability classification system (tag abilities by purpose)
-- [ ] Implement context-aware priority system
-- [ ] Add healing logic (use Heal when ally below X%)
-- [ ] Add buff logic (use Blessing/Shield Wall appropriately)
-- [ ] Add CC logic (use Stun/Silence on dangerous enemies)
-- [ ] Test autocombat vs manual combat balance
-
-### Phase 5: UX Improvements
-- [ ] Update pre-combat message to say "Press Enter to begin combat"
-- [ ] Find all pre-combat dialogue instances
-- [ ] Update TextHelper or centralized input system
-- [ ] Test all pre-combat encounters
-
-### Phase 6: Shield Wall Redesign
-- [ ] Choose redesign approach (reduce duration vs emergency block)
-- [ ] Implement changes
-- [ ] Update ability description
-- [ ] Test in combat scenarios
-
-### Phase 7: Testing & Balance
-- [ ] Playthrough with each class to test new abilities
-- [ ] Verify level gaps are filled appropriately
-- [ ] Confirm EP management feels tactical
-- [ ] Test autocombat performance
-- [ ] Gather feedback from testers
-
-### Phase 8: Documentation
-- [ ] Update `ABILITY_ANALYSIS.csv` with new abilities
-- [ ] Document all changes in PROJECT_LOG.md
-- [ ] Update CONTENT_CREATION_GUIDE.md if needed
-- [ ] Add notes for future ability designers
+### Remaining Level Gaps (After Proposed Abilities)
+**Legionnaire:** 4, 7, 9, 11, 13, 14, 17, 19 (8 more abilities needed)
+**Venator:** 7, 9, 10, 12, 14, 16, 18, 19 (8 more abilities needed)
+**Oracle:** 7, 9, 12, 14, 16, 18, 19 (7 more abilities needed)
 
 ---
 
-## Open Questions
+## Implementation Approach
 
-1. **XP Curve Adjustment:** Should we also adjust XP required per level to make early progression faster?
-2. **Combat Encounter Density:** User mentioned adding more early combat encounters. How many and where?
-3. **Ability Flavor:** Should we add more lore/flavor text to abilities? Currently very mechanical.
-4. **Ultimate Abilities:** Should level 20 abilities feel more "ultimate"? Current ones are good but not game-changing.
-5. **Multi-Class Abilities:** Any plans for recruits to learn abilities from other classes? (e.g., Braxus learns a heal?)
-6. **Ability Customization:** Future: Let players choose between 2 abilities at each level? (Like talent trees)
-7. **Consumable Scrolls:** Should more abilities be available as scrolls for non-class users?
+**Batching Strategy:**
+- 2-3 abilities at a time
+- One class at a time
+- Test in multiple encounters after each batch
+- Tweak before moving to next batch
+- Complete one class before moving to the next
 
----
-
-## Notes from User
-
-- "Oracle early game needs help but don't just buff HP/defense - fix it with abilities"
-- "More combat encounters early on" - specific locations/enemies TBD
-- "Fine tune XP required to level" - make early game progression smoother
-- "Autocombat tester says it's inferior" - confirms AI needs work
-- "Open the faucet on abilities" - users want more options earlier
+**Suggested Order:**
+1. Start with Legionnaire (needs most philosophical rework)
+2. Then Venator (proposals already fit well)
+3. Then Oracle (proposals already fit well)
 
 ---
 
-## Success Metrics
+## Open Questions for User
 
-How do we know the rework succeeded?
+1. **Legionnaire Multi-Target Focus:**
+   - Should we replace Iron Will (12), Rallying Shout (8), and Vengeful Strike (18) with more AOE damage abilities?
+   - Or is party support/survival part of the tank identity?
 
-1. **No level gaps over 2 levels** - Every 1-2 levels should grant new ability
-2. **EP management matters** - All classes should need to balance abilities and basic attacks
-3. **Autocombat competitive** - AI should win ~80% of fights manual player would win
-4. **Tactical depth** - At any given turn, player should have 3+ meaningful choices
-5. **Class identity** - Each class should feel distinct in playstyle and role
-6. **Oracle survival** - Oracle should survive early game without major stat buffs
+2. **Single-Target Taunt (Provoke):**
+   - Level 6 placement good?
+   - 0 EP cost, 2 turn cooldown, 2 turn duration - does this feel right?
+
+3. **Defensive Tools:**
+   - Oracle has Barrier (10) and Protective Ward (13) as "oh shit" buttons - is that enough?
+   - Should Legionnaire have more survival tools, or just lean into multi-target damage?
+
+4. **Ability Distribution:**
+   - We still have lots of level gaps (4, 7, 9, 11-14, 16-19 for all classes)
+   - Should we aim to fill every level, or is having gaps okay?
+   - Not every level needs an ability - what's the target density?
 
 ---
 
-## Version History
+## Notes
 
-- **2026-01-08:** Initial planning document created
-- **Next Update:** After ability design approval and before implementation
+- Pre-Combat UX already fixed - skipping
+- Shield Wall redesign: 1 turn, blocks next attack, 0 EP, 10 turn CD
+- Oracle EP regen: 20% → 15% passive, 5% per attack unchanged
+- Lightning Bolt: 4 EP → 5 EP
+- Blessing: 5 EP → 4 EP

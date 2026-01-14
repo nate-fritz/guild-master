@@ -308,11 +308,12 @@ namespace GuildMaster.Managers
 
             AnsiConsole.MarkupLine("[#FA935F]═══════════════════════════════════════════════════════════════════════════════[/]");
 
-            // Show available commands
+            // Show menu options
             AnsiConsole.MarkupLine("");
-            AnsiConsole.MarkupLine("[#75C8FF]═══ Available Commands ═══[/]");
-            AnsiConsole.MarkupLine("[dim]guild or g      - Manage party members and equipment[/]");
-            AnsiConsole.MarkupLine("[dim]inventory or i  - View and manage your inventory[/]");
+            AnsiConsole.MarkupLine("[#90FF90]1.[/] Manage Equipment");
+            AnsiConsole.MarkupLine("[dim]0.[/] Back");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
         }
 
         private string FormatPartyRow(string col1, string col2, string col3)

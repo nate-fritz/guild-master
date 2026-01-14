@@ -19,7 +19,10 @@ namespace GuildMaster.Managers
             Stunned,
             Taunted,
             CannotAttack,
-            Evasive
+            Evasive,
+            Confused,       // Forces enemy to attack ally or skip turn
+            Regenerating,   // Heals HP each turn
+            Frozen          // Reduces defense - from ice damage
         }
 
         public enum CombatState
@@ -92,6 +95,7 @@ namespace GuildMaster.Managers
         private Dictionary<Character, Dictionary<string, int>> abilityCooldowns = new Dictionary<Character, Dictionary<string, int>>();
         private Dictionary<Character, bool> evasiveFireActive = new Dictionary<Character, bool>();
         private Dictionary<Character, int> barrierAbsorption = new Dictionary<Character, int>();
+        private Dictionary<Character, int> frozenDefenseReduction = new Dictionary<Character, int>(); // Tracks defense reduction from Frozen status
 
         // Callback for when player dies
         private Action onPlayerDeath;
@@ -114,7 +118,8 @@ namespace GuildMaster.Managers
                 warCryDamageBoost,
                 abilityCooldowns,
                 evasiveFireActive,
-                barrierAbsorption
+                barrierAbsorption,
+                frozenDefenseReduction
             );
         }
 
@@ -319,6 +324,18 @@ namespace GuildMaster.Managers
                                     AnsiConsole.MarkupLine($"[#FFFF00]Your party members continue fighting![/]");
                                 }
                             }
+                        }
+                    }
+
+                    // Process Regeneration healing at start of player turn
+                    if (HasStatusEffect(player, StatusEffect.Regenerating))
+                    {
+                        int healAmount = abilityExecutor.GetRegenerationAmount(player);
+                        if (healAmount > 0)
+                        {
+                            int actualHeal = Math.Min(healAmount, player.MaxHealth - player.Health);
+                            player.Health += actualHeal;
+                            AnsiConsole.MarkupLine($"\n[#90FF90]You regenerate {actualHeal} HP! (HP: {player.Health}/{player.MaxHealth})[/]");
                         }
                     }
 
@@ -1167,7 +1184,14 @@ namespace GuildMaster.Managers
                     if (targets.Count == 1)
                     {
                         // Only one target available (just the player), execute directly
-                        abilityExecutor.ExecuteHealAbility(ability, actingCharacter, targets[0], context.Player);
+                        if (ability.Name == "Heal")
+                        {
+                            abilityExecutor.ExecuteHealAbility(ability, actingCharacter, targets[0], context.Player);
+                        }
+                        else if (ability.Name == "Rejuvenation")
+                        {
+                            abilityExecutor.ExecuteRejuvenationAbility(ability, actingCharacter, targets[0], context.Player);
+                        }
                         currentActingPartyMember = null;
                         CompleteTurn();
                     }
@@ -1175,12 +1199,14 @@ namespace GuildMaster.Managers
                     {
                         // Show party member selection
                         currentState = CombatState.SelectingAbilityTarget;
-                        AnsiConsole.MarkupLine("\n[#90FF90]Who do you want to heal?[/]");
+                        string promptMessage = ability.Name == "Heal" ? "Who do you want to heal?" : $"Choose target for {ability.Name}:";
+                        AnsiConsole.MarkupLine($"\n[#90FF90]{promptMessage}[/]");
                         for (int i = 0; i < targets.Count; i++)
                         {
                             string name = targets[i] == context.Player ? "Player" : targets[i].Name;
                             AnsiConsole.MarkupLine($"{i + 1}. {name} (HP: {targets[i].Health}/{targets[i].MaxHealth})");
                         }
+                        AnsiConsole.MarkupLine("0. Back");
                         // Store targets for later selection
                         pendingHealTargets = targets;
                         ShowStatusBar();
@@ -1228,6 +1254,8 @@ namespace GuildMaster.Managers
                 "Evasive Fire" => false,
                 "Blessing" => false,
                 "Heal" => false,
+                "Rejuvenation" => false,
+                "Protective Ward" => false,
                 "Battle Cry" => false,
                 "War Cry" => false,
                 "Barrier" => false,
@@ -1241,6 +1269,7 @@ namespace GuildMaster.Managers
             return ability.Name switch
             {
                 "Heal" => true,
+                "Rejuvenation" => true,
                 _ => false
             };
         }
@@ -1253,25 +1282,54 @@ namespace GuildMaster.Managers
             if (pendingHealTargets != null && pendingAbility != null && abilityCharacter != null)
             {
                 // Heal target selection
-                if (!int.TryParse(input, out int targetIndex) || targetIndex < 1 || targetIndex > pendingHealTargets.Count)
+                if (!int.TryParse(input, out int targetIndex) || targetIndex < 0 || targetIndex > pendingHealTargets.Count)
                 {
                     AnsiConsole.MarkupLine("[#FF0000]Invalid target! Please choose again.[/]");
 
                     // Re-show target selection
-                    AnsiConsole.MarkupLine("\n[#90FF90]Who do you want to heal?[/]");
+                    string promptMessage = pendingAbility.Name == "Heal" ? "Who do you want to heal?" : $"Choose target for {pendingAbility.Name}:";
+                    AnsiConsole.MarkupLine($"\n[#90FF90]{promptMessage}[/]");
                     for (int i = 0; i < pendingHealTargets.Count; i++)
                     {
                         string name = pendingHealTargets[i] == context.Player ? "Player" : pendingHealTargets[i].Name;
                         AnsiConsole.MarkupLine($"{i + 1}. {name} (HP: {pendingHealTargets[i].Health}/{pendingHealTargets[i].MaxHealth})");
                     }
+                    AnsiConsole.MarkupLine("0. Back");
                     ShowStatusBar();
                     AnsiConsole.MarkupLine("[dim](Enter target number)[/]");
                     return;
                 }
 
-                // Execute heal ability with selected target
+                // Check if player wants to go back
+                if (targetIndex == 0)
+                {
+                    // Clear pending state and return to ability menu
+                    pendingAbility = null;
+                    abilityCharacter = null;
+                    pendingHealTargets = null;
+
+                    if (currentActingPartyMember != null)
+                    {
+                        ShowPartyMemberAbilityMenu();
+                    }
+                    else
+                    {
+                        ShowAbilityMenu();
+                    }
+                    return;
+                }
+
+                // Execute ally-targeted ability with selected target
                 var target = pendingHealTargets[targetIndex - 1];
-                abilityExecutor.ExecuteHealAbility(pendingAbility, abilityCharacter, target, context.Player);
+
+                if (pendingAbility.Name == "Heal")
+                {
+                    abilityExecutor.ExecuteHealAbility(pendingAbility, abilityCharacter, target, context.Player);
+                }
+                else if (pendingAbility.Name == "Rejuvenation")
+                {
+                    abilityExecutor.ExecuteRejuvenationAbility(pendingAbility, abilityCharacter, target, context.Player);
+                }
 
                 // Clear pending state
                 pendingAbility = null;
@@ -1779,6 +1837,18 @@ namespace GuildMaster.Managers
                 }
             }
 
+            // Process Regeneration healing at start of ally turn
+            if (HasStatusEffect(ally, StatusEffect.Regenerating))
+            {
+                int healAmount = abilityExecutor.GetRegenerationAmount(ally);
+                if (healAmount > 0)
+                {
+                    int actualHeal = Math.Min(healAmount, ally.MaxHealth - ally.Health);
+                    ally.Health += actualHeal;
+                    AnsiConsole.MarkupLine($"\n[#90FF90]{ally.Name} regenerates {actualHeal} HP! (HP: {ally.Health}/{ally.MaxHealth})[/]");
+                }
+            }
+
             // Check if stunned
             if (HasStatusEffect(ally, StatusEffect.Stunned))
             {
@@ -2047,6 +2117,36 @@ namespace GuildMaster.Managers
                     return;
                 }
 
+                // Check if confused
+                if (HasStatusEffect(attackingEnemy, StatusEffect.Confused))
+                {
+                    AnsiConsole.MarkupLine($"\n[#9370DB]{attackingEnemy.Name} is confused![/]");
+
+                    // Try to attack a random ally enemy (excluding self)
+                    var otherEnemies = activeEnemies.Where(e => e != attackingEnemy && e.Health > 0).ToList();
+
+                    if (otherEnemies.Count > 0)
+                    {
+                        var confusedTarget = otherEnemies[random.Next(otherEnemies.Count)];
+                        int damage = RollDice(attackingEnemy.DamageCount, attackingEnemy.DamageDie, attackingEnemy.DamageBonus);
+                        damage = Math.Max(0, damage - confusedTarget.Defense);
+                        confusedTarget.Health -= damage;
+
+                        AnsiConsole.MarkupLine($"[#9370DB]{attackingEnemy.Name} attacks {confusedTarget.Name} in confusion, dealing {damage} damage![/]");
+
+                        if (confusedTarget.Health <= 0)
+                        {
+                            AnsiConsole.MarkupLine($"[#90FF90]{confusedTarget.Name} is defeated by friendly fire![/]");
+                        }
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine($"[#9370DB]{attackingEnemy.Name} stumbles in confusion, unable to find a target![/]");
+                    }
+
+                    return;
+                }
+
                 List<Character> possibleTargets = new List<Character>();
                 if (player.Health > 0) possibleTargets.Add(player);
                 possibleTargets.AddRange(player.ActiveParty.Where(a => a.Health > 0));
@@ -2221,6 +2321,25 @@ namespace GuildMaster.Managers
                                     AnsiConsole.MarkupLine($"[#FF0000]💀 {target.Name} has been knocked unconscious![/]");
                                 }
                             }
+                        }
+                    }
+                    // Check for protective ward absorption (if no barrier or damage exceeded barrier)
+                    else if (abilityExecutor.HasProtectiveWardShield(target))
+                    {
+                        int shieldAmount = abilityExecutor.GetProtectiveWardShield(target);
+                        int absorbed = Math.Min(actualDamage, shieldAmount);
+                        int remaining = actualDamage - absorbed;
+
+                        AnsiConsole.MarkupLine($"[#FFD700]The protective ward absorbs {absorbed} damage![/]");
+
+                        // Reduce ward shield
+                        abilityExecutor.ReduceProtectiveWardShield(target, absorbed);
+
+                        // Apply remaining damage
+                        if (remaining > 0)
+                        {
+                            target.TakeDamage(remaining);
+                            AnsiConsole.MarkupLine($"[#FA8A8A]{remaining} damage gets through the ward![/]");
                         }
                     }
                     else
@@ -2495,6 +2614,13 @@ namespace GuildMaster.Managers
                 currentRoom.NPCs.RemoveAll(n => n.Name == enemy.Name);
                 currentRoom.OriginalNPCs.RemoveAll(n => n.Name == enemy.Name);
             }
+
+            // Check if this is a dungeon floor-ending room and unlock the way down
+            if (currentRoom != null)
+            {
+                UnlockFloorTransition(currentRoom);
+            }
+
             player.Gold += totalGold;
             AnsiConsole.MarkupLine($"\nYou looted [#FCBA03]{totalGold} gold pieces[/] total!");
 
@@ -2790,10 +2916,18 @@ namespace GuildMaster.Managers
                     return ExecuteHealGeneric(ability, player, player);
                 case "Lightning Bolt":
                     return ExecuteLightningBoltGeneric(ability, player, enemies);
+                case "Befuddle":
+                    return abilityExecutor.ExecuteBefuddleGeneric(ability, player, enemies);
                 case "Blessing":
                     return ExecuteBlessingGeneric(ability, player, player);
+                case "Rejuvenation":
+                    return abilityExecutor.ExecuteRejuvenationGeneric(ability, player, player);
+                case "Ice Shards":
+                    return abilityExecutor.ExecuteIceShardsGeneric(ability, player, enemies);
                 case "Flame Strike":
                     return ExecuteFlameStrikeGeneric(ability, player, enemies);
+                case "Protective Ward":
+                    return abilityExecutor.ExecuteProtectiveWardGeneric(ability, player, player);
 
                 // Legacy abilities (if you still have these)
                 case "Whirlwind Attack":
@@ -2969,6 +3103,17 @@ namespace GuildMaster.Managers
                 statusEffects[character].Remove(effect);
                 if (effect == StatusEffect.Taunted)
                     taunters.Remove(character);
+                if (effect == StatusEffect.Regenerating)
+                    abilityExecutor.ClearRegenerationAmount(character);
+                if (effect == StatusEffect.Frozen)
+                {
+                    // Restore defense when Frozen expires
+                    if (frozenDefenseReduction.ContainsKey(character))
+                    {
+                        character.Defense += frozenDefenseReduction[character];
+                        frozenDefenseReduction.Remove(character);
+                    }
+                }
             }
 
             SyncStatusToCharacter(character);
@@ -2996,7 +3141,10 @@ namespace GuildMaster.Managers
         StatusEffect.CannotAttack,
         StatusEffect.Stunned,
         StatusEffect.Taunted,
-        StatusEffect.Evasive
+        StatusEffect.Evasive,
+        StatusEffect.Confused,
+        StatusEffect.Regenerating,
+        StatusEffect.Frozen
     };
 
             foreach (var effect in combatOnlyEffects)
@@ -3405,8 +3553,11 @@ namespace GuildMaster.Managers
                     // Ice: Full damage + defense reduction
                     target.TakeDamage(actualDamage);
 
-                    // Reduce defense by 1 for 2 turns (we'll implement this with status effects)
-                    // TODO: Implement defense reduction status effect
+                    // Apply Frozen status and reduce defense by 1 for 2 turns
+                    int defenseReduction = 1;
+                    target.Defense = Math.Max(0, target.Defense - defenseReduction);
+                    frozenDefenseReduction[target] = defenseReduction;
+                    ApplyStatusEffect(target, StatusEffect.Frozen, 2);
 
                     string[] iceGradient = { "#B0E0E6", "#87CEEB", "#00FFFF" }; // Light to dark cyan
                     DisplayStatusEffect("FROZEN",
@@ -3463,6 +3614,40 @@ namespace GuildMaster.Managers
                         target == context.Player || context.Player.ActiveParty.Contains(target as Recruit),
                         "{TARGET} suffers a grievous wound!",
                         bleedGradient);
+                    break;
+
+                case DamageType.Crush:
+                    // Crush: Full damage + permanent defense reduction (for this combat)
+                    target.TakeDamage(actualDamage);
+
+                    // Permanently reduce defense for this combat (minimum 0)
+                    int crushDefenseReduction = 2;
+                    target.Defense = Math.Max(0, target.Defense - crushDefenseReduction);
+
+                    string[] crushGradient = { "#A0522D", "#8B4513", "#654321" }; // Brown tones
+                    DisplayStatusEffect("ARMOR SUNDERED",
+                        target == context.Player ? "You" : target.Name,
+                        target == context.Player || context.Player.ActiveParty.Contains(target as Recruit),
+                        "{TARGET}'s armor is crushed and weakened!",
+                        crushGradient);
+                    break;
+
+                case DamageType.Concussive:
+                    // Concussive: Full damage + stun chance
+                    target.TakeDamage(actualDamage);
+
+                    // 50% chance to stun for 1 turn
+                    if (random.Next(100) < 50)
+                    {
+                        ApplyStatusEffect(target, StatusEffect.Stunned, 1);
+
+                        string[] concussiveGradient = { "#A9A9A9", "#808080", "#696969" }; // Gray tones
+                        DisplayStatusEffect("STUNNED",
+                            target == context.Player ? "You" : target.Name,
+                            target == context.Player || context.Player.ActiveParty.Contains(target as Recruit),
+                            "The concussive force leaves {TARGET} dazed!",
+                            concussiveGradient);
+                    }
                     break;
             }
         }
@@ -4256,6 +4441,31 @@ namespace GuildMaster.Managers
             }
 
             return message;
+        }
+
+        private void UnlockFloorTransition(Room room)
+        {
+            // Check if all enemies in room are defeated
+            if (room.NPCs.Any(n => n.IsHostile && n.Health > 0))
+            {
+                return; // Still enemies alive, don't unlock yet
+            }
+
+            // Determine if this is a floor-ending room and what the next floor is
+            int nextFloor = room.NumericId switch
+            {
+                905 => 906,  // Floor 1 -> Floor 2
+                910 => 911,  // Floor 2 -> Floor 3
+                915 => 916,  // Floor 3 -> Floor 4
+                _ => -1
+            };
+
+            // If this is a floor-ending room and exit not already added, unlock it
+            if (nextFloor != -1 && !room.Exits.ContainsKey("down"))
+            {
+                room.Exits["down"] = nextFloor;
+                AnsiConsole.MarkupLine("\n[#90FF90]With the guardians defeated, stone steps leading down become visible.[/]");
+            }
         }
 
     }

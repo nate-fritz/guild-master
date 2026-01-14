@@ -25,3 +25,19 @@ Cultist Lieutenant	75	40	12	7	11	false	2	8	10	160	25	50	Melee	Entropy Bolt,Crush
 Cultist Unraveler	48	45	11	3	12	false	2	8	8	150	20	45	Ranged	Void Touch,Entropy Bolt,Flame Bolt
 Archon Malachar	95	50	13	8	13	false	2	10	11	250	50	100	Ranged	Entropy Bolt,Void Touch,Flame Bolt
 Imperial Assassin	110	55	15	9	16	false	2	12	13	350	75	150	Melee	Void Touch,Corrosive Strike,Backstab,Entropy Bolt
+Satyr	10	5	3	0	3	false	1	4	1	30	2	5	Melee
+Harpy	12	8	4	1	5	true	1	4	2	35	3	6	Ranged
+Giant Scorpion	15	0	4	2	2	false	1	6	1	40	3	7	Melee
+Skeleton Warrior	14	0	4	1	2	false	1	4	2	35	2	5	Melee
+Centaur Scout	45	20	8	3	6	false	1	6	5	110	8	18	Melee	Piercing Arrow
+Gorgon	50	25	9	4	4	true	1	8	6	120	10	22	Ranged	Entropy Bolt
+Bronze Automaton	60	10	10	7	3	false	1	8	7	130	12	25	Melee
+Fury	48	30	10	3	7	true	1	6	6	115	9	20	Ranged	Flame Bolt
+Minotaur	75	15	13	5	5	false	1	10	10	170	18	40	Melee	Crushing Blow
+Medusa	65	40	11	4	6	true	2	8	8	165	20	42	Ranged	Entropy Bolt,Void Touch
+Cyclops	85	10	15	6	4	false	1	12	12	180	22	45	Melee	Power Attack
+Lamia	60	45	9	3	8	true	2	6	7	160	18	38	Ranged	Void Touch,Flame Bolt
+Hydra	95	30	14	7	6	false	2	10	11	220	35	70	Melee	Crushing Blow,Power Attack
+Chimera	90	40	13	6	8	false	2	10	10	215	32	68	Melee	Flame Bolt,Power Attack
+Cerberus	100	25	15	8	9	false	3	8	10	230	38	75	Melee	Power Attack
+Titan	110	50	16	9	7	false	2	12	13	250	50	100	Melee	Power Attack,Crushing Blow

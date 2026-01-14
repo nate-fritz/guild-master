@@ -24,6 +24,8 @@ namespace GuildMaster.Managers
             Stats,
             Inventory,
             Party,
+            PartyMemberSelection,
+            PartyEquipment,
             Save,
             Load,
             Settings
@@ -71,7 +73,7 @@ namespace GuildMaster.Managers
         public void ShowPartyMenu()
         {
             uiManager.ShowPartyStatus();
-            // Party is now display-only - no menu state needed
+            currentMenu = MenuState.Party;
         }
 
         public async Task ShowSaveMenuAsync()
@@ -144,6 +146,15 @@ namespace GuildMaster.Managers
                     break;
                 case MenuState.WarRoomMain:
                     ProcessWarRoomMainInput(input);
+                    break;
+                case MenuState.Party:
+                    ProcessPartyInput(input);
+                    break;
+                case MenuState.PartyMemberSelection:
+                    ProcessPartyMemberSelectionInput(input);
+                    break;
+                case MenuState.PartyEquipment:
+                    ProcessPartyEquipmentInput(input);
                     break;
                 case MenuState.Save:
                     await ProcessSaveInputAsync(input);
@@ -639,6 +650,100 @@ namespace GuildMaster.Managers
 
             AnsiConsole.MarkupLine("\n[dim]Press Enter to continue...[/]");
             ShowWarRoomMenu();
+        }
+
+        private void ProcessPartyInput(string input)
+        {
+            switch (input)
+            {
+                case "1":
+                    // Show party member selection for equipment
+                    currentMenu = MenuState.PartyMemberSelection;
+                    DisplayPartyMemberSelection();
+                    break;
+                case "0":
+                    currentMenu = MenuState.None;
+                    break;
+                default:
+                    AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
+                    ShowPartyMenu();
+                    break;
+            }
+        }
+
+        private void DisplayPartyMemberSelection()
+        {
+            var player = context.Player;
+
+            if (player.ActiveParty.Count == 0)
+            {
+                AnsiConsole.MarkupLine("\n[#FF9999]You have no party members.[/]");
+                AnsiConsole.MarkupLine("[dim]Recruit party members from the guild![/]");
+                currentMenu = MenuState.None;
+                return;
+            }
+
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[#75C8FF]═══ Select Party Member ═══[/]");
+            AnsiConsole.MarkupLine("");
+
+            for (int i = 0; i < player.ActiveParty.Count; i++)
+            {
+                var member = player.ActiveParty[i];
+                AnsiConsole.MarkupLine($"[#90FF90]{i + 1}.[/] {member.Name} - {member.Class?.Name}");
+            }
+
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim]0.[/] Back");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+        }
+
+        private void ProcessPartyMemberSelectionInput(string input)
+        {
+            var player = context.Player;
+
+            if (input == "0")
+            {
+                currentMenu = MenuState.None;
+                return;
+            }
+
+            if (!int.TryParse(input, out int choice) || choice < 1 || choice > player.ActiveParty.Count)
+            {
+                AnsiConsole.MarkupLine("\n[dim]Invalid choice. Please try again.[/]");
+                DisplayPartyMemberSelection();
+                return;
+            }
+
+            // Select the party member and show their equipment menu
+            selectedRecruit = player.ActiveParty[choice - 1];
+            currentMenu = MenuState.PartyEquipment;
+            guildManager.DisplayRecruitEquipmentMenu(selectedRecruit);
+        }
+
+        private void ProcessPartyEquipmentInput(string input)
+        {
+            if (selectedRecruit == null)
+            {
+                currentMenu = MenuState.None;
+                return;
+            }
+
+            if (input == "0")
+            {
+                // Back to member selection
+                selectedRecruit = null;
+                currentMenu = MenuState.PartyMemberSelection;
+                DisplayPartyMemberSelection();
+                return;
+            }
+
+            // Process equipment action using existing guild manager logic
+            guildManager.ProcessRecruitEquipmentAction(selectedRecruit, input);
+
+            // Re-display equipment menu after action
+            guildManager.DisplayRecruitEquipmentMenu(selectedRecruit);
         }
     }
 }

@@ -78,6 +78,7 @@ namespace GuildMaster.Services
             {
                 // No saves found, return to main menu
                 gameContext = null;
+                ShowMainMenu();
                 return;
             }
 
@@ -93,9 +94,24 @@ namespace GuildMaster.Services
         private bool isInPreCombatDialogue = false;
         private List<NPC>? pendingCombatEnemies = null;
         private Room? pendingCombatRoom = null;
+        private bool isWaitingForDungeonExitConfirmation = false;
 
         public bool IsWaitingForLoadSlot => isWaitingForLoadSlot;
         public bool IsInPreCombatDialogue => isInPreCombatDialogue;
+
+        public void SetWaitingForDungeonExit(bool waiting)
+        {
+            isWaitingForDungeonExitConfirmation = waiting;
+        }
+
+        private void ShowMainMenu()
+        {
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[#90FF90]1.[/] New Game");
+            AnsiConsole.MarkupLine("[#75C8FF]2.[/] Load Game");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[dim](Enter a number to choose)[/]");
+        }
 
         private async Task<bool> HandleLoadSlotSelection(string input)
         {
@@ -114,6 +130,7 @@ namespace GuildMaster.Services
                 isWaitingForLoadSlot = false;
                 tempLoadManager = null;
                 gameContext = null;
+                ShowMainMenu();
                 return true;
             }
 
@@ -328,6 +345,13 @@ namespace GuildMaster.Services
             if (isWaitingForLoadSlot)
             {
                 await HandleLoadSlotSelection(input);
+                return;
+            }
+
+            // Check if waiting for dungeon exit confirmation
+            if (isWaitingForDungeonExitConfirmation)
+            {
+                ProcessDungeonExitConfirmation(input);
                 return;
             }
 
@@ -551,6 +575,10 @@ namespace GuildMaster.Services
             else if (input.StartsWith("take"))
             {
                 itemManager?.HandleTakeCommand(input);
+            }
+            else if (input.StartsWith("equip ") && input.Contains(" on "))
+            {
+                itemManager?.HandleEquipOnMemberCommand(input);
             }
             else if (input.StartsWith("use "))
             {
@@ -1081,6 +1109,62 @@ namespace GuildMaster.Services
                 // Clear pending combat info
                 pendingCombatEnemies = null;
                 pendingCombatRoom = null;
+            }
+        }
+
+        private void ProcessDungeonExitConfirmation(string input)
+        {
+            isWaitingForDungeonExitConfirmation = false;
+
+            if (input.ToLower().Trim() == "yes")
+            {
+                ResetDungeon();
+
+                // Move player to hub
+                var player = gameContext.Player;
+                player.CurrentRoom = 900;
+
+                AnsiConsole.MarkupLine("");
+                AnsiConsole.MarkupLine("[#90FF90]You ascend the ancient steps and emerge into the entrance hall.[/]");
+                AnsiConsole.MarkupLine("[dim]The dungeon floors have been reset. All enemies have respawned.[/]");
+                AnsiConsole.MarkupLine("");
+
+                // Show room description
+                gameController?.HandleLookCommand("look");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("");
+                AnsiConsole.MarkupLine("[dim]You decide to stay in the dungeon.[/]");
+            }
+        }
+
+        private void ResetDungeon()
+        {
+            if (gameContext == null || gameContext.Rooms == null)
+                return;
+
+            var rooms = gameContext.Rooms;
+
+            // Reset all dungeon floors (901-920)
+            for (int roomId = 901; roomId <= 920; roomId++)
+            {
+                if (rooms.ContainsKey(roomId))
+                {
+                    var room = rooms[roomId];
+
+                    // Respawn enemies
+                    room.RespawnEnemies();
+
+                    // Remove conditional "down" exits from floor-end rooms
+                    if (roomId == 905 || roomId == 910 || roomId == 915)
+                    {
+                        if (room.Exits.ContainsKey("down"))
+                        {
+                            room.Exits.Remove("down");
+                        }
+                    }
+                }
             }
         }
     }

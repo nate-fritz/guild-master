@@ -1,16 +1,22 @@
 # Active Playthrough Testing Notes
 
-**Session Date:** 2026-01-09
+**Session Date:** 2026-01-10
 **Tester:** User
-**Build:** Latest (post-bug fixes from Jan 9)
+**Build:** Latest (dungeon test area + Oracle abilities)
 
 ---
 
-## ✅ FIXED (2026-01-09) - Gate Puzzle Keys Not Working
+## ✅ FIXED (2026-01-10) - Gate Puzzle Keys Not Working
 - **Was:** "use keys on gate" command failed with cast error in loaded save games
 - **Root Cause:** Puzzle state boolean values deserialized as JsonElement, not bool
 - **Fixed:** Created GetPuzzleStateBool() helper to safely handle both cases
 - **Status:** RESOLVED - Tested and working in both fresh games and loaded saves
+
+## ✅ UPDATED (2026-01-10) - Caelia Dialogue Enhanced
+- **Changed:** Rewrote Caelia's dialogue to emphasize decades-long partnership with Quintus
+- **Additions:** Reveals shared history, long investigation of Ordo Dissolutus, former guild connection
+- **Impact:** Better narrative cohesion, establishes player as key operative in their investigation
+- **Status:** Complete - Ready for player feedback
 
 ---
 
@@ -86,9 +92,115 @@ All bugs below were fixed in the 2026-01-09 update. Details in PROJECT_LOG.md.
 
 ---
 
+## 🆕 NEW: Dungeon Test Area (2026-01-10)
+
+**Access:** `tpto 900` from anywhere
+
+### Structure Testing
+- [ ] **Hub Room (900):** Verify description and `down` command to Floor 1
+- [ ] **Floor Navigation:** Test `up` and `down` commands between floors
+- [ ] **Room Connectivity:** Verify all exits work correctly
+  - Linear floors: 901→905, 911→915
+  - Branching floors: 906→910, 916→920
+
+### Enemy Testing
+- [ ] **Floor 1 (Levels 1-5):** Satyr, Harpy, Giant Scorpion, Skeleton Warrior
+  - Verify enemy stats, abilities, and loot drops
+  - Test XP rewards are appropriate for level range
+- [ ] **Floor 2 (Levels 6-10):** Centaur Scout, Gorgon, Bronze Automaton, Fury
+  - Test enemy abilities (Piercing Arrow, Entropy Bolt, Flame Bolt)
+- [ ] **Floor 3 (Levels 11-15):** Minotaur, Medusa, Cyclops, Lamia
+  - Test harder enemies with multiple abilities
+- [ ] **Floor 4 (Levels 16-20):** Hydra, Chimera, Cerberus, Titan
+  - Test end-game difficulty and multi-attack enemies
+
+### Equipment Testing
+- [ ] **Floor 1 Treasury (Room 905):** Bronze tier equipment
+  - Verify `take all` picks up all 4 items
+  - Test `look gladius`, `look bow`, `look staff`, `look breastplate`
+  - Equip and verify stat changes
+- [ ] **Floor 2 Armory (Room 910):** Enchanted tier
+- [ ] **Floor 3 Vault (Room 915):** Legendary tier
+- [ ] **Floor 4 Chamber (Room 920):** Divine tier
+
+### Future Features (Not Yet Implemented)
+- ⚠️ **Door Unlock System:** Currently `down` exits always available (should require defeating enemies)
+- ⚠️ **Reset Mechanic:** Going `up` should reset floors (not implemented yet)
+
+---
+
+## 🆕 NEW: Oracle Abilities Testing (2026-01-10)
+
+### Heal (Buffed - Level Scaling)
+- [ ] **Level 1:** Should heal 4-10 HP (2d4+1)
+- [ ] **Level 5:** Should heal 8-14 HP (2d4+5)
+- [ ] **Level 10:** Should heal 13-19 HP (2d4+10)
+- [ ] **Level 15:** Should heal 18-24 HP (2d4+15)
+- [ ] **Level 20:** Should heal 23-29 HP (2d4+20)
+- [ ] Verify scales properly throughout dungeon levels
+
+### Befuddle (Level 2, 2 EP) - Confusion
+- [ ] Cast on enemy in multi-enemy fight
+- [ ] Verify confused enemy attacks random ally (not player)
+- [ ] Cast on solo enemy
+- [ ] Verify solo enemy skips turn when confused
+- [ ] Verify duration is exactly 1 turn
+- [ ] Check status display shows "Confused" icon
+
+### Rejuvenation (Level 4, 2 EP) - HoT
+- [ ] Cast on party member with damaged health
+- [ ] Verify heals 3 HP on caster's turn
+- [ ] Verify heals 3 HP on buffed ally's turn
+- [ ] Verify total healing = 9 HP over 3 turns (3 HP × 3 turns)
+- [ ] Check status display shows "Regenerating" icon with turn counter
+- [ ] Verify effect disappears after 3 turns
+
+### Ice Shards (Level 8, 2 EP) - Multi-target
+- [ ] Cast with 5+ enemies present
+- [ ] Verify hits exactly 3 random enemies
+- [ ] Verify damage is 1d4+1 per target (2-5 HP)
+- [ ] Check ice damage color coding (should be ice blue)
+- [ ] Test with fewer than 3 enemies (should hit all available)
+- [ ] Test with 1 enemy (should hit once)
+
+### Protective Ward (Level 13, 4 EP) - Party Shield
+- [ ] Cast with full party (player + 2 allies)
+- [ ] Verify all 3 characters receive 8 HP shield
+- [ ] Take damage and verify shield absorbs before health
+- [ ] Verify shield value decreases correctly
+- [ ] Test shield lasting 3 turns
+- [ ] Verify shield disappears after 3 turns
+- [ ] Test with partial damage (shield blocks some, not all)
+- [ ] Compare to Barrier (single-target shield)
+
+### Status Effects System
+- [ ] Verify Confused enemies show proper icon/status
+- [ ] Verify Regenerating shows proper icon/status with turn counter
+- [ ] Verify Protective Ward shows shield value in status display
+- [ ] Test multiple status effects on same character
+- [ ] Verify status cleanup when duration expires
+
+---
+
+## Party Equipment Management
+
+### Current Behavior (Guild Menu)
+- ✅ Can equip items on party members through guild menu
+- ✅ "Manage Equipment" option shows numbered inventory
+- ✅ Can unequip items with `unequip weapon/armor/helm/ring`
+
+### Requested Improvements
+- [ ] **Add to Party Menu:** Equipment management should also be accessible from party menu
+- [ ] **Direct Commands:** Consider `equip <item> on <member>` syntax for convenience
+- [ ] Test equipment stat changes apply correctly to party members
+- [ ] Verify equipment bonuses show in combat
+
+---
+
 ## Next Testing Focus
 
+- **Priority 1:** Test all Oracle abilities in dungeon combat
+- **Priority 2:** Verify status effects work correctly (Confused, Regenerating, Protective Ward)
+- **Priority 3:** Test equipment progression through dungeon floors
 - Continue playthrough to verify respawn behavior in cave
-- Test Oracle combat balance with current abilities
-- Verify all recent bug fixes (Jan 5-7) are working in integrated playthrough
-- Check for any new issues introduced by recent changes
+- Verify all recent bug fixes (Jan 5-9) are working in integrated playthrough

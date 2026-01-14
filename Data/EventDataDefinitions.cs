@@ -411,7 +411,7 @@ namespace GuildMaster.Data
                 },
                 ["seal_breaks"] = new DialogueNode
                 {
-                    Text = "Caelia's expression is grim. \"The seals are interconnected. If one fails, the cascade unravels all five within days. The entities that were bound...\" She pauses, choosing her words carefully. \"Madness. Entropy. The dissolution of natural law itself. Everything ends.\"<br><br>The room falls silent. Quintus breaks it. \"This is why we must act now. The festival is in two days. We have one chance to stop this.\"",
+                    Text = "Caelia's expression is grim. \"The seals are interconnected. If one fails, the cascade unravels all five within days. The entities that were bound...\" She pauses, choosing her words carefully. \"Madness. Entropy. The dissolution of natural law itself. Everything ends.\"<br><br>The room falls silent. Quintus breaks it. \"This is why we must act now. The festival is in five days. We have one chance to stop this.\"",
                     Choices = new List<DialogueNode.Choice>
                     {
                         new DialogueNode.Choice

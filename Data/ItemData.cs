@@ -364,6 +364,108 @@ namespace GuildMaster.Data
                             IsConsumable = false
                         }}
                     }
+                },
+
+                // ===== DUNGEON TEST AREA EQUIPMENT =====
+
+                {905, new Dictionary<string, Item>()  // bronzeTreasury - Floor 1 equipment
+                    {
+                        {"bronze gladius", new Item {
+                            Description = "A well-crafted bronze shortsword with a leather-wrapped hilt. The blade gleams with an aged patina.",
+                            ShortName = "gladius",
+                            IsLootable = true
+                        }},
+                        {"reinforced bow", new Item {
+                            Description = "A sturdy bow reinforced with bronze fittings. The limbs are made of flexible yew wood.",
+                            ShortName = "bow",
+                            IsLootable = true
+                        }},
+                        {"bronze staff", new Item {
+                            Description = "A bronze-capped staff carved from ancient oak. Faint arcane symbols glow along its length.",
+                            ShortName = "staff",
+                            IsLootable = true
+                        }},
+                        {"bronze breastplate", new Item {
+                            Description = "A bronze cuirass molded to fit the torso. Despite its age, it offers solid protection.",
+                            ShortName = "breastplate",
+                            IsLootable = true
+                        }}
+                    }
+                },
+
+                {910, new Dictionary<string, Item>()  // enchantedArmory - Floor 2 equipment
+                    {
+                        {"enchanted spatha", new Item {
+                            Description = "A well-crafted shortsword with runes glowing along the blade. The enchantment hums with power.",
+                            ShortName = "spatha",
+                            IsLootable = true
+                        }},
+                        {"stormbow", new Item {
+                            Description = "An elegant bow inscribed with targeting runes. Arrows fired from it crackle with lightning.",
+                            ShortName = "bow",
+                            IsLootable = true
+                        }},
+                        {"crystal staff", new Item {
+                            Description = "A war staff crowned with a glowing crystal. Magical energy crackles around it.",
+                            ShortName = "staff",
+                            IsLootable = true
+                        }},
+                        {"blessed cuirass", new Item {
+                            Description = "A cuirass covered in protective enchantments. The metal seems to shimmer with defensive magic.",
+                            ShortName = "cuirass",
+                            IsLootable = true
+                        }}
+                    }
+                },
+
+                {915, new Dictionary<string, Item>()  // legendaryVault - Floor 3 equipment
+                    {
+                        {"hero's blade", new Item {
+                            Description = "A legendary blade forged from celestial steel. The sword seems to glow with inner light.",
+                            ShortName = "blade",
+                            IsLootable = true
+                        }},
+                        {"gorgon's bane", new Item {
+                            Description = "A masterwork composite bow crafted from mythril and dragonbone. Each shot strikes like thunder.",
+                            ShortName = "bow",
+                            IsLootable = true
+                        }},
+                        {"medusa's wand", new Item {
+                            Description = "An ancient wand topped with a flawless gemstone. It pulses with arcane might.",
+                            ShortName = "wand",
+                            IsLootable = true
+                        }},
+                        {"griffon hide armor", new Item {
+                            Description = "Armor forged by legendary smiths, inscribed with powerful wards. It feels lighter than air yet strong as adamantine.",
+                            ShortName = "armor",
+                            IsLootable = true
+                        }}
+                    }
+                },
+
+                {920, new Dictionary<string, Item>()  // chamberOfTheGods - Floor 4 equipment
+                    {
+                        {"titan's maul", new Item {
+                            Description = "A warhammer blessed by the gods themselves. It radiates holy power and smites evil with righteous fury.",
+                            ShortName = "maul",
+                            IsLootable = true
+                        }},
+                        {"olympian greatbow", new Item {
+                            Description = "A bow crafted from storm-touched wood and blessed silver. Arrows loosed from it crackle with lightning.",
+                            ShortName = "greatbow",
+                            IsLootable = true
+                        }},
+                        {"divine scepter", new Item {
+                            Description = "A staff crowned with a star fragment. It channels the raw power of creation itself.",
+                            ShortName = "scepter",
+                            IsLootable = true
+                        }},
+                        {"aegis of the gods", new Item {
+                            Description = "Armor blessed by divine hands. It shimmers with celestial light and turns aside even the mightiest blows.",
+                            ShortName = "aegis",
+                            IsLootable = true
+                        }}
+                    }
                 }
             };
         }

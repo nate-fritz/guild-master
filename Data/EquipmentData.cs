@@ -152,6 +152,154 @@ namespace GuildMaster.Data
                 Bonus = 1,
                 Value = 220
             });
+
+            // Dungeon Floor 1 Weapons (Levels 1-5, Bronze Age)
+            AllEquipment.Add("bronze gladius", new Equipment
+            {
+                Name = "Bronze Gladius",
+                ShortName = "gladius",
+                Description = "An ancient bronze blade recovered from the ruins.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 1,
+                DiceSides = 6,
+                Bonus = 3,
+                Value = 20
+            });
+
+            AllEquipment.Add("reinforced bow", new Equipment
+            {
+                Name = "Reinforced Bow",
+                ShortName = "bow",
+                Description = "A sturdy bow with bronze reinforcements.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 1,
+                DiceSides = 6,
+                Bonus = 2,
+                Value = 18
+            });
+
+            AllEquipment.Add("bronze staff", new Equipment
+            {
+                Name = "Bronze Staff",
+                ShortName = "staff",
+                Description = "A staff topped with a bronze orb that hums with ancient power.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 1,
+                DiceSides = 6,
+                Bonus = 1,
+                Value = 16
+            });
+
+            // Dungeon Floor 2 Weapons (Levels 6-10, Enchanted)
+            AllEquipment.Add("enchanted spatha", new Equipment
+            {
+                Name = "Enchanted Spatha",
+                ShortName = "spatha",
+                Description = "A longer sword imbued with protective enchantments.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 1,
+                DiceSides = 8,
+                Bonus = 4,
+                Value = 80
+            });
+
+            AllEquipment.Add("stormbow", new Equipment
+            {
+                Name = "Stormbow",
+                ShortName = "bow",
+                Description = "This bow crackles with electrical energy when drawn.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 1,
+                DiceSides = 8,
+                Bonus = 3,
+                Value = 75
+            });
+
+            AllEquipment.Add("crystal staff", new Equipment
+            {
+                Name = "Crystal Staff",
+                ShortName = "staff",
+                Description = "A staff crowned with a pulsing crystal that amplifies magic.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 1,
+                DiceSides = 6,
+                Bonus = 5,
+                Value = 70
+            });
+
+            // Dungeon Floor 3 Weapons (Levels 11-15, Legendary)
+            AllEquipment.Add("hero's blade", new Equipment
+            {
+                Name = "Hero's Blade",
+                ShortName = "blade",
+                Description = "A legendary sword said to have slain a minotaur.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 2,
+                DiceSides = 6,
+                Bonus = 4,
+                Value = 180
+            });
+
+            AllEquipment.Add("gorgon's bane", new Equipment
+            {
+                Name = "Gorgon's Bane",
+                ShortName = "bow",
+                Description = "A bow carved from petrified wood, deadly against mythical beasts.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 2,
+                DiceSides = 6,
+                Bonus = 3,
+                Value = 170
+            });
+
+            AllEquipment.Add("medusa's wand", new Equipment
+            {
+                Name = "Medusa's Wand",
+                ShortName = "wand",
+                Description = "A wand fashioned from a petrified serpent, radiating dark power.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 2,
+                DiceSides = 4,
+                Bonus = 6,
+                Value = 165
+            });
+
+            // Dungeon Floor 4 Weapons (Levels 16-20, Divine)
+            AllEquipment.Add("titan's maul", new Equipment
+            {
+                Name = "Titan's Maul",
+                ShortName = "maul",
+                Description = "A colossal weapon wielded by the titans of old.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 2,
+                DiceSides = 10,
+                Bonus = 4,
+                Value = 300
+            });
+
+            AllEquipment.Add("olympian greatbow", new Equipment
+            {
+                Name = "Olympian Greatbow",
+                ShortName = "greatbow",
+                Description = "A divine bow blessed by the gods themselves.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 2,
+                DiceSides = 8,
+                Bonus = 6,
+                Value = 280
+            });
+
+            AllEquipment.Add("divine scepter", new Equipment
+            {
+                Name = "Divine Scepter",
+                ShortName = "scepter",
+                Description = "A scepter that channels the power of the divine realm.",
+                Slot = EquipmentSlot.Weapon,
+                DiceCount = 3,
+                DiceSides = 6,
+                Bonus = 3,
+                Value = 290
+            });
         }
 
         private static void InitializeArmor()
@@ -208,6 +356,55 @@ namespace GuildMaster.Data
                 DefenseBonus = 3,
                 SpeedBonus = 1,
                 Value = 250
+            });
+
+            // Dungeon Floor 1 Armor (Levels 1-5, Bronze Age)
+            AllEquipment.Add("bronze breastplate", new Equipment
+            {
+                Name = "Bronze Breastplate",
+                ShortName = "breastplate",
+                Description = "An ancient bronze cuirass, still sturdy after centuries.",
+                Slot = EquipmentSlot.Armor,
+                DefenseBonus = 2,
+                Value = 25
+            });
+
+            // Dungeon Floor 2 Armor (Levels 6-10, Enchanted)
+            AllEquipment.Add("blessed cuirass", new Equipment
+            {
+                Name = "Blessed Cuirass",
+                ShortName = "cuirass",
+                Description = "Steel armor blessed by oracles, offering protection and vitality.",
+                Slot = EquipmentSlot.Armor,
+                DefenseBonus = 3,
+                HealthBonus = 10,
+                Value = 90
+            });
+
+            // Dungeon Floor 3 Armor (Levels 11-15, Legendary)
+            AllEquipment.Add("griffon hide armor", new Equipment
+            {
+                Name = "Griffon Hide Armor",
+                ShortName = "armor",
+                Description = "Armor crafted from the hide of a slain griffon, incredibly durable.",
+                Slot = EquipmentSlot.Armor,
+                DefenseBonus = 4,
+                HealthBonus = 12,
+                SpeedBonus = 1,
+                Value = 200
+            });
+
+            // Dungeon Floor 4 Armor (Levels 16-20, Divine)
+            AllEquipment.Add("aegis of the gods", new Equipment
+            {
+                Name = "Aegis of the Gods",
+                ShortName = "aegis",
+                Description = "Divine armor said to have been forged on Mount Olympus itself.",
+                Slot = EquipmentSlot.Armor,
+                DefenseBonus = 5,
+                HealthBonus = 20,
+                SpeedBonus = 2,
+                Value = 350
             });
         }
 
