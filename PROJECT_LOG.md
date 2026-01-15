@@ -314,6 +314,103 @@ When creating or modifying room content:
 
 ## Development Log
 
+## [2026-01-14] - Tester Feedback Fixes & UX Improvements
+
+**Status:** Built & Tested ✅
+
+**Summary:**
+Fixed three critical bugs reported by tester (name collision, timeline inconsistency, dialogue naming) and implemented two UX improvements (similar item name handling, flexible rest duration). Also refined room title/description color scheme for better visual hierarchy.
+
+**Bug Fixes from Tester Feedback:**
+
+**1. Name Collision - Empress/Recruit Both Named "Livia"**
+   - **Problem:** Empress and recruitable archer both named "Livia" causing confusion
+   - **Solution:** Renamed Empress from "Livia" to "Aurelia"
+   - **File Modified:** `Data/NPCData.cs:1856`
+   - **Impact:** No more confusion between Emperor's wife (Aurelia) and recruit (Livia)
+
+**2. Timeline Inconsistency - Festival/Travel Math**
+   - **Problem:** Quintus says "festival is in two days" then "journey takes three days" (impossible)
+   - **Solution:** Changed festival timing from 2 days to 5 days
+   - **File Modified:** `Data/EventDataDefinitions.cs:414`
+   - **Timeline Now:** Festival in 5 days → 3 day journey → arrive with 2 days to prepare ✅
+
+**3. Quintus Repeat Greeting Inconsistency**
+   - **Problem:** Quintus used "greeting" node while other NPCs use "repeat_greeting"
+   - **Solution:** Renamed dialogue node to match NPC naming convention
+   - **File Modified:** `Data/NPCData.cs:1600`
+   - **Impact:** Consistent with Caelia, Emperor, Althea dialogue systems
+
+**UX Improvements:**
+
+**4. Look Command - Similar Item Name Handling**
+   - **Problem:** Can't look at "dagger" when "ceremonial dagger" exists (partial match picks first)
+   - **Solution:**
+     - Prioritizes exact matches first
+     - If multiple partial matches, shows disambiguation list with all matching items
+     - Player uses full name to specify which item
+   - **Example:**
+     ```
+     > l dagger
+     Multiple items match 'dagger':
+       1. ceremonial dagger
+       2. dagger
+     Use the full item name to look at a specific item.
+     ```
+   - **File Modified:** `Managers/GameController.cs:313-340`
+
+**5. Rest Command - Optional Hours Parameter**
+   - **Problem:** Players want to advance time by specific amounts without spamming rest
+   - **Solution:** Added optional hours parameter with default value
+   - **Usage:**
+     - `rest` → 8 hours (default, unchanged)
+     - `rest 24` → 24 hours (1 day)
+     - `rest 48` → 48 hours (2 days)
+   - **Features:**
+     - Supports decimal hours (e.g., `rest 0.5` for 30 minutes)
+     - Shows total days passed if resting > 24 hours
+     - Help text updated
+   - **Files Modified:**
+     - `Managers/GameController.cs:735` - Added hours parameter
+     - `Services/GameEngine.cs:668-685` - Parse hours from command
+     - `Managers/UIManager.cs:239` - Updated help text
+
+**6. Room Title/Description Color Refinement**
+   - **Problem:** Room title and description used same color (no visual hierarchy)
+   - **Solution:** Made room title distinct from description
+   - **Colors:**
+     - Room Title: `#F05D1B` (vibrant orange)
+     - Room Description: `#FC8E6B` (lighter peachy orange)
+   - **File Modified:** `Managers/GameController.cs` (3 locations: look, move, teleport)
+   - **Impact:** Better visual distinction between room name and description
+
+**Key Files Modified:**
+- `Data/NPCData.cs` - Empress name change, Quintus dialogue node
+- `Data/EventDataDefinitions.cs` - Timeline fix
+- `Managers/GameController.cs` - Look command, rest hours, room colors
+- `Services/GameEngine.cs` - Rest command parsing
+- `Managers/UIManager.cs` - Help text
+
+**Testing Status:**
+- ✅ Build succeeds (0 errors, 296 warnings)
+- ✅ All changes compile successfully
+- ⏳ In-game testing pending
+
+**Notes/Context:**
+- Tester feedback came from live build (not latest local changes)
+- Some issues may have been previously addressed but good to verify
+- Room color scheme went through multiple iterations to find right contrast
+- Rest command flexibility requested for testing convenience
+- Similar item name issue is edge case but important for UX
+
+**Follow-Up Tasks:**
+- [ ] Test all damage types in dungeon (Bleed, Crush, Concussive, Fire, Ice, Lightning, Poison)
+- [ ] Test Oracle abilities (Befuddle, Rejuvenation, Ice Shards, Protective Ward)
+- [ ] Verify tester issues are resolved in-game
+- [ ] Continue Oracle ability implementation (6 more proposed abilities)
+
+---
+
 ## [2026-01-10] - Oracle Ability Rework (Batch 1)
 
 **Status:** Built & Tested ✅ (Compiled successfully, ready for in-game testing)

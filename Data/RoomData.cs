@@ -45,7 +45,7 @@ namespace GuildMaster.Data
             commonArea.DescriptionVariants.Add("recruits_10", "The vibrant heart of a legendary guild hall. This grand common area is filled with elite adventurers, their equipment gleaming in the firelight. Trophies from epic quests line the walls. The main door is to the north, the hallway to the south, with passages leading west to the training yard and east to the armory. Your guild has achieved greatness.");
 
             // Updated
-            Room frontDoor = CreateRoom(5, "guildHallFrontDoor", "The Guild Hall - Front Door", "You stand before a modest two-story building made of grey stone with a yellow thatched roof. Ivy climbs the walls, and the roof looks a bit worse for wear, but considering it's been largely abandoned in recent years, it's relatively well maintained. Two large wooden doors stand at the back of the portico at the front of the guildhall. A hanging sign sways lazily in the wind, its painted lettering worn away to the point of being indecipherable.");
+            Room frontDoor = CreateRoom(5, "guildHallFrontDoor", "The Guild Hall - Front Door", "You stand before a modest two-story building made of white stone with a roof of red terracotta tiles. Ivy climbs the cracked walls and the plants around the house are untamed and overgrown, but considering it's been largely abandoned in recent years, it's relatively well maintained. Two large wooden doors stand at the back of the portico at the front of the guildhall. A hanging sign sways lazily in the wind, its painted lettering worn away to the point of being indecipherable.");
             frontDoor.Exits.Add("south", 4);
             frontDoor.Exits.Add("north", 6);
 
@@ -77,12 +77,12 @@ namespace GuildMaster.Data
             portalRoom.Exits.Add("down", 61);   // Portal to Eastern Forest Exit (Hircinian Forest)
 
             // Updated
-            Room guildPath = CreateRoom(6, "guildPath", "A Dirt Path", "You're on a wide dirt path that runs roughly north to south. Rolling grass covered hills flank either side of the path, with the occasional tree breaking up the sea of green.  To the south you can still see the guild hall.  Further north, it looks like another road intersects with the one that you're on.");
+            Room guildPath = CreateRoom(6, "guildPath", "A Dirt Road", "You're on a wide dirt road that runs roughly north to south.  Stagnant water pools in two deep parallel  grooves along the road where years of carts coming and going have left their mark. A dozen tall, thin, coniferous trees line either side of the road leading up to the guild hall just to the south. Further north, it looks like another road intersects with the one that you're on.");
             guildPath.Exits.Add("south", 5);
             guildPath.Exits.Add("north", 7);
 
             // Updated
-            Room theCrossRoads = CreateRoom(7, "theCrossRoads", "A crossroads", "You enter a crossroads that extends in the four cardinal directions.  A wooden sign post has four signs pointing towards each. <br><br>North:   The Town of Belum<br>East:    Hircinian Forest<br>South:   [this sign looks long neglected, and can't be read]<br>West:    Avinten Foothills");
+            Room theCrossRoads = CreateRoom(7, "theCrossRoads", "A crossroads", "Two dirt roads intersect here, creating a crossroads that extends in the four cardinal directions.  A wooden sign post has four signs pointing towards each. <br><br>North:   The Town of Belum<br>East:    Hircinian Forest<br>South:   [this sign looks long neglected, and can't be read]<br>West:    Avinten Foothills");
             theCrossRoads.Exits.Add("south", 6);
             theCrossRoads.Exits.Add("west", 8);
             theCrossRoads.Exits.Add("east", 40);
@@ -374,7 +374,7 @@ namespace GuildMaster.Data
             darkHollow.Exits.Add("north", 49);
             darkHollow.Exits.Add("west", 47);
 
-            Room tangledThicket = CreateRoom(49, "tangledThicket", "A tangled thicket", "Dense briars and thorny bushes crowd the path here. You thought you heard something to the north, but it was probably nothing.  Wait, there it was again! It's not too late to turn back.");
+            Room tangledThicket = CreateRoom(49, "tangledThicket", "A tangled thicket", "Dense briars and thorny bushes crowd the path here. You thought you heard something to the north, but it was probably nothing.  Wait, there it was again! It's not too late to turn back.  The path leads out of the forest to the north, and deeper inwards to the south.");
             tangledThicket.Exits.Add("north", 50);
             tangledThicket.Exits.Add("south", 48);
 
@@ -382,12 +382,12 @@ namespace GuildMaster.Data
             mossyClearingNorth.Exits.Add("east", 51);
             mossyClearingNorth.Exits.Add("south", 49);
 
-            Room ancientOak = CreateRoom(51, "ancientOak", "An ancient oak", "A massive oak tree dominates this area, its trunk wider than three men standing together. Strange symbols are carved into its bark, worn smooth by time.");
+            Room ancientOak = CreateRoom(51, "ancientOak", "An ancient oak", "A massive oak tree dominates this area, its trunk as wide as a small home. Strange symbols are carved into its bark, worn smooth by time.");
             ancientOak.Exits.Add("east", 52);
             ancientOak.Exits.Add("west", 50);
             
 
-            Room overgrownRuins = CreateRoom(52, "overgrownRuins", "Overgrown ruins", "Crumbling stone walls peek through the undergrowth here - the remains of some long-forgotten structure. Vines have reclaimed most of it.");
+            Room overgrownRuins = CreateRoom(52, "overgrownRuins", "Overgrown ruins", "Crumbling stone walls peek through the undergrowth here - the remains of some long-forgotten structure. Vines and the surrounding trees have reclaimed most of it.");
             overgrownRuins.Exits.Add("west", 51);
             overgrownRuins.Exits.Add("south", 53);
 
