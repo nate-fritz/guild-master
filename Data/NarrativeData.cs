@@ -19,25 +19,17 @@ namespace GuildMaster.Data
 
                 $"\"Dear {playerName},<br><br>" +
 
-                "I had hoped to be around when you awoke, but my journey can be delayed no longer.<br><br>" +
+                "Forgive me - I had hoped to be here when you woke, but my journey could wait no longer.<br><br>" +
 
-                "It is hard to say how much you remember of your time here. At times, you seemed perfectly lucid, and at others you hardly knew your own name.<br><br>" +
+                $"Seventeen days ago I locked the doors of this old guild hall for what I believed was the last time. I hadn't made it a hundred paces before I found you lying in the road. I carried you back inside and patched you up as best I could. You drifted in and out for days - long enough for me to learn that you are {playerName}, an itinerant {className}, and little else. Whatever brought you here, you kept it to yourself. But you did seem to enjoy my stories of this hall's glory days.<br><br>" +
 
-                "Seventeen days ago I had closed and locked the door to this old guild hall behind me and started on what might be my final journey.<br><br>Then, before I'd made it a few hundred paces from the front door, I found you laying in the road.  Pardon my honesty, but your timing could not have been worse.<br><br>" +
+                "So I leave you the guild - or what remains of it. I am the last member, and Guild Master, of the old Adventurer's Guild. Now the title is yours.<br><br>If you will take it.<br><br>" +
 
-                $"Regardless, I patched you up to the best of my ability, and after several days you awoke. We spoke for some time before you eventually drifted back into a deep sleep. Over the following days, you would drift in and out of consciousness.<br><br>As often as you felt up to it, we spoke just enough for me to learn that you are {playerName}, an itinerant {className}.<br><br>" +
+                "I hope that you do. The empire's peace will not last forever, and a time is coming when protectors of the realm will be needed.<br><br>" +
 
-                "You wouldn't, or couldn't, tell me where you were from or how you ended up here.  You did, however, seem to rather enjoy my tales of this guild hall's glory days.<br><br>" +
+                "Gather like-minded souls - at least ten - and fill the coffers once more; a hundred gold would be a fine start. Saving the world is expensive work. You have a hundred days; if I survive my journey, I will write to you then.<br><br>" +
 
-                "Yesterday, I received a missive that let me know that my departure was long past due, and as such, I am forced to leave you here on your own. Not ideal, but circumstances forced my hand.<br><br>" +
-
-                "To make it up to you, I leave you the guild. Well, the guild hall anyway; you see, I am the last remaining member - and Guild Master - of the old Adventurer's Guild. Now, that job belongs to you.<br><br>If you will take it.<br><br>" +
-
-                "I hope that you do.<br><br>The present peace and stability of the empire should not be taken for granted. A time will soon come when protectors of the realm are needed.<br><br>Try to find like-minded individuals - at least ten - and see if you can fill the coffers with gold once more. Saving the world can be expensive work.<br><br>" +
-
-                "Time is of the essence. Try to rebuild the guild within the next hundred days. If I survive my journey, I will write to you then to see how things are coming along.<br><br>" +
-
-                "Good fortune and may the gods watch over you.<br><br>" +
+                "Good fortune, and may the gods watch over you.<br><br>" +
 
                 "Signed,<br><br>" +
 

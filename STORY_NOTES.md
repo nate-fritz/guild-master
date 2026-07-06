@@ -120,6 +120,16 @@ This document captures story beats, thematic elements, symbolism, and planned fu
 
 ## Planned Story Beats
 
+### Alaron's Day-100 Letter (Planned)
+- **Setup**: The intro note promises: 10 recruits, 100 gold, 100 days, "if I survive my journey, I will write to you then"
+- **Current state**: Nothing in code enforces or reacts to any of this — the goals are display-only (status bar /10) and the deadline exists only in the letter text
+- **Plan**: Make the promised letter a real scripted event around Day 100 that REACTS to progress rather than failing the player:
+  - Met both goals: Alaron is proud, hints at larger purpose behind the guild
+  - Partial progress: encouraging but pointed, nudges toward what's lacking
+  - Little progress: worried/wry, but never a fail state
+- **Why no fail state**: A hard timer would punish the exploration and side content Act II is built around
+- **Opportunities**: Letter arrival can double as an Act II transition beat (alongside Quintus rejoining); also advances the Alaron mystery — where did his "final journey" take him? Did he survive?
+
 ### Early Act II
 - Quintus officially rejoins the guild
 - Guild quest system becomes primary mission source
@@ -293,5 +303,5 @@ This document captures story beats, thematic elements, symbolism, and planned fu
 
 ---
 
-**Last Updated**: 2025-12-30
+**Last Updated**: 2026-07-06
 **Status**: Living document - update as story evolves
