@@ -1,0 +1,3650 @@
+[
+  {
+    "numericId": 1,
+    "id": "guildHallBedroom",
+    "title": "The Guild Hall - Bedroom",
+    "description": "You\u0027re in a small bedroom with a bed and a nightstand.  There\u0027s a small locked chest at the foot of the bed.  There\u0027s a desk with a small copper mug sitting on it. To the east is a door that leads to a hallway.",
+    "exits": {
+      "east": 2
+    },
+    "items": [
+      "mug",
+      "note",
+      "chest"
+    ],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 2,
+    "id": "guildHallHallway",
+    "title": "The Guild Hall - Hallway",
+    "description": "You\u0027re in a narrow hallway that runs north to south.  To the west is your bedroom.  A study is to the south, and a large common area is open to the north.",
+    "exits": {
+      "west": 1,
+      "north": 4,
+      "south": 3
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 3,
+    "id": "guildHallStudy",
+    "title": "The Guild Hall - Study",
+    "description": "You\u0027re in a dusty study filled with old books, scrolls, and other trinkets.  The hallway that you entered from is to the north.",
+    "exits": {
+      "north": 2
+    },
+    "items": [
+      "desk",
+      "restoration scroll",
+      "dusty tome"
+    ],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 4,
+    "id": "guildHallCommonArea",
+    "title": "The Guild Hall - Common Area",
+    "description": "A large common area with tables, chairs, and couches in front of a large fireplace.  You imagine this room was once quite lively, but today it sits unused.  The main door to the guildhall is to the north, and a hallway is to the south.",
+    "exits": {
+      "south": 2,
+      "north": 5
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {
+      "recruits_4": "A large common area with tables, chairs, and couches arranged before a roaring fireplace. The space is beginning to show signs of life - a few members can be seen relaxing between missions. The main door to the guildhall is to the north, and a hallway is to the south. A passage to the west leads to the newly opened training yard.",
+      "recruits_6": "A lively common area filled with the sounds of conversation and camaraderie. Tables and chairs surround a roaring fireplace where guild members gather to share tales of their adventures. The room feels alive with purpose. The main door is to the north, the hallway to the south. Passages lead west to the training yard and east to the armory.",
+      "recruits_8": "A bustling common area that serves as the heart of your thriving guild. Members fill the space, some relaxing by the fireplace, others planning their next quest. The energy is palpable. The main door is to the north, the hallway to the south, with passages leading west to the training yard and east to the armory.",
+      "recruits_10": "The vibrant heart of a legendary guild hall. This grand common area is filled with elite adventurers, their equipment gleaming in the firelight. Trophies from epic quests line the walls. The main door is to the north, the hallway to the south, with passages leading west to the training yard and east to the armory. Your guild has achieved greatness."
+    },
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 5,
+    "id": "guildHallFrontDoor",
+    "title": "The Guild Hall - Front Door",
+    "description": "You stand before a modest two-story building made of white stone with a roof of red terracotta tiles. Ivy climbs the cracked walls and the plants around the house are untamed and overgrown, but considering it\u0027s been largely abandoned in recent years, it\u0027s relatively well maintained. Two large wooden doors stand at the back of the portico at the front of the guildhall. A hanging sign sways lazily in the wind, its painted lettering worn away to the point of being indecipherable.",
+    "exits": {
+      "south": 4,
+      "north": 6
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 6,
+    "id": "guildPath",
+    "title": "A Dirt Road",
+    "description": "You\u0027re on a wide dirt road that runs roughly north to south.  Stagnant water pools in two deep parallel  grooves along the road where years of carts coming and going have left their mark. A dozen tall, thin, coniferous trees line either side of the road leading up to the guild hall just to the south. Further north, it looks like another road intersects with the one that you\u0027re on.",
+    "exits": {
+      "south": 5,
+      "north": 7
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 7,
+    "id": "theCrossRoads",
+    "title": "A crossroads",
+    "description": "Two dirt roads intersect here, creating a crossroads that extends in the four cardinal directions.  A wooden sign post has four signs pointing towards each. \u003Cbr\u003E\u003Cbr\u003ENorth:   The Town of Belum\u003Cbr\u003EEast:    Hircinian Forest\u003Cbr\u003ESouth:   [this sign looks long neglected, and can\u0027t be read]\u003Cbr\u003EWest:    Avinten Foothills",
+    "exits": {
+      "south": 6,
+      "west": 8,
+      "east": 40,
+      "north": 68
+    },
+    "items": [
+      "neglected sign"
+    ],
+    "npcs": [
+      {
+        "mode": "shared",
+        "name": "Gaius"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 8,
+    "id": "westPath",
+    "title": "A path west of the crossroads",
+    "description": "You are west of The Crossroads on a wide dirt path.  In some areas, where the road is deeply pitted from use and weather, one might notice ancient cobblestone.  Further west the skyline is dominated by distant snow tipped mountains.",
+    "exits": {
+      "east": 7,
+      "west": 9
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 9,
+    "id": "westernBend",
+    "title": "A bend in the road",
+    "description": "The road bends sharply before resuming a west-to-east orientation.  To the west you see a nearby mountain range.  To the far east you can barely make out a crossroads.",
+    "exits": {
+      "east": 8,
+      "west": 10
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 16
+  },
+  {
+    "numericId": 10,
+    "id": "gaiusFarmFields",
+    "title": "A farm in the Avinten foothills",
+    "description": "You see fields of grain extending to the north and vineyards to the south as far as your eye can see.  Further west you see graneries and barns, stables and sheds for livestock.",
+    "exits": {
+      "east": 9,
+      "west": 11
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "inline",
+        "name": "Bandit",
+        "inline": {
+          "name": "Bandit",
+          "shortDescription": "A hostile bandit",
+          "description": "A rough-looking bandit blocks your path, weapon drawn.",
+          "isHostile": true,
+          "health": 8,
+          "maxHealth": 8,
+          "energy": 0,
+          "maxEnergy": 0,
+          "attackDamage": 2,
+          "defense": 0,
+          "damageCount": 1,
+          "damageDie": 4,
+          "damageBonus": 0,
+          "speed": 2,
+          "isBackRow": false,
+          "energyRegenPerTurn": 1,
+          "minGold": 1,
+          "maxGold": 3,
+          "experienceReward": 25,
+          "role": "Melee",
+          "abilityNames": [],
+          "lootTable": {
+            "potion": 30,
+            "iron gladius": 5
+          },
+          "preCombatDialogue": "",
+          "currentDialogueNode": "greeting",
+          "recruitableAfterDefeat": false,
+          "recruitClass": "Fighter"
+        }
+      },
+      {
+        "mode": "inline",
+        "name": "Bandit Thug",
+        "inline": {
+          "name": "Bandit Thug",
+          "shortDescription": "A hostile bandit thug",
+          "description": "A rougher-looking bandit thug, weapon drawn.",
+          "isHostile": true,
+          "health": 12,
+          "maxHealth": 12,
+          "energy": 0,
+          "maxEnergy": 0,
+          "attackDamage": 3,
+          "defense": 0,
+          "damageCount": 1,
+          "damageDie": 4,
+          "damageBonus": 0,
+          "speed": 1,
+          "isBackRow": false,
+          "energyRegenPerTurn": 1,
+          "minGold": 2,
+          "maxGold": 4,
+          "experienceReward": 25,
+          "role": "Melee",
+          "abilityNames": [],
+          "lootTable": {
+            "potion": 40,
+            "iron gladius": 10
+          },
+          "preCombatDialogue": "",
+          "currentDialogueNode": "greeting",
+          "recruitableAfterDefeat": false,
+          "recruitClass": "Fighter"
+        }
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit"
+      },
+      {
+        "mode": "clone",
+        "name": "Bandit Thug"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 16
+  },
+  {
+    "numericId": 11,
+    "id": "gaiusFarmHouse",
+    "title": "Gaius\u0027 Farmhouse",
+    "description": "A large stone house with baked clay roof tiles stands before you, surrounded by the fields and other buildings that make up Gaius\u0027 farm.  To the east are the fields, and to the west the land begins to climb upwards towards the peak of Mount Gelus.",
+    "exits": {
+      "east": 10,
+      "west": 12
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "shared",
+        "name": "Bandit Leader"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit Leader"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 16
+  },
+  {
+    "numericId": 12,
+    "id": "lowerSlopes",
+    "title": "The Lower Slopes",
+    "description": "Here the rolling fields of the foothills meet the base of Mount Gelus, which begins to slope sharply upward to the west.  The mountain\u0027s snow-touched peaks are nearly hidden by wispy clouds above.  The steep incline and high winds make a trek up the mountain seem ill advised.  To the south you see a cave mouth, and to the east is Gaius\u0027 farm.",
+    "exits": {
+      "east": 11,
+      "west": 22,
+      "south": 13
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 13,
+    "id": "caveEntrance",
+    "title": "Bandit Cave - Entrance",
+    "description": "You approach the mouth of a cave that extends deep into the roots of Mount Gelus.  Flickering torches line the walls, and the smell of smoke and warm bodies hangs in the air.  Back to the north are the lower slopes of Mount Gelus, while the cave slopes downward to the south.",
+    "exits": {
+      "north": 12,
+      "south": 14
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit Scout"
+      },
+      {
+        "mode": "clone",
+        "name": "Bandit Scout"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 14,
+    "id": "caveTunnel",
+    "title": "Bandit Cave - Tunnel",
+    "description": "The tunnel slopes downward, the ceiling dripping with moisture. Crude wooden supports brace the walls. You hear voices echoing from deeper in the cave. The passage splits here - continuing south or branching west.",
+    "exits": {
+      "north": 13,
+      "south": 19,
+      "west": 15
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit Scout"
+      },
+      {
+        "mode": "clone",
+        "name": "Bandit Cutthroat"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 15,
+    "id": "westernBranch",
+    "title": "Bandit Cave - Western Branch",
+    "description": "This narrower passage winds westward. Makeshift sleeping areas line the walls - dirty bedrolls and stolen goods scattered about. Someone has been living here. The passage continues west and opens into a larger chamber.",
+    "exits": {
+      "east": 14,
+      "west": 16
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit Cutthroat"
+      },
+      {
+        "mode": "clone",
+        "name": "Bandit Cutthroat"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 16,
+    "id": "westernChamber",
+    "title": "Bandit Cave - Western Chamber",
+    "description": "A natural chamber opens up here, its high ceiling lost in darkness. Crates of stolen supplies are stacked against the walls - food, weapons, and trade goods taken from travelers. The bandits have made this their storage room. The tunnel continues west into deeper darkness.",
+    "exits": {
+      "east": 15,
+      "south": 17
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit Enforcer"
+      },
+      {
+        "mode": "clone",
+        "name": "Bandit Cutthroat"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 17,
+    "id": "darkPassage",
+    "title": "Bandit Cave - Dark Passage",
+    "description": "The torches are fewer here, leaving long stretches of shadow. Your footsteps echo ominously. Blood stains mark the floor, evidence of past violence. The passage slopes further downward to the south, while a faint light glows from the north.",
+    "exits": {
+      "north": 16,
+      "south": 18
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit Enforcer"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 18,
+    "id": "deepCave",
+    "title": "Bandit Cave - Deep Cavern",
+    "description": "You\u0027ve descended deep into the mountain. The air here is cold and still. Strange rock formations create eerie shapes in the torchlight. Water drips steadily somewhere in the darkness. A massive iron gate blocks the passage east. The way north leads back toward the cave exit.",
+    "exits": {
+      "north": 17
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit Guard"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "iron_gate",
+        "name": "iron gate",
+        "aliases": [
+          "gate",
+          "iron door",
+          "bars"
+        ],
+        "defaultDescription": "A formidable iron gate bars the passage east. It has two keyholes - one for an iron key and one for a bronze key.",
+        "lookedAtDescription": "The gate is locked tight with a complex dual-lock mechanism. You\u0027ll need both an iron key and a bronze key to open it.",
+        "isInteractable": true,
+        "isHidden": false,
+        "interactionType": "use"
+      }
+    ],
+    "puzzleId": "warlord_chamber_gates",
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 19,
+    "id": "floodedChamber",
+    "title": "Bandit Cave - Flooded Chamber",
+    "description": "An underground stream flows through this chamber, the water black and swift. A narrow ledge runs along the eastern wall. Someone is standing guard here - a woman with a bow. She doesn\u0027t look like the other bandits. The only way forward is west, across a rickety wooden bridge.",
+    "exits": {
+      "north": 14,
+      "south": 20
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Livia"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 20,
+    "id": "undergroundRiver",
+    "title": "Bandit Cave - Underground River",
+    "description": "A narrow chasm opens up in the middle of this cavern, with a rickety looking wood and rope bridge spanning across it. It\u0027s too dark to see the bottom of the chasm, but you can faintly hear the flowing water of an underground river far below you. A bronze gate blocks the passage west. To the north is the way back toward the cave\u0027s entrance.",
+    "exits": {
+      "north": 19
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "bronze_gate",
+        "name": "bronze gate",
+        "aliases": [
+          "gate",
+          "bronze door",
+          "bars"
+        ],
+        "defaultDescription": "An ornate bronze gate blocks the passage west. It has two keyholes - one for an iron key and one for a bronze key.",
+        "lookedAtDescription": "The gate is secured with a complex dual-lock mechanism. You\u0027ll need both an iron key and a bronze key to open it.",
+        "isInteractable": true,
+        "isHidden": false,
+        "interactionType": "use"
+      }
+    ],
+    "puzzleId": "warlord_chamber_gates",
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 21,
+    "id": "warlordChamber",
+    "title": "Bandit Cave - Warlord\u0027s Lair",
+    "description": "The passage opens into a large natural cavern that has been converted into a throne room of sorts. Stolen tapestries hang on the walls, and a crude throne of piled crates sits at the far end.",
+    "exits": {
+      "east": 20,
+      "west": 18
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bandit Warlord"
+      },
+      {
+        "mode": "clone",
+        "name": "Bandit Enforcer"
+      },
+      {
+        "mode": "clone",
+        "name": "Bandit Enforcer"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 22,
+    "id": "mountainPath",
+    "title": "Mountain Path",
+    "description": "A narrow path winds up the mountainside. The air grows thinner and colder as you climb. Loose rocks make footing treacherous. To the east you can see Gaius\u0027 farm far below. The path continues west, climbing higher.",
+    "exits": {
+      "east": 12,
+      "west": 23
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Mountain Bandit"
+      },
+      {
+        "mode": "clone",
+        "name": "Mountain Bandit"
+      },
+      {
+        "mode": "clone",
+        "name": "Mountain Bandit"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Mountain Bandit"
+      },
+      {
+        "mode": "clone",
+        "name": "Mountain Bandit"
+      },
+      {
+        "mode": "clone",
+        "name": "Mountain Bandit"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 12
+  },
+  {
+    "numericId": 23,
+    "id": "rockyOutcrop",
+    "title": "Rocky Outcrop",
+    "description": "The path opens onto a wide rocky ledge. Ice and snow cover the ground here, and the temperature has dropped noticeably. The howling wind carries the sound of distant wolves. To the east the path descends, while to the west a dark cave entrance beckons.",
+    "exits": {
+      "east": 22,
+      "west": 24
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Frost Wolf"
+      },
+      {
+        "mode": "clone",
+        "name": "Frost Wolf"
+      },
+      {
+        "mode": "clone",
+        "name": "Frost Wolf"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Frost Wolf"
+      },
+      {
+        "mode": "clone",
+        "name": "Frost Wolf"
+      },
+      {
+        "mode": "clone",
+        "name": "Frost Wolf"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 12
+  },
+  {
+    "numericId": 24,
+    "id": "iceCavern",
+    "title": "Ice Cavern",
+    "description": "You enter a cavern entirely encased in ice. Frozen waterfalls create pillars of crystalline beauty. Strange shapes move within the ice walls - elementals of pure winter. The cave continues deeper to the west, while the entrance lies to the east.",
+    "exits": {
+      "north": 25,
+      "east": 23
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Ice Elemental"
+      },
+      {
+        "mode": "clone",
+        "name": "Ice Elemental"
+      },
+      {
+        "mode": "clone",
+        "name": "Ice Elemental"
+      },
+      {
+        "mode": "clone",
+        "name": "Ice Elemental"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Ice Elemental"
+      },
+      {
+        "mode": "clone",
+        "name": "Ice Elemental"
+      },
+      {
+        "mode": "clone",
+        "name": "Ice Elemental"
+      },
+      {
+        "mode": "clone",
+        "name": "Ice Elemental"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 12
+  },
+  {
+    "numericId": 25,
+    "id": "mountainPeak",
+    "title": "Mountain Peak",
+    "description": "You emerge from the cave onto the mountain peak. Clouds swirl around you at this altitude, and lightning crackles in the distance. Massive eagles circle overhead, their cries echoing across the peaks. To the east is the ice cavern. To the west, ancient stone steps lead to what appears to be ruins.",
+    "exits": {
+      "north": 26,
+      "south": 24
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Thunder Eagle"
+      },
+      {
+        "mode": "clone",
+        "name": "Thunder Eagle"
+      },
+      {
+        "mode": "clone",
+        "name": "Thunder Eagle"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Thunder Eagle"
+      },
+      {
+        "mode": "clone",
+        "name": "Thunder Eagle"
+      },
+      {
+        "mode": "clone",
+        "name": "Thunder Eagle"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 12
+  },
+  {
+    "numericId": 26,
+    "id": "ancientAltar",
+    "title": "Ancient Altar",
+    "description": "At the summit stands an ancient altar, carved from a single piece of black stone. Runes glow with an eerie light. A massive warrior in ancient armor stands before the altar, flanked by two elite guards. They turn to face you as you approach. The only exit is back to the east.",
+    "exits": {
+      "south": 25
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Mountain Warlord"
+      },
+      {
+        "mode": "clone",
+        "name": "Elite Guard"
+      },
+      {
+        "mode": "clone",
+        "name": "Elite Guard"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Mountain Warlord"
+      },
+      {
+        "mode": "clone",
+        "name": "Elite Guard"
+      },
+      {
+        "mode": "clone",
+        "name": "Elite Guard"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 96
+  },
+  {
+    "numericId": 40,
+    "id": "eastPath",
+    "title": "A path east of the crossroads",
+    "description": "You are east of the crossroads on a wide dirt path. In some areas, where the road is deeply pitted from use and weather, one might notice ancient cobblestone.  Further east you see a dark and gnarled forest.",
+    "exits": {
+      "west": 7,
+      "east": 41
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 41,
+    "id": "woodedPath",
+    "title": "A wooded path",
+    "description": "This section of the path is sparsely surrounded by trees and overgrowth.  To the distant west you see a crossroads and beyond that, a mountain range.  Further east the forest grows thicker.",
+    "exits": {
+      "west": 40,
+      "east": 42
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "shared",
+        "name": "Silvacis"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 42,
+    "id": "nearFallenTree",
+    "title": "A wooded path near a fallen tree",
+    "description": "A gigantic fallen tree blocks the path here. You would have some difficulty climbing over it, but you notice a break in the trunk just south of the path that you can squeeze through to continue along.",
+    "exits": {
+      "west": 41,
+      "east": 43
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 43,
+    "id": "pathWithCart",
+    "title": "A wooded path with a broken cart",
+    "description": "As you enter this section of the wooded path, you notice a large wooden cart in a ditch on the side of the road.  The wheels are broken and the old wood is mossy and cracked.  It looks as though it\u0027s been here for ages.",
+    "exits": {
+      "west": 42,
+      "east": 44
+    },
+    "items": [
+      "cart"
+    ],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 44,
+    "id": "abandonedCampsite",
+    "title": "An abandoned campsite",
+    "description": "You come across the charred remains of a long abandoned campsite.  You notice a charred wooden chest sticking out of one of the several ash piles.  The west leads out of the forest, and you can hear a stream to the south.",
+    "exits": {
+      "west": 43,
+      "south": 45
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 45,
+    "id": "forestStream",
+    "title": "A stream running through the forest",
+    "description": "You stand before a shallow bubbling stream that runs east to west through the forest.  A waterlogged stump is stubbornly rooted in the center of the stream, the current splitting around it.  You can smell a campfire to the north. To the south a barely worn path continues into the forest, which gets darker the further you go.",
+    "exits": {
+      "north": 44,
+      "south": 46
+    },
+    "items": [
+      "stump"
+    ],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 46,
+    "id": "forestBend",
+    "title": "A bend in the forest path",
+    "description": "The path through the forest curves from the north to the east.  The path is looking less worn here, and the canopy overhead is so thick that only a few thin beams of light shine through.  You hear rustling leaves all around you, as though the creatures of this forest are constantly on the move.  To the north you can hear a stream, and to the east the path continues into the deeper parts of the woods.",
+    "exits": {
+      "north": 45,
+      "east": 47
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Dire Wolf"
+      },
+      {
+        "mode": "clone",
+        "name": "Dire Wolf"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Dire Wolf"
+      },
+      {
+        "mode": "clone",
+        "name": "Dire Wolf"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 16
+  },
+  {
+    "numericId": 47,
+    "id": "deepForest",
+    "title": "A deep forest clearing",
+    "description": "This secluded clearing is barely visible from the path. A small campfire smolders near a worn bedroll, and weapons are carefully arranged on a fallen log. Someone has been living here. To the west the path turns back towards the forest entrance.  To the east the forest grows wildly.",
+    "exits": {
+      "west": 46,
+      "east": 48
+    },
+    "items": [
+      "chest"
+    ],
+    "npcs": [
+      {
+        "mode": "shared",
+        "name": "Braxus"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 48,
+    "id": "darkHollow",
+    "title": "A dark hollow",
+    "description": "The forest floor dips into a shadowy hollow here. Thick roots twist across the ground, and the air feels damp and still. The path bends here, leading both west and north.",
+    "exits": {
+      "north": 49,
+      "west": 47
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 49,
+    "id": "tangledThicket",
+    "title": "A tangled thicket",
+    "description": "Dense briars and thorny bushes crowd the path here. You thought you heard something to the north, but it was probably nothing.  Wait, there it was again! It\u0027s not too late to turn back.  The path leads out of the forest to the north, and deeper inwards to the south.",
+    "exits": {
+      "north": 50,
+      "south": 48
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 50,
+    "id": "mossyClearingNorth",
+    "title": "A mossy clearing",
+    "description": "Soft green moss carpets this small clearing. Shafts of light filter through gaps in the canopy above. The forest feels slightly less oppressive here.",
+    "exits": {
+      "east": 51,
+      "south": 49
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 51,
+    "id": "ancientOak",
+    "title": "An ancient oak",
+    "description": "A massive oak tree dominates this area, its trunk as wide as a small home. Strange symbols are carved into its bark, worn smooth by time.",
+    "exits": {
+      "east": 52,
+      "west": 50
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 52,
+    "id": "overgrownRuins",
+    "title": "Overgrown ruins",
+    "description": "Crumbling stone walls peek through the undergrowth here - the remains of some long-forgotten structure. Vines and the surrounding trees have reclaimed most of it.",
+    "exits": {
+      "west": 51,
+      "south": 53
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 53,
+    "id": "foggyPath",
+    "title": "A foggy clearing",
+    "description": "An unnatural fog blankets this clearing, thick and oppressive. Unlike normal mist, this fog seems almost alive - it swirls in patterns that defy the wind and pulses with a faint, sickly luminescence. The fog is so dense to the east that you cannot see more than a few feet in that direction. To the south, the mist thins slightly, revealing a path.",
+    "exits": {
+      "south": 54,
+      "north": 52
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "puzzleId": "foggy_clearing_puzzle",
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 54,
+    "id": "wildernessTrail",
+    "title": "A wilderness trail",
+    "description": "A narrow trail winds through dense underbrush. Animal tracks crisscross the path - some disturbingly large. The fog continues to obscure the path. Are you sure you\u0027re heading in the right direction?",
+    "exits": {
+      "north": 55
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 55,
+    "id": "fungalGrove",
+    "title": "A fungal grove",
+    "description": "Enormous mushrooms grow in clusters here, some taller than a man. Their caps glow faintly with an eerie bioluminescence. The air smells earthy and strange, but the fog has subsided here. You can make out paths to the east and to the west.",
+    "exits": {
+      "west": 56,
+      "east": 54
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 56,
+    "id": "mossyClearingSouth",
+    "title": "A mossy clearing",
+    "description": "Another mossy clearing, similar to the one you may have seen to the north. Are you going in circles? The forest all looks the same here.",
+    "exits": {
+      "north": 55,
+      "south": 57
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 57,
+    "id": "twistingPath",
+    "title": "A twisting path",
+    "description": "The path twists and turns here, making it difficult to maintain your bearings. Dense undergrowth surrounds you on all sides.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "animal_bones",
+        "name": "bones",
+        "aliases": [
+          "animal bones",
+          "skeleton",
+          "remains",
+          "deer bones"
+        ],
+        "defaultDescription": "Scattered bones lie half-buried in the undergrowth. They look like they belonged to a deer.",
+        "lookedAtDescription": "The bones have been picked clean. Whatever killed this deer dragged it through here - you can see faint drag marks and wolf tracks leading west through the undergrowth.",
+        "isInteractable": false,
+        "isHidden": false
+      },
+      {
+        "id": "wolf_tracks",
+        "name": "tracks",
+        "aliases": [
+          "wolf tracks",
+          "prints",
+          "paw prints",
+          "pawprints"
+        ],
+        "defaultDescription": "Fresh wolf tracks crisscross the area. They seem to converge from multiple directions.",
+        "lookedAtDescription": "Following the tracks with your eyes, you notice they all lead toward a particularly thick tangle of branches to the west. Something regularly passes through there.",
+        "isInteractable": false,
+        "isHidden": true
+      },
+      {
+        "id": "thick_branches",
+        "name": "branches",
+        "aliases": [
+          "thick branches",
+          "tangle",
+          "undergrowth",
+          "brush"
+        ],
+        "defaultDescription": "A wall of tangled branches blocks any passage to the west.",
+        "lookedAtDescription": "Looking closer, the branches are less solid than they first appeared. After looking closely at these branches, you notice that a narrow path continues beyond them. Maybe you could push them out of the way?",
+        "isInteractable": true,
+        "isHidden": true,
+        "interactionType": "push"
+      },
+      {
+        "id": "boot_prints",
+        "name": "bootprints",
+        "aliases": [
+          "boot prints",
+          "footprints",
+          "prints",
+          "boots"
+        ],
+        "defaultDescription": "Fresh bootprints mark the ground here.",
+        "lookedAtDescription": "Wait... these bootprints match your own boots exactly. You\u0027ve been walking in circles! But looking more carefully, you can see your original tracks came from the north, where thick vines now conceal the path.",
+        "isInteractable": false,
+        "isHidden": false
+      },
+      {
+        "id": "thick_vines",
+        "name": "vines",
+        "aliases": [
+          "thick vines",
+          "ivy",
+          "growth"
+        ],
+        "defaultDescription": "Thick vines hang across what might once have been a path to the north.",
+        "lookedAtDescription": "The vines are draped over the opening like a curtain. After looking closely at these vines, you notice that a path continues beyond them. You could probably move them aside to pass through.",
+        "isInteractable": true,
+        "isHidden": true,
+        "interactionType": "move"
+      }
+    ],
+    "puzzleId": "twisting_path_puzzle",
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 58,
+    "id": "forestEdge",
+    "title": "The forest\u0027s edge",
+    "description": "The trees thin here and you can see open sky to the south. The forest seems reluctant to let you go, however, and thorny vines and branches reach out like grasping fingers to block your path.  The way you came from seems to have disappeared behind you.  Your only way forward is to the west.",
+    "exits": {
+      "west": 59
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 59,
+    "id": "rottenLog",
+    "title": "A rotten log crossing",
+    "description": "A massive fallen log bridges a muddy depression here. The wood is soft and rotten - crossing it requires careful footing.",
+    "exits": {
+      "north": 60,
+      "east": 58
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 60,
+    "id": "wolfDen",
+    "title": "Near a wolf den",
+    "description": "You spot the dark entrance of a den dug into a hillside. Bones are scattered around the entrance. Something lives here - something hungry.",
+    "exits": {
+      "north": 61,
+      "south": 59
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Dire Wolf"
+      },
+      {
+        "mode": "clone",
+        "name": "Dire Wolf"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Dire Wolf"
+      },
+      {
+        "mode": "clone",
+        "name": "Dire Wolf"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": true,
+    "respawnTimeHours": 12
+  },
+  {
+    "numericId": 61,
+    "id": "forestExit",
+    "title": "Eastern forest exit",
+    "description": "The trees finally give way to open grassland. The dark forest looms behind you to the west. A worn path leads south toward... somewhere. Fresh air has never felt so good.",
+    "exits": {
+      "north": 48,
+      "south": 60
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 64,
+    "id": "guildHallTrainingYard",
+    "title": "The Guild Hall - Training Yard",
+    "description": "A spacious outdoor training yard behind the guild hall. Wooden practice dummies line one wall, their surfaces scarred from countless strikes. A weapons rack holds an assortment of training weapons, and the packed earth shows signs of recent use. Your guild is growing, and this space gives your warriors room to hone their skills.",
+    "exits": {
+      "east": 4
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 65,
+    "id": "guildHallArmory",
+    "title": "The Guild Hall - Armory",
+    "description": "A well-stocked armory filled with weapon racks and armor stands. The smell of oil and leather fills the air. Light streams through narrow windows, glinting off polished steel. With your guild\u0027s reputation growing, a mysterious armorer has taken up residence here, offering quality equipment to those with coin to spare.",
+    "exits": {
+      "west": 4
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Guild Armorer"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 66,
+    "id": "guildHallTreasury",
+    "title": "The Guild Hall - Treasury",
+    "description": "A secure treasury room lined with reinforced chests and lockboxes. The walls are thick stone, and a heavy iron door guards the entrance. Your guild\u0027s wealth and most valuable treasures are stored here. In the center of the room sits an ornate chest containing rings of power, one for each class of adventurer.",
+    "exits": {
+      "west": 65
+    },
+    "items": [
+      "legionnaire\u0027s ring",
+      "venator\u0027s ring",
+      "oracle\u0027s ring"
+    ],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 67,
+    "id": "guildHallPortalRoom",
+    "title": "The Guild Hall - Portal Chamber",
+    "description": "A mystical chamber thrumming with arcane energy. Three shimmering portals stand in alcoves along the walls, their surfaces rippling like water. Ancient runes are carved into the floor in concentric circles, glowing with a faint blue light. Your guild has achieved greatness, and these portals now offer passage to distant lands that would otherwise take weeks to reach.",
+    "exits": {
+      "north": 66,
+      "east": 80,
+      "west": 25,
+      "down": 61
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 68,
+    "id": "northRoad",
+    "title": "The North Road",
+    "description": "The road north from the crossroads is well-maintained and shows signs of regular traffic. Wagon ruts line either side, and you can see the walls of a town in the distance. The crossroads lies to the south.",
+    "exits": {
+      "north": 69,
+      "south": 7
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 69,
+    "id": "belumApproach",
+    "title": "Approach to Belum",
+    "description": "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands closed. A veteran guard named Marcus stands watch. A signpost reads: \u0027GATE CLOSED\u0027.",
+    "exits": {
+      "south": 68
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Marcus"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 70,
+    "id": "belumSouthGate",
+    "title": "Belum - South Gate",
+    "description": "You pass through the southern gate of Belum. Guards in bronze armor eye travelers but make no move to stop you. The cobblestone streets are busy with merchants, locals, and fellow travelers. The main road continues north into the town center.",
+    "exits": {
+      "north": 79,
+      "east": 71,
+      "south": 69,
+      "west": 85
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Town Guard"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 71,
+    "id": "southMarket",
+    "title": "Belum - South Market",
+    "description": "Stalls and carts line this section of the street, merchants hawking their wares. The smell of spices, leather, and fresh bread fills the air. The noise of commerce is constant.",
+    "exits": {
+      "north": 78,
+      "east": 72,
+      "west": 70
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Apothecary"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 72,
+    "id": "stablesDistrict",
+    "title": "Belum - Stables District",
+    "description": "The smell of hay and horses is strong here. Several stables and paddocks house animals for travelers and merchants. A weathered sign advertises boarding rates.",
+    "exits": {
+      "north": 73,
+      "west": 71
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 73,
+    "id": "poorQuarter",
+    "title": "Belum - Poor Quarter",
+    "description": "The buildings here are older and less maintained than elsewhere in town. Laundry hangs from windows, and children play in the narrow streets. The locals eye you with a mix of curiosity and wariness.",
+    "exits": {
+      "north": 74,
+      "south": 72,
+      "west": 78
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 74,
+    "id": "theGoldenGrape",
+    "title": "Belum - The Golden Grape Tavern",
+    "description": "A large and welcoming tavern. The sign shows a golden bunch of grapes. Laughter and music spill out through the open door. This seems like the place to hear local news and rumors.",
+    "exits": {
+      "north": 75,
+      "south": 73,
+      "west": 77
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Barkeep"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 75,
+    "id": "merchantRow",
+    "title": "Belum - Merchant Row",
+    "description": "Prosperous shops display their goods through glass windows - a luxury in these parts. Tailors, jewelers, and specialty craftsmen ply their trades here.",
+    "exits": {
+      "west": 76,
+      "south": 74
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Scribe"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 76,
+    "id": "craftsmansWay",
+    "title": "Belum - Craftsman\u0027s Way",
+    "description": "The ring of hammers on anvils echoes here. Blacksmiths, coopers, and carpenters work their trades. The air is warm from forge fires.",
+    "exits": {
+      "west": 81,
+      "south": 77,
+      "east": 75
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 77,
+    "id": "backAlleys",
+    "title": "Belum - Back Alleys",
+    "description": "Narrow alleyways wind between cramped buildings. It\u0027s darker here, and the main bustle of the town feels far away. Not the safest part of town after dark.",
+    "exits": {
+      "north": 76,
+      "east": 74,
+      "south": 78,
+      "west": 80
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 78,
+    "id": "blacksmithForge",
+    "title": "Belum - The Iron Anvil",
+    "description": "A large smithy with multiple forges burning hot. Weapons, tools, and armor line the walls. The smith is a mountain of a man with arms like tree trunks.",
+    "exits": {
+      "north": 77,
+      "south": 71,
+      "west": 79
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Blacksmith"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 79,
+    "id": "mainStreetSouth",
+    "title": "Belum - Main Street (South)",
+    "description": "The main thoroughfare of Belum stretches north and south. Shops and taverns line both sides. A public fountain provides a gathering spot for locals.",
+    "exits": {
+      "north": 80,
+      "east": 78,
+      "south": 70,
+      "west": 84
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Villager"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 80,
+    "id": "townSquare",
+    "title": "Belum - Town Square",
+    "description": "The heart of Belum opens into a grand square. A large stone fountain depicting Marea, goddess of the sea, dominates the center. Important-looking buildings surround the square - the town hall, a temple, and what appears to be a guild house of some kind.",
+    "exits": {
+      "north": 81,
+      "east": 77,
+      "south": 79,
+      "west": 83
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Town Guard"
+      },
+      {
+        "mode": "clone",
+        "name": "Villager"
+      },
+      {
+        "mode": "clone",
+        "name": "Merchant"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 81,
+    "id": "residentialNorth",
+    "title": "Belum - North Residential",
+    "description": "Well-appointed homes belonging to Belum\u0027s more prosperous citizens line this quiet street. Gardens and small courtyards provide greenery.  The northern gate leading out of town is to the north, shops are to the east, the town square lies directly south, and to the west is a large plaza surrounded by temples to the gods.",
+    "exits": {
+      "north": 90,
+      "east": 76,
+      "south": 80,
+      "west": 82
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 82,
+    "id": "templeDistrict",
+    "title": "Belum - Temple District",
+    "description": "Massive temples of white stone surround an open plaza.  The largest of all of these, to the north, is devoted to Keius - father of the gods.  If you look straight up, you can barely see the tops of the colossal columns that line the temple\u0027s facade.  Temples to major and minor gods of Keius\u0027 pantheon fill the rest of the square.  To the east is a residential district on the main street through Belum.  To the south are several inns, and more residences to the west.",
+    "exits": {
+      "east": 81,
+      "south": 83,
+      "west": 89
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 83,
+    "id": "innDistrict",
+    "title": "Belum - Inn District",
+    "description": "Several inns compete for business here, their signs creaking in the breeze. \u0027The Wanderer\u0027s Rest\u0027, \u0027The Sleeping Lion\u0027, and \u0027Beds \u0026 Breakfast\u0027 all promise comfortable lodging.",
+    "exits": {
+      "north": 82,
+      "east": 80,
+      "south": 84,
+      "west": 88
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 84,
+    "id": "armorersRow",
+    "title": "Belum - Armorer\u0027s Row",
+    "description": "Shops specializing in armor and protective gear line this street. Mannequins display everything from leather jerkins to full plate mail. A testing dummy stands outside one shop, heavily dented.",
+    "exits": {
+      "north": 83,
+      "east": 79,
+      "south": 85,
+      "west": 87
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 85,
+    "id": "thievesGuild",
+    "title": "Belum - Unmarked Alley",
+    "description": "A dead-end alley with a single unmarked door. Those who know, know. Those who don\u0027t, shouldn\u0027t be here.",
+    "exits": {
+      "north": 84,
+      "east": 70,
+      "west": 86
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 86,
+    "id": "shadowyCorner",
+    "title": "Belum - A Shadowy Corner",
+    "description": "This corner of town sees less traffic. A nondescript door leads to what might be a less-than-legitimate establishment. The locals here don\u0027t meet your eyes.",
+    "exits": {
+      "north": 87,
+      "east": 85
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 87,
+    "id": "townHall",
+    "title": "Belum - Town Hall",
+    "description": "The administrative center of Belum. An imposing classical building with tall marble columns and bronze doors stands before you. Guards stand at attention near the entrance. A notice board displays official proclamations. The bronze doors to the west lead inside the building.",
+    "exits": {
+      "north": 88,
+      "south": 86,
+      "east": 84,
+      "west": 91
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Town Guard"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 88,
+    "id": "barracks",
+    "title": "Belum - Guard Barracks",
+    "description": "The town guard\u0027s headquarters. Soldiers drill in a courtyard while others sharpen weapons or play dice. The captain\u0027s office is visible through an open door.",
+    "exits": {
+      "east": 83,
+      "south": 87
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Town Guard"
+      },
+      {
+        "mode": "clone",
+        "name": "Town Guard"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 89,
+    "id": "templeOfKeius",
+    "title": "Belum - Temple of Keius",
+    "description": "You step into the Temple of Keius and immediately feel small. The columns soar far above the city walls that surround Belum. The ceiling is lost in shadow. Everything here is built on a scale meant to humble mortals before the divine. To complete that feeling, an enormous statue of Keius sits at the back of the temple, looking onward in judgement of all who enter.  Back to the east lies the plaza of the Temple District.",
+    "exits": {
+      "east": 82
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "shared",
+        "name": "Caelia"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 90,
+    "id": "belumNorthGate",
+    "title": "Belum - North Gate",
+    "description": "A large wooden and iron gate stands open here, stone towers on either side. Armed guards stand at attention, watching for any sign of trouble.  To the south is the residential district, and the road north leads out of town.",
+    "exits": {
+      "south": 81
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 91,
+    "id": "townHallInterior",
+    "title": "Belum - Town Hall Interior",
+    "description": "You step into the interior of an ancient classical administrative building. Tall marble columns rise to support a vaulted ceiling decorated with frescoes depicting the founding of Belum. Rows of wooden benches face a raised platform where officials conduct town business. Scrolls, ledgers, and official documents are neatly organized on shelves along the walls. The air smells of parchment and wax seals. To the east is the exit back to the town square.",
+    "exits": {
+      "east": 87
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "shared",
+        "name": "Senator Quintus"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 100,
+    "id": "hideoutEntrance",
+    "title": "Cultist Hideout - Entrance",
+    "description": "Beyond the dissipated fog, a hidden path leads to a clearing dominated by a crude wooden structure built against the base of an enormous hollow tree. The bark has been carved with disturbing symbols - spirals that seem to unravel the longer you look at them, and texts that fade and blur as if rejecting coherence. The entrance yawns open like a wound. To the west, the fog-cleared path leads back to the forest. To the east, darkness beckons.",
+    "exits": {
+      "west": 53,
+      "east": 101
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 101,
+    "id": "guardPost",
+    "title": "Cultist Hideout - Guard Post",
+    "description": "This chamber serves as a watchtower for the cultists. Simple wooden furniture has been deliberately broken and left in disarray - not from violence, but as a statement. A lookout post faces the entrance. Cultist guards patrol here, their eyes cold and fanatical. Passages lead east and south deeper into the hideout.",
+    "exits": {
+      "west": 100,
+      "east": 102,
+      "south": 105
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cultist Scout"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Zealot"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 102,
+    "id": "supplyCache",
+    "title": "Cultist Hideout - Supply Cache",
+    "description": "Crates and barrels are stacked here, though many have been deliberately damaged - grain spilled, water barrels cracked open. The cultists seem to take only what they need and destroy the rest. A few intact containers remain that you could loot. The only exit is back west.",
+    "exits": {
+      "west": 101
+    },
+    "items": [
+      "greater potion",
+      "energy potion"
+    ],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 105,
+    "id": "ritualChamber",
+    "title": "Cultist Hideout - Ritual Chamber",
+    "description": "A circular room with symbols painted on the floor in ash and charcoal. The air feels wrong here, as if reality itself is slightly unstable. Six stone pedestals ring the chamber, each bearing a carved symbol. In the center, a locked iron gate blocks passage to the south - but there\u0027s no visible keyhole, only a phrase carved above: \u0027Speak the word that unmakes all things.\u0027 The symbols on the pedestals seem to be parts of a puzzle.",
+    "exits": {
+      "north": 101
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "stone_pedestals",
+        "name": "pedestals",
+        "aliases": [
+          "stone pedestals",
+          "pedestal",
+          "symbols",
+          "carved symbols"
+        ],
+        "defaultDescription": "Six stone pedestals arranged in a circle, each carved with a different symbol.",
+        "lookedAtDescription": "Each pedestal bears a symbol and a word beneath it:\n1. A flame - \u0027IGNIS\u0027 (Fire)\n2. A droplet - \u0027AQUA\u0027 (Water)\n3. A skull - \u0027MORTIS\u0027 (Death)\n4. A spiral - \u0027VORAGO\u0027 (Abyss)\n5. A shattered circle - \u0027FRACTUS\u0027 (Broken)\n6. An empty void - \u0027NIHIL\u0027 (Nothing)\n\nThe phrase above the gate reads: \u0027Speak the word that unmakes all things.\u0027 What could it mean?",
+        "isInteractable": false,
+        "isHidden": false
+      },
+      {
+        "id": "iron_gate",
+        "name": "gate",
+        "aliases": [
+          "iron gate",
+          "locked gate",
+          "southern gate"
+        ],
+        "defaultDescription": "A heavy iron gate blocks the southern passage. Above it is carved: \u0027Speak the word that unmakes all things.\u0027",
+        "lookedAtDescription": "The gate has no lock or handle - only the carved phrase. It seems to require a spoken answer to open.",
+        "isInteractable": false,
+        "isHidden": false
+      }
+    ],
+    "puzzleId": "ritual_chamber_cipher",
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 108,
+    "id": "defacedLibrary",
+    "title": "Cultist Hideout - Defaced Library",
+    "description": "What was once a repository of knowledge has been systematically destroyed. Bookshelves line the walls, but most books have been torn apart, their pages scattered like snow. Some books have been burned, others unraveled thread by thread. Yet a few volumes remain intact on a central reading table - perhaps they contain something the cultists found useful. A passage leads north, and a narrow hallway continues east.",
+    "exits": {
+      "north": 105,
+      "east": 110
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "reading_table",
+        "name": "table",
+        "aliases": [
+          "reading table",
+          "central table",
+          "books",
+          "intact books"
+        ],
+        "defaultDescription": "A reading table with several intact books that survived the destruction.",
+        "lookedAtDescription": "Three books remain intact:\n\n\u0027Principles of Order\u0027 - A philosophical text. The cultists have annotated it heavily with contemptuous notes in the margins: \u0027All order is temporary,\u0027 \u0027Entropy claims all,\u0027 \u0027Why preserve what will inevitably fall?\u0027\n\n\u0027The Founding of Aevoria\u0027 - A historical text. One passage is circled in red: \u0027The five seals were placed to contain the ancient chaos. Should they fail, the empire itself would unravel.\u0027\n\n\u0027Rituals of Unbinding\u0027 - A dangerous tome. Instructions for breaking magical seals and disrupting protective wards. A bookmark marks a page titled \u0027The Festival Convergence - When barriers are weakest.\u0027",
+        "isInteractable": false,
+        "isHidden": false
+      },
+      {
+        "id": "scattered_pages",
+        "name": "pages",
+        "aliases": [
+          "scattered pages",
+          "torn pages",
+          "paper",
+          "destroyed books"
+        ],
+        "defaultDescription": "Thousands of torn pages cover the floor like autumn leaves.",
+        "lookedAtDescription": "Most are illegible, but you spot a few fragments:\n\u0027...the old empire knew what we have forgotten...\u0027\n\u0027...containing rather than destroying was their mistake...\u0027\n\u0027...when enough seals break, the cascade cannot be stopped...\u0027\n\nThe destruction here was methodical and purposeful.",
+        "isInteractable": false,
+        "isHidden": false
+      }
+    ],
+    "puzzleId": "library_book_puzzle",
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 110,
+    "id": "monumentRoom",
+    "title": "Cultist Hideout - Monument of Unmaking",
+    "description": "A large chamber dominated by what was once a beautiful marble statue of an ancient emperor. The cultists have defaced it systematically - chipping away features, carving spirals into the stone, covering it in ash. Around the statue, offerings have been placed: broken tools, shredded documents, snapped weapons. This is a shrine to destruction itself. Passages lead west back to the library and south deeper into the complex.",
+    "exits": {
+      "west": 108,
+      "south": 115
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cultist Defacer"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Philosopher"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "defaced_statue",
+        "name": "statue",
+        "aliases": [
+          "marble statue",
+          "emperor statue",
+          "defaced statue",
+          "monument"
+        ],
+        "defaultDescription": "A marble statue of an ancient emperor, systematically defaced and covered in disturbing symbols.",
+        "lookedAtDescription": "The statue once depicted Emperor Valerius the First, founder of the empire. The cultists have carved away his face, replaced his scepter with a spiral symbol, and inscribed across the base: \u0027Even stone crumbles. Even empires fall. We hasten the inevitable.\u0027 The workmanship of the defacement is almost artistic in its precision - this wasn\u0027t vandalism, but ritual.",
+        "isInteractable": false,
+        "isHidden": false
+      },
+      {
+        "id": "offerings",
+        "name": "offerings",
+        "aliases": [
+          "broken tools",
+          "shredded documents",
+          "offerings",
+          "shrine"
+        ],
+        "defaultDescription": "Various destroyed objects arranged around the statue like offerings at a shrine.",
+        "lookedAtDescription": "Broken hammers, split anvils, torn maps, shredded legal documents, snapped swords - each carefully placed. You recognize some of the documents: property deeds, marriage certificates, trade agreements. The cultists are collecting symbols of order and civilization to ritually destroy them. It\u0027s deeply unsettling.",
+        "isInteractable": false,
+        "isHidden": false
+      }
+    ],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 115,
+    "id": "prisonCells",
+    "title": "Cultist Hideout - Prison Cells",
+    "description": "A row of crude iron cages lines the wall of this chamber. Most are empty, their doors hanging open, but one cell in the far corner is locked. Inside, you can see a figure huddled in the shadows - a young woman in tattered robes, her eyes glowing faintly with an eerie light even in the darkness. She looks up as you enter, hope flickering across her gaunt face. Passages lead north and east.",
+    "exits": {
+      "north": 110,
+      "east": 118
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cultist Lieutenant"
+      },
+      {
+        "mode": "shared",
+        "name": "Althea"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "prison_cells",
+        "name": "cells",
+        "aliases": [
+          "cages",
+          "iron cages",
+          "prison",
+          "locked cell"
+        ],
+        "defaultDescription": "A row of iron cages. Most are empty, but one in the corner is locked with a figure inside.",
+        "lookedAtDescription": "The cells are crudely constructed but effective. The locked cell contains a young woman who watches you with a mixture of hope and suspicion. She appears weak but alert. A key ring hangs on the wall nearby - the lieutenant probably carries the actual key.",
+        "isInteractable": false,
+        "isHidden": false
+      }
+    ],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 118,
+    "id": "antechamber",
+    "title": "Cultist Hideout - Antechamber",
+    "description": "This chamber serves as a waiting area before the inner sanctum. The walls are covered in elaborate murals depicting the fall of civilizations - towers crumbling, books burning, monuments sinking into the earth. The artistry is disturbing in its beauty. To the west are the prison cells, and to the east, heavy double doors lead to what must be the leader\u0027s chamber. Cultist guards stand watch.",
+    "exits": {
+      "west": 115,
+      "east": 120
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cultist Breaker"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Archivist"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "murals",
+        "name": "murals",
+        "aliases": [
+          "wall murals",
+          "paintings",
+          "artwork",
+          "walls"
+        ],
+        "defaultDescription": "Elaborate murals covering the walls, depicting the fall of civilizations.",
+        "lookedAtDescription": "The murals are masterfully painted, showing:\n- The Library of Alexandria burning, scholars weeping\n- The Tower of Babel collapsing as people scatter\n- Great monuments being swallowed by sand and time\n- Cities crumbling as nature reclaims them\n\nAt the bottom of each scene is written: \u0027Ordo Dissolutus\u0027 - the Dissolved Order. These cultists don\u0027t just destroy - they philosophically embrace entropy itself.",
+        "isInteractable": false,
+        "isHidden": false
+      },
+      {
+        "id": "double_doors",
+        "name": "doors",
+        "aliases": [
+          "heavy doors",
+          "double doors",
+          "eastern doors",
+          "sanctum doors"
+        ],
+        "defaultDescription": "Heavy wooden doors reinforced with iron bands, leading east to the inner sanctum.",
+        "lookedAtDescription": "The doors are carved with a massive spiral symbol that seems to draw your eye inward. Above them, an inscription reads: \u0027Beyond this threshold, the Archon of Unmaking awaits. Enter and witness the inevitable.\u0027",
+        "isInteractable": false,
+        "isHidden": false
+      }
+    ],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 120,
+    "id": "archonChamber",
+    "title": "Cultist Hideout - The Archon\u0027s Sanctum",
+    "description": "A vast circular chamber at the heart of the hideout. The walls are carved with spiraling symbols that seem to move in the corner of your vision. In the center, ritual circles have been drawn in ash and blood, and the air itself seems to shimmer with wrongness. This is clearly the cult\u0027s inner sanctum - a place of dark rituals and forbidden practices.",
+    "exits": {
+      "west": 118
+    },
+    "items": [
+      "ritual dagger",
+      "cultist orders",
+      "ritual notes",
+      "philosophical tract",
+      "cell key"
+    ],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Archon Malachar"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [
+      {
+        "id": "ritual_circles",
+        "name": "circles",
+        "aliases": [
+          "ritual circles",
+          "ash circles",
+          "blood circles",
+          "symbols"
+        ],
+        "defaultDescription": "Complex ritual circles drawn on the floor in ash and blood.",
+        "lookedAtDescription": "The circles are incredibly intricate, with symbols you don\u0027t recognize interwoven with mathematical formulae and arcane sigils. At specific points around the circles, small offerings have been placed - broken seals, torn documents, shattered amulets. This ritual appears designed to break or weaken something, though you can\u0027t tell what.",
+        "isInteractable": false,
+        "isHidden": false
+      },
+      {
+        "id": "archon_throne",
+        "name": "throne",
+        "aliases": [
+          "chair",
+          "seat",
+          "throne"
+        ],
+        "defaultDescription": "A simple stone chair at the far end of the chamber, deliberately plain and unadorned.",
+        "lookedAtDescription": "Unlike the elaborate thrones of rulers, this is just a plain stone seat. The message is clear: the Archon has no need for the trappings of power or authority. He sees himself as merely an instrument of entropy, not a king. Somehow, that makes him more dangerous.",
+        "isInteractable": false,
+        "isHidden": false
+      }
+    ],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 121,
+    "id": "imperialHighway121",
+    "title": "Imperial Highway - Western Approach",
+    "description": "The Imperial Highway stretches before you - a marvel of engineering paved with fitted stone that has endured for centuries. To your south, you can see the northern walls of Belum rising in the distance. The road is wide enough for four wagons to travel abreast, with drainage ditches on either side. Mile markers bearing the imperial eagle show the distance to major cities.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 122,
+    "id": "imperialHighway122",
+    "title": "Imperial Highway - Belum Outskirts",
+    "description": "You\u0027re still within sight of Belum\u0027s north gate to the south, though the city is beginning to fade behind you. Small farms and homesteads dot the landscape here - this close to a major town, the roads are safe and settlement thrives. Smoke rises from chimneys, and you can hear the distant sound of cattle lowing in their pens.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 123,
+    "id": "imperialHighway123",
+    "title": "Imperial Highway - Edge of the Steppes",
+    "description": "The landscape begins to change as the road leads you northward. To the north, vast grasslands stretch to the horizon - the legendary Northern Steppes where tribal horsemen once ruled before the Empire pacified them. The wind carries the scent of wild grass and distant rain. Civilization feels far away here.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 124,
+    "id": "imperialHighway124",
+    "title": "Imperial Highway - Steppe Overlook",
+    "description": "The highway runs along a ridge here, offering a commanding view of the steppes to the north. Endless waves of grass ripple in the wind like a green ocean. You can see herds of wild horses in the distance, running free across the plains. This is the frontier - beautiful, vast, and untamed.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 125,
+    "id": "imperialHighway125",
+    "title": "Imperial Highway - Steppe Crossing",
+    "description": "The road cuts directly through the steppes here. The landscape is deceptively flat - you can see for miles in every direction, which is both reassuring and unsettling. Imperial watchtowers dot the horizon at regular intervals, remnants of the campaigns that brought these lands under control. The wind never stops.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 126,
+    "id": "imperialHighway126",
+    "title": "Imperial Highway - Shrubland Border",
+    "description": "The terrain shifts as you continue north. To the north, the open steppes give way to dense shrubland - thick bushes and small twisted trees that grow in stubborn clusters. The Imperial Highway remains immaculate, but the wild country presses close on either side. You notice game trails crossing the road - deer, perhaps, or something larger.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 127,
+    "id": "imperialHighway127",
+    "title": "Imperial Highway - Through the Shrublands",
+    "description": "Dense shrubland flanks the highway to the north, creating a wall of thorny vegetation that would be impassable without the road. The bushes are thick with berries - some edible, some poisonous, if you know which is which. Bird calls echo through the thickets, and you catch glimpses of movement in the shadows.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 128,
+    "id": "imperialHighway128",
+    "title": "Imperial Highway - Shrubland Heights",
+    "description": "The road climbs slightly here, and you can look down on the shrublands spreading to the north like a rumpled green carpet. In the distance to the south, you can still make out Belum\u0027s walls - a reassuring sight of civilization in this wild country. The highway continues its inexorable march northward toward the capital.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 129,
+    "id": "imperialHighway129",
+    "title": "Imperial Highway - Quarry Road Junction",
+    "description": "A side road branches off the highway here, leading east toward what appears to be an active quarry. You can hear the distant sound of hammers on stone and see dust rising from the excavation site. Wagons loaded with cut stone occasionally join the main highway here, their wheels worn deep into the road from years of heavy use. The quarry must supply stone for imperial construction projects.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 130,
+    "id": "imperialHighway130",
+    "title": "Imperial Highway - Past the Quarry",
+    "description": "The quarry is clearly visible to the east now - a massive scar in the hillside where workers have been extracting limestone and marble for generations. You can see tiny figures moving among the cut stone, hear the rhythmic striking of tools. This is where the Empire\u0027s grandeur is literally carved from the earth. The highway continues north, paved with the very stone mined from these hills.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 131,
+    "id": "imperialHighway131",
+    "title": "Imperial Highway - Beyond the Quarry",
+    "description": "The sounds of the quarry fade behind you as the road continues northward. The landscape here is scarred by old excavation sites - places where the stone was exhausted decades or centuries ago and nature is slowly reclaiming the land. Wildflowers grow in the abandoned pits, and trees sprout from cracks in discarded stone. Progress marches on, leaving ruins in its wake.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 132,
+    "id": "imperialHighway132",
+    "title": "Imperial Highway - Ruins Approach",
+    "description": "To the west, massive stone structures rise from the landscape - ruins far older than the Empire itself. These are pre-imperial constructions, built by civilizations whose very names have been forgotten. The Imperial Highway runs alongside these ancient monuments, a newer road beside a far older mystery. Scholars sometimes camp here, studying the weathered stones.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 133,
+    "id": "imperialHighway133",
+    "title": "Imperial Highway - Shadow of the Ancients",
+    "description": "The ruins loom to the west - cyclopean walls built from stones so massive it\u0027s hard to imagine how they were moved. No mortar holds them together; they\u0027re fitted with such precision that a knife blade couldn\u0027t slip between them. The Empire claims these lands, but these structures predate imperial history by millennia. What empire fell here? What catastrophe reduced them to ruins?",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 134,
+    "id": "imperialHighway134",
+    "title": "Imperial Highway - Ancient Gateway",
+    "description": "A massive archway stands to the west - part of the ruins, still standing after countless centuries. The Imperial Highway passes directly beside it, as if the road builders deliberately positioned the route to acknowledge these ancient works. Strange symbols are carved into the arch\u0027s keystone - not imperial script, not any language you recognize. Some mysteries endure.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 135,
+    "id": "imperialHighway135",
+    "title": "Imperial Highway - Leaving the Ruins",
+    "description": "The ancient ruins gradually fade behind you to the west as the highway continues its northern march. You take one last look at those massive stones, those impossible walls. The Empire is powerful, yes - but it stands on the bones of older powers. The road ahead is well-maintained, paved by imperial engineers who perhaps never wondered what came before.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 136,
+    "id": "imperialHighway136",
+    "title": "Imperial Highway - Marsh Border",
+    "description": "The air grows thick and humid as marshlands appear to the east. You can smell the wetlands - a mix of rotting vegetation, stagnant water, and rich mud. The Imperial Highway is raised here, built on a causeway to keep it above the flood plain. This must have been an incredible engineering feat, creating a solid road through swampland.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 137,
+    "id": "imperialHighway137",
+    "title": "Imperial Highway - Through the Marshes",
+    "description": "Marshland stretches to the east - pools of dark water, stands of reeds, twisted trees draped with moss. The Imperial Highway cuts straight through it all, an arrow of civilization through the wild. You can hear frogs croaking, insects buzzing, and the occasional splash of something moving through the water. The road beneath your feet is solid, but the world on either side is uncertain, shifting.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 138,
+    "id": "imperialHighway138",
+    "title": "Imperial Highway - Marsh Causeway",
+    "description": "The raised causeway continues through the marshlands to the east. Imperial engineering at its finest - drainage channels on both sides keep water from undermining the road, and stone abutments support the structure where the ground is softest. Birds wade in the shallow waters, hunting for fish. The marsh is beautiful in its own way, but you\u0027re grateful for the solid road.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 139,
+    "id": "imperialHighway139",
+    "title": "Imperial Highway - Northern Reaches",
+    "description": "The marshlands finally give way to firmer ground as you continue north. The landscape here is well-cultivated - farms and estates owned by wealthy nobles who enjoy proximity to the capital without living in the city itself. The highway is busier here; you pass other travelers, merchants, imperial messengers on fast horses. Civilization thickens with every mile northward.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 140,
+    "id": "imperialHighway140",
+    "title": "Imperial Highway - Aevoria Approaches",
+    "description": "The traffic increases steadily as you travel north. Wagons laden with goods, nobles in carriages, pilgrims on foot - all making their way to or from the Eternal City. To the far north, you can just make out a change in the horizon - something massive and white that must be Aevoria itself. The capital, heart of the Empire, draws near.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 141,
+    "id": "imperialHighway141",
+    "title": "Imperial Highway - Capital Road",
+    "description": "Aevoria is clearly visible now to the north - white marble buildings gleaming in the distance, the Colosseum\u0027s massive arches rising above the city walls. The highway here is immaculate, swept daily by work crews who maintain the approaches to the capital. Imperial banners flutter from posts along the road. You\u0027re in the heart of the Empire now.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 142,
+    "id": "imperialHighway142",
+    "title": "Imperial Highway - Aevoria Gates",
+    "description": "The Imperial Highway terminates at the massive western gates of Aevoria. The city walls rise fifty feet high, built from gleaming white marble that seems to glow in the sunlight. Guards in ceremonial armor stand at attention, checking travelers entering the capital. Beyond the gates, you can see the city itself - the Eternal City, fifteen centuries old, seat of imperial power. You\u0027ve arrived.",
+    "exits": {},
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 200,
+    "id": "imperialVillaHall",
+    "title": "Imperial Villa - Grand Hall",
+    "description": "You stand in the magnificent grand hall of the Emperor\u0027s private villa. Soaring marble columns support a vaulted ceiling painted with scenes of imperial conquest. Sunlight streams through tall windows, casting patterns across the polished floor. Rich tapestries depicting the Empire\u0027s 1500-year history line the walls.\u003Cbr\u003E\u003Cbr\u003ESenator Quintus and High Priestess Caelia stand nearby, speaking in low tones. Imperial guards in ceremonial armor stand at attention throughout the hall.",
+    "exits": {
+      "north": 201,
+      "east": 202,
+      "south": 203,
+      "west": 204
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 201,
+    "id": "imperialVillaThroneRoom",
+    "title": "Imperial Villa - Throne Room",
+    "description": "An opulent throne room fit for the ruler of an empire. The throne itself is carved from a single piece of black marble, inlaid with gold depicting the imperial eagle. Banners of the legions that conquered the known world hang from the ceiling. Despite the grandeur, the room has an intimate quality - this is the Emperor\u0027s private audience chamber, not the vast public throne room of the palace.\u003Cbr\u003E\u003Cbr\u003EEmperor Certius awaits here, ready to receive visitors.",
+    "exits": {
+      "south": 200
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Emperor Certius"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 202,
+    "id": "imperialVillaGuestQuarters",
+    "title": "Imperial Villa - Guest Quarters",
+    "description": "Luxurious guest quarters have been prepared for you and your companions. The room features plush beds with silk sheets, a writing desk of polished mahogany, and a balcony overlooking the city. Fresh fruit and wine have been laid out on a side table.\u003Cbr\u003E\u003Cbr\u003EA bronze plaque reads: \u0027Guests of the Emperor are granted the Empire\u0027s hospitality.\u0027",
+    "exits": {
+      "west": 200
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 203,
+    "id": "imperialVillaGardens",
+    "title": "Imperial Villa - Gardens",
+    "description": "Meticulously maintained gardens surround a central fountain depicting the goddess Victoria. Rare flowers from every corner of the Empire bloom in carefully arranged beds. Stone paths wind between sculpted hedges, and the scent of jasmine fills the air. Servants tend the plants with quiet efficiency.\u003Cbr\u003E\u003Cbr\u003EThis is a place of peace, though the weight of impending crisis makes relaxation difficult.",
+    "exits": {
+      "north": 200
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 204,
+    "id": "imperialVillaLibrary",
+    "title": "Imperial Villa - Imperial Library",
+    "description": "Floor-to-ceiling shelves hold thousands of scrolls and bound volumes - the personal collection of Emperor Certius himself. You spot texts on military strategy, philosophy, history, and governance. A large table in the center holds maps of the Empire and its frontiers.\u003Cbr\u003E\u003Cbr\u003ESeveral scholars work quietly at desks, cataloging and preserving this knowledge for future generations.",
+    "exits": {
+      "east": 200
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 220,
+    "id": "colosseumLowerGallery",
+    "title": "Colosseum - Lower Gallery",
+    "description": "The lower gallery of the Colosseum is packed with spectators. Banners in imperial purple hang from the stone arches. The roar of the crowd echoes off the walls as gladiatorial games unfold in the arena below. Vendors hawk wine and food, and the air is thick with excitement.\u003Cbr\u003E\u003Cbr\u003EAhead, you notice several figures in hooded robes moving against the crowd flow - heading deeper into the structure. Their movements are too purposeful, too synchronized. Cultists.",
+    "exits": {
+      "north": 221
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cultist Scout"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Scout"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 221,
+    "id": "colosseumMidGallery",
+    "title": "Colosseum - Mid Gallery",
+    "description": "You\u0027ve climbed to the mid-level gallery, where wealthier citizens watch the games from cushioned seats. The view of the arena is spectacular from here, but you have no time for spectacle. More cultists block your path - these ones are armored and ready for combat. They\u0027ve abandoned all pretense of blending in.",
+    "exits": {
+      "south": 220,
+      "north": 222
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cultist Zealot"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Defacer"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Scout"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 222,
+    "id": "colosseumUpperGallery",
+    "title": "Colosseum - Upper Gallery",
+    "description": "The upper gallery is reserved for senators and high nobility. The seats here are empty - the elite are all in private viewing boxes. You\u0027re close to the Emperor\u0027s box now. A group of cultists has taken position here as a final line of defense. These are veteran fighters arrayed in defensive formation, weapons drawn and ready.",
+    "exits": {
+      "south": 221,
+      "north": 223
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cultist Lieutenant"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Philosopher"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Zealot"
+      },
+      {
+        "mode": "clone",
+        "name": "Cultist Defacer"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 223,
+    "id": "emperorSeatBox",
+    "title": "Colosseum - Emperor\u0027s Seat Box",
+    "description": "The Emperor\u0027s private viewing box offers an unobstructed view of the arena floor. Rich purple tapestries bearing the imperial eagle frame the space. This is where rulers of the Empire have watched gladiatorial games for fifteen centuries.\u003Cbr\u003E\u003Cbr\u003EThe box is currently empty except for imperial guards... and one figure moving with deadly intent.",
+    "exits": {
+      "south": 222
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 900,
+    "id": "dungeonHub",
+    "title": "Ancient Ruins - Entrance",
+    "description": "You stand before a massive stone archway, worn smooth by countless centuries. The stonework predates the Empire by millennia - cyclopean blocks fitted together with impossible precision. Strange symbols are carved into the arch\u0027s surface, their meaning lost to time. Beyond the archway, stone steps descend into darkness. The air that rises from below is cool and carries the faint scent of ancient dust and something else... something watchful.",
+    "exits": {
+      "down": 901
+    },
+    "items": [],
+    "npcs": [],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 901,
+    "id": "dungeonF1R1",
+    "title": "Ancient Ruins - Entry Chamber",
+    "description": "The stone steps lead down into a vast chamber lit by an eerie phosphorescent moss growing on the walls. Broken pottery and ancient weapons litter the floor. Two satyrs prowl among the rubble, their goat-like legs clicking on the stone. They turn toward you, yellow eyes gleaming with feral hunger.",
+    "exits": {
+      "up": 900,
+      "east": 902
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      },
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      },
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 902,
+    "id": "dungeonF1R2",
+    "title": "Ancient Ruins - Weathered Corridor",
+    "description": "A long corridor stretches eastward, its walls decorated with faded frescoes depicting long-forgotten battles. A harpy perches on a broken pillar, preening its bronze-feathered wings. At its feet, a satyr gnaws on old bones. Both creatures notice your presence.",
+    "exits": {
+      "west": 901,
+      "east": 903
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Harpy"
+      },
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Harpy"
+      },
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 903,
+    "id": "dungeonF1R3",
+    "title": "Ancient Ruins - Grand Chamber",
+    "description": "The corridor opens into a grand chamber with a vaulted ceiling supported by massive stone columns. Two giant scorpions, each as large as a cart, scuttle across the floor. Their chitinous armor gleams in the dim light, and their stingers drip with venom.",
+    "exits": {
+      "west": 902,
+      "east": 904
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Giant Scorpion"
+      },
+      {
+        "mode": "clone",
+        "name": "Giant Scorpion"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Giant Scorpion"
+      },
+      {
+        "mode": "clone",
+        "name": "Giant Scorpion"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 904,
+    "id": "dungeonF1R4",
+    "title": "Ancient Ruins - Bone-Strewn Passage",
+    "description": "This narrow passage is littered with ancient bones - human and otherwise. Three skeleton warriors stand in an eternal vigil, their empty eye sockets glowing with spectral blue light. As you enter, they raise their rusted weapons in unison.",
+    "exits": {
+      "west": 903,
+      "east": 905
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      },
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      },
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      },
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      },
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 905,
+    "id": "dungeonF1R5",
+    "title": "Ancient Ruins - Bronze Treasury",
+    "description": "The passage opens into a circular chamber with a domed ceiling. Ancient bronze weapons and armor line the walls on racks and stands. A harpy roosts on a bronze chandelier above, while two satyrs guard a stone chest in the center of the room. Stone steps descend deeper into the ruins.",
+    "exits": {
+      "west": 904
+    },
+    "items": [
+      "bronze gladius",
+      "reinforced bow",
+      "bronze staff",
+      "bronze breastplate"
+    ],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Harpy"
+      },
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      },
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Harpy"
+      },
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      },
+      {
+        "mode": "clone",
+        "name": "Satyr"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 906,
+    "id": "dungeonF2R1",
+    "title": "Ancient Ruins - Enchanted Hall",
+    "description": "The stairs lead into a vast hall whose walls shimmer with residual magic. A bronze automaton stands in the center of the room, its eyes glowing with arcane light. Ancient gears whir and click as it turns to face you.",
+    "exits": {
+      "up": 905,
+      "east": 907
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bronze Automaton"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Bronze Automaton"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 907,
+    "id": "dungeonF2R2",
+    "title": "Ancient Ruins - Central Crossroads",
+    "description": "This chamber serves as a nexus point, with passages leading in three directions. Two centaur scouts patrol the area, their hooves echoing on the stone floor. They draw their bows as you approach.",
+    "exits": {
+      "west": 906,
+      "north": 908,
+      "east": 909
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Centaur Scout"
+      },
+      {
+        "mode": "clone",
+        "name": "Centaur Scout"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Centaur Scout"
+      },
+      {
+        "mode": "clone",
+        "name": "Centaur Scout"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 908,
+    "id": "dungeonF2R3",
+    "title": "Ancient Ruins - Northern Treasury",
+    "description": "A side chamber filled with piles of ancient gold coins and gemstones. A gorgon stands guard over the treasure, her serpentine hair writhing. You feel her petrifying gaze upon you.",
+    "exits": {
+      "south": 907
+    },
+    "items": [
+      "potion",
+      "potion"
+    ],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Gorgon"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Gorgon"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 909,
+    "id": "dungeonF2R4",
+    "title": "Ancient Ruins - Eastern Passage",
+    "description": "A long passage decorated with murals of ancient battles. Two furies hover in the air, their wings beating slowly. Flames flicker around their clawed hands.",
+    "exits": {
+      "west": 907,
+      "east": 910
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Fury"
+      },
+      {
+        "mode": "clone",
+        "name": "Fury"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Fury"
+      },
+      {
+        "mode": "clone",
+        "name": "Fury"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 910,
+    "id": "dungeonF2R5",
+    "title": "Ancient Ruins - Enchanted Armory",
+    "description": "A magnificent chamber whose walls are lined with enchanted weapons and armor that pulse with magical energy. A bronze automaton and a gorgon guard a large stone chest. Stairs descend to the depths below.",
+    "exits": {
+      "west": 909
+    },
+    "items": [
+      "enchanted spatha",
+      "stormbow",
+      "crystal staff",
+      "blessed cuirass"
+    ],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Bronze Automaton"
+      },
+      {
+        "mode": "clone",
+        "name": "Gorgon"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Bronze Automaton"
+      },
+      {
+        "mode": "clone",
+        "name": "Gorgon"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 911,
+    "id": "dungeonF3R1",
+    "title": "Ancient Ruins - Minotaur\u0027s Domain",
+    "description": "The stairs open into a massive circular arena. The floor is stained with ancient blood. A minotaur paces in the center, its massive axe resting on one shoulder. It bellows a challenge as you enter.",
+    "exits": {
+      "up": 910,
+      "east": 912
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Minotaur"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Minotaur"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 912,
+    "id": "dungeonF3R2",
+    "title": "Ancient Ruins - Serpent Corridor",
+    "description": "A long corridor whose walls are carved with images of serpents and dark rituals. Two lamias slither through the shadows, their hypnotic eyes fixed on you.",
+    "exits": {
+      "west": 911,
+      "east": 913
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Lamia"
+      },
+      {
+        "mode": "clone",
+        "name": "Lamia"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Lamia"
+      },
+      {
+        "mode": "clone",
+        "name": "Lamia"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 913,
+    "id": "dungeonF3R3",
+    "title": "Ancient Ruins - Grand Throne Hall",
+    "description": "An enormous hall with a high vaulted ceiling. A single massive eye opens above you - a cyclops awakens from its slumber. At its feet, two skeleton warriors stand ready, their bones reinforced with dark magic.",
+    "exits": {
+      "west": 912,
+      "east": 914
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cyclops"
+      },
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      },
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Cyclops"
+      },
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      },
+      {
+        "mode": "clone",
+        "name": "Skeleton Warrior"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 914,
+    "id": "dungeonF3R4",
+    "title": "Ancient Ruins - Petrified Antechamber",
+    "description": "This chamber is filled with dozens of stone statues - victims of the medusa who dwells here. The serpent-haired gorgon queen stands beside a massive minotaur. Both guardians turn toward you.",
+    "exits": {
+      "west": 913,
+      "east": 915
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Medusa"
+      },
+      {
+        "mode": "clone",
+        "name": "Minotaur"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Medusa"
+      },
+      {
+        "mode": "clone",
+        "name": "Minotaur"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 915,
+    "id": "dungeonF3R5",
+    "title": "Ancient Ruins - Legendary Vault",
+    "description": "A treasure vault of legendary proportions. Weapons and armor of incredible craftsmanship line the walls. A cyclops and a medusa guard the central chest. Steps lead down to the final depths of the ruins.",
+    "exits": {
+      "west": 914
+    },
+    "items": [
+      "hero\u0027s blade",
+      "gorgon\u0027s bane",
+      "medusa\u0027s wand",
+      "griffon hide armor"
+    ],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Cyclops"
+      },
+      {
+        "mode": "clone",
+        "name": "Medusa"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Cyclops"
+      },
+      {
+        "mode": "clone",
+        "name": "Medusa"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 916,
+    "id": "dungeonF4R1",
+    "title": "Ancient Ruins - Gates of the Divine",
+    "description": "The deepest level of the ruins opens into a cathedral-like space. Divine light filters down from cracks in the ceiling far above. A chimera and a three-headed cerberus guard the way forward. This is the realm of legends.",
+    "exits": {
+      "up": 915,
+      "east": 917
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Chimera"
+      },
+      {
+        "mode": "clone",
+        "name": "Cerberus"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Chimera"
+      },
+      {
+        "mode": "clone",
+        "name": "Cerberus"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 917,
+    "id": "dungeonF4R2",
+    "title": "Ancient Ruins - Hydra\u0027s Lair",
+    "description": "A vast chamber with a pool of dark water in the center. A massive hydra rises from the depths, its multiple heads swaying hypnotically. Each head breathes a different elemental attack.",
+    "exits": {
+      "west": 916,
+      "north": 918,
+      "east": 919
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Hydra"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Hydra"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 918,
+    "id": "dungeonF4R3",
+    "title": "Ancient Ruins - Divine Treasury",
+    "description": "A sanctum filled with divine artifacts and treasures beyond mortal comprehension. Two chimeras stand eternal watch over the hoard. The very air thrums with divine power.",
+    "exits": {
+      "south": 917
+    },
+    "items": [
+      "potion",
+      "potion",
+      "restoration scroll"
+    ],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Chimera"
+      },
+      {
+        "mode": "clone",
+        "name": "Chimera"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Chimera"
+      },
+      {
+        "mode": "clone",
+        "name": "Chimera"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 919,
+    "id": "dungeonF4R4",
+    "title": "Ancient Ruins - Titan\u0027s Approach",
+    "description": "The passage opens to reveal a titanic statue that slowly begins to move. This is no statue - it\u0027s a titan, ancient guardian of this place. Its stone skin cracks as it takes its first step in centuries.",
+    "exits": {
+      "west": 917,
+      "east": 920
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Titan"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Titan"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 920,
+    "id": "dungeonF4R5",
+    "title": "Ancient Ruins - Chamber of the Gods",
+    "description": "The heart of the ancient ruins - a chamber that predates the Empire by thousands of years. A titan and a hydra stand as final guardians before an altar laden with divine weapons and armor. Completing this challenge proves you worthy of legend. A shimmering portal stands ready to return you to the surface.",
+    "exits": {
+      "west": 919,
+      "up": 900
+    },
+    "items": [
+      "titan\u0027s maul",
+      "olympian greatbow",
+      "divine scepter",
+      "aegis of the gods"
+    ],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Titan"
+      },
+      {
+        "mode": "clone",
+        "name": "Hydra"
+      }
+    ],
+    "originalNpcs": [
+      {
+        "mode": "clone",
+        "name": "Titan"
+      },
+      {
+        "mode": "clone",
+        "name": "Hydra"
+      }
+    ],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 991,
+    "id": "testRoom991",
+    "title": "[TEST] Recruit Testing Area 9",
+    "description": "[TEST ROOM] Final testing chamber. Use \u0027teleport 1\u0027 to return to guild hall.",
+    "exits": {
+      "north": 992
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Celestia"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 992,
+    "id": "testRoom992",
+    "title": "[TEST] Recruit Testing Area 8",
+    "description": "[TEST ROOM] Beast tracker testing.",
+    "exits": {
+      "north": 993,
+      "south": 991
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Fenris"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 993,
+    "id": "testRoom993",
+    "title": "[TEST] Recruit Testing Area 7",
+    "description": "[TEST ROOM] More conversational testing.",
+    "exits": {
+      "north": 994,
+      "south": 992
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Thora"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 994,
+    "id": "testRoom994",
+    "title": "[TEST] Recruit Testing Area 6",
+    "description": "[TEST ROOM] Combat recruit testing - talk to Aldric to fight.",
+    "exits": {
+      "north": 995,
+      "south": 993
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Aldric the Wise"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 995,
+    "id": "testRoom995",
+    "title": "[TEST] Recruit Testing Area 5",
+    "description": "[TEST ROOM] Combat recruit testing - talk to Aria to fight.",
+    "exits": {
+      "north": 996,
+      "south": 994
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Aria Swift"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 996,
+    "id": "testRoom996",
+    "title": "[TEST] Recruit Testing Area 4",
+    "description": "[TEST ROOM] Combat recruit testing - talk to Marcus to fight.",
+    "exits": {
+      "north": 997,
+      "south": 995
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Marcus the Bold"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 997,
+    "id": "testRoom997",
+    "title": "[TEST] Recruit Testing Area 3",
+    "description": "[TEST ROOM] Yet another testing chamber.",
+    "exits": {
+      "north": 998,
+      "south": 996
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Lyra"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 998,
+    "id": "testRoom998",
+    "title": "[TEST] Recruit Testing Area 2",
+    "description": "[TEST ROOM] Another testing chamber.",
+    "exits": {
+      "north": 999,
+      "south": 997
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Darius"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  },
+  {
+    "numericId": 999,
+    "id": "testRoom999",
+    "title": "[TEST] Recruit Testing Area 1",
+    "description": "[TEST ROOM] A simple testing chamber. Use \u0027teleport 999\u0027 to get here.",
+    "exits": {
+      "south": 998
+    },
+    "items": [],
+    "npcs": [
+      {
+        "mode": "clone",
+        "name": "Valeria"
+      }
+    ],
+    "originalNpcs": [],
+    "descriptionVariants": {},
+    "objects": [],
+    "canRespawn": false,
+    "respawnTimeHours": 48
+  }
+]

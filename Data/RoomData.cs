@@ -9,7 +9,20 @@ namespace GuildMaster.Data
 {
     public static class RoomData
     {
+        /// <summary>
+        /// Builds rooms from wwwroot/data/rooms.json (loaded at startup by RoomTemplateStore).
+        /// Room content lives in that JSON file now - edit it, not this class.
+        /// </summary>
         public static Dictionary<int, Room> InitializeRooms(Dictionary<string, NPC> npcs)
+        {
+            return RoomTemplateStore.BuildRooms(npcs);
+        }
+
+        /// <summary>
+        /// LEGACY code-built rooms, kept temporarily as the source for tools/RoomJsonGenerator
+        /// and the migration parity check. Do not add new rooms here - edit rooms.json instead.
+        /// </summary>
+        public static Dictionary<int, Room> InitializeRoomsLegacy(Dictionary<string, NPC> npcs)
         {
             var rooms = new Dictionary<int, Room>();
 

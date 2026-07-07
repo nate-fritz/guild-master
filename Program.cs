@@ -14,4 +14,11 @@ builder.Services.AddScoped<IStorageService, LocalStorageService>();
 builder.Services.AddScoped<GameConsole>();
 builder.Services.AddScoped<GameEngine>();
 
+// Load room content before the app starts; the game can't run without it.
+using (var contentClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
+{
+    var roomsJson = await contentClient.GetStringAsync("data/rooms.json");
+    GuildMaster.Data.RoomTemplateStore.Load(roomsJson);
+}
+
 await builder.Build().RunAsync();
