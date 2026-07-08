@@ -698,6 +698,14 @@ namespace GuildMaster.Managers
                     abilitySuccess = ExecuteProtectiveWardGeneric(ability, character, player);
                     break;
 
+                // New Legionnaire Abilities
+                case "Provoke":
+                    abilitySuccess = ExecuteProvokeGeneric(ability, character, enemies);
+                    break;
+                case "Crushing Sweep":
+                    abilitySuccess = ExecuteCrushingSweepGeneric(ability, character, enemies);
+                    break;
+
                 // New Venator Abilities
                 case "Crippling Shot":
                     abilitySuccess = ExecuteCripplingShotGeneric(ability, character, enemies);
@@ -1162,6 +1170,49 @@ namespace GuildMaster.Managers
             // Apply regeneration status effect
             ApplyStatusEffect(target, CombatManager.StatusEffect.Regenerating, duration);
             regenerationAmount[target] = healPerTurn;
+
+            return true;
+        }
+
+        public bool ExecuteProvokeGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            if (IsAbilityOnCooldown(character, "Provoke"))
+            {
+                int cooldownRemaining = GetAbilityCooldown(character, "Provoke");
+                AnsiConsole.MarkupLine($"\n[#FFFF00]Provoke is on cooldown for {cooldownRemaining} more turns![/]");
+                return false;
+            }
+
+            var target = SelectEnemyTarget(enemies);
+            if (target == null) return false;
+
+            AnsiConsole.MarkupLine($"\n[#FFFF00]{character.Name} provokes {target.Name}, demanding their full attention![/]");
+            ApplyStatusEffect(target, CombatManager.StatusEffect.Taunted, 2, character);
+            AnsiConsole.MarkupLine($"[#FFFF00]{target.Name} is taunted for 2 turns![/]");
+
+            SetAbilityCooldown(character, "Provoke", 2);
+            return true;
+        }
+
+        public bool ExecuteCrushingSweepGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            var targets = enemies.Where(e => e.Health > 0).Take(4).ToList();
+            if (targets.Count == 0)
+            {
+                AnsiConsole.MarkupLine("No enemies to target!");
+                return false;
+            }
+
+            AnsiConsole.MarkupLine($"\n[#FF0000]{character.Name} sweeps their gladius in a crushing arc![/]");
+
+            foreach (var target in targets)
+            {
+                int damage = CalculateAbilityDamage(character, ability);
+                string diceString = GetAbilityDiceString(character, ability);
+
+                AnsiConsole.MarkupLine($"  → {target.Name}: (Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Physical)})");
+                ApplyDamageWithType(character, target, damage, DamageType.Physical, "crushing sweep");
+            }
 
             return true;
         }

@@ -2973,6 +2973,12 @@ namespace GuildMaster.Managers
                 case "Protective Ward":
                     return abilityExecutor.ExecuteProtectiveWardGeneric(ability, player, player);
 
+                // New Legionnaire Abilities
+                case "Provoke":
+                    return abilityExecutor.ExecuteProvokeGeneric(ability, player, enemies);
+                case "Crushing Sweep":
+                    return abilityExecutor.ExecuteCrushingSweepGeneric(ability, player, enemies);
+
                 // New Venator Abilities
                 case "Crippling Shot":
                     return abilityExecutor.ExecuteCripplingShotGeneric(ability, player, enemies);

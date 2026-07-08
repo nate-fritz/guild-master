@@ -126,6 +126,10 @@ Blessing: 5 EP → 4 EP (more accessible)
 - **Fits Philosophy:** ❌ Single-target damage doesn't fit "high multi-target" philosophy
 - **RECOMMENDATION:** Replace with another AOE or party support ability?
 
+**STATUS (2026-07-06): Provoke (L6) and Crushing Sweep (L16) IMPLEMENTED AND TESTED ✅**
+Open user decisions: Rallying Shout (L8)?, Iron Will (L12) replacement?, Vengeful
+Strike (L18) replacement?, Shield Wall redesign (planned but not yet implemented).
+
 ### LEGIONNAIRE SUMMARY
 **Fits Philosophy:** Provoke (6), Crushing Sweep (16)
 **Questionable Fit:** Rallying Shout (8), Iron Will (12)

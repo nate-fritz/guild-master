@@ -403,6 +403,38 @@
         };
 
         // ============================================
+        // NEW LEGIONNAIRE ABILITIES (Ability Rework)
+        // ============================================
+
+        // Legionnaire Level 6
+        public static Ability Provoke = new Ability
+        {
+            Name = "Provoke",
+            Description = "Taunt a single enemy into attacking you for 2 turns (2 turn cooldown)",
+            EnergyCost = 0,
+            DiceCount = 0,
+            DiceSides = 0,
+            Bonus = 0,
+            Type = AbilityType.SingleTarget,
+            IsRanged = true,   // A shout, not a strike; must work from any row
+            UnlockLevel = 6
+        };
+
+        // Legionnaire Level 16
+        public static Ability CrushingSweep = new Ability
+        {
+            Name = "Crushing Sweep",
+            Description = "Sweep your gladius in a crushing arc, striking up to 4 enemies",
+            EnergyCost = 4,
+            DiceCount = 1,
+            DiceSides = 6,
+            Bonus = 2,
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = false,
+            UnlockLevel = 16
+        };
+
+        // ============================================
         // NEW VENATOR ABILITIES (Ability Rework)
         // ============================================
 
@@ -561,6 +593,8 @@
                 "Rejuvenation" => Rejuvenation,
                 "Ice Shards" => IceShards,
                 "Protective Ward" => ProtectiveWard,
+                "Provoke" => Provoke,
+                "Crushing Sweep" => CrushingSweep,
                 "Crippling Shot" => CripplingShot,
                 "Volley" => Volley,
                 "Hunter's Mark" => HuntersMark,
