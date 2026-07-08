@@ -43,9 +43,12 @@
     private const int MAX_HISTORY_SIZE = 25;
 
     // Scroll UX state: pinned = view glued to the bottom; the unread marker
-    // sits before the first line that arrived while the player was scrolled up.
+    // sits before the first line the player hasn't seen yet (either where a
+    // long command output was anchored, or where text arrived while they
+    // were reading scrollback).
     private bool scrollPinned = true;
     private int? unreadMarkerIndex = null;
+    private int burstStartIndex = 0;
     private DotNetObjectReference<Home>? selfRef;
 
     [JSInvokable]
@@ -55,9 +58,11 @@
     }
 
     [JSInvokable]
-    public void OnViewportResized(int lines)
+    public async Task OnAnchoredToNewText()
     {
-        GuildMaster.Helpers.TextHelper.ViewportLinesPerPage = lines;
+        // Long output got anchored at its top; the divider marks the boundary.
+        unreadMarkerIndex = burstStartIndex;
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task JumpToPresent()
@@ -86,8 +91,11 @@
         {
             selfRef = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("gmConsole.init", "consoleOutput", selfRef);
-            GuildMaster.Helpers.TextHelper.ViewportLinesPerPage =
-                await JS.InvokeAsync<int>("gmConsole.measureViewportLines");
+
+            // Page breaks are retired: long output anchors the view to the
+            // top of the new text instead (see console-ui.js afterRender).
+            GuildMaster.Helpers.TextHelper.ViewportLinesPerPage = int.MaxValue;
+
             await inputField.FocusAsync();
         }
 
@@ -180,12 +188,10 @@
             string input = currentInput?.Trim() ?? "";
             currentInput = "";
 
-            // Submitting a command while at the bottom means the player has
-            // caught up; retire the unread divider.
-            if (scrollPinned && unreadMarkerIndex != null)
-            {
-                unreadMarkerIndex = null;
-            }
+            // Submitting a command returns the view to the present and starts
+            // a new output burst; whatever was unread is considered caught up.
+            unreadMarkerIndex = null;
+            await JS.InvokeVoidAsync("gmConsole.beginOutput");
 
             // Add non-empty commands to history
             if (!string.IsNullOrEmpty(input))
@@ -203,6 +209,7 @@
             // Always process if there's input, or if it's empty but the game wants it (for pagination)
             if (!string.IsNullOrEmpty(input) || GameEngine.IsGameStarted)
             {
+                burstStartIndex = outputLines.Count;
                 if (!string.IsNullOrEmpty(input))
                 {
                     outputLines.Add($"<span style=\"color:#44ff44\">&gt; {System.Web.HttpUtility.HtmlEncode(input)}</span>");

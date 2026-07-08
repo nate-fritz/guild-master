@@ -13,8 +13,9 @@ namespace GuildMaster.Helpers
         public const int MaxLineLength = 80;
         public const int DefaultLinesPerPage = 16;
 
-        // Measured by the UI (console height / line height); when set, pages
-        // size themselves to what actually fits in the player's viewport.
+        // Set by the web UI. int.MaxValue disables page breaks entirely: the
+        // browser anchors long output to the top of the new text instead
+        // (see wwwroot/js/console-ui.js). A finite value re-enables breaks.
         public static int? ViewportLinesPerPage { get; set; }
 
         // Flag to disable paging (for web version)

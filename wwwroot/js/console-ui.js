@@ -1,9 +1,15 @@
 // Console scroll/viewport helpers for the game terminal.
-// State lives here; Blazor is notified only when the pinned state flips.
+//
+// Output model: when a command produces more text than fits the viewport,
+// the view anchors to the TOP of the new text (reader continues downward at
+// their own pace, "new text below" pill shows the way back). Shorter output
+// keeps the classic follow-the-bottom behavior. This replaces the old
+// "Press Enter to continue" page breaks.
 window.gmConsole = (function () {
     let output = null;
     let dotNetRef = null;
-    let pinned = true;           // user is at (or near) the bottom
+    let pinned = true;           // view is glued to the bottom
+    let burstStart = -1;         // scrollHeight when the current command was submitted
     const PIN_THRESHOLD = 40;    // px from bottom still counting as "at bottom"
 
     function distanceFromBottom() {
@@ -18,7 +24,6 @@ window.gmConsole = (function () {
     }
 
     function lineHeightPx() {
-        // Lines render as child divs with line-height 1.0; measure a real one when possible.
         const child = output.querySelector('div');
         if (child) {
             const lh = parseFloat(getComputedStyle(child).lineHeight);
@@ -37,25 +42,34 @@ window.gmConsole = (function () {
             output.addEventListener('scroll', () => {
                 setPinned(distanceFromBottom() <= PIN_THRESHOLD);
             });
-
-            new ResizeObserver(() => {
-                dotNetRef?.invokeMethodAsync('OnViewportResized', this.measureViewportLines());
-            }).observe(output);
         },
 
-        // How many text lines fit in the console, minus a reserve for the
-        // pagination prompt and status bar so a full page never overflows.
-        measureViewportLines() {
-            if (!output) return 16;
-            const usable = Math.floor(output.clientHeight / lineHeightPx()) - 5;
-            return Math.max(8, Math.min(usable, 60));
+        // Called when the player submits a command: return to the present and
+        // remember where the new output will begin.
+        beginOutput() {
+            if (!output) return;
+            output.scrollTop = output.scrollHeight;
+            setPinned(true);
+            burstStart = output.scrollHeight;
         },
 
-        // Called after each Blazor render: keep view glued to bottom only when pinned.
+        // Called after each Blazor render.
         afterRender() {
-            if (output && pinned) {
-                output.scrollTop = output.scrollHeight;
+            if (!output || !pinned) return;
+
+            // If this command's output has outgrown the viewport, anchor the
+            // view to where the new text starts instead of its bottom.
+            if (burstStart >= 0) {
+                const newContentHeight = output.scrollHeight - burstStart;
+                if (newContentHeight > output.clientHeight * 0.95) {
+                    output.scrollTop = Math.max(0, burstStart - lineHeightPx());
+                    setPinned(false);
+                    dotNetRef?.invokeMethodAsync('OnAnchoredToNewText');
+                    return;
+                }
             }
+
+            output.scrollTop = output.scrollHeight;
         },
 
         scrollPage(direction) {
