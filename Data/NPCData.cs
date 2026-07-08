@@ -848,7 +848,7 @@ namespace GuildMaster.Data
             bandit.MaxHealth = 8;
             bandit.AttackDamage = 2;
             bandit.MinGold = 1;
-            bandit.MinGold = 3;
+            bandit.MaxGold = 3;
             bandit.ExperienceReward = 25;
             bandit.LootTable = new Dictionary<string, int>
             {
