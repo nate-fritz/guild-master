@@ -96,6 +96,15 @@ namespace GuildMaster.Managers
                             AnsiConsole.MarkupLine($"- {obj.Name}");
                         }
                     }
+
+                    // First time the player looks around a room with something in it,
+                    // teach the general examine verb using a real item they can see
+                    string exampleItem = currentRoomObj.Items.FirstOrDefault()
+                        ?? currentRoomObj.Objects.FirstOrDefault(o => !o.IsHidden)?.Name;
+                    if (exampleItem != null)
+                    {
+                        ProgramStatics.messageManager?.CheckAndShowMessage("first_look_items", exampleItem);
+                    }
                 }
                 else
                 {

@@ -72,6 +72,10 @@ namespace GuildMaster.Managers
                     ("You see someone here! To speak with NPCs, use the [cyan]TALK[/] command<br>followed by their name. For example: [cyan]talk Gaius[/]<br><br>Talking to NPCs can reveal quests, lore, and opportunities to<br>recruit new guild members.",
                      MessageType.Tutorial),
 
+                "first_look_items" =>
+                    ($"To examine the items you notice in a room, type [cyan]look[/] (or [cyan]l[/]) followed by the item's name - try [cyan]l {customParam}[/]. Examining things can reveal more than meets the eye.",
+                     MessageType.Tutorial),
+
                 "first_container" =>
                     ("This object contained a new item within. Try taking a [cyan]look[/] around the room to see what came out.  Then, you can [cyan]take[/] the item or even [cyan]take all[/] loose items in the room.",
                      MessageType.Tutorial),
