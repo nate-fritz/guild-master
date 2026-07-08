@@ -13,6 +13,10 @@ namespace GuildMaster.Helpers
         public const int MaxLineLength = 80;
         public const int DefaultLinesPerPage = 16;
 
+        // Measured by the UI (console height / line height); when set, pages
+        // size themselves to what actually fits in the player's viewport.
+        public static int? ViewportLinesPerPage { get; set; }
+
         // Flag to disable paging (for web version)
         public static bool DisablePaging { get; set; } = true;
 
@@ -81,6 +85,9 @@ namespace GuildMaster.Helpers
 
         public static void DisplayTextWithPaging(string text, int maxLineLength = MaxLineLength, int linesPerPage = DefaultLinesPerPage, string color = null)
         {
+            // Viewport-measured page size wins over the static default
+            linesPerPage = ViewportLinesPerPage ?? linesPerPage;
+
             string wrappedText = WrapText(text, maxLineLength);
             string[] lines = wrappedText.Split('\n');
 

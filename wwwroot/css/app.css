@@ -13,6 +13,53 @@ html, body {
     height: 100vh;
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
+}
+
+/* Marks where unseen text begins after scrolling away */
+.unread-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #FA935F;
+    margin: 4px 0;
+    user-select: none;
+}
+
+.unread-divider::before,
+.unread-divider::after {
+    content: "";
+    flex: 1;
+    border-top: 1px dashed #FA935F;
+}
+
+/* Floating "return to present" button, shown while scrolled up */
+.jump-pill {
+    position: absolute;
+    bottom: 84px;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    background-color: #262626;
+    color: #FA935F;
+    border: 1px solid #FA935F;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 0.85em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 10;
+}
+
+.jump-pill.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.jump-pill:hover {
+    background-color: #333;
 }
 
 .console-output {

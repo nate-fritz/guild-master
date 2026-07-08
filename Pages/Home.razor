@@ -8,12 +8,18 @@
 
 <div class="game-container">
     <div class="console-output" id="consoleOutput" @ref="outputDiv">
-        @foreach (var line in outputLines)
+        @for (int i = 0; i < outputLines.Count; i++)
         {
-            <div>@((MarkupString)line)</div>
+            @if (unreadMarkerIndex == i)
+            {
+                <div class="unread-divider">new</div>
+            }
+            <div>@((MarkupString)outputLines[i])</div>
         }
     </div>
-    
+
+    <div class="jump-pill" @onclick="JumpToPresent" title="Ctrl+End">&#9660; new text below</div>
+
     <div class="console-input">
         <span class="prompt">&gt;</span>
         <input @ref="inputField"
@@ -36,6 +42,30 @@
     private int historyIndex = -1;
     private const int MAX_HISTORY_SIZE = 25;
 
+    // Scroll UX state: pinned = view glued to the bottom; the unread marker
+    // sits before the first line that arrived while the player was scrolled up.
+    private bool scrollPinned = true;
+    private int? unreadMarkerIndex = null;
+    private DotNetObjectReference<Home>? selfRef;
+
+    [JSInvokable]
+    public void OnScrollPinnedChanged(bool pinned)
+    {
+        scrollPinned = pinned;
+    }
+
+    [JSInvokable]
+    public void OnViewportResized(int lines)
+    {
+        GuildMaster.Helpers.TextHelper.ViewportLinesPerPage = lines;
+    }
+
+    private async Task JumpToPresent()
+    {
+        await JS.InvokeVoidAsync("gmConsole.scrollToBottom");
+        await inputField.FocusAsync();
+    }
+
     protected override void OnInitialized()
     {
         GameConsole.OnOutput += HandleOutput;
@@ -54,20 +84,22 @@
     {
         if (firstRender)
         {
+            selfRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("gmConsole.init", "consoleOutput", selfRef);
+            GuildMaster.Helpers.TextHelper.ViewportLinesPerPage =
+                await JS.InvokeAsync<int>("gmConsole.measureViewportLines");
             await inputField.FocusAsync();
         }
-        await ScrollToBottom();
-    }
-    
-    private async Task ScrollToBottom()
-    {
+
+        // Follows output only while the player is at the bottom; scrolled-up
+        // readers stay where they are (the jump pill offers the way back).
         try
         {
-            await JS.InvokeVoidAsync("eval", "document.getElementById('consoleOutput').scrollTop = document.getElementById('consoleOutput').scrollHeight");
+            await JS.InvokeVoidAsync("gmConsole.afterRender");
         }
         catch
         {
-            // Silently ignore scroll errors (element may not exist yet during initialization)
+            // Ignore scroll errors during teardown/initialization
         }
     }
     
@@ -107,6 +139,12 @@
 
     private async void HandleOutput(string htmlLine)
     {
+        // Text arriving while the player reads scrollback: mark where the
+        // unseen part begins (once), so the divider shows them the boundary.
+        if (!scrollPinned && unreadMarkerIndex == null)
+        {
+            unreadMarkerIndex = outputLines.Count;
+        }
         outputLines.Add(htmlLine);
         await InvokeAsync(StateHasChanged);
     }
@@ -114,15 +152,40 @@
     private async void HandleClear()
     {
         outputLines.Clear();
+        unreadMarkerIndex = null;
         await InvokeAsync(StateHasChanged);
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs e)
     {
+        // Scrollback navigation from the input field
+        if (e.Key == "PageUp")
+        {
+            await JS.InvokeVoidAsync("gmConsole.scrollPage", -1);
+            return;
+        }
+        if (e.Key == "PageDown")
+        {
+            await JS.InvokeVoidAsync("gmConsole.scrollPage", 1);
+            return;
+        }
+        if (e.Key == "End" && e.CtrlKey)
+        {
+            await JumpToPresent();
+            return;
+        }
+
         if (e.Key == "Enter")
         {
             string input = currentInput?.Trim() ?? "";
             currentInput = "";
+
+            // Submitting a command while at the bottom means the player has
+            // caught up; retire the unread divider.
+            if (scrollPinned && unreadMarkerIndex != null)
+            {
+                unreadMarkerIndex = null;
+            }
 
             // Add non-empty commands to history
             if (!string.IsNullOrEmpty(input))
@@ -305,5 +368,6 @@
     {
         GameConsole.OnOutput -= HandleOutput;
         GameConsole.OnClear -= HandleClear;
+        selfRef?.Dispose();
     }
 }
