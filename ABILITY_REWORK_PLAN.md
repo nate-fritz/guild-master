@@ -190,6 +190,16 @@ Blessing: 5 EP → 4 EP (more accessible)
 **Fits Philosophy:** ✅ All 5 proposed abilities fit perfectly
 **Still Needed:** Abilities for levels 7, 9, 10, 12, 14, 16, 18, 19
 
+**STATUS (2026-07-06): ALL 5 IMPLEMENTED AND TESTED ✅**
+- Crippling Shot, Volley, Hunter's Mark, Explosive Arrow, Phase Shift in game
+- New status effects: Rooted (skips turns, can be hit), Marked (+30% damage from
+  all sources incl. basic attacks), Untargetable (enemy AI skips; taunt overridden)
+- Explosive Arrow splash = 1d4 to every other living enemy ("adjacent" simplified;
+  no positioning system to be adjacent in)
+- Phase Shift must stay IsRanged=true (self-buffs flagged melee get blocked by
+  the back-row restriction - found in testing)
+- Verified in dungeon vs Satyrs/Harpy/Scorpions/Hydra at level 17
+
 ---
 
 ## 🔮 ORACLE - The Arcane Battery

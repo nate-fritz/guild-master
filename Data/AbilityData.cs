@@ -403,6 +403,80 @@
         };
 
         // ============================================
+        // NEW VENATOR ABILITIES (Ability Rework)
+        // ============================================
+
+        // Venator Level 6
+        public static Ability CripplingShot = new Ability
+        {
+            Name = "Crippling Shot",
+            Description = "Pin an enemy's leg, rooting them in place for 2 turns",
+            EnergyCost = 3,
+            DiceCount = 1,
+            DiceSides = 4,
+            Bonus = 2,
+            Type = AbilityType.SingleTarget,
+            IsRanged = true,
+            UnlockLevel = 6
+        };
+
+        // Venator Level 8
+        public static Ability Volley = new Ability
+        {
+            Name = "Volley",
+            Description = "Loose a quick volley at up to 2 random enemies",
+            EnergyCost = 2,
+            DiceCount = 1,
+            DiceSides = 3,
+            Bonus = 0,
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = true,
+            UnlockLevel = 8
+        };
+
+        // Venator Level 11
+        public static Ability HuntersMark = new Ability
+        {
+            Name = "Hunter's Mark",
+            Description = "Mark a target to take 30% more damage from all sources for 4 turns",
+            EnergyCost = 2,
+            DiceCount = 0,  // No damage
+            DiceSides = 0,
+            Bonus = 0,
+            Type = AbilityType.SingleTarget,
+            IsRanged = true,
+            UnlockLevel = 11
+        };
+
+        // Venator Level 13
+        public static Ability ExplosiveArrow = new Ability
+        {
+            Name = "Explosive Arrow",
+            Description = "An explosive-tipped arrow that damages the target and splashes nearby enemies",
+            EnergyCost = 5,
+            DiceCount = 1,
+            DiceSides = 6,
+            Bonus = 3,
+            Type = AbilityType.SingleTarget,  // Needs a primary target; splash handled by executor
+            IsRanged = true,
+            UnlockLevel = 13
+        };
+
+        // Venator Level 17
+        public static Ability PhaseShift = new Ability
+        {
+            Name = "Phase Shift",
+            Description = "Slip from sight for 1 turn, becoming untargetable and recovering 4 EP (10 turn cooldown)",
+            EnergyCost = 0,
+            DiceCount = 0,
+            DiceSides = 0,
+            Bonus = 0,
+            Type = AbilityType.Buff,
+            IsRanged = true,   // Self-buff; must be usable from the back row
+            UnlockLevel = 17
+        };
+
+        // ============================================
         // LEVEL 15 ABILITIES
         // ============================================
 
@@ -487,6 +561,11 @@
                 "Rejuvenation" => Rejuvenation,
                 "Ice Shards" => IceShards,
                 "Protective Ward" => ProtectiveWard,
+                "Crippling Shot" => CripplingShot,
+                "Volley" => Volley,
+                "Hunter's Mark" => HuntersMark,
+                "Explosive Arrow" => ExplosiveArrow,
+                "Phase Shift" => PhaseShift,
 
                 // Other
                 "Whirlwind Attack" => WhirlwindAttack,

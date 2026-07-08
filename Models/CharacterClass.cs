@@ -100,7 +100,12 @@ namespace GuildMaster.Models
                 AbilityData.CoveringShot,
                 AbilityData.EvasiveFire,
                 AbilityData.BarbedArrow,
+                AbilityData.CripplingShot,     // Level 6 (NEW)
+                AbilityData.Volley,            // Level 8 (NEW)
+                AbilityData.HuntersMark,       // Level 11 (NEW)
+                AbilityData.ExplosiveArrow,    // Level 13 (NEW)
                 AbilityData.FrostArrow,
+                AbilityData.PhaseShift,        // Level 17 (NEW)
                 AbilityData.ThunderVolley
             };
         }

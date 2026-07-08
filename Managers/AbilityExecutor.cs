@@ -698,6 +698,23 @@ namespace GuildMaster.Managers
                     abilitySuccess = ExecuteProtectiveWardGeneric(ability, character, player);
                     break;
 
+                // New Venator Abilities
+                case "Crippling Shot":
+                    abilitySuccess = ExecuteCripplingShotGeneric(ability, character, enemies);
+                    break;
+                case "Volley":
+                    abilitySuccess = ExecuteVolleyGeneric(ability, character, enemies);
+                    break;
+                case "Hunter's Mark":
+                    abilitySuccess = ExecuteHuntersMarkGeneric(ability, character, enemies);
+                    break;
+                case "Explosive Arrow":
+                    abilitySuccess = ExecuteExplosiveArrowGeneric(ability, character, enemies);
+                    break;
+                case "Phase Shift":
+                    abilitySuccess = ExecutePhaseShiftGeneric(ability, character);
+                    break;
+
                 // Level 5 Abilities
                 case "Barbed Arrow":
                     abilitySuccess = ExecuteBarbedArrowGeneric(ability, character, enemies);
@@ -1149,6 +1166,118 @@ namespace GuildMaster.Managers
             return true;
         }
 
+        public bool ExecuteCripplingShotGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            var target = SelectEnemyTarget(enemies);
+            if (target == null) return false;
+
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
+
+            AnsiConsole.MarkupLine($"\n[#90FF90]{character.Name} fires a crippling shot into {target.Name}'s leg![/]");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Physical)})");
+
+            ApplyDamageWithType(character, target, damage, DamageType.Physical, "crippling shot");
+
+            if (target.Health > 0)
+            {
+                ApplyStatusEffect(target, CombatManager.StatusEffect.Rooted, 2);
+                AnsiConsole.MarkupLine($"[#FFFF00]{target.Name} is rooted in place for 2 turns![/]");
+            }
+
+            return true;
+        }
+
+        public bool ExecuteVolleyGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            if (enemies.Count == 0)
+            {
+                AnsiConsole.MarkupLine("No enemies to target!");
+                return false;
+            }
+
+            // Hit up to 2 random enemies
+            int targetCount = Math.Min(2, enemies.Count);
+            var targets = enemies.OrderBy(x => random.Next()).Take(targetCount).ToList();
+
+            AnsiConsole.MarkupLine($"\n[#90FF90]{character.Name} looses a quick volley at {targetCount} enem{(targetCount == 1 ? "y" : "ies")}![/]");
+
+            foreach (var target in targets)
+            {
+                int damage = CalculateAbilityDamage(character, ability);
+                string diceString = GetAbilityDiceString(character, ability);
+
+                AnsiConsole.MarkupLine($"  → {target.Name}: (Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Physical)})");
+                ApplyDamageWithType(character, target, damage, DamageType.Physical, "volley");
+            }
+
+            return true;
+        }
+
+        public bool ExecuteHuntersMarkGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            var target = SelectEnemyTarget(enemies);
+            if (target == null) return false;
+
+            AnsiConsole.MarkupLine($"\n[#90FF90]{character.Name} marks {target.Name} as prey![/]");
+            AnsiConsole.MarkupLine($"[#FFFF00]{target.Name} takes 30% more damage from all sources for 4 turns![/]");
+
+            ApplyStatusEffect(target, CombatManager.StatusEffect.Marked, 4);
+
+            return true;
+        }
+
+        public bool ExecuteExplosiveArrowGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            var target = SelectEnemyTarget(enemies);
+            if (target == null) return false;
+
+            int damage = CalculateAbilityDamage(character, ability);
+            string diceString = GetAbilityDiceString(character, ability);
+
+            AnsiConsole.MarkupLine($"\n[#FA935F]{character.Name} fires an explosive arrow at {target.Name}![/]");
+            AnsiConsole.MarkupLine($"(Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Physical)})");
+
+            ApplyDamageWithType(character, target, damage, DamageType.Physical, "explosive arrow");
+
+            // Splash: every other living enemy takes 1d4
+            var splashTargets = enemies.Where(e => e != target && e.Health > 0).ToList();
+            if (splashTargets.Count > 0)
+            {
+                AnsiConsole.MarkupLine($"[#FA935F]The explosion tears through the enemy ranks![/]");
+                foreach (var splash in splashTargets)
+                {
+                    int splashDamage = RollDice(1, 4, 0);
+                    AnsiConsole.MarkupLine($"  → {splash.Name}: {GetTypedDamageMarkup(splashDamage, DamageType.Physical)} splash");
+                    ApplyDamageWithType(character, splash, splashDamage, DamageType.Physical, "explosion");
+                }
+            }
+
+            return true;
+        }
+
+        public bool ExecutePhaseShiftGeneric(Ability ability, Character character)
+        {
+            if (IsAbilityOnCooldown(character, "Phase Shift"))
+            {
+                int cooldownRemaining = GetAbilityCooldown(character, "Phase Shift");
+                AnsiConsole.MarkupLine($"\n[#90FF90]Phase Shift is on cooldown for {cooldownRemaining} more turns![/]");
+                return false;
+            }
+
+            AnsiConsole.MarkupLine($"\n[#90FF90]{character.Name} slips from sight, nocking fresh arrows![/]");
+
+            ApplyStatusEffect(character, CombatManager.StatusEffect.Untargetable, 1);
+
+            int epRestored = Math.Min(4, character.MaxEnergy - character.Energy);
+            character.Energy += epRestored;
+            AnsiConsole.MarkupLine($"[#75C8FF]{character.Name} becomes untargetable for 1 turn and recovers {epRestored} EP![/]");
+
+            SetAbilityCooldown(character, "Phase Shift", 10);
+
+            return true;
+        }
+
         public bool ExecuteIceShardsGeneric(Ability ability, Character character, List<NPC> enemies)
         {
             if (enemies.Count == 0)
@@ -1276,6 +1405,13 @@ namespace GuildMaster.Managers
         private void ApplyDamageWithType(Character attacker, Character target, int baseDamage, DamageType damageType, string attackName = "attack")
         {
             int actualDamage = baseDamage;
+
+            // Hunter's Mark: marked targets take 30% more damage from all sources
+            if (HasStatusEffect(target, CombatManager.StatusEffect.Marked))
+            {
+                actualDamage = (int)Math.Ceiling(actualDamage * 1.3);
+                AnsiConsole.MarkupLine($"[#90FF90]The mark glows - {target.Name} takes amplified damage![/]");
+            }
 
             // Apply damage type effects
             switch (damageType)

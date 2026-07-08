@@ -22,7 +22,10 @@ namespace GuildMaster.Managers
             Evasive,
             Confused,       // Forces enemy to attack ally or skip turn
             Regenerating,   // Heals HP each turn
-            Frozen          // Reduces defense - from ice damage
+            Frozen,         // Reduces defense - from ice damage
+            Rooted,         // Cannot act, but can still be hit - from Crippling Shot
+            Marked,         // Takes +30% damage from all sources - from Hunter's Mark
+            Untargetable    // Enemies cannot target this character - from Phase Shift
         }
 
         public enum CombatState
@@ -744,6 +747,14 @@ namespace GuildMaster.Managers
 
             AnsiConsole.MarkupLine($"\n{currentActingPartyMember.Name} attacks {target.Name}!");
             AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damage} damage[/]!)");
+
+            // Hunter's Mark: marked targets take 30% more damage from all sources
+            if (HasStatusEffect(target, StatusEffect.Marked))
+            {
+                damage = (int)Math.Ceiling(damage * 1.3);
+                AnsiConsole.MarkupLine($"[#90FF90]The mark glows - {target.Name} takes amplified damage![/]");
+            }
+
             target.Health -= damage;
 
             // Class-based EP regeneration from basic attacks
@@ -988,6 +999,13 @@ namespace GuildMaster.Managers
 
             AnsiConsole.MarkupLine($"\nYou attack {target.Name} with your {player.EquippedWeapon}!");
             AnsiConsole.MarkupLine($"(Rolled {diceString} for [#FA8A8A]{damageRoll} damage[/]!)");
+
+            // Hunter's Mark: marked targets take 30% more damage from all sources
+            if (HasStatusEffect(target, StatusEffect.Marked))
+            {
+                damageRoll = (int)Math.Ceiling(damageRoll * 1.3);
+                AnsiConsole.MarkupLine($"[#90FF90]The mark glows - {target.Name} takes amplified damage![/]");
+            }
 
             target.Health -= damageRoll;
 
@@ -1252,6 +1270,7 @@ namespace GuildMaster.Managers
             {
                 "Shield Wall" => false,
                 "Evasive Fire" => false,
+                "Phase Shift" => false,
                 "Blessing" => false,
                 "Heal" => false,
                 "Rejuvenation" => false,
@@ -1856,6 +1875,13 @@ namespace GuildMaster.Managers
                 return;
             }
 
+            // Check if rooted
+            if (HasStatusEffect(ally, StatusEffect.Rooted))
+            {
+                AnsiConsole.MarkupLine($"\n{ally.Name} is rooted in place and cannot act!");
+                return;
+            }
+
             // Check if autocombat is enabled
             var player = context.Player;
             if (player.AutoCombatEnabled)
@@ -2117,6 +2143,13 @@ namespace GuildMaster.Managers
                     return;
                 }
 
+                // Check if rooted (Crippling Shot)
+                if (HasStatusEffect(attackingEnemy, StatusEffect.Rooted))
+                {
+                    AnsiConsole.MarkupLine($"\n[#90FF90]{attackingEnemy.Name} strains against the arrow pinning them in place and cannot act![/]");
+                    return;
+                }
+
                 // Check if confused
                 if (HasStatusEffect(attackingEnemy, StatusEffect.Confused))
                 {
@@ -2151,12 +2184,23 @@ namespace GuildMaster.Managers
                 if (player.Health > 0) possibleTargets.Add(player);
                 possibleTargets.AddRange(player.ActiveParty.Where(a => a.Health > 0));
 
+                // Phase Shift: untargetable characters cannot be selected
+                bool anyoneAlive = possibleTargets.Count > 0;
+                possibleTargets.RemoveAll(t => HasStatusEffect(t, StatusEffect.Untargetable));
+                if (possibleTargets.Count == 0 && anyoneAlive)
+                {
+                    AnsiConsole.MarkupLine($"\n[#90FF90]{attackingEnemy.Name} searches for a target, but finds no one to strike![/]");
+                    return;
+                }
+
                 if (possibleTargets.Count > 0)
                 {
                     Character target;
 
                     // Check for taunt effects - if this enemy is taunted, must attack taunter
-                    if (taunters.ContainsKey(attackingEnemy) && taunters[attackingEnemy].Health > 0)
+                    // (unless the taunter has phased out of sight)
+                    if (taunters.ContainsKey(attackingEnemy) && taunters[attackingEnemy].Health > 0
+                        && !HasStatusEffect(taunters[attackingEnemy], StatusEffect.Untargetable))
                     {
                         target = taunters[attackingEnemy];
                         AnsiConsole.MarkupLine($"\n{attackingEnemy.Name} is forced to attack {(target == player ? "you" : target.Name)}!");
@@ -2929,6 +2973,18 @@ namespace GuildMaster.Managers
                 case "Protective Ward":
                     return abilityExecutor.ExecuteProtectiveWardGeneric(ability, player, player);
 
+                // New Venator Abilities
+                case "Crippling Shot":
+                    return abilityExecutor.ExecuteCripplingShotGeneric(ability, player, enemies);
+                case "Volley":
+                    return abilityExecutor.ExecuteVolleyGeneric(ability, player, enemies);
+                case "Hunter's Mark":
+                    return abilityExecutor.ExecuteHuntersMarkGeneric(ability, player, enemies);
+                case "Explosive Arrow":
+                    return abilityExecutor.ExecuteExplosiveArrowGeneric(ability, player, enemies);
+                case "Phase Shift":
+                    return abilityExecutor.ExecutePhaseShiftGeneric(ability, player);
+
                 // Legacy abilities (if you still have these)
                 case "Whirlwind Attack":
                     return ExecuteWhirlwind(player, enemies);
@@ -3144,7 +3200,10 @@ namespace GuildMaster.Managers
         StatusEffect.Evasive,
         StatusEffect.Confused,
         StatusEffect.Regenerating,
-        StatusEffect.Frozen
+        StatusEffect.Frozen,
+        StatusEffect.Rooted,
+        StatusEffect.Marked,
+        StatusEffect.Untargetable
     };
 
             foreach (var effect in combatOnlyEffects)
@@ -3523,6 +3582,13 @@ namespace GuildMaster.Managers
         private void ApplyDamageWithType(Character attacker, Character target, int baseDamage, DamageType damageType, string attackName = "attack")
         {
             int actualDamage = baseDamage;
+
+            // Hunter's Mark: marked targets take 30% more damage from all sources
+            if (HasStatusEffect(target, StatusEffect.Marked))
+            {
+                actualDamage = (int)Math.Ceiling(actualDamage * 1.3);
+                AnsiConsole.MarkupLine($"[#90FF90]The mark glows - {target.Name} takes amplified damage![/]");
+            }
 
             // Apply damage type effects
             switch (damageType)

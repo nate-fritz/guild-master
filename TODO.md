@@ -63,12 +63,12 @@
 
 ## Ability Rework (Ongoing)
 
-### Venator Abilities (Next Class)
-- [ ] Review current Venator abilities in ABILITY_REWORK_PLAN.md
-- [ ] Implement Venator philosophy: Burst marksman with reload pattern
-- [ ] Add new abilities (TBD based on plan)
-- [ ] Test in dungeon at appropriate levels
-- [ ] Balance EP costs and damage values
+### Venator Abilities ✅ DONE (2026-07-06)
+- [x] Review current Venator abilities in ABILITY_REWORK_PLAN.md
+- [x] Implement Venator philosophy: Burst marksman with reload pattern
+- [x] Add new abilities: Crippling Shot (6), Volley (8), Hunter's Mark (11), Explosive Arrow (13), Phase Shift (17)
+- [x] Test in dungeon at appropriate levels (level 17 vs floors 1 & 4)
+- [ ] Balance EP costs and damage values (pending three-class balance pass)
 
 ### Legionnaire Abilities
 - [ ] Review current Legionnaire abilities in ABILITY_REWORK_PLAN.md
