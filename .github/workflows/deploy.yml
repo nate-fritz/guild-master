@@ -32,6 +32,11 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
+    - name: Regression playthroughs
+      run: |
+        dotnet build GuildMaster.csproj --configuration Debug
+        dotnet run --project tools/PlaythroughHarness
+
     - name: Publish
       run: dotnet publish -c Release -o release --nologo
 
