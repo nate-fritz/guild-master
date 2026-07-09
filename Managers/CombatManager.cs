@@ -817,6 +817,11 @@ namespace GuildMaster.Managers
             {
                 abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
             }
+            // Arrow Storm replaces Multi-Shot at level 20 (same pattern)
+            if (abilities.Any(a => a.Name == "Arrow Storm"))
+            {
+                abilities = abilities.Where(a => a.Name != "Multi-Shot").ToList();
+            }
 
             if (abilities.Count == 0)
             {
@@ -1065,6 +1070,11 @@ namespace GuildMaster.Managers
             {
                 abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
             }
+            // Arrow Storm replaces Multi-Shot at level 20 (same pattern)
+            if (abilities.Any(a => a.Name == "Arrow Storm"))
+            {
+                abilities = abilities.Where(a => a.Name != "Multi-Shot").ToList();
+            }
 
             if (abilities.Count == 0)
             {
@@ -1113,6 +1123,11 @@ namespace GuildMaster.Managers
             if (abilities.Any(a => a.Name == "War Cry"))
             {
                 abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+            }
+            // Arrow Storm replaces Multi-Shot at level 20 (same pattern)
+            if (abilities.Any(a => a.Name == "Arrow Storm"))
+            {
+                abilities = abilities.Where(a => a.Name != "Multi-Shot").ToList();
             }
 
             // Check if abilities are available - if not, accept Enter key as well as "0"
@@ -1934,6 +1949,11 @@ namespace GuildMaster.Managers
             if (abilities.Any(a => a.Name == "War Cry"))
             {
                 abilities = abilities.Where(a => a.Name != "Battle Cry").ToList();
+            }
+            // Arrow Storm replaces Multi-Shot at level 20 (same pattern)
+            if (abilities.Any(a => a.Name == "Arrow Storm"))
+            {
+                abilities = abilities.Where(a => a.Name != "Multi-Shot").ToList();
             }
 
             var aliveEnemies = enemies.Where(e => e.Health > 0).ToList();
@@ -3074,6 +3094,10 @@ namespace GuildMaster.Managers
                     return abilityExecutor.ExecuteExplosiveArrowGeneric(ability, player, enemies);
                 case "Phase Shift":
                     return abilityExecutor.ExecutePhaseShiftGeneric(ability, player);
+                case "Arrow Storm":
+                    return abilityExecutor.ExecuteArrowStormGeneric(ability, player, enemies);
+                case "Judgment":
+                    return abilityExecutor.ExecuteJudgmentGeneric(ability, player, player, enemies);
 
                 // Legacy abilities (if you still have these)
                 case "Whirlwind Attack":

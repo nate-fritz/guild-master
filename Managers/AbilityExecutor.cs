@@ -731,6 +731,12 @@ namespace GuildMaster.Managers
                 case "Phase Shift":
                     abilitySuccess = ExecutePhaseShiftGeneric(ability, character);
                     break;
+                case "Arrow Storm":
+                    abilitySuccess = ExecuteArrowStormGeneric(ability, character, enemies);
+                    break;
+                case "Judgment":
+                    abilitySuccess = ExecuteJudgmentGeneric(ability, character, player, enemies);
+                    break;
 
                 // Level 5 Abilities
                 case "Barbed Arrow":
@@ -1410,6 +1416,69 @@ namespace GuildMaster.Managers
             AnsiConsole.MarkupLine($"[#75C8FF]{character.Name} becomes untargetable for 1 turn and recovers {epRestored} EP![/]");
 
             SetAbilityCooldown(character, "Phase Shift", 10);
+
+            return true;
+        }
+
+        public bool ExecuteArrowStormGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            var targets = enemies.Where(e => e.Health > 0).ToList();
+            if (targets.Count == 0)
+            {
+                AnsiConsole.MarkupLine("No enemies to target!");
+                return false;
+            }
+
+            AnsiConsole.MarkupLine($"\n[#90FF90]{character.Name} unleashes an arrow storm - the sky darkens with shafts![/]");
+
+            foreach (var target in targets)
+            {
+                int damage = CalculateAbilityDamage(character, ability);
+                string diceString = GetAbilityDiceString(character, ability);
+
+                AnsiConsole.MarkupLine($"  → {target.Name}: (Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Bleed)})");
+                ApplyDamageWithType(character, target, damage, DamageType.Bleed, "arrow storm");
+            }
+
+            return true;
+        }
+
+        public bool ExecuteJudgmentGeneric(Ability ability, Character character, Player player, List<NPC> enemies)
+        {
+            var targets = enemies.Where(e => e.Health > 0).ToList();
+            if (targets.Count == 0)
+            {
+                AnsiConsole.MarkupLine("No enemies to target!");
+                return false;
+            }
+
+            AnsiConsole.MarkupLine($"\n[#FFD700]{character.Name} calls down Judgment - holy fire scours the battlefield![/]");
+
+            int totalDamage = 0;
+            foreach (var target in targets)
+            {
+                int damage = CalculateAbilityDamage(character, ability);
+                string diceString = GetAbilityDiceString(character, ability);
+                totalDamage += damage;
+
+                AnsiConsole.MarkupLine($"  → {target.Name}: (Rolled {diceString} for {GetTypedDamageMarkup(damage, DamageType.Fire)})");
+                ApplyDamageWithType(character, target, damage, DamageType.Fire, "judgment");
+            }
+
+            // The released energy mends the faithful: party heals 10% of total damage
+            int healAmount = Math.Max(1, totalDamage / 10);
+            var members = new List<Character> { player };
+            members.AddRange(player.ActiveParty.Where(a => a.Health > 0));
+            foreach (var member in members)
+            {
+                int actual = Math.Min(healAmount, member.MaxHealth - member.Health);
+                if (actual > 0)
+                {
+                    member.Health += actual;
+                    string name = member == player ? "You are" : $"{member.Name} is";
+                    AnsiConsole.MarkupLine($"[#90FF90]{name} healed for {actual} by the divine light! ({member.Health}/{member.MaxHealth})[/]");
+                }
+            }
 
             return true;
         }

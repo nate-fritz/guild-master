@@ -211,7 +211,7 @@
         {
             Name = "Lightning Bolt",
             Description = "Magical damage that cannot be blocked",
-            EnergyCost = 4,
+            EnergyCost = 5,   // Balance pass: was 4
             DiceCount = 1,
             DiceSides = 8,
             Bonus = 1,
@@ -224,7 +224,7 @@
         {
             Name = "Blessing",
             Description = "Boost all party members' attack for 4 turns",
-            EnergyCost = 5,
+            EnergyCost = 4,   // Balance pass: was 5
             Type = AbilityType.Buff,
             IsRanged = true,
             UnlockLevel = 3
@@ -341,7 +341,7 @@
             Bonus = 0,
             Type = AbilityType.SingleTarget,
             IsRanged = true,
-            UnlockLevel = 20
+            UnlockLevel = 16   // Balance pass: moved from 20; Judgment is the capstone now
         };
 
         // ============================================
@@ -478,6 +478,34 @@
             UnlockLevel = 16
         };
 
+        // Venator Level 20 - upgrade-replaces Multi-Shot (the War Cry pattern)
+        public static Ability ArrowStorm = new Ability
+        {
+            Name = "Arrow Storm",
+            Description = "Ultimate barrage that shreds all enemies and leaves them bleeding",
+            EnergyCost = 8,
+            DiceCount = 1,
+            DiceSides = 6,
+            Bonus = 3,
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = true,
+            UnlockLevel = 20
+        };
+
+        // Oracle Level 20 - the arcane battery discharges
+        public static Ability Judgment = new Ability
+        {
+            Name = "Judgment",
+            Description = "Ultimate holy conflagration that sears all enemies; the party is healed by the released energy",
+            EnergyCost = 10,
+            DiceCount = 2,
+            DiceSides = 8,
+            Bonus = 4,
+            Type = AbilityType.AreaOfEffect,
+            IsRanged = true,
+            UnlockLevel = 20
+        };
+
         // ============================================
         // NEW VENATOR ABILITIES (Ability Rework)
         // ============================================
@@ -574,11 +602,11 @@
         public static Ability ThunderVolley = new Ability
         {
             Name = "Thunder Volley",
-            Description = "Lightning-charged volley that can stun all enemies",
-            EnergyCost = 6,
-            DiceCount = 1,
+            Description = "Ultimate lightning-charged volley that devastates and can stun all enemies",
+            EnergyCost = 10,   // Rescaled to true ultimate (balance pass 2026-07-06)
+            DiceCount = 2,
             DiceSides = 8,
-            Bonus = 2,
+            Bonus = 4,
             Type = AbilityType.AreaOfEffect,
             IsRanged = true,
             UnlockLevel = 20
@@ -647,6 +675,8 @@
                 "Hunter's Mark" => HuntersMark,
                 "Explosive Arrow" => ExplosiveArrow,
                 "Phase Shift" => PhaseShift,
+                "Arrow Storm" => ArrowStorm,
+                "Judgment" => Judgment,
 
                 // Other
                 "Whirlwind Attack" => WhirlwindAttack,

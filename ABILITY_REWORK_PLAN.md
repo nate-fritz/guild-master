@@ -62,6 +62,46 @@ Blessing: 5 EP → 4 EP (more accessible)
 
 ---
 
+## BALANCE PASS AGENDA (2026-07-06 — both class reworks complete)
+
+**STATUS: ITEMS 1-3 IMPLEMENTED AND TESTED ✅ (same day)**
+Thunder Volley rescaled (10 EP, 2d8+4); Arrow Storm added (L20, replaces
+Multi-Shot via the War Cry menu-filter pattern, Bleed to all enemies);
+Venom moved to 16; Judgment added (Oracle L20, Fire AOE + party heal =
+10% of total damage); EP economy Option A applied (Oracle 15% regen,
+Lightning Bolt 5 EP, Blessing 4 EP). Item 4 (damage formula) decided:
+KEEP the hot formula and tune around it — enemy HP scaling belongs to
+the Act II content pass.
+
+### 1. Capstone disparity (the big one)
+Legionnaire L20 = real ultimate package (Whirlwind 24 EP dump + War Cry
+upgrade-replacing Battle Cry). Venator L20 = Thunder Volley (6 EP, mid-tier
+stats — code comment still says "Venator Level 15", it was bumped without
+rescaling). Oracle L20 = Venom (3 EP utility DOT, weakest capstone in game).
+
+**PROPOSAL — Venator:** rescale Thunder Volley to ult (6→10 EP, 1d8+2→2d8+4,
+keep AOE stun); add Multi-Shot → "Arrow Storm" upgrade-replacement at 20
+(War Cry pattern: hits all enemies harder + applies Bleed).
+
+**PROPOSAL — Oracle:** move Venom 20→16 (starts filling her dead zone); new
+true capstone at 20: "Judgment" (~10 EP, 2d8+4 Fire/holy to all enemies,
+party healed for 10% of total damage dealt — the arcane battery discharges).
+
+### 2. Level dead zones
+Oracle 16-19 (Venom→16 helps), Venator 18-19, Legionnaire thin at 17/19.
+Roughly equal after the capstone moves; no filler abilities needed yet.
+
+### 3. EP economy rebalance (specced above, never implemented)
+Oracle regen 20%→15% per turn; Lightning Bolt 4→5 EP; Blessing 5→4 EP.
+
+### 4. Systemic damage heat (flag only — separate decision)
+CalculateAbilityDamage adds weapon+stat dice on top of ability dice, so
+high-level ability hits run very hot (40+ at L17-18 vs 10-95 HP enemies).
+Any per-ability tuning should happen AFTER deciding whether this formula
+stays — otherwise numbers get tuned twice.
+
+---
+
 ## New Abilities - Organized by Class
 
 ## 🛡️ LEGIONNAIRE - The Unstoppable Vanguard

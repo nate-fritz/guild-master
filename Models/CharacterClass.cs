@@ -111,7 +111,8 @@ namespace GuildMaster.Models
                 AbilityData.ExplosiveArrow,    // Level 13 (NEW)
                 AbilityData.FrostArrow,
                 AbilityData.PhaseShift,        // Level 17 (NEW)
-                AbilityData.ThunderVolley
+                AbilityData.ThunderVolley,     // Level 20 (rescaled to true ultimate)
+                AbilityData.ArrowStorm         // Level 20 (replaces Multi-Shot)
             };
         }
 
@@ -144,7 +145,7 @@ namespace GuildMaster.Models
 
             // EP Regeneration: High passive regeneration
             EpPerBasicAttack = 0.05f; // 5% max EP per basic attack
-            EpPerTurnStart = 0.20f;   // 20% max EP at turn start
+            EpPerTurnStart = 0.15f;   // 15% max EP at turn start (balance pass: was 20%)
             ResetEpOnRest = false;    // Rest restores EP to max
         }
 
@@ -163,7 +164,8 @@ namespace GuildMaster.Models
                 AbilityData.ProtectiveWard,    // Level 13 (NEW)
                 AbilityData.Frostbolt,         // Level 15
                 AbilityData.DivineWrath,       // Level 15
-                AbilityData.Venom              // Level 20
+                AbilityData.Venom,             // Level 16 (moved from 20)
+                AbilityData.Judgment           // Level 20 (NEW capstone)
             };
         }
 
