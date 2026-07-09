@@ -362,21 +362,11 @@ namespace GuildMaster.Data
             // Register guild hall welcome dialogue
             var guildHallWelcomeDialogue = new Dictionary<string, DialogueNode>
             {
+                // No forced acknowledgement: the narrative shows and play continues
+                // (players who skim shouldn't be stopped by a one-option "choice")
                 ["start"] = new DialogueNode
                 {
-                    Text = "As you step into the common area of the guild hall for the first time, you pause to take it in.<br><br>It is far too large a space for just one person, but you briefly imagine what this place felt like when it was full of brothers and sisters in arms, united in a common purpose.<br><br>You had never planned for anything like this, but the idea suddenly feels like one worth working towards.",
-                    Choices = new List<DialogueNode.Choice>
-                    {
-                        new DialogueNode.Choice
-                        {
-                            choiceText = "I'll be back soon..  and not alone.",
-                            nextNodeID = "end"
-                        }
-                    }
-                },
-                ["end"] = new DialogueNode
-                {
-                    Text = "You hang on to this feeling for just a moment longer, then get back to the task at hand.",
+                    Text = "As you step into the common area of the guild hall for the first time, you pause to take it in.<br><br>It is far too large a space for just one person, but you briefly imagine what this place felt like when it was full of brothers and sisters in arms, united in a common purpose.<br><br>You had never planned for anything like this, but the idea suddenly feels like one worth working towards.<br><br>You hang on to this feeling for just a moment longer, then get back to the task at hand.",
                     Choices = new List<DialogueNode.Choice>() // No choices - dialogue ends
                 }
             };

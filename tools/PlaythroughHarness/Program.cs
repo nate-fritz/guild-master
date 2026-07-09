@@ -72,9 +72,8 @@ static Scenario TravelCombatSaveLoad() => new("travel-combat-save-load", "Harnes
     {
         Step.Cmd("look note", expect: new[] { "Dear Harness" }),
         Step.Cmd("east", expect: new[] { "Hallway" }),
-        Step.Cmd("north", expect: new[] { "Common Area" }),
-        // Scripted first-visit event in the common area offers one reply
-        Step.Cmd("1", expect: Array.Empty<string>()),
+        // The first-visit event narrative shows without blocking for input
+        Step.Cmd("north", expect: new[] { "Common Area", "hang on to this feeling" }),
         Step.Cmd("north", expect: new[] { "Front Door" }),
         Step.Cmd("north", expect: new[] { "Dirt Road" }),
         Step.Cmd("north", expect: new[] { "crossroads", "farmer" }),
