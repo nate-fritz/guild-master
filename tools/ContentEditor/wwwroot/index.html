@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GuildMaster Content Editor</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Consolas, Monaco, monospace; background:#1a1a1a; color:#e0e0e0; display:flex; height:100vh; }
+  #sidebar { width:300px; border-right:1px solid #333; display:flex; flex-direction:column; }
+  #sidebar header { padding:10px; border-bottom:1px solid #333; }
+  h1 { font-size:16px; color:#FA935F; margin:0 0 8px; }
+  input, textarea, select, button { background:#0d0d0d; color:#e0e0e0; border:1px solid #333; border-radius:4px; padding:6px; font-family:inherit; font-size:13px; }
+  input:focus, textarea:focus { outline:1px solid #FA935F; }
+  #search { width:100%; }
+  #roomlist { flex:1; overflow-y:auto; }
+  .room-item { padding:6px 10px; cursor:pointer; border-bottom:1px solid #222; }
+  .room-item:hover { background:#262626; }
+  .room-item.active { background:#332211; color:#FA935F; }
+  .room-item .rid { color:#75C8FF; margin-right:6px; }
+  #main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  #toolbar { padding:8px 12px; border-bottom:1px solid #333; display:flex; gap:8px; align-items:center; }
+  #toolbar .spacer { flex:1; }
+  #dirty { color:#FA935F; display:none; }
+  #status { color:#90FF90; }
+  #status.err { color:#FF6666; white-space:pre-wrap; }
+  #content { flex:1; display:flex; overflow:hidden; }
+  #form { width:55%; overflow-y:auto; padding:14px; }
+  #graph { flex:1; border-left:1px solid #333; overflow:auto; background:#111; }
+  label { display:block; color:#FA935F; margin:12px 0 4px; font-size:12px; }
+  #f-title, #f-desc { width:100%; }
+  #f-desc { height:130px; }
+  .row { display:flex; gap:6px; margin-bottom:4px; align-items:center; }
+  .row input, .row select { flex:1; }
+  .row button { flex:0 0 auto; color:#FF6666; }
+  .add-btn { color:#90FF90; margin-top:4px; }
+  button.primary { background:#332211; color:#FA935F; border-color:#FA935F; cursor:pointer; }
+  button { cursor:pointer; }
+  svg text { font-family:Consolas, monospace; }
+  .hint { color:#777; font-size:11px; }
+</style>
+</head>
+<body>
+<div id="sidebar">
+  <header>
+    <h1>⚔ GuildMaster Rooms</h1>
+    <input id="search" placeholder="filter by id or title...">
+  </header>
+  <div id="roomlist"></div>
+  <div style="padding:10px; border-top:1px solid #333;">
+    <button class="primary" style="width:100%" onclick="newRoom()">+ New Room</button>
+  </div>
+</div>
+<div id="main">
+  <div id="toolbar">
+    <button class="primary" onclick="save()">💾 Save (validates first)</button>
+    <span id="dirty">● unsaved changes</span>
+    <span class="spacer"></span>
+    <span id="status"></span>
+  </div>
+  <div id="content">
+    <div id="form"><p class="hint">Select a room to edit, or create a new one.</p></div>
+    <div id="graph"></div>
+  </div>
+</div>
+<script>
+let rooms = [], npcNames = [], sel = null, dirty = false;
+const $ = id => document.getElementById(id);
+const DIRS = ["north","east","south","west","up","down"];
+
+async function init() {
+  rooms = await (await fetch('/api/rooms')).json();
+  npcNames = await (await fetch('/api/npcs')).json();
+  renderList(); renderGraph();
+}
+function markDirty() { dirty = true; $('dirty').style.display = 'inline'; }
+
+function renderList() {
+  const q = $('search').value.toLowerCase();
+  $('roomlist').innerHTML = rooms
+    .filter(r => !q || String(r.numericId).includes(q) || (r.title||'').toLowerCase().includes(q))
+    .map(r => `<div class="room-item ${sel===r?'active':''}" onclick="pick(${r.numericId})"><span class="rid">${r.numericId}</span>${esc(r.title)}</div>`).join('');
+}
+function pick(id) { sel = rooms.find(r => r.numericId === id); renderList(); renderForm(); renderGraph(); }
+function esc(s) { return (s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+function renderForm() {
+  if (!sel) return;
+  const roomOpts = id => rooms.map(r => `<option value="${r.numericId}" ${r.numericId==id?'selected':''}>${r.numericId} - ${esc(r.title)}</option>`).join('');
+  const npcOpts = n => npcNames.map(x => `<option ${x===n?'selected':''}>${esc(x)}</option>`).join('');
+  const exits = Object.entries(sel.exits||{}).map(([d,t],i) => `<div class="row">
+      <select onchange="exitDir(${i},this.value)">${DIRS.map(x=>`<option ${x===d?'selected':''}>${x}</option>`).join('')}</select>
+      <select onchange="exitTarget(${i},this.value)">${roomOpts(t)}</select>
+      <button onclick="delExit(${i})">✕</button></div>`).join('');
+  const items = (sel.items||[]).map((it,i) => `<div class="row"><input value="${esc(it)}" onchange="editItem(${i},this.value)"><button onclick="delItem(${i})">✕</button></div>`).join('');
+  const npcs = (sel.npcs||[]).map((n,i) => `<div class="row">
+      <select onchange="npcMode(${i},this.value)">${['clone','shared','inline'].map(m=>`<option ${m===n.mode?'selected':''}>${m}</option>`).join('')}</select>
+      ${n.mode==='inline' ? `<input value="${esc(n.name)}" disabled title="inline NPCs: edit JSON directly">` : `<select onchange="npcName(${i},this.value)">${npcOpts(n.name)}</select>`}
+      <button onclick="delNpc(${i})">✕</button></div>`).join('');
+  $('form').innerHTML = `
+    <label>Room ID / internal name</label>
+    <div class="row"><input value="${sel.numericId}" disabled style="flex:0 0 70px"><input id="f-id" value="${esc(sel.id)}" onchange="sel.id=this.value;markDirty()"></div>
+    <label>Title</label><input id="f-title" value="${esc(sel.title)}" onchange="sel.title=this.value;markDirty();renderList();renderGraph()">
+    <label>Description <span class="hint">(&lt;br&gt; for line breaks)</span></label>
+    <textarea id="f-desc" onchange="sel.description=this.value;markDirty()">${esc(sel.description)}</textarea>
+    <label>Exits</label>${exits}<button class="add-btn" onclick="addExit()">+ exit</button>
+    <label>Items</label>${items}<button class="add-btn" onclick="addItem()">+ item</button>
+    <label>NPCs <span class="hint">(clone = fresh copy per game, shared = persistent story NPC)</span></label>${npcs}<button class="add-btn" onclick="addNpc()">+ npc</button>
+    <label>Respawn</label>
+    <div class="row"><select onchange="sel.canRespawn=this.value==='true';markDirty()"><option value="false" ${!sel.canRespawn?'selected':''}>no respawn</option><option value="true" ${sel.canRespawn?'selected':''}>enemies respawn</option></select>
+    <input value="${sel.respawnTimeHours??48}" title="hours" onchange="sel.respawnTimeHours=parseFloat(this.value);markDirty()" style="flex:0 0 80px"></div>`;
+}
+// form mutators
+function exitEntries(){ return Object.entries(sel.exits||{}); }
+function rebuildExits(e){ sel.exits = Object.fromEntries(e); markDirty(); renderForm(); renderGraph(); }
+function exitDir(i,v){ const e=exitEntries(); e[i][0]=v; rebuildExits(e); }
+function exitTarget(i,v){ const e=exitEntries(); e[i][1]=parseInt(v); rebuildExits(e); }
+function delExit(i){ const e=exitEntries(); e.splice(i,1); rebuildExits(e); }
+function addExit(){ const e=exitEntries(); const used=e.map(x=>x[0]); e.push([DIRS.find(d=>!used.includes(d))||'north', rooms[0].numericId]); rebuildExits(e); }
+function editItem(i,v){ sel.items[i]=v; markDirty(); }
+function delItem(i){ sel.items.splice(i,1); markDirty(); renderForm(); }
+function addItem(){ (sel.items??=[]).push('new item'); markDirty(); renderForm(); }
+function npcMode(i,v){ sel.npcs[i].mode=v; markDirty(); renderForm(); }
+function npcName(i,v){ sel.npcs[i].name=v; markDirty(); }
+function delNpc(i){ sel.npcs.splice(i,1); markDirty(); renderForm(); }
+function addNpc(){ (sel.npcs??=[]).push({mode:'clone', name:npcNames[0]}); markDirty(); renderForm(); }
+
+function newRoom() {
+  const id = Math.max(...rooms.map(r=>r.numericId)) + 1;
+  const r = { numericId:id, id:'room'+id, title:'New Room '+id, description:'Describe me.', exits:{}, items:[], npcs:[], originalNpcs:[], descriptionVariants:{}, objects:[], canRespawn:false, respawnTimeHours:48 };
+  rooms.push(r); sel = r; markDirty(); renderList(); renderForm(); renderGraph();
+}
+
+// Graph: BFS depth layout from selected room (or room 1)
+function renderGraph() {
+  const byId = Object.fromEntries(rooms.map(r=>[r.numericId,r]));
+  const root = sel?.numericId ?? rooms[0]?.numericId;
+  const depth = {[root]:0}, cols = {0:[root]}, seen = new Set([root]);
+  let queue=[root];
+  while(queue.length){ const cur=queue.shift(); for(const t of Object.values(byId[cur]?.exits||{})){ if(!seen.has(t)&&byId[t]){ seen.add(t); depth[t]=depth[cur]+1; (cols[depth[t]]??=[]).push(t); queue.push(t);} } }
+  const W=170,H=52; let maxRow=Math.max(1,...Object.values(cols).map(c=>c.length));
+  const pos={}; for(const[d,ids]of Object.entries(cols)) ids.forEach((id,i)=>pos[id]=[30+d*W, 30+i*H]);
+  let edges='', nodes='';
+  for(const id of seen){ const r=byId[id];
+    for(const[dir,t]of Object.entries(r.exits||{})){ const broken=!byId[t];
+      if(pos[t]||broken){ const [x1,y1]=pos[id], [x2,y2]=pos[t]||[x1+60,y1+30];
+        edges+=`<line x1="${x1+65}" y1="${y1+14}" x2="${x2??x1}" y2="${y2??y1}" stroke="${broken?'#FF4444':'#444'}" stroke-width="1"/>`; } }
+    nodes+=`<g onclick="pick(${id})" style="cursor:pointer">
+      <rect x="${pos[id][0]}" y="${pos[id][1]}" width="130" height="28" rx="4" fill="${id===sel?.numericId?'#332211':'#1e1e1e'}" stroke="${id===sel?.numericId?'#FA935F':'#555'}"/>
+      <text x="${pos[id][0]+6}" y="${pos[id][1]+18}" font-size="10" fill="#e0e0e0">${id} ${esc((byId[id].title||'').slice(0,14))}</text></g>`;
+  }
+  const w=30+(Object.keys(cols).length)*W+150, h=60+maxRow*H;
+  $('graph').innerHTML = `<svg width="${w}" height="${h}">${edges}${nodes}</svg>
+    <p class="hint" style="padding:0 10px">Graph = rooms reachable from the selected room. Red lines = exits to missing rooms. Click a node to edit it.</p>`;
+}
+
+async function save() {
+  const res = await fetch('/api/rooms', { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(rooms, null, 2) });
+  const body = await res.json();
+  const st = $('status');
+  if (res.ok) { dirty=false; $('dirty').style.display='none'; st.className=''; st.textContent = `saved ✓ (backup: ${body.backup})`; }
+  else { st.className='err'; st.textContent = 'NOT saved - validation failed:\n' + body.error; }
+}
+$('search').addEventListener('input', renderList);
+init();
+</script>
+</body>
+</html>

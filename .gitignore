@@ -67,3 +67,6 @@ UpgradeLog*.XML
 
 # Blazor
 wwwroot/service-worker-assets.js
+
+# Content editor save backups
+wwwroot/data/*.bak

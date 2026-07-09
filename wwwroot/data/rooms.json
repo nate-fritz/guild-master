@@ -3,7 +3,7 @@
     "numericId": 1,
     "id": "guildHallBedroom",
     "title": "The Guild Hall - Bedroom",
-    "description": "You\u0027re in a small bedroom with a bed and a nightstand.  There\u0027s a small locked chest at the foot of the bed.  There\u0027s a desk with a small copper mug sitting on it. To the east is a door that leads to a hallway.",
+    "description": "You're in a small bedroom with a bed and a nightstand.  There's a small locked chest at the foot of the bed.  There's a desk with a small copper mug sitting on it. To the east is a door that leads to a hallway.",
     "exits": {
       "east": 2
     },
@@ -23,7 +23,7 @@
     "numericId": 2,
     "id": "guildHallHallway",
     "title": "The Guild Hall - Hallway",
-    "description": "You\u0027re in a narrow hallway that runs north to south.  To the west is your bedroom.  A study is to the south, and a large common area is open to the north.",
+    "description": "You're in a narrow hallway that runs north to south.  To the west is your bedroom.  A study is to the south, and a large common area is open to the north.",
     "exits": {
       "west": 1,
       "north": 4,
@@ -41,7 +41,7 @@
     "numericId": 3,
     "id": "guildHallStudy",
     "title": "The Guild Hall - Study",
-    "description": "You\u0027re in a dusty study filled with old books, scrolls, and other trinkets.  The hallway that you entered from is to the north.",
+    "description": "You're in a dusty study filled with old books, scrolls, and other trinkets.  The hallway that you entered from is to the north.",
     "exits": {
       "north": 2
     },
@@ -83,7 +83,7 @@
     "numericId": 5,
     "id": "guildHallFrontDoor",
     "title": "The Guild Hall - Front Door",
-    "description": "You stand before a modest two-story building made of white stone with a roof of red terracotta tiles. Ivy climbs the cracked walls and the plants around the house are untamed and overgrown, but considering it\u0027s been largely abandoned in recent years, it\u0027s relatively well maintained. Two large wooden doors stand at the back of the portico at the front of the guildhall. A hanging sign sways lazily in the wind, its painted lettering worn away to the point of being indecipherable.",
+    "description": "You stand before a modest two-story building made of white stone with a roof of red terracotta tiles. Ivy climbs the cracked walls and the plants around the house are untamed and overgrown, but considering it's been largely abandoned in recent years, it's relatively well maintained. Two large wooden doors stand at the back of the portico at the front of the guildhall. A hanging sign sways lazily in the wind, its painted lettering worn away to the point of being indecipherable.",
     "exits": {
       "south": 4,
       "north": 6
@@ -100,7 +100,7 @@
     "numericId": 6,
     "id": "guildPath",
     "title": "A Dirt Road",
-    "description": "You\u0027re on a wide dirt road that runs roughly north to south.  Stagnant water pools in two deep parallel  grooves along the road where years of carts coming and going have left their mark. A dozen tall, thin, coniferous trees line either side of the road leading up to the guild hall just to the south. Further north, it looks like another road intersects with the one that you\u0027re on.",
+    "description": "You're on a wide dirt road that runs roughly north to south.  Stagnant water pools in two deep parallel  grooves along the road where years of carts coming and going have left their mark. A dozen tall, thin, coniferous trees line either side of the road leading up to the guild hall just to the south. Further north, it looks like another road intersects with the one that you're on.",
     "exits": {
       "south": 5,
       "north": 7
@@ -117,7 +117,7 @@
     "numericId": 7,
     "id": "theCrossRoads",
     "title": "A crossroads",
-    "description": "Two dirt roads intersect here, creating a crossroads that extends in the four cardinal directions.  A wooden sign post has four signs pointing towards each. \u003Cbr\u003E\u003Cbr\u003ENorth:   The Town of Belum\u003Cbr\u003EEast:    Hircinian Forest\u003Cbr\u003ESouth:   [this sign looks long neglected, and can\u0027t be read]\u003Cbr\u003EWest:    Avinten Foothills",
+    "description": "Two dirt roads intersect here, creating a crossroads that extends in the four cardinal directions.  A wooden sign post has four signs pointing towards each. <br><br>North:   The Town of Belum<br>East:    Hircinian Forest<br>South:   [this sign looks long neglected, and can't be read]<br>West:    Avinten Foothills",
     "exits": {
       "south": 6,
       "west": 8,
@@ -283,8 +283,8 @@
   {
     "numericId": 11,
     "id": "gaiusFarmHouse",
-    "title": "Gaius\u0027 Farmhouse",
-    "description": "A large stone house with baked clay roof tiles stands before you, surrounded by the fields and other buildings that make up Gaius\u0027 farm.  To the east are the fields, and to the west the land begins to climb upwards towards the peak of Mount Gelus.",
+    "title": "Gaius' Farmhouse",
+    "description": "A large stone house with baked clay roof tiles stands before you, surrounded by the fields and other buildings that make up Gaius' farm.  To the east are the fields, and to the west the land begins to climb upwards towards the peak of Mount Gelus.",
     "exits": {
       "east": 10,
       "west": 12
@@ -311,7 +311,7 @@
     "numericId": 12,
     "id": "lowerSlopes",
     "title": "The Lower Slopes",
-    "description": "Here the rolling fields of the foothills meet the base of Mount Gelus, which begins to slope sharply upward to the west.  The mountain\u0027s snow-touched peaks are nearly hidden by wispy clouds above.  The steep incline and high winds make a trek up the mountain seem ill advised.  To the south you see a cave mouth, and to the east is Gaius\u0027 farm.",
+    "description": "Here the rolling fields of the foothills meet the base of Mount Gelus, which begins to slope sharply upward to the west.  The mountain's snow-touched peaks are nearly hidden by wispy clouds above.  The steep incline and high winds make a trek up the mountain seem ill advised.  To the south you see a cave mouth, and to the east is Gaius' farm.",
     "exits": {
       "east": 11,
       "west": 22,
@@ -456,7 +456,7 @@
     "numericId": 18,
     "id": "deepCave",
     "title": "Bandit Cave - Deep Cavern",
-    "description": "You\u0027ve descended deep into the mountain. The air here is cold and still. Strange rock formations create eerie shapes in the torchlight. Water drips steadily somewhere in the darkness. A massive iron gate blocks the passage east. The way north leads back toward the cave exit.",
+    "description": "You've descended deep into the mountain. The air here is cold and still. Strange rock formations create eerie shapes in the torchlight. Water drips steadily somewhere in the darkness. A massive iron gate blocks the passage east. The way north leads back toward the cave exit.",
     "exits": {
       "north": 17
     },
@@ -479,7 +479,7 @@
           "bars"
         ],
         "defaultDescription": "A formidable iron gate bars the passage east. It has two keyholes - one for an iron key and one for a bronze key.",
-        "lookedAtDescription": "The gate is locked tight with a complex dual-lock mechanism. You\u0027ll need both an iron key and a bronze key to open it.",
+        "lookedAtDescription": "The gate is locked tight with a complex dual-lock mechanism. You'll need both an iron key and a bronze key to open it.",
         "isInteractable": true,
         "isHidden": false,
         "interactionType": "use"
@@ -493,7 +493,7 @@
     "numericId": 19,
     "id": "floodedChamber",
     "title": "Bandit Cave - Flooded Chamber",
-    "description": "An underground stream flows through this chamber, the water black and swift. A narrow ledge runs along the eastern wall. Someone is standing guard here - a woman with a bow. She doesn\u0027t look like the other bandits. The only way forward is west, across a rickety wooden bridge.",
+    "description": "An underground stream flows through this chamber, the water black and swift. A narrow ledge runs along the eastern wall. Someone is standing guard here - a woman with a bow. She doesn't look like the other bandits. The only way forward is west, across a rickety wooden bridge.",
     "exits": {
       "north": 14,
       "south": 20
@@ -515,7 +515,7 @@
     "numericId": 20,
     "id": "undergroundRiver",
     "title": "Bandit Cave - Underground River",
-    "description": "A narrow chasm opens up in the middle of this cavern, with a rickety looking wood and rope bridge spanning across it. It\u0027s too dark to see the bottom of the chasm, but you can faintly hear the flowing water of an underground river far below you. A bronze gate blocks the passage west. To the north is the way back toward the cave\u0027s entrance.",
+    "description": "A narrow chasm opens up in the middle of this cavern, with a rickety looking wood and rope bridge spanning across it. It's too dark to see the bottom of the chasm, but you can faintly hear the flowing water of an underground river far below you. A bronze gate blocks the passage west. To the north is the way back toward the cave's entrance.",
     "exits": {
       "north": 19
     },
@@ -533,7 +533,7 @@
           "bars"
         ],
         "defaultDescription": "An ornate bronze gate blocks the passage west. It has two keyholes - one for an iron key and one for a bronze key.",
-        "lookedAtDescription": "The gate is secured with a complex dual-lock mechanism. You\u0027ll need both an iron key and a bronze key to open it.",
+        "lookedAtDescription": "The gate is secured with a complex dual-lock mechanism. You'll need both an iron key and a bronze key to open it.",
         "isInteractable": true,
         "isHidden": false,
         "interactionType": "use"
@@ -546,7 +546,7 @@
   {
     "numericId": 21,
     "id": "warlordChamber",
-    "title": "Bandit Cave - Warlord\u0027s Lair",
+    "title": "Bandit Cave - Warlord's Lair",
     "description": "The passage opens into a large natural cavern that has been converted into a throne room of sorts. Stolen tapestries hang on the walls, and a crude throne of piled crates sits at the far end.",
     "exits": {
       "east": 20,
@@ -577,7 +577,7 @@
     "numericId": 22,
     "id": "mountainPath",
     "title": "Mountain Path",
-    "description": "A narrow path winds up the mountainside. The air grows thinner and colder as you climb. Loose rocks make footing treacherous. To the east you can see Gaius\u0027 farm far below. The path continues west, climbing higher.",
+    "description": "A narrow path winds up the mountainside. The air grows thinner and colder as you climb. Loose rocks make footing treacherous. To the east you can see Gaius' farm far below. The path continues west, climbing higher.",
     "exits": {
       "east": 12,
       "west": 23
@@ -855,7 +855,7 @@
     "numericId": 43,
     "id": "pathWithCart",
     "title": "A wooded path with a broken cart",
-    "description": "As you enter this section of the wooded path, you notice a large wooden cart in a ditch on the side of the road.  The wheels are broken and the old wood is mossy and cracked.  It looks as though it\u0027s been here for ages.",
+    "description": "As you enter this section of the wooded path, you notice a large wooden cart in a ditch on the side of the road.  The wheels are broken and the old wood is mossy and cracked.  It looks as though it's been here for ages.",
     "exits": {
       "west": 42,
       "east": 44
@@ -986,7 +986,7 @@
     "numericId": 49,
     "id": "tangledThicket",
     "title": "A tangled thicket",
-    "description": "Dense briars and thorny bushes crowd the path here. You thought you heard something to the north, but it was probably nothing.  Wait, there it was again! It\u0027s not too late to turn back.  The path leads out of the forest to the north, and deeper inwards to the south.",
+    "description": "Dense briars and thorny bushes crowd the path here. You thought you heard something to the north, but it was probably nothing.  Wait, there it was again! It's not too late to turn back.  The path leads out of the forest to the north, and deeper inwards to the south.",
     "exits": {
       "north": 50,
       "south": 48
@@ -1072,7 +1072,7 @@
     "numericId": 54,
     "id": "wildernessTrail",
     "title": "A wilderness trail",
-    "description": "A narrow trail winds through dense underbrush. Animal tracks crisscross the path - some disturbingly large. The fog continues to obscure the path. Are you sure you\u0027re heading in the right direction?",
+    "description": "A narrow trail winds through dense underbrush. Animal tracks crisscross the path - some disturbingly large. The fog continues to obscure the path. Are you sure you're heading in the right direction?",
     "exits": {
       "north": 55
     },
@@ -1182,7 +1182,7 @@
           "boots"
         ],
         "defaultDescription": "Fresh bootprints mark the ground here.",
-        "lookedAtDescription": "Wait... these bootprints match your own boots exactly. You\u0027ve been walking in circles! But looking more carefully, you can see your original tracks came from the north, where thick vines now conceal the path.",
+        "lookedAtDescription": "Wait... these bootprints match your own boots exactly. You've been walking in circles! But looking more carefully, you can see your original tracks came from the north, where thick vines now conceal the path.",
         "isInteractable": false,
         "isHidden": false
       },
@@ -1208,7 +1208,7 @@
   {
     "numericId": 58,
     "id": "forestEdge",
-    "title": "The forest\u0027s edge",
+    "title": "The forest's edge",
     "description": "The trees thin here and you can see open sky to the south. The forest seems reluctant to let you go, however, and thorny vines and branches reach out like grasping fingers to block your path.  The way you came from seems to have disappeared behind you.  Your only way forward is to the west.",
     "exits": {
       "west": 59
@@ -1310,7 +1310,7 @@
     "numericId": 65,
     "id": "guildHallArmory",
     "title": "The Guild Hall - Armory",
-    "description": "A well-stocked armory filled with weapon racks and armor stands. The smell of oil and leather fills the air. Light streams through narrow windows, glinting off polished steel. With your guild\u0027s reputation growing, a mysterious armorer has taken up residence here, offering quality equipment to those with coin to spare.",
+    "description": "A well-stocked armory filled with weapon racks and armor stands. The smell of oil and leather fills the air. Light streams through narrow windows, glinting off polished steel. With your guild's reputation growing, a mysterious armorer has taken up residence here, offering quality equipment to those with coin to spare.",
     "exits": {
       "west": 4
     },
@@ -1331,14 +1331,14 @@
     "numericId": 66,
     "id": "guildHallTreasury",
     "title": "The Guild Hall - Treasury",
-    "description": "A secure treasury room lined with reinforced chests and lockboxes. The walls are thick stone, and a heavy iron door guards the entrance. Your guild\u0027s wealth and most valuable treasures are stored here. In the center of the room sits an ornate chest containing rings of power, one for each class of adventurer.",
+    "description": "A secure treasury room lined with reinforced chests and lockboxes. The walls are thick stone, and a heavy iron door guards the entrance. Your guild's wealth and most valuable treasures are stored here. In the center of the room sits an ornate chest containing rings of power, one for each class of adventurer.",
     "exits": {
       "west": 65
     },
     "items": [
-      "legionnaire\u0027s ring",
-      "venator\u0027s ring",
-      "oracle\u0027s ring"
+      "legionnaire's ring",
+      "venator's ring",
+      "oracle's ring"
     ],
     "npcs": [],
     "originalNpcs": [],
@@ -1387,7 +1387,7 @@
     "numericId": 69,
     "id": "belumApproach",
     "title": "Approach to Belum",
-    "description": "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands closed. A veteran guard named Marcus stands watch. A signpost reads: \u0027GATE CLOSED\u0027.",
+    "description": "The town walls of Belum rise before you, built of weathered grey stone. Guards patrol the battlements above. The main gate stands closed. A veteran guard named Marcus stands watch. A signpost reads: 'GATE CLOSED'.",
     "exits": {
       "south": 68
     },
@@ -1534,7 +1534,7 @@
   {
     "numericId": 76,
     "id": "craftsmansWay",
-    "title": "Belum - Craftsman\u0027s Way",
+    "title": "Belum - Craftsman's Way",
     "description": "The ring of hammers on anvils echoes here. Blacksmiths, coopers, and carpenters work their trades. The air is warm from forge fires.",
     "exits": {
       "west": 81,
@@ -1553,7 +1553,7 @@
     "numericId": 77,
     "id": "backAlleys",
     "title": "Belum - Back Alleys",
-    "description": "Narrow alleyways wind between cramped buildings. It\u0027s darker here, and the main bustle of the town feels far away. Not the safest part of town after dark.",
+    "description": "Narrow alleyways wind between cramped buildings. It's darker here, and the main bustle of the town feels far away. Not the safest part of town after dark.",
     "exits": {
       "north": 76,
       "east": 74,
@@ -1651,7 +1651,7 @@
     "numericId": 81,
     "id": "residentialNorth",
     "title": "Belum - North Residential",
-    "description": "Well-appointed homes belonging to Belum\u0027s more prosperous citizens line this quiet street. Gardens and small courtyards provide greenery.  The northern gate leading out of town is to the north, shops are to the east, the town square lies directly south, and to the west is a large plaza surrounded by temples to the gods.",
+    "description": "Well-appointed homes belonging to Belum's more prosperous citizens line this quiet street. Gardens and small courtyards provide greenery.  The northern gate leading out of town is to the north, shops are to the east, the town square lies directly south, and to the west is a large plaza surrounded by temples to the gods.",
     "exits": {
       "north": 90,
       "east": 76,
@@ -1670,7 +1670,7 @@
     "numericId": 82,
     "id": "templeDistrict",
     "title": "Belum - Temple District",
-    "description": "Massive temples of white stone surround an open plaza.  The largest of all of these, to the north, is devoted to Keius - father of the gods.  If you look straight up, you can barely see the tops of the colossal columns that line the temple\u0027s facade.  Temples to major and minor gods of Keius\u0027 pantheon fill the rest of the square.  To the east is a residential district on the main street through Belum.  To the south are several inns, and more residences to the west.",
+    "description": "Massive temples of white stone surround an open plaza.  The largest of all of these, to the north, is devoted to Keius - father of the gods.  If you look straight up, you can barely see the tops of the colossal columns that line the temple's facade.  Temples to major and minor gods of Keius' pantheon fill the rest of the square.  To the east is a residential district on the main street through Belum.  To the south are several inns, and more residences to the west.",
     "exits": {
       "east": 81,
       "south": 83,
@@ -1688,7 +1688,7 @@
     "numericId": 83,
     "id": "innDistrict",
     "title": "Belum - Inn District",
-    "description": "Several inns compete for business here, their signs creaking in the breeze. \u0027The Wanderer\u0027s Rest\u0027, \u0027The Sleeping Lion\u0027, and \u0027Beds \u0026 Breakfast\u0027 all promise comfortable lodging.",
+    "description": "Several inns compete for business here, their signs creaking in the breeze. 'The Wanderer's Rest', 'The Sleeping Lion', and 'Beds & Breakfast' all promise comfortable lodging.",
     "exits": {
       "north": 82,
       "east": 80,
@@ -1706,7 +1706,7 @@
   {
     "numericId": 84,
     "id": "armorersRow",
-    "title": "Belum - Armorer\u0027s Row",
+    "title": "Belum - Armorer's Row",
     "description": "Shops specializing in armor and protective gear line this street. Mannequins display everything from leather jerkins to full plate mail. A testing dummy stands outside one shop, heavily dented.",
     "exits": {
       "north": 83,
@@ -1726,7 +1726,7 @@
     "numericId": 85,
     "id": "thievesGuild",
     "title": "Belum - Unmarked Alley",
-    "description": "A dead-end alley with a single unmarked door. Those who know, know. Those who don\u0027t, shouldn\u0027t be here.",
+    "description": "A dead-end alley with a single unmarked door. Those who know, know. Those who don't, shouldn't be here.",
     "exits": {
       "north": 84,
       "east": 70,
@@ -1744,7 +1744,7 @@
     "numericId": 86,
     "id": "shadowyCorner",
     "title": "Belum - A Shadowy Corner",
-    "description": "This corner of town sees less traffic. A nondescript door leads to what might be a less-than-legitimate establishment. The locals here don\u0027t meet your eyes.",
+    "description": "This corner of town sees less traffic. A nondescript door leads to what might be a less-than-legitimate establishment. The locals here don't meet your eyes.",
     "exits": {
       "north": 87,
       "east": 85
@@ -1785,7 +1785,7 @@
     "numericId": 88,
     "id": "barracks",
     "title": "Belum - Guard Barracks",
-    "description": "The town guard\u0027s headquarters. Soldiers drill in a courtyard while others sharpen weapons or play dice. The captain\u0027s office is visible through an open door.",
+    "description": "The town guard's headquarters. Soldiers drill in a courtyard while others sharpen weapons or play dice. The captain's office is visible through an open door.",
     "exits": {
       "east": 83,
       "south": 87
@@ -1932,7 +1932,7 @@
     "numericId": 105,
     "id": "ritualChamber",
     "title": "Cultist Hideout - Ritual Chamber",
-    "description": "A circular room with symbols painted on the floor in ash and charcoal. The air feels wrong here, as if reality itself is slightly unstable. Six stone pedestals ring the chamber, each bearing a carved symbol. In the center, a locked iron gate blocks passage to the south - but there\u0027s no visible keyhole, only a phrase carved above: \u0027Speak the word that unmakes all things.\u0027 The symbols on the pedestals seem to be parts of a puzzle.",
+    "description": "A circular room with symbols painted on the floor in ash and charcoal. The air feels wrong here, as if reality itself is slightly unstable. Six stone pedestals ring the chamber, each bearing a carved symbol. In the center, a locked iron gate blocks passage to the south - but there's no visible keyhole, only a phrase carved above: 'Speak the word that unmakes all things.' The symbols on the pedestals seem to be parts of a puzzle.",
     "exits": {
       "north": 101
     },
@@ -1951,7 +1951,7 @@
           "carved symbols"
         ],
         "defaultDescription": "Six stone pedestals arranged in a circle, each carved with a different symbol.",
-        "lookedAtDescription": "Each pedestal bears a symbol and a word beneath it:\n1. A flame - \u0027IGNIS\u0027 (Fire)\n2. A droplet - \u0027AQUA\u0027 (Water)\n3. A skull - \u0027MORTIS\u0027 (Death)\n4. A spiral - \u0027VORAGO\u0027 (Abyss)\n5. A shattered circle - \u0027FRACTUS\u0027 (Broken)\n6. An empty void - \u0027NIHIL\u0027 (Nothing)\n\nThe phrase above the gate reads: \u0027Speak the word that unmakes all things.\u0027 What could it mean?",
+        "lookedAtDescription": "Each pedestal bears a symbol and a word beneath it:\n1. A flame - 'IGNIS' (Fire)\n2. A droplet - 'AQUA' (Water)\n3. A skull - 'MORTIS' (Death)\n4. A spiral - 'VORAGO' (Abyss)\n5. A shattered circle - 'FRACTUS' (Broken)\n6. An empty void - 'NIHIL' (Nothing)\n\nThe phrase above the gate reads: 'Speak the word that unmakes all things.' What could it mean?",
         "isInteractable": false,
         "isHidden": false
       },
@@ -1963,7 +1963,7 @@
           "locked gate",
           "southern gate"
         ],
-        "defaultDescription": "A heavy iron gate blocks the southern passage. Above it is carved: \u0027Speak the word that unmakes all things.\u0027",
+        "defaultDescription": "A heavy iron gate blocks the southern passage. Above it is carved: 'Speak the word that unmakes all things.'",
         "lookedAtDescription": "The gate has no lock or handle - only the carved phrase. It seems to require a spoken answer to open.",
         "isInteractable": false,
         "isHidden": false
@@ -1997,7 +1997,7 @@
           "intact books"
         ],
         "defaultDescription": "A reading table with several intact books that survived the destruction.",
-        "lookedAtDescription": "Three books remain intact:\n\n\u0027Principles of Order\u0027 - A philosophical text. The cultists have annotated it heavily with contemptuous notes in the margins: \u0027All order is temporary,\u0027 \u0027Entropy claims all,\u0027 \u0027Why preserve what will inevitably fall?\u0027\n\n\u0027The Founding of Aevoria\u0027 - A historical text. One passage is circled in red: \u0027The five seals were placed to contain the ancient chaos. Should they fail, the empire itself would unravel.\u0027\n\n\u0027Rituals of Unbinding\u0027 - A dangerous tome. Instructions for breaking magical seals and disrupting protective wards. A bookmark marks a page titled \u0027The Festival Convergence - When barriers are weakest.\u0027",
+        "lookedAtDescription": "Three books remain intact:\n\n'Principles of Order' - A philosophical text. The cultists have annotated it heavily with contemptuous notes in the margins: 'All order is temporary,' 'Entropy claims all,' 'Why preserve what will inevitably fall?'\n\n'The Founding of Aevoria' - A historical text. One passage is circled in red: 'The five seals were placed to contain the ancient chaos. Should they fail, the empire itself would unravel.'\n\n'Rituals of Unbinding' - A dangerous tome. Instructions for breaking magical seals and disrupting protective wards. A bookmark marks a page titled 'The Festival Convergence - When barriers are weakest.'",
         "isInteractable": false,
         "isHidden": false
       },
@@ -2011,7 +2011,7 @@
           "destroyed books"
         ],
         "defaultDescription": "Thousands of torn pages cover the floor like autumn leaves.",
-        "lookedAtDescription": "Most are illegible, but you spot a few fragments:\n\u0027...the old empire knew what we have forgotten...\u0027\n\u0027...containing rather than destroying was their mistake...\u0027\n\u0027...when enough seals break, the cascade cannot be stopped...\u0027\n\nThe destruction here was methodical and purposeful.",
+        "lookedAtDescription": "Most are illegible, but you spot a few fragments:\n'...the old empire knew what we have forgotten...'\n'...containing rather than destroying was their mistake...'\n'...when enough seals break, the cascade cannot be stopped...'\n\nThe destruction here was methodical and purposeful.",
         "isInteractable": false,
         "isHidden": false
       }
@@ -2053,7 +2053,7 @@
           "monument"
         ],
         "defaultDescription": "A marble statue of an ancient emperor, systematically defaced and covered in disturbing symbols.",
-        "lookedAtDescription": "The statue once depicted Emperor Valerius the First, founder of the empire. The cultists have carved away his face, replaced his scepter with a spiral symbol, and inscribed across the base: \u0027Even stone crumbles. Even empires fall. We hasten the inevitable.\u0027 The workmanship of the defacement is almost artistic in its precision - this wasn\u0027t vandalism, but ritual.",
+        "lookedAtDescription": "The statue once depicted Emperor Valerius the First, founder of the empire. The cultists have carved away his face, replaced his scepter with a spiral symbol, and inscribed across the base: 'Even stone crumbles. Even empires fall. We hasten the inevitable.' The workmanship of the defacement is almost artistic in its precision - this wasn't vandalism, but ritual.",
         "isInteractable": false,
         "isHidden": false
       },
@@ -2067,7 +2067,7 @@
           "shrine"
         ],
         "defaultDescription": "Various destroyed objects arranged around the statue like offerings at a shrine.",
-        "lookedAtDescription": "Broken hammers, split anvils, torn maps, shredded legal documents, snapped swords - each carefully placed. You recognize some of the documents: property deeds, marriage certificates, trade agreements. The cultists are collecting symbols of order and civilization to ritually destroy them. It\u0027s deeply unsettling.",
+        "lookedAtDescription": "Broken hammers, split anvils, torn maps, shredded legal documents, snapped swords - each carefully placed. You recognize some of the documents: property deeds, marriage certificates, trade agreements. The cultists are collecting symbols of order and civilization to ritually destroy them. It's deeply unsettling.",
         "isInteractable": false,
         "isHidden": false
       }
@@ -2120,7 +2120,7 @@
     "numericId": 118,
     "id": "antechamber",
     "title": "Cultist Hideout - Antechamber",
-    "description": "This chamber serves as a waiting area before the inner sanctum. The walls are covered in elaborate murals depicting the fall of civilizations - towers crumbling, books burning, monuments sinking into the earth. The artistry is disturbing in its beauty. To the west are the prison cells, and to the east, heavy double doors lead to what must be the leader\u0027s chamber. Cultist guards stand watch.",
+    "description": "This chamber serves as a waiting area before the inner sanctum. The walls are covered in elaborate murals depicting the fall of civilizations - towers crumbling, books burning, monuments sinking into the earth. The artistry is disturbing in its beauty. To the west are the prison cells, and to the east, heavy double doors lead to what must be the leader's chamber. Cultist guards stand watch.",
     "exits": {
       "west": 115,
       "east": 120
@@ -2149,7 +2149,7 @@
           "walls"
         ],
         "defaultDescription": "Elaborate murals covering the walls, depicting the fall of civilizations.",
-        "lookedAtDescription": "The murals are masterfully painted, showing:\n- The Library of Alexandria burning, scholars weeping\n- The Tower of Babel collapsing as people scatter\n- Great monuments being swallowed by sand and time\n- Cities crumbling as nature reclaims them\n\nAt the bottom of each scene is written: \u0027Ordo Dissolutus\u0027 - the Dissolved Order. These cultists don\u0027t just destroy - they philosophically embrace entropy itself.",
+        "lookedAtDescription": "The murals are masterfully painted, showing:\n- The Library of Alexandria burning, scholars weeping\n- The Tower of Babel collapsing as people scatter\n- Great monuments being swallowed by sand and time\n- Cities crumbling as nature reclaims them\n\nAt the bottom of each scene is written: 'Ordo Dissolutus' - the Dissolved Order. These cultists don't just destroy - they philosophically embrace entropy itself.",
         "isInteractable": false,
         "isHidden": false
       },
@@ -2163,7 +2163,7 @@
           "sanctum doors"
         ],
         "defaultDescription": "Heavy wooden doors reinforced with iron bands, leading east to the inner sanctum.",
-        "lookedAtDescription": "The doors are carved with a massive spiral symbol that seems to draw your eye inward. Above them, an inscription reads: \u0027Beyond this threshold, the Archon of Unmaking awaits. Enter and witness the inevitable.\u0027",
+        "lookedAtDescription": "The doors are carved with a massive spiral symbol that seems to draw your eye inward. Above them, an inscription reads: 'Beyond this threshold, the Archon of Unmaking awaits. Enter and witness the inevitable.'",
         "isInteractable": false,
         "isHidden": false
       }
@@ -2174,8 +2174,8 @@
   {
     "numericId": 120,
     "id": "archonChamber",
-    "title": "Cultist Hideout - The Archon\u0027s Sanctum",
-    "description": "A vast circular chamber at the heart of the hideout. The walls are carved with spiraling symbols that seem to move in the corner of your vision. In the center, ritual circles have been drawn in ash and blood, and the air itself seems to shimmer with wrongness. This is clearly the cult\u0027s inner sanctum - a place of dark rituals and forbidden practices.",
+    "title": "Cultist Hideout - The Archon's Sanctum",
+    "description": "A vast circular chamber at the heart of the hideout. The walls are carved with spiraling symbols that seem to move in the corner of your vision. In the center, ritual circles have been drawn in ash and blood, and the air itself seems to shimmer with wrongness. This is clearly the cult's inner sanctum - a place of dark rituals and forbidden practices.",
     "exits": {
       "west": 118
     },
@@ -2205,7 +2205,7 @@
           "symbols"
         ],
         "defaultDescription": "Complex ritual circles drawn on the floor in ash and blood.",
-        "lookedAtDescription": "The circles are incredibly intricate, with symbols you don\u0027t recognize interwoven with mathematical formulae and arcane sigils. At specific points around the circles, small offerings have been placed - broken seals, torn documents, shattered amulets. This ritual appears designed to break or weaken something, though you can\u0027t tell what.",
+        "lookedAtDescription": "The circles are incredibly intricate, with symbols you don't recognize interwoven with mathematical formulae and arcane sigils. At specific points around the circles, small offerings have been placed - broken seals, torn documents, shattered amulets. This ritual appears designed to break or weaken something, though you can't tell what.",
         "isInteractable": false,
         "isHidden": false
       },
@@ -2244,7 +2244,7 @@
     "numericId": 122,
     "id": "imperialHighway122",
     "title": "Imperial Highway - Belum Outskirts",
-    "description": "You\u0027re still within sight of Belum\u0027s north gate to the south, though the city is beginning to fade behind you. Small farms and homesteads dot the landscape here - this close to a major town, the roads are safe and settlement thrives. Smoke rises from chimneys, and you can hear the distant sound of cattle lowing in their pens.",
+    "description": "You're still within sight of Belum's north gate to the south, though the city is beginning to fade behind you. Small farms and homesteads dot the landscape here - this close to a major town, the roads are safe and settlement thrives. Smoke rises from chimneys, and you can hear the distant sound of cattle lowing in their pens.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2328,7 +2328,7 @@
     "numericId": 128,
     "id": "imperialHighway128",
     "title": "Imperial Highway - Shrubland Heights",
-    "description": "The road climbs slightly here, and you can look down on the shrublands spreading to the north like a rumpled green carpet. In the distance to the south, you can still make out Belum\u0027s walls - a reassuring sight of civilization in this wild country. The highway continues its inexorable march northward toward the capital.",
+    "description": "The road climbs slightly here, and you can look down on the shrublands spreading to the north like a rumpled green carpet. In the distance to the south, you can still make out Belum's walls - a reassuring sight of civilization in this wild country. The highway continues its inexorable march northward toward the capital.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2356,7 +2356,7 @@
     "numericId": 130,
     "id": "imperialHighway130",
     "title": "Imperial Highway - Past the Quarry",
-    "description": "The quarry is clearly visible to the east now - a massive scar in the hillside where workers have been extracting limestone and marble for generations. You can see tiny figures moving among the cut stone, hear the rhythmic striking of tools. This is where the Empire\u0027s grandeur is literally carved from the earth. The highway continues north, paved with the very stone mined from these hills.",
+    "description": "The quarry is clearly visible to the east now - a massive scar in the hillside where workers have been extracting limestone and marble for generations. You can see tiny figures moving among the cut stone, hear the rhythmic striking of tools. This is where the Empire's grandeur is literally carved from the earth. The highway continues north, paved with the very stone mined from these hills.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2398,7 +2398,7 @@
     "numericId": 133,
     "id": "imperialHighway133",
     "title": "Imperial Highway - Shadow of the Ancients",
-    "description": "The ruins loom to the west - cyclopean walls built from stones so massive it\u0027s hard to imagine how they were moved. No mortar holds them together; they\u0027re fitted with such precision that a knife blade couldn\u0027t slip between them. The Empire claims these lands, but these structures predate imperial history by millennia. What empire fell here? What catastrophe reduced them to ruins?",
+    "description": "The ruins loom to the west - cyclopean walls built from stones so massive it's hard to imagine how they were moved. No mortar holds them together; they're fitted with such precision that a knife blade couldn't slip between them. The Empire claims these lands, but these structures predate imperial history by millennia. What empire fell here? What catastrophe reduced them to ruins?",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2412,7 +2412,7 @@
     "numericId": 134,
     "id": "imperialHighway134",
     "title": "Imperial Highway - Ancient Gateway",
-    "description": "A massive archway stands to the west - part of the ruins, still standing after countless centuries. The Imperial Highway passes directly beside it, as if the road builders deliberately positioned the route to acknowledge these ancient works. Strange symbols are carved into the arch\u0027s keystone - not imperial script, not any language you recognize. Some mysteries endure.",
+    "description": "A massive archway stands to the west - part of the ruins, still standing after countless centuries. The Imperial Highway passes directly beside it, as if the road builders deliberately positioned the route to acknowledge these ancient works. Strange symbols are carved into the arch's keystone - not imperial script, not any language you recognize. Some mysteries endure.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2468,7 +2468,7 @@
     "numericId": 138,
     "id": "imperialHighway138",
     "title": "Imperial Highway - Marsh Causeway",
-    "description": "The raised causeway continues through the marshlands to the east. Imperial engineering at its finest - drainage channels on both sides keep water from undermining the road, and stone abutments support the structure where the ground is softest. Birds wade in the shallow waters, hunting for fish. The marsh is beautiful in its own way, but you\u0027re grateful for the solid road.",
+    "description": "The raised causeway continues through the marshlands to the east. Imperial engineering at its finest - drainage channels on both sides keep water from undermining the road, and stone abutments support the structure where the ground is softest. Birds wade in the shallow waters, hunting for fish. The marsh is beautiful in its own way, but you're grateful for the solid road.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2510,7 +2510,7 @@
     "numericId": 141,
     "id": "imperialHighway141",
     "title": "Imperial Highway - Capital Road",
-    "description": "Aevoria is clearly visible now to the north - white marble buildings gleaming in the distance, the Colosseum\u0027s massive arches rising above the city walls. The highway here is immaculate, swept daily by work crews who maintain the approaches to the capital. Imperial banners flutter from posts along the road. You\u0027re in the heart of the Empire now.",
+    "description": "Aevoria is clearly visible now to the north - white marble buildings gleaming in the distance, the Colosseum's massive arches rising above the city walls. The highway here is immaculate, swept daily by work crews who maintain the approaches to the capital. Imperial banners flutter from posts along the road. You're in the heart of the Empire now.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2524,7 +2524,7 @@
     "numericId": 142,
     "id": "imperialHighway142",
     "title": "Imperial Highway - Aevoria Gates",
-    "description": "The Imperial Highway terminates at the massive western gates of Aevoria. The city walls rise fifty feet high, built from gleaming white marble that seems to glow in the sunlight. Guards in ceremonial armor stand at attention, checking travelers entering the capital. Beyond the gates, you can see the city itself - the Eternal City, fifteen centuries old, seat of imperial power. You\u0027ve arrived.",
+    "description": "The Imperial Highway terminates at the massive western gates of Aevoria. The city walls rise fifty feet high, built from gleaming white marble that seems to glow in the sunlight. Guards in ceremonial armor stand at attention, checking travelers entering the capital. Beyond the gates, you can see the city itself - the Eternal City, fifteen centuries old, seat of imperial power. You've arrived.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2538,7 +2538,7 @@
     "numericId": 200,
     "id": "imperialVillaHall",
     "title": "Imperial Villa - Grand Hall",
-    "description": "You stand in the magnificent grand hall of the Emperor\u0027s private villa. Soaring marble columns support a vaulted ceiling painted with scenes of imperial conquest. Sunlight streams through tall windows, casting patterns across the polished floor. Rich tapestries depicting the Empire\u0027s 1500-year history line the walls.\u003Cbr\u003E\u003Cbr\u003ESenator Quintus and High Priestess Caelia stand nearby, speaking in low tones. Imperial guards in ceremonial armor stand at attention throughout the hall.",
+    "description": "You stand in the magnificent grand hall of the Emperor's private villa. Soaring marble columns support a vaulted ceiling painted with scenes of imperial conquest. Sunlight streams through tall windows, casting patterns across the polished floor. Rich tapestries depicting the Empire's 1500-year history line the walls.<br><br>Senator Quintus and High Priestess Caelia stand nearby, speaking in low tones. Imperial guards in ceremonial armor stand at attention throughout the hall.",
     "exits": {
       "north": 201,
       "east": 202,
@@ -2557,7 +2557,7 @@
     "numericId": 201,
     "id": "imperialVillaThroneRoom",
     "title": "Imperial Villa - Throne Room",
-    "description": "An opulent throne room fit for the ruler of an empire. The throne itself is carved from a single piece of black marble, inlaid with gold depicting the imperial eagle. Banners of the legions that conquered the known world hang from the ceiling. Despite the grandeur, the room has an intimate quality - this is the Emperor\u0027s private audience chamber, not the vast public throne room of the palace.\u003Cbr\u003E\u003Cbr\u003EEmperor Certius awaits here, ready to receive visitors.",
+    "description": "An opulent throne room fit for the ruler of an empire. The throne itself is carved from a single piece of black marble, inlaid with gold depicting the imperial eagle. Banners of the legions that conquered the known world hang from the ceiling. Despite the grandeur, the room has an intimate quality - this is the Emperor's private audience chamber, not the vast public throne room of the palace.<br><br>Emperor Certius awaits here, ready to receive visitors.",
     "exits": {
       "south": 200
     },
@@ -2578,7 +2578,7 @@
     "numericId": 202,
     "id": "imperialVillaGuestQuarters",
     "title": "Imperial Villa - Guest Quarters",
-    "description": "Luxurious guest quarters have been prepared for you and your companions. The room features plush beds with silk sheets, a writing desk of polished mahogany, and a balcony overlooking the city. Fresh fruit and wine have been laid out on a side table.\u003Cbr\u003E\u003Cbr\u003EA bronze plaque reads: \u0027Guests of the Emperor are granted the Empire\u0027s hospitality.\u0027",
+    "description": "Luxurious guest quarters have been prepared for you and your companions. The room features plush beds with silk sheets, a writing desk of polished mahogany, and a balcony overlooking the city. Fresh fruit and wine have been laid out on a side table.<br><br>A bronze plaque reads: 'Guests of the Emperor are granted the Empire's hospitality.'",
     "exits": {
       "west": 200
     },
@@ -2594,7 +2594,7 @@
     "numericId": 203,
     "id": "imperialVillaGardens",
     "title": "Imperial Villa - Gardens",
-    "description": "Meticulously maintained gardens surround a central fountain depicting the goddess Victoria. Rare flowers from every corner of the Empire bloom in carefully arranged beds. Stone paths wind between sculpted hedges, and the scent of jasmine fills the air. Servants tend the plants with quiet efficiency.\u003Cbr\u003E\u003Cbr\u003EThis is a place of peace, though the weight of impending crisis makes relaxation difficult.",
+    "description": "Meticulously maintained gardens surround a central fountain depicting the goddess Victoria. Rare flowers from every corner of the Empire bloom in carefully arranged beds. Stone paths wind between sculpted hedges, and the scent of jasmine fills the air. Servants tend the plants with quiet efficiency.<br><br>This is a place of peace, though the weight of impending crisis makes relaxation difficult.",
     "exits": {
       "north": 200
     },
@@ -2610,7 +2610,7 @@
     "numericId": 204,
     "id": "imperialVillaLibrary",
     "title": "Imperial Villa - Imperial Library",
-    "description": "Floor-to-ceiling shelves hold thousands of scrolls and bound volumes - the personal collection of Emperor Certius himself. You spot texts on military strategy, philosophy, history, and governance. A large table in the center holds maps of the Empire and its frontiers.\u003Cbr\u003E\u003Cbr\u003ESeveral scholars work quietly at desks, cataloging and preserving this knowledge for future generations.",
+    "description": "Floor-to-ceiling shelves hold thousands of scrolls and bound volumes - the personal collection of Emperor Certius himself. You spot texts on military strategy, philosophy, history, and governance. A large table in the center holds maps of the Empire and its frontiers.<br><br>Several scholars work quietly at desks, cataloging and preserving this knowledge for future generations.",
     "exits": {
       "east": 200
     },
@@ -2626,7 +2626,7 @@
     "numericId": 220,
     "id": "colosseumLowerGallery",
     "title": "Colosseum - Lower Gallery",
-    "description": "The lower gallery of the Colosseum is packed with spectators. Banners in imperial purple hang from the stone arches. The roar of the crowd echoes off the walls as gladiatorial games unfold in the arena below. Vendors hawk wine and food, and the air is thick with excitement.\u003Cbr\u003E\u003Cbr\u003EAhead, you notice several figures in hooded robes moving against the crowd flow - heading deeper into the structure. Their movements are too purposeful, too synchronized. Cultists.",
+    "description": "The lower gallery of the Colosseum is packed with spectators. Banners in imperial purple hang from the stone arches. The roar of the crowd echoes off the walls as gladiatorial games unfold in the arena below. Vendors hawk wine and food, and the air is thick with excitement.<br><br>Ahead, you notice several figures in hooded robes moving against the crowd flow - heading deeper into the structure. Their movements are too purposeful, too synchronized. Cultists.",
     "exits": {
       "north": 221
     },
@@ -2651,7 +2651,7 @@
     "numericId": 221,
     "id": "colosseumMidGallery",
     "title": "Colosseum - Mid Gallery",
-    "description": "You\u0027ve climbed to the mid-level gallery, where wealthier citizens watch the games from cushioned seats. The view of the arena is spectacular from here, but you have no time for spectacle. More cultists block your path - these ones are armored and ready for combat. They\u0027ve abandoned all pretense of blending in.",
+    "description": "You've climbed to the mid-level gallery, where wealthier citizens watch the games from cushioned seats. The view of the arena is spectacular from here, but you have no time for spectacle. More cultists block your path - these ones are armored and ready for combat. They've abandoned all pretense of blending in.",
     "exits": {
       "south": 220,
       "north": 222
@@ -2681,7 +2681,7 @@
     "numericId": 222,
     "id": "colosseumUpperGallery",
     "title": "Colosseum - Upper Gallery",
-    "description": "The upper gallery is reserved for senators and high nobility. The seats here are empty - the elite are all in private viewing boxes. You\u0027re close to the Emperor\u0027s box now. A group of cultists has taken position here as a final line of defense. These are veteran fighters arrayed in defensive formation, weapons drawn and ready.",
+    "description": "The upper gallery is reserved for senators and high nobility. The seats here are empty - the elite are all in private viewing boxes. You're close to the Emperor's box now. A group of cultists has taken position here as a final line of defense. These are veteran fighters arrayed in defensive formation, weapons drawn and ready.",
     "exits": {
       "south": 221,
       "north": 223
@@ -2714,8 +2714,8 @@
   {
     "numericId": 223,
     "id": "emperorSeatBox",
-    "title": "Colosseum - Emperor\u0027s Seat Box",
-    "description": "The Emperor\u0027s private viewing box offers an unobstructed view of the arena floor. Rich purple tapestries bearing the imperial eagle frame the space. This is where rulers of the Empire have watched gladiatorial games for fifteen centuries.\u003Cbr\u003E\u003Cbr\u003EThe box is currently empty except for imperial guards... and one figure moving with deadly intent.",
+    "title": "Colosseum - Emperor's Seat Box",
+    "description": "The Emperor's private viewing box offers an unobstructed view of the arena floor. Rich purple tapestries bearing the imperial eagle frame the space. This is where rulers of the Empire have watched gladiatorial games for fifteen centuries.<br><br>The box is currently empty except for imperial guards... and one figure moving with deadly intent.",
     "exits": {
       "south": 222
     },
@@ -2731,7 +2731,7 @@
     "numericId": 900,
     "id": "dungeonHub",
     "title": "Ancient Ruins - Entrance",
-    "description": "You stand before a massive stone archway, worn smooth by countless centuries. The stonework predates the Empire by millennia - cyclopean blocks fitted together with impossible precision. Strange symbols are carved into the arch\u0027s surface, their meaning lost to time. Beyond the archway, stone steps descend into darkness. The air that rises from below is cool and carries the faint scent of ancient dust and something else... something watchful.",
+    "description": "You stand before a massive stone archway, worn smooth by countless centuries. The stonework predates the Empire by millennia - cyclopean blocks fitted together with impossible precision. Strange symbols are carved into the arch's surface, their meaning lost to time. Beyond the archway, stone steps descend into darkness. The air that rises from below is cool and carries the faint scent of ancient dust and something else... something watchful.",
     "exits": {
       "down": 901
     },
@@ -3107,7 +3107,7 @@
   {
     "numericId": 911,
     "id": "dungeonF3R1",
-    "title": "Ancient Ruins - Minotaur\u0027s Domain",
+    "title": "Ancient Ruins - Minotaur's Domain",
     "description": "The stairs open into a massive circular arena. The floor is stained with ancient blood. A minotaur paces in the center, its massive axe resting on one shoulder. It bellows a challenge as you enter.",
     "exits": {
       "up": 910,
@@ -3253,9 +3253,9 @@
       "west": 914
     },
     "items": [
-      "hero\u0027s blade",
-      "gorgon\u0027s bane",
-      "medusa\u0027s wand",
+      "hero's blade",
+      "gorgon's bane",
+      "medusa's wand",
       "griffon hide armor"
     ],
     "npcs": [
@@ -3321,7 +3321,7 @@
   {
     "numericId": 917,
     "id": "dungeonF4R2",
-    "title": "Ancient Ruins - Hydra\u0027s Lair",
+    "title": "Ancient Ruins - Hydra's Lair",
     "description": "A vast chamber with a pool of dark water in the center. A massive hydra rises from the depths, its multiple heads swaying hypnotically. Each head breathes a different elemental attack.",
     "exits": {
       "west": 916,
@@ -3387,8 +3387,8 @@
   {
     "numericId": 919,
     "id": "dungeonF4R4",
-    "title": "Ancient Ruins - Titan\u0027s Approach",
-    "description": "The passage opens to reveal a titanic statue that slowly begins to move. This is no statue - it\u0027s a titan, ancient guardian of this place. Its stone skin cracks as it takes its first step in centuries.",
+    "title": "Ancient Ruins - Titan's Approach",
+    "description": "The passage opens to reveal a titanic statue that slowly begins to move. This is no statue - it's a titan, ancient guardian of this place. Its stone skin cracks as it takes its first step in centuries.",
     "exits": {
       "west": 917,
       "east": 920
@@ -3421,7 +3421,7 @@
       "up": 900
     },
     "items": [
-      "titan\u0027s maul",
+      "titan's maul",
       "olympian greatbow",
       "divine scepter",
       "aegis of the gods"
@@ -3455,7 +3455,7 @@
     "numericId": 991,
     "id": "testRoom991",
     "title": "[TEST] Recruit Testing Area 9",
-    "description": "[TEST ROOM] Final testing chamber. Use \u0027teleport 1\u0027 to return to guild hall.",
+    "description": "[TEST ROOM] Final testing chamber. Use 'teleport 1' to return to guild hall.",
     "exits": {
       "north": 992
     },
@@ -3630,7 +3630,7 @@
     "numericId": 999,
     "id": "testRoom999",
     "title": "[TEST] Recruit Testing Area 1",
-    "description": "[TEST ROOM] A simple testing chamber. Use \u0027teleport 999\u0027 to get here.",
+    "description": "[TEST ROOM] A simple testing chamber. Use 'teleport 999' to get here.",
     "exits": {
       "south": 998
     },
