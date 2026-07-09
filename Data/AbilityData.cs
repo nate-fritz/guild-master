@@ -120,9 +120,11 @@
         public static Ability ShieldWall = new Ability
         {
             Name = "Shield Wall",
-            Description = "Boost party defense for 3 turns, can't attack during effect (10 turn cooldown)",
+            // REDESIGNED 2026-07-06: reactive parry, not a 3-turn self-silence
+            Description = "Brace behind your shield: the next attack against you this turn deals no damage (10 turn cooldown)",
             EnergyCost = 0,
             Type = AbilityType.Buff,
+            IsRanged = true,   // Self-buff; must work from any row
             UnlockLevel = 10
         };
 
@@ -420,6 +422,48 @@
             UnlockLevel = 6
         };
 
+        // Legionnaire Level 8
+        public static Ability RallyingShout = new Ability
+        {
+            Name = "Rallying Shout",
+            Description = "Rally the party: remove one debuff from each member and restore 10% of their max HP",
+            EnergyCost = 3,
+            DiceCount = 0,
+            DiceSides = 0,
+            Bonus = 0,
+            Type = AbilityType.Buff,
+            IsRanged = true,   // A shout; must work from any row
+            UnlockLevel = 8
+        };
+
+        // Legionnaire Level 12
+        public static Ability IronWill = new Ability
+        {
+            Name = "Iron Will",
+            Description = "Steel yourself: the next blow that would fell you leaves you at 1 HP instead (15 turn cooldown)",
+            EnergyCost = 0,
+            DiceCount = 0,
+            DiceSides = 0,
+            Bonus = 0,
+            Type = AbilityType.Buff,
+            IsRanged = true,   // Self-buff; must work from any row
+            UnlockLevel = 12
+        };
+
+        // Legionnaire Level 18
+        public static Ability VengefulStrike = new Ability
+        {
+            Name = "Vengeful Strike",
+            Description = "Retaliate against an enemy that struck you last round for massive damage",
+            EnergyCost = 4,
+            DiceCount = 1,
+            DiceSides = 10,
+            Bonus = 0,   // Missing-HP bonus added by executor
+            Type = AbilityType.SingleTarget,
+            IsRanged = false,
+            UnlockLevel = 18
+        };
+
         // Legionnaire Level 16
         public static Ability CrushingSweep = new Ability
         {
@@ -594,7 +638,10 @@
                 "Ice Shards" => IceShards,
                 "Protective Ward" => ProtectiveWard,
                 "Provoke" => Provoke,
+                "Rallying Shout" => RallyingShout,
+                "Iron Will" => IronWill,
                 "Crushing Sweep" => CrushingSweep,
+                "Vengeful Strike" => VengefulStrike,
                 "Crippling Shot" => CripplingShot,
                 "Volley" => Volley,
                 "Hunter's Mark" => HuntersMark,

@@ -70,13 +70,13 @@
 - [x] Test in dungeon at appropriate levels (level 17 vs floors 1 & 4)
 - [ ] Balance EP costs and damage values (pending three-class balance pass)
 
-### Legionnaire Abilities
-- [ ] Review current Legionnaire abilities in ABILITY_REWORK_PLAN.md
-- [ ] Implement Legionnaire philosophy: Tank with high multi-target damage
-- [ ] Add/revise abilities for build-and-spend pattern
-- [ ] Implement early single-target taunt (0 EP, 2 turn CD)
-- [ ] Revise Shield Wall (1 turn duration, blocks next attack)
-- [ ] Test tanking effectiveness in dungeon
+### Legionnaire Abilities ✅ DONE (2026-07-06)
+- [x] Review current Legionnaire abilities in ABILITY_REWORK_PLAN.md
+- [x] Implement Legionnaire philosophy: Tank with high multi-target damage
+- [x] Add abilities: Provoke (6), Rallying Shout (8), Iron Will (12), Crushing Sweep (16), Vengeful Strike (18, retaliation redesign)
+- [x] Implement early single-target taunt (0 EP, 2 turn CD) - Provoke
+- [x] Revise Shield Wall (blocks next attack, 10 turn CD)
+- [x] Test in dungeon (level 18 vs Hydra)
 
 ### Balance Pass
 - [ ] Playtest all three classes through dungeon floors

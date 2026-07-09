@@ -51,10 +51,13 @@ namespace GuildMaster.Models
                 AbilityData.BattleCryLegionnaire, // Level 3 (replaced by War Cry at level 20)
                 AbilityData.RendingStrike,        // Level 5
                 AbilityData.Provoke,              // Level 6 (NEW)
+                AbilityData.RallyingShout,        // Level 8 (NEW)
                 AbilityData.SunderArmor,          // Level 10
-                AbilityData.ShieldWall,           // Level 10
+                AbilityData.ShieldWall,           // Level 10 (redesigned: block next attack)
+                AbilityData.IronWill,             // Level 12 (NEW)
                 AbilityData.DevastatingSlam,      // Level 15
                 AbilityData.CrushingSweep,        // Level 16 (NEW)
+                AbilityData.VengefulStrike,       // Level 18 (NEW)
                 AbilityData.Whirlwind,            // Level 20
                 AbilityData.WarCry                // Level 20 (replaces Battle Cry)
             };

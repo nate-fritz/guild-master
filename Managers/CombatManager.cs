@@ -25,7 +25,9 @@ namespace GuildMaster.Managers
             Frozen,         // Reduces defense - from ice damage
             Rooted,         // Cannot act, but can still be hit - from Crippling Shot
             Marked,         // Takes +30% damage from all sources - from Hunter's Mark
-            Untargetable    // Enemies cannot target this character - from Phase Shift
+            Untargetable,   // Enemies cannot target this character - from Phase Shift
+            ShieldBlock,    // Next incoming attack deals 0 damage - from Shield Wall
+            IronWill        // Next killing blow leaves 1 HP instead - from Iron Will
         }
 
         public enum CombatState
@@ -99,6 +101,22 @@ namespace GuildMaster.Managers
         private Dictionary<Character, bool> evasiveFireActive = new Dictionary<Character, bool>();
         private Dictionary<Character, int> barrierAbsorption = new Dictionary<Character, int>();
         private Dictionary<Character, int> frozenDefenseReduction = new Dictionary<Character, int>(); // Tracks defense reduction from Frozen status
+
+        // Vengeful Strike: who attacked each character, split by "this round" vs
+        // "since their previous turn" (swapped at the victim's turn start)
+        private Dictionary<Character, List<NPC>> attackersLastRound = new Dictionary<Character, List<NPC>>();
+        private Dictionary<Character, List<NPC>> attackersThisRound = new Dictionary<Character, List<NPC>>();
+
+        public List<NPC> GetLastRoundAttackers(Character victim)
+            => attackersLastRound.TryGetValue(victim, out var list) ? list : new List<NPC>();
+
+        private void RecordAttacker(Character victim, NPC attacker)
+        {
+            if (!attackersThisRound.ContainsKey(victim))
+                attackersThisRound[victim] = new List<NPC>();
+            if (!attackersThisRound[victim].Contains(attacker))
+                attackersThisRound[victim].Add(attacker);
+        }
 
         // Callback for when player dies
         private Action onPlayerDeath;
@@ -349,6 +367,12 @@ namespace GuildMaster.Managers
                         ProcessNextTurn();
                         return;
                     }
+
+                    // Vengeful Strike window: attacks since the player's previous
+                    // turn become "last round"; a fresh window starts now
+                    attackersLastRound[player] = attackersThisRound.TryGetValue(player, out var recent)
+                        ? recent : new List<NPC>();
+                    attackersThisRound[player] = new List<NPC>();
 
                     // Class-based EP regeneration at turn start (player)
                     if (player.Class != null && player.Class.EpPerTurnStart > 0)
@@ -1271,6 +1295,8 @@ namespace GuildMaster.Managers
                 "Shield Wall" => false,
                 "Evasive Fire" => false,
                 "Phase Shift" => false,
+                "Rallying Shout" => false,
+                "Iron Will" => false,
                 "Blessing" => false,
                 "Heal" => false,
                 "Rejuvenation" => false,
@@ -1981,6 +2007,35 @@ namespace GuildMaster.Managers
             CompleteTurn();
         }
 
+        /// <summary>
+        /// Enemy ability damage to the player's side funnels through here so
+        /// Shield Wall, Iron Will, and Vengeful Strike tracking stay consistent.
+        /// Returns false if the hit was fully blocked.
+        /// </summary>
+        private bool TryApplyEnemyDamage(NPC attacker, Character target, int damage)
+        {
+            RecordAttacker(target, attacker);
+
+            if (HasStatusEffect(target, StatusEffect.ShieldBlock))
+            {
+                statusEffects[target].Remove(StatusEffect.ShieldBlock);
+                SyncStatusToCharacter(target);
+                AnsiConsole.MarkupLine($"[#FFD700]{(target == context.Player ? "You turn" : $"{target.Name} turns")} the blow aside with a braced shield - no damage![/]");
+                return false;
+            }
+
+            target.TakeDamage(damage);
+
+            if (target.Health <= 0 && HasStatusEffect(target, StatusEffect.IronWill))
+            {
+                target.Health = 1;
+                statusEffects[target].Remove(StatusEffect.IronWill);
+                SyncStatusToCharacter(target);
+                AnsiConsole.MarkupLine($"[#FFD700]{(target == context.Player ? "Your iron will refuses to break - you remain" : $"{target.Name}'s iron will refuses to break - they remain")} standing at 1 HP![/]");
+            }
+            return true;
+        }
+
         private bool ExecuteEnemyAbility(Ability ability, NPC enemy, Character target, List<Character> possibleTargets, List<NPC> activeEnemies, Player player)
         {
             // Deduct energy cost
@@ -2024,7 +2079,8 @@ namespace GuildMaster.Managers
                         actualDamage = finalDamage;
                     }
 
-                    target.TakeDamage(actualDamage);
+                    if (!TryApplyEnemyDamage(enemy, target, actualDamage))
+                        return true;   // blocked, but the ability was still used
 
                     if (target.Health <= 0)
                     {
@@ -2054,8 +2110,9 @@ namespace GuildMaster.Managers
                             aoeActualDamage = Math.Max(1, aoeActualDamage / 2);
                         }
 
-                        aoeTarget.TakeDamage(aoeActualDamage);
                         string aoeTargetName = aoeTarget == player ? "You" : aoeTarget.Name;
+                        if (!TryApplyEnemyDamage(enemy, aoeTarget, aoeActualDamage))
+                            continue;
                         AnsiConsole.MarkupLine($"  {aoeTargetName} take{(aoeTarget == player ? "" : "s")} [#FA8A8A]{aoeActualDamage} damage[/]!");
 
                         if (aoeTarget.Health <= 0)
@@ -2308,6 +2365,16 @@ namespace GuildMaster.Managers
                         return;
                     }
 
+                    // Shield Wall: a braced shield turns the next attack aside entirely
+                    if (HasStatusEffect(target, StatusEffect.ShieldBlock))
+                    {
+                        statusEffects[target].Remove(StatusEffect.ShieldBlock);
+                        SyncStatusToCharacter(target);
+                        AnsiConsole.MarkupLine($"[#FFD700]{(target == player ? "You turn" : $"{target.Name} turns")} the blow aside with a braced shield - no damage![/]");
+                        RecordAttacker(target, attackingEnemy);
+                        return;
+                    }
+
                     // Calculate base damage
                     int actualDamage = Math.Max(1, enemyDamage - target.Defense);
 
@@ -2390,6 +2457,17 @@ namespace GuildMaster.Managers
                     {
                         // Normal damage
                         target.TakeDamage(actualDamage);
+                    }
+
+                    RecordAttacker(target, attackingEnemy);
+
+                    // Iron Will: the blow that would fell them leaves them standing at 1 HP
+                    if (target.Health <= 0 && HasStatusEffect(target, StatusEffect.IronWill))
+                    {
+                        target.Health = 1;
+                        statusEffects[target].Remove(StatusEffect.IronWill);
+                        SyncStatusToCharacter(target);
+                        AnsiConsole.MarkupLine($"[#FFD700]{(target == player ? "Your" : $"{target.Name}'s")} iron will refuses to break - {(target == player ? "you remain" : "they remain")} standing at 1 HP![/]");
                     }
 
                     // Check if target was knocked out
@@ -2941,7 +3019,7 @@ namespace GuildMaster.Managers
                 case "Battle Cry":
                     return ExecuteTauntGeneric(ability, player, enemies);
                 case "Shield Wall":
-                    return ExecuteShieldWallGeneric(ability, player, player);
+                    return abilityExecutor.ExecuteShieldWallRedesigned(ability, player);
                 case "Cleave":
                     return ExecuteCleaveGeneric(ability, player, enemies);
 
@@ -2976,6 +3054,12 @@ namespace GuildMaster.Managers
                 // New Legionnaire Abilities
                 case "Provoke":
                     return abilityExecutor.ExecuteProvokeGeneric(ability, player, enemies);
+                case "Rallying Shout":
+                    return abilityExecutor.ExecuteRallyingShoutGeneric(ability, player, player);
+                case "Iron Will":
+                    return abilityExecutor.ExecuteIronWillGeneric(ability, player);
+                case "Vengeful Strike":
+                    return abilityExecutor.ExecuteVengefulStrikeGeneric(ability, player, enemies);
                 case "Crushing Sweep":
                     return abilityExecutor.ExecuteCrushingSweepGeneric(ability, player, enemies);
 
@@ -3209,7 +3293,9 @@ namespace GuildMaster.Managers
         StatusEffect.Frozen,
         StatusEffect.Rooted,
         StatusEffect.Marked,
-        StatusEffect.Untargetable
+        StatusEffect.Untargetable,
+        StatusEffect.ShieldBlock,
+        StatusEffect.IronWill
     };
 
             foreach (var effect in combatOnlyEffects)

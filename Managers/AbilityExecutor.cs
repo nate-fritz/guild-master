@@ -702,6 +702,15 @@ namespace GuildMaster.Managers
                 case "Provoke":
                     abilitySuccess = ExecuteProvokeGeneric(ability, character, enemies);
                     break;
+                case "Rallying Shout":
+                    abilitySuccess = ExecuteRallyingShoutGeneric(ability, character, player);
+                    break;
+                case "Iron Will":
+                    abilitySuccess = ExecuteIronWillGeneric(ability, character);
+                    break;
+                case "Vengeful Strike":
+                    abilitySuccess = ExecuteVengefulStrikeGeneric(ability, character, enemies);
+                    break;
                 case "Crushing Sweep":
                     abilitySuccess = ExecuteCrushingSweepGeneric(ability, character, enemies);
                     break;
@@ -837,6 +846,9 @@ namespace GuildMaster.Managers
             return true;
         }
 
+        public bool ExecuteShieldWallRedesigned(Ability ability, Character character)
+            => ExecuteShieldWallGeneric(ability, character, null);
+
         private bool ExecuteShieldWallGeneric(Ability ability, Character character, Player player)
         {
             if (IsAbilityOnCooldown(character, "Shield Wall"))
@@ -846,22 +858,95 @@ namespace GuildMaster.Managers
                 return false;
             }
 
-            AnsiConsole.MarkupLine($"\n[#FFD700]{character.Name} raises their shield and forms a protective barrier![/]");
-            AnsiConsole.MarkupLine($"[#00FFFF]The entire party gains +2 defense for 3 turns![/]");
-            AnsiConsole.MarkupLine($"[#FF9999]{character.Name} cannot attack while maintaining the shield wall![/]");
+            // REDESIGNED: reactive parry - next incoming attack this turn deals 0 damage
+            AnsiConsole.MarkupLine($"\n[#FFD700]{character.Name} braces behind their shield, ready to turn aside the next blow![/]");
 
-            // Apply defense buff to party
-            buffedDefense[player] = 2;
-            battleCryTurns[player] = 3;
+            // Duration 2 so the effect survives the caster's own end-of-turn tick;
+            // it's consumed by the first blocked attack either way
+            ApplyStatusEffect(character, CombatManager.StatusEffect.ShieldBlock, 2);
+            SetAbilityCooldown(character, "Shield Wall", 10);
+            return true;
+        }
 
-            foreach (var ally in player.ActiveParty.Where(a => a.Health > 0))
+        public bool ExecuteRallyingShoutGeneric(Ability ability, Character character, Player player)
+        {
+            AnsiConsole.MarkupLine($"\n[#FFD700]{character.Name} lets out a rallying shout![/]");
+
+            var members = new List<Character> { player };
+            members.AddRange(player.ActiveParty.Where(a => a.Health > 0));
+
+            // Debuffs a shout can shake off
+            var cleansable = new[] {
+                CombatManager.StatusEffect.Stunned, CombatManager.StatusEffect.Confused,
+                CombatManager.StatusEffect.Frozen, CombatManager.StatusEffect.Rooted,
+                CombatManager.StatusEffect.CannotAttack, CombatManager.StatusEffect.Marked
+            };
+
+            foreach (var member in members)
             {
-                buffedDefense[ally] = 2;
-                battleCryTurns[ally] = 3;
+                string name = member == player ? "You" : member.Name;
+
+                if (statusEffects.ContainsKey(member))
+                {
+                    var debuff = cleansable.FirstOrDefault(e => statusEffects[member].ContainsKey(e));
+                    if (statusEffects[member].ContainsKey(debuff))
+                    {
+                        statusEffects[member].Remove(debuff);
+                        AnsiConsole.MarkupLine($"[#90FF90]{name} shake{(member == player ? "" : "s")} off {debuff}![/]");
+                    }
+                }
+
+                int heal = Math.Max(1, (int)Math.Ceiling(member.MaxHealth * 0.10));
+                int actual = Math.Min(heal, member.MaxHealth - member.Health);
+                if (actual > 0)
+                {
+                    member.Health += actual;
+                    AnsiConsole.MarkupLine($"[#90FF90]{name} recover{(member == player ? "" : "s")} {actual} HP! ({member.Health}/{member.MaxHealth})[/]");
+                }
             }
 
-            ApplyStatusEffect(character, CombatManager.StatusEffect.CannotAttack, 3);
-            SetAbilityCooldown(character, "Shield Wall", 10);
+            return true;
+        }
+
+        public bool ExecuteIronWillGeneric(Ability ability, Character character)
+        {
+            if (IsAbilityOnCooldown(character, "Iron Will"))
+            {
+                int cooldownRemaining = GetAbilityCooldown(character, "Iron Will");
+                AnsiConsole.MarkupLine($"\n[#FFD700]Iron Will is on cooldown for {cooldownRemaining} more turns![/]");
+                return false;
+            }
+
+            AnsiConsole.MarkupLine($"\n[#FFD700]{character.Name} steels themselves - the next killing blow will not fell them![/]");
+
+            ApplyStatusEffect(character, CombatManager.StatusEffect.IronWill, 99);
+            SetAbilityCooldown(character, "Iron Will", 15);
+            return true;
+        }
+
+        public bool ExecuteVengefulStrikeGeneric(Ability ability, Character character, List<NPC> enemies)
+        {
+            // Only enemies that struck this character since their previous turn are valid
+            var attackers = combatManager.GetLastRoundAttackers(character)
+                .Where(a => a.Health > 0 && enemies.Contains(a)).ToList();
+
+            if (attackers.Count == 0)
+            {
+                AnsiConsole.MarkupLine($"\n[#FFD700]No enemy has struck {character.Name} since their last turn - there is nothing to avenge![/]");
+                return false;
+            }
+
+            var target = SelectEnemyTarget(attackers);
+            if (target == null) return false;
+
+            // Massive retaliation: 1d10 + up to +10 scaling with missing HP
+            int missingBonus = (int)Math.Ceiling(10.0 * (character.MaxHealth - character.Health) / character.MaxHealth);
+            int damage = CalculateAbilityDamage(character, ability) + missingBonus;
+
+            AnsiConsole.MarkupLine($"\n[#FF0000]{character.Name} answers {target.Name}'s assault with a vengeful strike![/]");
+            AnsiConsole.MarkupLine($"(Retaliation for {GetTypedDamageMarkup(damage, DamageType.Physical)}{(missingBonus > 0 ? $", including +{missingBonus} fury from wounds" : "")})");
+
+            ApplyDamageWithType(character, target, damage, DamageType.Physical, "vengeful strike");
             return true;
         }
 
