@@ -29,6 +29,31 @@ app.MapGet("/api/rooms", () => Results.Text(File.ReadAllText(roomsPath), "applic
 // NPC names the game actually knows, for reference dropdowns
 app.MapGet("/api/npcs", () => NPCData.InitializeNPCs().Keys.OrderBy(k => k).ToList());
 
+// Full NPC content (stats + dialogue trees), raw
+app.MapGet("/api/npcs-full", () => Results.Text(File.ReadAllText(npcsPath), "application/json"));
+
+// Validate + save NPCs with backup
+app.MapPut("/api/npcs-full", async (HttpRequest request) =>
+{
+    using var reader = new StreamReader(request.Body);
+    string json = await reader.ReadToEndAsync();
+
+    try
+    {
+        NpcTemplateStore.Load(json);   // structural + dialogue-target validation
+        NpcTemplateStore.BuildNpcs();  // must construct cleanly
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
+
+    var backup = npcsPath + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak";
+    File.Copy(npcsPath, backup, overwrite: false);
+    await File.WriteAllTextAsync(npcsPath, json);
+    return Results.Ok(new { saved = true, backup = Path.GetFileName(backup) });
+});
+
 // Validate + save with backup. Returns validation errors instead of writing bad content.
 app.MapPut("/api/rooms", async (HttpRequest request) =>
 {

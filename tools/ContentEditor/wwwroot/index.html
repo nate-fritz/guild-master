@@ -9,14 +9,17 @@
   #sidebar { width:300px; border-right:1px solid #333; display:flex; flex-direction:column; }
   #sidebar header { padding:10px; border-bottom:1px solid #333; }
   h1 { font-size:16px; color:#FA935F; margin:0 0 8px; }
+  #tabs { display:flex; gap:4px; margin-bottom:8px; }
+  #tabs button { flex:1; }
+  #tabs button.on { background:#332211; color:#FA935F; border-color:#FA935F; }
   input, textarea, select, button { background:#0d0d0d; color:#e0e0e0; border:1px solid #333; border-radius:4px; padding:6px; font-family:inherit; font-size:13px; }
   input:focus, textarea:focus { outline:1px solid #FA935F; }
   #search { width:100%; }
-  #roomlist { flex:1; overflow-y:auto; }
-  .room-item { padding:6px 10px; cursor:pointer; border-bottom:1px solid #222; }
-  .room-item:hover { background:#262626; }
-  .room-item.active { background:#332211; color:#FA935F; }
-  .room-item .rid { color:#75C8FF; margin-right:6px; }
+  #list { flex:1; overflow-y:auto; }
+  .item { padding:6px 10px; cursor:pointer; border-bottom:1px solid #222; }
+  .item:hover { background:#262626; }
+  .item.active { background:#332211; color:#FA935F; }
+  .item .rid { color:#75C8FF; margin-right:6px; }
   #main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
   #toolbar { padding:8px 12px; border-bottom:1px solid #333; display:flex; gap:8px; align-items:center; }
   #toolbar .spacer { flex:1; }
@@ -25,29 +28,38 @@
   #status.err { color:#FF6666; white-space:pre-wrap; }
   #content { flex:1; display:flex; overflow:hidden; }
   #form { width:55%; overflow-y:auto; padding:14px; }
-  #graph { flex:1; border-left:1px solid #333; overflow:auto; background:#111; }
+  #side { flex:1; border-left:1px solid #333; overflow:auto; background:#111; padding:10px; }
   label { display:block; color:#FA935F; margin:12px 0 4px; font-size:12px; }
-  #f-title, #f-desc { width:100%; }
-  #f-desc { height:130px; }
+  .w100 { width:100%; }
+  textarea.w100 { height:110px; }
   .row { display:flex; gap:6px; margin-bottom:4px; align-items:center; }
   .row input, .row select { flex:1; }
-  .row button { flex:0 0 auto; color:#FF6666; }
+  .row .del { flex:0 0 auto; color:#FF6666; }
   .add-btn { color:#90FF90; margin-top:4px; }
   button.primary { background:#332211; color:#FA935F; border-color:#FA935F; cursor:pointer; }
   button { cursor:pointer; }
-  svg text { font-family:Consolas, monospace; }
+  .grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; }
+  .grid label { margin:4px 0 2px; }
+  .node { border:1px solid #333; border-radius:4px; padding:8px; margin-bottom:10px; }
+  .node h3 { color:#75C8FF; font-size:13px; margin:0 0 6px; }
+  .choice { border-left:2px solid #444; padding-left:8px; margin:6px 0; }
   .hint { color:#777; font-size:11px; }
+  svg text { font-family:Consolas, monospace; }
 </style>
 </head>
 <body>
 <div id="sidebar">
   <header>
-    <h1>⚔ GuildMaster Rooms</h1>
-    <input id="search" placeholder="filter by id or title...">
+    <h1>⚔ GuildMaster Editor</h1>
+    <div id="tabs">
+      <button id="tab-rooms" class="on" onclick="setMode('rooms')">Rooms</button>
+      <button id="tab-npcs" onclick="setMode('npcs')">NPCs</button>
+    </div>
+    <input id="search" placeholder="filter...">
   </header>
-  <div id="roomlist"></div>
+  <div id="list"></div>
   <div style="padding:10px; border-top:1px solid #333;">
-    <button class="primary" style="width:100%" onclick="newRoom()">+ New Room</button>
+    <button class="primary" style="width:100%" id="newbtn" onclick="newEntry()">+ New Room</button>
   </div>
 </div>
 <div id="main">
@@ -58,107 +70,154 @@
     <span id="status"></span>
   </div>
   <div id="content">
-    <div id="form"><p class="hint">Select a room to edit, or create a new one.</p></div>
-    <div id="graph"></div>
+    <div id="form"><p class="hint">Select an entry to edit.</p></div>
+    <div id="side"></div>
   </div>
 </div>
 <script>
-let rooms = [], npcNames = [], sel = null, dirty = false;
+let mode='rooms', rooms=[], npcs=[], npcNames=[], sel=null, dirty=false;
 const $ = id => document.getElementById(id);
 const DIRS = ["north","east","south","west","up","down"];
+const esc = s => (s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 
 async function init() {
   rooms = await (await fetch('/api/rooms')).json();
-  npcNames = await (await fetch('/api/npcs')).json();
-  renderList(); renderGraph();
+  npcs = await (await fetch('/api/npcs-full')).json();
+  npcNames = npcs.map(n=>n.key).sort();
+  renderList();
 }
-function markDirty() { dirty = true; $('dirty').style.display = 'inline'; }
+function markDirty(){ dirty=true; $('dirty').style.display='inline'; }
+function setMode(m){ mode=m; sel=null; $('tab-rooms').className=m==='rooms'?'on':''; $('tab-npcs').className=m==='npcs'?'on':'';
+  $('newbtn').textContent = m==='rooms'?'+ New Room':'+ New NPC';
+  $('form').innerHTML='<p class="hint">Select an entry to edit.</p>'; $('side').innerHTML=''; renderList(); }
 
-function renderList() {
-  const q = $('search').value.toLowerCase();
-  $('roomlist').innerHTML = rooms
-    .filter(r => !q || String(r.numericId).includes(q) || (r.title||'').toLowerCase().includes(q))
-    .map(r => `<div class="room-item ${sel===r?'active':''}" onclick="pick(${r.numericId})"><span class="rid">${r.numericId}</span>${esc(r.title)}</div>`).join('');
+function renderList(){
+  const q=$('search').value.toLowerCase();
+  $('list').innerHTML = mode==='rooms'
+    ? rooms.filter(r=>!q||String(r.numericId).includes(q)||(r.title||'').toLowerCase().includes(q))
+        .map(r=>`<div class="item ${sel===r?'active':''}" onclick="pickRoom(${r.numericId})"><span class="rid">${r.numericId}</span>${esc(r.title)}</div>`).join('')
+    : npcs.filter(n=>!q||n.key.toLowerCase().includes(q))
+        .map((n,i)=>`<div class="item ${sel===n?'active':''}" onclick="pickNpc(${i})"><span class="rid">${n.isHostile?'⚔':n.isVendor?'🪙':'💬'}</span>${esc(n.key)}</div>`).join('');
 }
-function pick(id) { sel = rooms.find(r => r.numericId === id); renderList(); renderForm(); renderGraph(); }
-function esc(s) { return (s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function pickRoom(id){ sel=rooms.find(r=>r.numericId===id); renderList(); renderRoomForm(); renderGraph(); }
+function pickNpc(i){ sel=npcs[i]; renderList(); renderNpcForm(); }
+function newEntry(){
+  if(mode==='rooms'){ const id=Math.max(...rooms.map(r=>r.numericId))+1;
+    sel={numericId:id,id:'room'+id,title:'New Room '+id,description:'Describe me.',exits:{},items:[],npcs:[],originalNpcs:[],descriptionVariants:{},objects:[],canRespawn:false,respawnTimeHours:48};
+    rooms.push(sel); }
+  else { sel={key:'New NPC',name:'New NPC',shortDescription:'a stranger',description:'Describe me.',isHostile:false,health:10,maxHealth:10,energy:0,maxEnergy:0,attackDamage:1,defense:0,damageCount:1,damageDie:4,damageBonus:0,speed:2,isBackRow:false,energyRegenPerTurn:1,minGold:1,maxGold:5,experienceReward:25,role:'Melee',abilityNames:[],lootTable:{},preCombatDialogue:'',currentDialogueNode:'greeting',recruitableAfterDefeat:false,recruitClass:'Fighter',isVendor:false,shopInventory:{},shopPrices:{},buybackMultiplier:0.5,dialogue:{greeting:{text:'Hello.',permanentlyEndsDialogue:false,partyInterjections:{},choices:[]}}};
+    npcs.push(sel); npcNames=npcs.map(n=>n.key).sort(); }
+  markDirty(); renderList(); mode==='rooms'?(renderRoomForm(),renderGraph()):renderNpcForm();
+}
 
-function renderForm() {
-  if (!sel) return;
-  const roomOpts = id => rooms.map(r => `<option value="${r.numericId}" ${r.numericId==id?'selected':''}>${r.numericId} - ${esc(r.title)}</option>`).join('');
-  const npcOpts = n => npcNames.map(x => `<option ${x===n?'selected':''}>${esc(x)}</option>`).join('');
-  const exits = Object.entries(sel.exits||{}).map(([d,t],i) => `<div class="row">
+/* ---------- ROOMS (same behavior as v1) ---------- */
+function renderRoomForm(){
+  if(!sel) return;
+  const roomOpts = id => rooms.map(r=>`<option value="${r.numericId}" ${r.numericId==id?'selected':''}>${r.numericId} - ${esc(r.title)}</option>`).join('');
+  const refOpts = n => npcNames.map(x=>`<option ${x===n?'selected':''}>${esc(x)}</option>`).join('');
+  const exits = Object.entries(sel.exits||{}).map(([d,t],i)=>`<div class="row">
       <select onchange="exitDir(${i},this.value)">${DIRS.map(x=>`<option ${x===d?'selected':''}>${x}</option>`).join('')}</select>
       <select onchange="exitTarget(${i},this.value)">${roomOpts(t)}</select>
-      <button onclick="delExit(${i})">✕</button></div>`).join('');
-  const items = (sel.items||[]).map((it,i) => `<div class="row"><input value="${esc(it)}" onchange="editItem(${i},this.value)"><button onclick="delItem(${i})">✕</button></div>`).join('');
-  const npcs = (sel.npcs||[]).map((n,i) => `<div class="row">
-      <select onchange="npcMode(${i},this.value)">${['clone','shared','inline'].map(m=>`<option ${m===n.mode?'selected':''}>${m}</option>`).join('')}</select>
-      ${n.mode==='inline' ? `<input value="${esc(n.name)}" disabled title="inline NPCs: edit JSON directly">` : `<select onchange="npcName(${i},this.value)">${npcOpts(n.name)}</select>`}
-      <button onclick="delNpc(${i})">✕</button></div>`).join('');
+      <button class="del" onclick="delExit(${i})">✕</button></div>`).join('');
+  const items = (sel.items||[]).map((it,i)=>`<div class="row"><input value="${esc(it)}" onchange="sel.items[${i}]=this.value;markDirty()"><button class="del" onclick="sel.items.splice(${i},1);markDirty();renderRoomForm()">✕</button></div>`).join('');
+  const nrefs = (sel.npcs||[]).map((n,i)=>`<div class="row">
+      <select onchange="sel.npcs[${i}].mode=this.value;markDirty();renderRoomForm()">${['clone','shared','inline'].map(m=>`<option ${m===n.mode?'selected':''}>${m}</option>`).join('')}</select>
+      ${n.mode==='inline'?`<input value="${esc(n.name)}" disabled title="inline NPCs: edit JSON directly">`:`<select onchange="sel.npcs[${i}].name=this.value;markDirty()">${refOpts(n.name)}</select>`}
+      <button class="del" onclick="sel.npcs.splice(${i},1);markDirty();renderRoomForm()">✕</button></div>`).join('');
   $('form').innerHTML = `
     <label>Room ID / internal name</label>
-    <div class="row"><input value="${sel.numericId}" disabled style="flex:0 0 70px"><input id="f-id" value="${esc(sel.id)}" onchange="sel.id=this.value;markDirty()"></div>
-    <label>Title</label><input id="f-title" value="${esc(sel.title)}" onchange="sel.title=this.value;markDirty();renderList();renderGraph()">
-    <label>Description <span class="hint">(&lt;br&gt; for line breaks)</span></label>
-    <textarea id="f-desc" onchange="sel.description=this.value;markDirty()">${esc(sel.description)}</textarea>
+    <div class="row"><input value="${sel.numericId}" disabled style="flex:0 0 70px"><input value="${esc(sel.id)}" onchange="sel.id=this.value;markDirty()"></div>
+    <label>Title</label><input class="w100" value="${esc(sel.title)}" onchange="sel.title=this.value;markDirty();renderList();renderGraph()">
+    <label>Description <span class="hint">(&lt;br&gt; = line break)</span></label>
+    <textarea class="w100" onchange="sel.description=this.value;markDirty()">${esc(sel.description)}</textarea>
     <label>Exits</label>${exits}<button class="add-btn" onclick="addExit()">+ exit</button>
-    <label>Items</label>${items}<button class="add-btn" onclick="addItem()">+ item</button>
-    <label>NPCs <span class="hint">(clone = fresh copy per game, shared = persistent story NPC)</span></label>${npcs}<button class="add-btn" onclick="addNpc()">+ npc</button>
+    <label>Items</label>${items}<button class="add-btn" onclick="(sel.items??=[]).push('new item');markDirty();renderRoomForm()">+ item</button>
+    <label>NPCs</label>${nrefs}<button class="add-btn" onclick="(sel.npcs??=[]).push({mode:'clone',name:npcNames[0]});markDirty();renderRoomForm()">+ npc</button>
     <label>Respawn</label>
     <div class="row"><select onchange="sel.canRespawn=this.value==='true';markDirty()"><option value="false" ${!sel.canRespawn?'selected':''}>no respawn</option><option value="true" ${sel.canRespawn?'selected':''}>enemies respawn</option></select>
     <input value="${sel.respawnTimeHours??48}" title="hours" onchange="sel.respawnTimeHours=parseFloat(this.value);markDirty()" style="flex:0 0 80px"></div>`;
 }
-// form mutators
-function exitEntries(){ return Object.entries(sel.exits||{}); }
-function rebuildExits(e){ sel.exits = Object.fromEntries(e); markDirty(); renderForm(); renderGraph(); }
+const exitEntries=()=>Object.entries(sel.exits||{});
+function rebuildExits(e){ sel.exits=Object.fromEntries(e); markDirty(); renderRoomForm(); renderGraph(); }
 function exitDir(i,v){ const e=exitEntries(); e[i][0]=v; rebuildExits(e); }
 function exitTarget(i,v){ const e=exitEntries(); e[i][1]=parseInt(v); rebuildExits(e); }
 function delExit(i){ const e=exitEntries(); e.splice(i,1); rebuildExits(e); }
 function addExit(){ const e=exitEntries(); const used=e.map(x=>x[0]); e.push([DIRS.find(d=>!used.includes(d))||'north', rooms[0].numericId]); rebuildExits(e); }
-function editItem(i,v){ sel.items[i]=v; markDirty(); }
-function delItem(i){ sel.items.splice(i,1); markDirty(); renderForm(); }
-function addItem(){ (sel.items??=[]).push('new item'); markDirty(); renderForm(); }
-function npcMode(i,v){ sel.npcs[i].mode=v; markDirty(); renderForm(); }
-function npcName(i,v){ sel.npcs[i].name=v; markDirty(); }
-function delNpc(i){ sel.npcs.splice(i,1); markDirty(); renderForm(); }
-function addNpc(){ (sel.npcs??=[]).push({mode:'clone', name:npcNames[0]}); markDirty(); renderForm(); }
 
-function newRoom() {
-  const id = Math.max(...rooms.map(r=>r.numericId)) + 1;
-  const r = { numericId:id, id:'room'+id, title:'New Room '+id, description:'Describe me.', exits:{}, items:[], npcs:[], originalNpcs:[], descriptionVariants:{}, objects:[], canRespawn:false, respawnTimeHours:48 };
-  rooms.push(r); sel = r; markDirty(); renderList(); renderForm(); renderGraph();
+function renderGraph(){
+  if(mode!=='rooms'||!sel) return;
+  const byId=Object.fromEntries(rooms.map(r=>[r.numericId,r]));
+  const root=sel.numericId, depth={[root]:0}, cols={0:[root]}, seen=new Set([root]);
+  let q=[root];
+  while(q.length){ const c=q.shift(); for(const t of Object.values(byId[c]?.exits||{})){ if(!seen.has(t)&&byId[t]){ seen.add(t); depth[t]=depth[c]+1; (cols[depth[t]]??=[]).push(t); q.push(t);} } }
+  const W=170,H=52,pos={}; for(const[d,ids]of Object.entries(cols)) ids.forEach((id,i)=>pos[id]=[30+d*W,30+i*H]);
+  let edges='',nodes='';
+  for(const id of seen){ for(const[dir,t]of Object.entries(byId[id].exits||{})){ const broken=!byId[t];
+      if(pos[t]||broken){ const[x1,y1]=pos[id],[x2,y2]=pos[t]||[x1+60,y1+30];
+        edges+=`<line x1="${x1+65}" y1="${y1+14}" x2="${x2??x1}" y2="${y2??y1}" stroke="${broken?'#FF4444':'#444'}"/>`; } }
+    nodes+=`<g onclick="pickRoom(${id})" style="cursor:pointer"><rect x="${pos[id][0]}" y="${pos[id][1]}" width="130" height="28" rx="4" fill="${id===sel.numericId?'#332211':'#1e1e1e'}" stroke="${id===sel.numericId?'#FA935F':'#555'}"/><text x="${pos[id][0]+6}" y="${pos[id][1]+18}" font-size="10" fill="#e0e0e0">${id} ${esc((byId[id].title||'').slice(0,14))}</text></g>`; }
+  const maxRow=Math.max(1,...Object.values(cols).map(c=>c.length));
+  $('side').innerHTML=`<svg width="${30+Object.keys(cols).length*W+150}" height="${60+maxRow*H}">${edges}${nodes}</svg>
+    <p class="hint">Rooms reachable from the selected room. Red = broken exit. Click to edit.</p>`;
 }
 
-// Graph: BFS depth layout from selected room (or room 1)
-function renderGraph() {
-  const byId = Object.fromEntries(rooms.map(r=>[r.numericId,r]));
-  const root = sel?.numericId ?? rooms[0]?.numericId;
-  const depth = {[root]:0}, cols = {0:[root]}, seen = new Set([root]);
-  let queue=[root];
-  while(queue.length){ const cur=queue.shift(); for(const t of Object.values(byId[cur]?.exits||{})){ if(!seen.has(t)&&byId[t]){ seen.add(t); depth[t]=depth[cur]+1; (cols[depth[t]]??=[]).push(t); queue.push(t);} } }
-  const W=170,H=52; let maxRow=Math.max(1,...Object.values(cols).map(c=>c.length));
-  const pos={}; for(const[d,ids]of Object.entries(cols)) ids.forEach((id,i)=>pos[id]=[30+d*W, 30+i*H]);
-  let edges='', nodes='';
-  for(const id of seen){ const r=byId[id];
-    for(const[dir,t]of Object.entries(r.exits||{})){ const broken=!byId[t];
-      if(pos[t]||broken){ const [x1,y1]=pos[id], [x2,y2]=pos[t]||[x1+60,y1+30];
-        edges+=`<line x1="${x1+65}" y1="${y1+14}" x2="${x2??x1}" y2="${y2??y1}" stroke="${broken?'#FF4444':'#444'}" stroke-width="1"/>`; } }
-    nodes+=`<g onclick="pick(${id})" style="cursor:pointer">
-      <rect x="${pos[id][0]}" y="${pos[id][1]}" width="130" height="28" rx="4" fill="${id===sel?.numericId?'#332211':'#1e1e1e'}" stroke="${id===sel?.numericId?'#FA935F':'#555'}"/>
-      <text x="${pos[id][0]+6}" y="${pos[id][1]+18}" font-size="10" fill="#e0e0e0">${id} ${esc((byId[id].title||'').slice(0,14))}</text></g>`;
-  }
-  const w=30+(Object.keys(cols).length)*W+150, h=60+maxRow*H;
-  $('graph').innerHTML = `<svg width="${w}" height="${h}">${edges}${nodes}</svg>
-    <p class="hint" style="padding:0 10px">Graph = rooms reachable from the selected room. Red lines = exits to missing rooms. Click a node to edit it.</p>`;
+/* ---------- NPCs ---------- */
+function renderNpcForm(){
+  if(!sel) return;
+  const stat=(label,field,step)=>`<div><label>${label}</label><input class="w100" type="number" ${step?'step="'+step+'"':''} value="${sel[field]??0}" onchange="sel['${field}']=parseFloat(this.value);markDirty()"></div>`;
+  const loot=Object.entries(sel.lootTable||{}).map(([it,pc],i)=>`<div class="row"><input value="${esc(it)}" onchange="renameKey('lootTable','${esc(it)}',this.value)"><input type="number" value="${pc}" style="flex:0 0 70px" title="% chance" onchange="sel.lootTable['${esc(it)}']=parseInt(this.value);markDirty()"><button class="del" onclick="delete sel.lootTable['${esc(it)}'];markDirty();renderNpcForm()">✕</button></div>`).join('');
+  const shop=Object.entries(sel.shopInventory||{}).map(([it,pr])=>`<div class="row"><input value="${esc(it)}" onchange="renameKey('shopInventory','${esc(it)}',this.value)"><input type="number" value="${pr}" style="flex:0 0 70px" title="price" onchange="sel.shopInventory['${esc(it)}']=parseInt(this.value);markDirty()"><button class="del" onclick="delete sel.shopInventory['${esc(it)}'];markDirty();renderNpcForm()">✕</button></div>`).join('');
+  $('form').innerHTML=`
+    <label>Dictionary key <span class="hint">(rooms reference this)</span> / display name</label>
+    <div class="row"><input value="${esc(sel.key)}" onchange="sel.key=this.value;markDirty();renderList()"><input value="${esc(sel.name)}" onchange="sel.name=this.value;markDirty()"></div>
+    <label>Short description / description</label>
+    <input class="w100" value="${esc(sel.shortDescription)}" onchange="sel.shortDescription=this.value;markDirty()">
+    <textarea class="w100" style="height:70px" onchange="sel.description=this.value;markDirty()">${esc(sel.description)}</textarea>
+    <div class="row" style="margin-top:10px">
+      <select onchange="sel.isHostile=this.value==='true';markDirty();renderList()"><option value="false" ${!sel.isHostile?'selected':''}>friendly</option><option value="true" ${sel.isHostile?'selected':''}>hostile</option></select>
+      <select onchange="sel.role=this.value;markDirty()">${['Melee','Ranged','Support'].map(r=>`<option ${r===sel.role?'selected':''}>${r}</option>`).join('')}</select>
+      <select onchange="sel.isVendor=this.value==='true';markDirty();renderNpcForm()"><option value="false" ${!sel.isVendor?'selected':''}>not a vendor</option><option value="true" ${sel.isVendor?'selected':''}>vendor</option></select>
+    </div>
+    <div class="grid">
+      ${stat('Health','health')}${stat('Max HP','maxHealth')}${stat('Attack','attackDamage')}${stat('Defense','defense')}
+      ${stat('Speed','speed')}${stat('Min gold','minGold')}${stat('Max gold','maxGold')}${stat('XP','experienceReward')}
+    </div>
+    <label>Loot table <span class="hint">(item / % chance)</span></label>${loot}
+    <button class="add-btn" onclick="sel.lootTable['new item']=10;markDirty();renderNpcForm()">+ loot</button>
+    ${sel.isVendor?`<label>Shop inventory <span class="hint">(item / price)</span></label>${shop}<button class="add-btn" onclick="sel.shopInventory['new item']=10;markDirty();renderNpcForm()">+ shop item</button>`:''}
+    <label>Pre-combat dialogue</label><input class="w100" value="${esc(sel.preCombatDialogue)}" onchange="sel.preCombatDialogue=this.value;markDirty()">`;
+  renderDialogue();
+}
+function renameKey(dict,oldK,newK){ const v=sel[dict][oldK]; delete sel[dict][oldK]; sel[dict][newK]=v; markDirty(); renderNpcForm(); }
+
+function renderDialogue(){
+  const nodeIds=Object.keys(sel.dialogue||{});
+  const nodeOpts=n=>['end',...nodeIds].map(x=>`<option ${x===n?'selected':''}>${x}</option>`).join('');
+  $('side').innerHTML = `<h1 style="font-size:14px">Dialogue tree (${nodeIds.length} nodes)</h1>` +
+    nodeIds.map(id=>{ const n=sel.dialogue[id];
+      const choices=(n.choices||[]).map((c,ci)=>`<div class="choice">
+        <input class="w100" value="${esc(c.text)}" placeholder="choice text" onchange="sel.dialogue['${id}'].choices[${ci}].text=this.value;markDirty()">
+        <div class="row"><span class="hint">→</span><select onchange="sel.dialogue['${id}'].choices[${ci}].next=this.value;markDirty()">${nodeOpts(c.next)}</select>
+        <input value="${esc(c.requiredItem??'')}" placeholder="required item (optional)" onchange="sel.dialogue['${id}'].choices[${ci}].requiredItem=this.value||null;markDirty()">
+        <button class="del" onclick="sel.dialogue['${id}'].choices.splice(${ci},1);markDirty();renderDialogue()">✕</button></div>
+        ${c.action?`<span class="hint">action: ${esc(c.action.type)}</span>`:''}</div>`).join('');
+      return `<div class="node"><h3>${esc(id)} ${id===sel.currentDialogueNode?'★':''}</h3>
+        <textarea class="w100" style="height:70px" onchange="sel.dialogue['${id}'].text=this.value;markDirty()">${esc(n.text)}</textarea>
+        ${n.action?`<span class="hint">node action: ${esc(n.action.type)}</span>`:''}
+        ${choices}
+        <button class="add-btn" onclick="(sel.dialogue['${id}'].choices??=[]).push({text:'...',next:'end'});markDirty();renderDialogue()">+ choice</button>
+        <button class="del" onclick="if(confirm('Delete node ${esc(id)}?')){delete sel.dialogue['${id}'];markDirty();renderDialogue()}">delete node</button>
+      </div>`; }).join('') +
+    `<div class="row"><input id="newnode" placeholder="new node id"><button class="add-btn" onclick="const k=$('newnode').value.trim();if(k){(sel.dialogue??={})[k]={text:'...',permanentlyEndsDialogue:false,partyInterjections:{},choices:[]};markDirty();renderDialogue()}">+ node</button></div>
+    <p class="hint">★ = entry node. Choices with actions/conditions beyond required-item keep them (shown as hints); edit JSON for those.</p>`;
 }
 
-async function save() {
-  const res = await fetch('/api/rooms', { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(rooms, null, 2) });
-  const body = await res.json();
-  const st = $('status');
-  if (res.ok) { dirty=false; $('dirty').style.display='none'; st.className=''; st.textContent = `saved ✓ (backup: ${body.backup})`; }
-  else { st.className='err'; st.textContent = 'NOT saved - validation failed:\n' + body.error; }
+async function save(){
+  const [url, body] = mode==='rooms' ? ['/api/rooms', rooms] : ['/api/npcs-full', npcs];
+  const res = await fetch(url, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body, null, 2)});
+  const out = await res.json(); const st=$('status');
+  if(res.ok){ dirty=false; $('dirty').style.display='none'; st.className=''; st.textContent=`saved ✓ (backup: ${out.backup})`; }
+  else { st.className='err'; st.textContent='NOT saved - validation failed:\n'+out.error; }
 }
 $('search').addEventListener('input', renderList);
 init();

@@ -33,103 +33,103 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "The guard glances at you briefly and says \u0022Move along, citizen. Keep your nose clean and we won\u0027t have any problems.\u0022",
+        "text": "The guard glances at you briefly and says \"Move along, citizen. Keep your nose clean and we won't have any problems.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Can you give me directions?\u0022",
+            "text": "\"Can you give me directions?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Understood.\u0022",
+            "text": "\"Understood.\"",
             "next": "end"
           }
         ]
       },
       "ask_directions": {
-        "text": "The guard nods. \u0022What are you looking for?\u0022",
+        "text": "The guard nods. \"What are you looking for?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Where is the Town Hall?\u0022",
+            "text": "\"Where is the Town Hall?\"",
             "next": "dir_town_hall"
           },
           {
-            "text": "\u0022Where is the Temple District?\u0022",
+            "text": "\"Where is the Temple District?\"",
             "next": "dir_temple"
           },
           {
-            "text": "\u0022Where can I find the tavern?\u0022",
+            "text": "\"Where can I find the tavern?\"",
             "next": "dir_tavern"
           },
           {
-            "text": "\u0022Where\u0027s the blacksmith?\u0022",
+            "text": "\"Where's the blacksmith?\"",
             "next": "dir_blacksmith"
           },
           {
-            "text": "\u0022Never mind.\u0022",
+            "text": "\"Never mind.\"",
             "next": "end"
           }
         ]
       },
       "dir_town_hall": {
-        "text": "\u0022The Town Hall is in the western part of Belum. Head to the town square and go west through the residential area. You can\u0027t miss it - big marble columns and bronze doors.\u0022",
+        "text": "\"The Town Hall is in the western part of Belum. Head to the town square and go west through the residential area. You can't miss it - big marble columns and bronze doors.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Anything else?\u0022",
+            "text": "\"Anything else?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Thank you.\u0022",
+            "text": "\"Thank you.\"",
             "next": "end"
           }
         ]
       },
       "dir_temple": {
-        "text": "\u0022The Temple District is northwest of the town square. Head north to the residential area, then west. The temples surround a central plaza.\u0022",
+        "text": "\"The Temple District is northwest of the town square. Head north to the residential area, then west. The temples surround a central plaza.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Anything else?\u0022",
+            "text": "\"Anything else?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Thank you.\u0022",
+            "text": "\"Thank you.\"",
             "next": "end"
           }
         ]
       },
       "dir_tavern": {
-        "text": "\u0022The Golden Grape? Popular place. It\u0027s in the eastern part of town. From the town square, head east and you\u0027ll find it in the poor quarter area. Can\u0027t miss the golden grape sign.\u0022",
+        "text": "\"The Golden Grape? Popular place. It's in the eastern part of town. From the town square, head east and you'll find it in the poor quarter area. Can't miss the golden grape sign.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Anything else?\u0022",
+            "text": "\"Anything else?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Thank you.\u0022",
+            "text": "\"Thank you.\"",
             "next": "end"
           }
         ]
       },
       "dir_blacksmith": {
-        "text": "\u0022The Iron Anvil is in the southern market district. From the south gate, head north through the market and you\u0027ll hear the forges. Big place, can\u0027t miss it.\u0022",
+        "text": "\"The Iron Anvil is in the southern market district. From the south gate, head north through the market and you'll hear the forges. Big place, can't miss it.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Anything else?\u0022",
+            "text": "\"Anything else?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Thank you.\u0022",
+            "text": "\"Thank you.\"",
             "next": "end"
           }
         ]
@@ -176,103 +176,103 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "The villager greets you with a friendly smile. \u0022Good day to you, traveler. Welcome to Belum!\u0022",
+        "text": "The villager greets you with a friendly smile. \"Good day to you, traveler. Welcome to Belum!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Can you help me find my way around?\u0022",
+            "text": "\"Can you help me find my way around?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Good day to you as well.\u0022",
+            "text": "\"Good day to you as well.\"",
             "next": "end"
           }
         ]
       },
       "ask_directions": {
-        "text": "\u0022Of course! I\u0027d be happy to help. What are you looking for?\u0022",
+        "text": "\"Of course! I'd be happy to help. What are you looking for?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Where is the Town Hall?\u0022",
+            "text": "\"Where is the Town Hall?\"",
             "next": "dir_town_hall"
           },
           {
-            "text": "\u0022Where is the Temple District?\u0022",
+            "text": "\"Where is the Temple District?\"",
             "next": "dir_temple"
           },
           {
-            "text": "\u0022Where can I get a drink?\u0022",
+            "text": "\"Where can I get a drink?\"",
             "next": "dir_tavern"
           },
           {
-            "text": "\u0022Where\u0027s the blacksmith?\u0022",
+            "text": "\"Where's the blacksmith?\"",
             "next": "dir_blacksmith"
           },
           {
-            "text": "\u0022I\u0027m all set, thank you.\u0022",
+            "text": "\"I'm all set, thank you.\"",
             "next": "end"
           }
         ]
       },
       "dir_town_hall": {
-        "text": "\u0022The Town Hall? That\u0027s on the western side of town. Go to the town square and head west through the nice residential area. You\u0027ll see it - big impressive building with marble columns!\u0022",
+        "text": "\"The Town Hall? That's on the western side of town. Go to the town square and head west through the nice residential area. You'll see it - big impressive building with marble columns!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022What else is there?\u0022",
+            "text": "\"What else is there?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Thank you!\u0022",
+            "text": "\"Thank you!\"",
             "next": "end"
           }
         ]
       },
       "dir_temple": {
-        "text": "\u0022Ah, the temples! Northwest of the town square. Head north from the square to the residential area, then west. There\u0027s a whole plaza surrounded by temples to the different gods.\u0022",
+        "text": "\"Ah, the temples! Northwest of the town square. Head north from the square to the residential area, then west. There's a whole plaza surrounded by temples to the different gods.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022What else is there?\u0022",
+            "text": "\"What else is there?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Thank you!\u0022",
+            "text": "\"Thank you!\"",
             "next": "end"
           }
         ]
       },
       "dir_tavern": {
-        "text": "\u0022The Golden Grape is the best tavern in Belum! It\u0027s in the eastern part of town. From the square, head east and you\u0027ll find it. Look for the golden grape on the sign - can\u0027t miss it!\u0022",
+        "text": "\"The Golden Grape is the best tavern in Belum! It's in the eastern part of town. From the square, head east and you'll find it. Look for the golden grape on the sign - can't miss it!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022What else is there?\u0022",
+            "text": "\"What else is there?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Thank you!\u0022",
+            "text": "\"Thank you!\"",
             "next": "end"
           }
         ]
       },
       "dir_blacksmith": {
-        "text": "\u0022The Iron Anvil is the best smithy around! It\u0027s in the southern part of town near the market. If you\u0027re coming from the south gate, head north through the market district and follow your ears - you\u0027ll hear the hammers on the anvils!\u0022",
+        "text": "\"The Iron Anvil is the best smithy around! It's in the southern part of town near the market. If you're coming from the south gate, head north through the market district and follow your ears - you'll hear the hammers on the anvils!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022What else is there?\u0022",
+            "text": "\"What else is there?\"",
             "next": "ask_directions"
           },
           {
-            "text": "\u0022Thank you!\u0022",
+            "text": "\"Thank you!\"",
             "next": "end"
           }
         ]
@@ -319,7 +319,7 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "The merchant spreads his arms wide and says \u0022Looking to buy? Looking to sell? Either way, you\u0027ve come to the right place!\u0022",
+        "text": "The merchant spreads his arms wide and says \"Looking to buy? Looking to sell? Either way, you've come to the right place!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -360,7 +360,7 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "The barkeep looks up from wiping down the bar and greets you warmly. \u0022Welcome to the Golden Grape! What\u0027ll it be? Ale? Wine? Or perhaps you\u0027re looking for information?\u0022",
+        "text": "The barkeep looks up from wiping down the bar and greets you warmly. \"Welcome to the Golden Grape! What'll it be? Ale? Wine? Or perhaps you're looking for information?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -399,7 +399,7 @@
     "shopInventory": {
       "iron gladius": 50,
       "battle axe": 60,
-      "hunter\u0027s bow": 55,
+      "hunter's bow": 55,
       "steel gladius": 120,
       "leather armor": 40,
       "chainmail": 80,
@@ -409,7 +409,7 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "The blacksmith sets down his hammer and wipes the sweat from his brow. \u0022Need something forged? Repaired? I\u0027m the best smith in Belum - ask anyone.\u0022",
+        "text": "The blacksmith sets down his hammer and wipes the sweat from his brow. \"Need something forged? Repaired? I'm the best smith in Belum - ask anyone.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -457,7 +457,7 @@
     "buybackMultiplier": 0.4,
     "dialogue": {
       "greeting": {
-        "text": "The apothecary looks up from her work and smiles. \u0022Welcome to my apothecary. I stock the finest potions and remedies in all of Belum. What can I prepare for you today?\u0022",
+        "text": "The apothecary looks up from her work and smiles. \"Welcome to my apothecary. I stock the finest potions and remedies in all of Belum. What can I prepare for you today?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -505,7 +505,7 @@
     "buybackMultiplier": 0.3,
     "dialogue": {
       "greeting": {
-        "text": "The scribe carefully sets down his quill and regards you with keen eyes. \u0022Greetings, traveler. I deal in scrolls, both mundane and mystical. Are you in need of knowledge... or power?\u0022",
+        "text": "The scribe carefully sets down his quill and regards you with keen eyes. \"Greetings, traveler. I deal in scrolls, both mundane and mystical. Are you in need of knowledge... or power?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -516,7 +516,7 @@
     "key": "Guild Armorer",
     "name": "Guild Armorer",
     "shortDescription": "A master armorer",
-    "description": "A grizzled veteran with a master smith\u0027s apron stands before an array of exceptional weapons and armor. Scars and burn marks on his weathered hands speak to decades of forge work. His eyes gleam with professional pride as he examines each piece of equipment.",
+    "description": "A grizzled veteran with a master smith's apron stands before an array of exceptional weapons and armor. Scars and burn marks on his weathered hands speak to decades of forge work. His eyes gleam with professional pride as he examines each piece of equipment.",
     "isHostile": false,
     "health": 0,
     "maxHealth": 0,
@@ -555,7 +555,7 @@
     "buybackMultiplier": 0.6,
     "dialogue": {
       "greeting": {
-        "text": "The armorer nods respectfully as you approach. \u0022Welcome to the guild armory. Your reputation precedes you - only the finest equipment for proven adventurers. What catches your eye?\u0022",
+        "text": "The armorer nods respectfully as you approach. \"Welcome to the guild armory. Your reputation precedes you - only the finest equipment for proven adventurers. What catches your eye?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -596,96 +596,96 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "As you approach the gate, the sentry adjusts his shield and spear, then barks \u0022Halt, traveler. This gate to Belum is closed by order of the town council. None may enter.\u0022",
+        "text": "As you approach the gate, the sentry adjusts his shield and spear, then barks \"Halt, traveler. This gate to Belum is closed by order of the town council. None may enter.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I have the Bandit Warlord\u0027s head.\u0022 (Show him the head)",
+            "text": "\"I have the Bandit Warlord's head.\" (Show him the head)",
             "next": "quest_complete",
-            "requiredItem": "warlord\u0027s head",
+            "requiredItem": "warlord's head",
             "action": {
               "type": "give_item",
               "parameters": {
-                "item": "warlord\u0027s head"
+                "item": "warlord's head"
               }
             }
           },
           {
-            "text": "\u0022Why is the gate closed?\u0022",
+            "text": "\"Why is the gate closed?\"",
             "next": "explain_bandits"
           },
           {
-            "text": "\u0022I understand. I\u0027ll move along.\u0022",
+            "text": "\"I understand. I'll move along.\"",
             "next": "end"
           }
         ]
       },
       "explain_bandits": {
-        "text": "Marcus scowls. \u0022Bandits. A large group has made camp in caves to the southwest - west of Gaius\u0027 farm, south of the mountains. They\u0027ve been raiding travelers and farms. Until they\u0027re dealt with, the council won\u0027t allow the southern gate to open. Too dangerous.\u0022",
+        "text": "Marcus scowls. \"Bandits. A large group has made camp in caves to the southwest - west of Gaius' farm, south of the mountains. They've been raiding travelers and farms. Until they're dealt with, the council won't allow the southern gate to open. Too dangerous.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022You\u0027re not going to believe this, but I have the Warlord\u0027s head.\u0022 (Show him)",
+            "text": "\"You're not going to believe this, but I have the Warlord's head.\" (Show him)",
             "next": "quest_complete",
-            "requiredItem": "warlord\u0027s head",
+            "requiredItem": "warlord's head",
             "action": {
               "type": "give_item",
               "parameters": {
-                "item": "warlord\u0027s head"
+                "item": "warlord's head"
               }
             }
           },
           {
-            "text": "\u0022I could deal with these bandits.\u0022",
+            "text": "\"I could deal with these bandits.\"",
             "next": "offer_help"
           },
           {
-            "text": "\u0022That sounds dangerous. I\u0027ll stay away.\u0022",
+            "text": "\"That sounds dangerous. I'll stay away.\"",
             "next": "end"
           }
         ]
       },
       "offer_help": {
-        "text": "He sizes you up. \u0022You?\u0022 He pauses, then continues, \u0022...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I\u0027ll convince the council to open the gate.\u0022",
+        "text": "He sizes you up. \"You?\" He pauses, then continues, \"...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I'll convince the council to open the gate.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I\u0027ll do it. The Warlord will fall.\u0022",
+            "text": "\"I'll do it. The Warlord will fall.\"",
             "next": "quest_accepted"
           },
           {
-            "text": "\u0022Let me think about it.\u0022",
+            "text": "\"Let me think about it.\"",
             "next": "end"
           }
         ]
       },
       "quest_accepted": {
-        "text": "Marcus nods grimly. \u0022Good luck. You\u0027ll need it. Be careful down there - the bandits fight dirty and they outnumber you. Return with the Warlord\u0027s head and your reward will be access to Belum.\u0022",
+        "text": "Marcus nods grimly. \"Good luck. You'll need it. Be careful down there - the bandits fight dirty and they outnumber you. Return with the Warlord's head and your reward will be access to Belum.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I have the Bandit Warlord\u0027s head.\u0022 (Show him)",
+            "text": "\"I have the Bandit Warlord's head.\" (Show him)",
             "next": "quest_complete",
-            "requiredItem": "warlord\u0027s head",
+            "requiredItem": "warlord's head",
             "action": {
               "type": "give_item",
               "parameters": {
-                "item": "warlord\u0027s head"
+                "item": "warlord's head"
               }
             }
           },
           {
-            "text": "\u0022I\u0027m still working on it.\u0022",
+            "text": "\"I'm still working on it.\"",
             "next": "end"
           }
         ]
       },
       "quest_complete": {
-        "text": "Marcus\u0027 eyes widen as you unwrap the grisly trophy. \u0022By the gods... you actually did it! The Warlord\u0027s head!\u0022 He examines it grimly. \u0022This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I\u0027ll inform the council immediately - the southern gate is now open to you.\u0022\u003Cbr\u003E\u003Cbr\u003EHe pauses, then adds, \u0022If you found anything unusual on the Warlord - letters, documents, anything like that - you should take them to Senator Quintus in the town hall. He\u0027s skilled with ciphers and codes. Might be able to make sense of it.\u0022",
+        "text": "Marcus' eyes widen as you unwrap the grisly trophy. \"By the gods... you actually did it! The Warlord's head!\" He examines it grimly. \"This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I'll inform the council immediately - the southern gate is now open to you.\"<br><br>He pauses, then adds, \"If you found anything unusual on the Warlord - letters, documents, anything like that - you should take them to Senator Quintus in the town hall. He's skilled with ciphers and codes. Might be able to make sense of it.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -695,22 +695,22 @@
         "choices": []
       },
       "after_quest": {
-        "text": "Marcus nods at you respectfully. \u0022Thank you again for taking care of those bandits. The roads are safer now because of you.\u0022",
+        "text": "Marcus nods at you respectfully. \"Thank you again for taking care of those bandits. The roads are safer now because of you.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Just doing my part.\u0022",
+            "text": "\"Just doing my part.\"",
             "next": "end"
           },
           {
-            "text": "\u0022Happy to help. Take care, Marcus.\u0022",
+            "text": "\"Happy to help. Take care, Marcus.\"",
             "next": "end"
           }
         ]
       },
       "end": {
-        "text": "He nods curtly. \u0022Stay safe out there.\u0022",
+        "text": "He nods curtly. \"Stay safe out there.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -755,7 +755,7 @@
     "key": "Grax",
     "name": "Grax",
     "shortDescription": "Grax",
-    "description": "A grizzled mountain hunter with keen eyes and a weather-worn bow. He moves with the quiet confidence of someone who\u0027s survived years in the wilderness.",
+    "description": "A grizzled mountain hunter with keen eyes and a weather-worn bow. He moves with the quiet confidence of someone who's survived years in the wilderness.",
     "isHostile": false,
     "health": 18,
     "maxHealth": 18,
@@ -1114,83 +1114,83 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "first_greeting": {
-        "text": "As you approach the farmer\u0027s stand, he rises to meet you with a smile.\u003Cbr\u003E\u003Cbr\u003E\u0022Greetings, friend. Haven\u0027t seen you \u0027round these parts before. Name\u0027s Gaius.\u0022",
+        "text": "As you approach the farmer's stand, he rises to meet you with a smile.<br><br>\"Greetings, friend. Haven't seen you 'round these parts before. Name's Gaius.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Greetings. {player.name}, and I actually have no idea where \u0027these parts\u0027 even are. Where am I?\u0022",
+            "text": "\"Greetings. {player.name}, and I actually have no idea where 'these parts' even are. Where am I?\"",
             "next": "ask_about_area"
           },
           {
-            "text": "\u0022I should get going.\u0022",
+            "text": "\"I should get going.\"",
             "next": "end"
           }
         ]
       },
       "repeat_greeting": {
-        "text": "Gaius looks up from arranging his wares and greets you with a familiar smile.\u003Cbr\u003E\u003Cbr\u003E\u0022Good to see you again, {player.name}. What can I do for you?\u0022",
+        "text": "Gaius looks up from arranging his wares and greets you with a familiar smile.<br><br>\"Good to see you again, {player.name}. What can I do for you?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I cleared out the bandits from your farm.\u0022",
+            "text": "\"I cleared out the bandits from your farm.\"",
             "next": "bandits_cleared",
             "requireNotDiscussedNode": "bandits_cleared"
           },
           {
-            "text": "\u0022Could you tell me more about this forest and the people you\u0027ve seen going into it?\u0022",
+            "text": "\"Could you tell me more about this forest and the people you've seen going into it?\"",
             "next": "ask_about_forest",
             "requireNotDiscussedNode": "ask_about_forest"
           },
           {
-            "text": "\u0022Tell me about that closed gate again?\u0022",
+            "text": "\"Tell me about that closed gate again?\"",
             "next": "ask_about_gate",
             "requireNotDiscussedNode": "ask_about_gate"
           },
           {
-            "text": "\u0022Just passing through. Take care, Gaius.\u0022",
+            "text": "\"Just passing through. Take care, Gaius.\"",
             "next": "end"
           }
         ]
       },
       "greeting": {
-        "text": "As you approach the farmer\u0027s stand, Gaius rises to meet you with a smile. \u0022Greetings, friend. Haven\u0027t seen you \u0027round these parts before. Name\u0027s Gaius.\u0022",
+        "text": "As you approach the farmer's stand, Gaius rises to meet you with a smile. \"Greetings, friend. Haven't seen you 'round these parts before. Name's Gaius.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Greetings. {player.name}, and I actually have no idea where \u0027these parts\u0027 even are. Where am I?\u0022",
+            "text": "\"Greetings. {player.name}, and I actually have no idea where 'these parts' even are. Where am I?\"",
             "next": "ask_about_area"
           },
           {
-            "text": "\u0022I should get going.\u0022",
+            "text": "\"I should get going.\"",
             "next": "end"
           }
         ]
       },
       "ask_about_area": {
-        "text": "Gaius briefly raises an eyebrow at this, but a smile quickly replaces the suspicious look on his face. \u0022Well, in that case, welcome to Belum.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022The town itself is behind those fortress walls to the north. My farm is a ways to the west, before you reach Mount Gelus. Hircinian Forest is east of here, although you\u0027d be better off avoiding it. Strange folk have been coming and going from there of late.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I saw you come from the south, so I imagine you saw that old guild hall. I think it\u0027s been abandoned for a while now.\u0022",
+        "text": "Gaius briefly raises an eyebrow at this, but a smile quickly replaces the suspicious look on his face. \"Well, in that case, welcome to Belum.\"<br><br>\"The town itself is behind those fortress walls to the north. My farm is a ways to the west, before you reach Mount Gelus. Hircinian Forest is east of here, although you'd be better off avoiding it. Strange folk have been coming and going from there of late.\"<br><br>\"I saw you come from the south, so I imagine you saw that old guild hall. I think it's been abandoned for a while now.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I did come from there, but it\u0027s not exactly abandoned any more.   It\u0027s mine now, apparently.\u0022",
+            "text": "\"I did come from there, but it's not exactly abandoned any more.   It's mine now, apparently.\"",
             "next": "explain_guild"
           },
           {
-            "text": "\u0022I should get going.\u0022",
+            "text": "\"I should get going.\"",
             "next": "end"
           }
         ]
       },
       "explain_guild": {
-        "text": "At this, Gaius makes no more attempts to hide his surprise. \u0022Now that\u0027s not something I expected to hear! I\u0027m not sure if I should offer congratulations or condolences.\u0022",
+        "text": "At this, Gaius makes no more attempts to hide his surprise. \"Now that's not something I expected to hear! I'm not sure if I should offer congratulations or condolences.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Too early to say, I think.  I\u0027ve been tasked with rebuilding the Adventurer\u0027s Guild, which means I need to start recruiting.  I suppose I should head into town and see if I can find anyone interested.\u0022",
+            "text": "\"Too early to say, I think.  I've been tasked with rebuilding the Adventurer's Guild, which means I need to start recruiting.  I suppose I should head into town and see if I can find anyone interested.\"",
             "next": "recruit"
           },
           {
@@ -1200,66 +1200,66 @@
         ]
       },
       "other_topics": {
-        "text": "Gaius nods. \u0022What can I help you with?\u0022",
+        "text": "Gaius nods. \"What can I help you with?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022You said the gate to town was closed.  Permanently?\u0022",
+            "text": "\"You said the gate to town was closed.  Permanently?\"",
             "next": "ask_about_gate"
           },
           {
-            "text": "\u0022Could you tell me more about this forest and the people you\u0027ve seen going into it?\u0022",
+            "text": "\"Could you tell me more about this forest and the people you've seen going into it?\"",
             "next": "ask_about_forest"
           }
         ]
       },
       "ask_about_gate": {
-        "text": "Gaius gives a small frown. \u0022The sentry can tell you more, but it seems to me that they\u0027re nervous about leaving that gate open given all of the unusual activity down this way. Bandits, mostly, but also whatever\u0027s going on in the forest.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022If I\u0027m being honest, I hope they can resolve it quickly. I\u0027m uncomfortable with those bandits holing up so close to my farm, and there\u0027s not enough traffic through these crossroads for me to make a living.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022If you think you can help, talk to Marcus at the gate.\u0022",
+        "text": "Gaius gives a small frown. \"The sentry can tell you more, but it seems to me that they're nervous about leaving that gate open given all of the unusual activity down this way. Bandits, mostly, but also whatever's going on in the forest.\"<br><br>\"If I'm being honest, I hope they can resolve it quickly. I'm uncomfortable with those bandits holing up so close to my farm, and there's not enough traffic through these crossroads for me to make a living.\"<br><br>\"If you think you can help, talk to Marcus at the gate.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I might just do that.  I wanted to ask about something else.\u0022",
+            "text": "\"I might just do that.  I wanted to ask about something else.\"",
             "next": "other_topics"
           }
         ]
       },
       "recruit": {
-        "text": "Gaius sighs. \u0022Well, I\u0027ve got bad news. The south gate is closed, which is why I\u0027m out here. Normally I\u0027d head into the market to sell my goods, but with the gate being closed I\u0027m forced to set up shop out here.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022There\u0027s a north gate and a west gate, but you\u0027ll have a hard time getting to either of them.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Bandits have holed up in the caves to the west, and all sorts of foul creatures live in the mountains.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I hate to say it, but if you\u0027re looking for anyone to help you clear out monsters or bandits, maybe your best bet is to head into that nasty old forest after all.\u0022",
+        "text": "Gaius sighs. \"Well, I've got bad news. The south gate is closed, which is why I'm out here. Normally I'd head into the market to sell my goods, but with the gate being closed I'm forced to set up shop out here.\"<br><br>\"There's a north gate and a west gate, but you'll have a hard time getting to either of them.\"<br><br>\"Bandits have holed up in the caves to the west, and all sorts of foul creatures live in the mountains.\"<br><br>\"I hate to say it, but if you're looking for anyone to help you clear out monsters or bandits, maybe your best bet is to head into that nasty old forest after all.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Could you tell me more about this forest and the people you\u0027ve seen going into it?\u0022",
+            "text": "\"Could you tell me more about this forest and the people you've seen going into it?\"",
             "next": "ask_about_forest"
           }
         ]
       },
       "ask_about_forest": {
-        "text": "Gaius shakes his head. \u0022Dark woods, full of wolves and worse things. Lost a few chickens to whatever lurks in there.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Lately a lot of horse-drawn carts have been headed in to the woods. A couple of them stopped here and bought some food, although part of me wished they hadn\u0027t. Unsettling folk, every one of them.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022The last two weren\u0027t so bad, though. A venator passed through, and said he\u0027d be back this way once he found whatever it is that he\u0027s looking for. Besides him, a soldier went into the forest just this morning. Friendly enough, but had a crazed look in his eye. Seemed like he was looking for someone or something to fight.\u0022",
+        "text": "Gaius shakes his head. \"Dark woods, full of wolves and worse things. Lost a few chickens to whatever lurks in there.\"<br><br>\"Lately a lot of horse-drawn carts have been headed in to the woods. A couple of them stopped here and bought some food, although part of me wished they hadn't. Unsettling folk, every one of them.\"<br><br>\"The last two weren't so bad, though. A venator passed through, and said he'd be back this way once he found whatever it is that he's looking for. Besides him, a soldier went into the forest just this morning. Friendly enough, but had a crazed look in his eye. Seemed like he was looking for someone or something to fight.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Interesting.  It sounds like the woods are my best bet, then.  Maybe one of these interesting characters will join up with me.\u0022",
+            "text": "\"Interesting.  It sounds like the woods are my best bet, then.  Maybe one of these interesting characters will join up with me.\"",
             "next": "look_for_recruits"
           }
         ]
       },
       "look_for_recruits": {
-        "text": "Gaius smiles at that. \u0022Ha! Maybe they will. Be safe in there, friend, and good luck finding those recruits.\u0022",
+        "text": "Gaius smiles at that. \"Ha! Maybe they will. Be safe in there, friend, and good luck finding those recruits.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Thank you. With luck, you\u0027ll see me coming back through here soon.\u0022",
+            "text": "\"Thank you. With luck, you'll see me coming back through here soon.\"",
             "next": "end"
           }
         ]
       },
       "bandits_cleared": {
-        "text": "Gaius\u0027 eyes widen in amazement. \u0022You what?! The bandits are gone?\u0022 He rushes around the stand and grips your shoulders with both hands. \u0022{player.name}, you have no idea what this means to me! Those bastards have been terrorizing my farm for weeks!\u0022\u003Cbr\u003E\u003Cbr\u003EHe releases you and reaches into his coin purse. \u0022Here, please take this. It\u0027s all I can offer right now, but you\u0027ve saved my livelihood. My family can finally return home safely!\u0022",
+        "text": "Gaius' eyes widen in amazement. \"You what?! The bandits are gone?\" He rushes around the stand and grips your shoulders with both hands. \"{player.name}, you have no idea what this means to me! Those bastards have been terrorizing my farm for weeks!\"<br><br>He releases you and reaches into his coin purse. \"Here, please take this. It's all I can offer right now, but you've saved my livelihood. My family can finally return home safely!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -1270,13 +1270,13 @@
         },
         "choices": [
           {
-            "text": "\u0022Happy to help, Gaius. Your farm is safe now.\u0022",
+            "text": "\"Happy to help, Gaius. Your farm is safe now.\"",
             "next": "end"
           }
         ]
       },
       "end": {
-        "text": "Gaius nods warmly. \u0022Alright, don\u0027t let me keep you.\u003Cbr\u003E\u003Cbr\u003EIf you ever end up west of here, stop by my farm some time.\u0022",
+        "text": "Gaius nods warmly. \"Alright, don't let me keep you.<br><br>If you ever end up west of here, stop by my farm some time.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -1317,48 +1317,48 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "first_greeting": {
-        "text": "Silvacis looks up suddenly, his eyes narrowing. \u0022Damn it, don\u0027t sneak up on me like that!\u0022\u003Cbr\u003E\u003Cbr\u003EAfter a moment, the venator regains his composure.\u0022Apologies, I\u0027ve been searching for something and haven\u0027t had much luck.  I certainly didn\u0027t expect to see someone standing over me, but I should be paying more attention.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I\u0027m Silvacis.  What brings you out into these woods?\u0022",
+        "text": "Silvacis looks up suddenly, his eyes narrowing. \"Damn it, don't sneak up on me like that!\"<br><br>After a moment, the venator regains his composure.\"Apologies, I've been searching for something and haven't had much luck.  I certainly didn't expect to see someone standing over me, but I should be paying more attention.\"<br><br>\"I'm Silvacis.  What brings you out into these woods?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I\u0027m rebuilding the Adventurer\u0027s Guild nearby.\u0022",
+            "text": "\"I'm rebuilding the Adventurer's Guild nearby.\"",
             "next": "mention_guild_first"
           },
           {
-            "text": "\u0022Just exploring the area.\u0022",
+            "text": "\"Just exploring the area.\"",
             "next": "exploring"
           }
         ]
       },
       "repeat_greeting": {
-        "text": "Silvacis looks up from his search and nods in recognition. \u0022Ah, it\u0027s you again.\u0022",
+        "text": "Silvacis looks up from his search and nods in recognition. \"Ah, it's you again.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Still looking for that amulet?\u0022",
+            "text": "\"Still looking for that amulet?\"",
             "next": "main_hub",
             "requireDiscussedNode": "mention_guild_first"
           },
           {
-            "text": "\u0022Still looking for that amulet?\u0022",
+            "text": "\"Still looking for that amulet?\"",
             "next": "main_hub",
             "requireDiscussedNode": "exploring"
           },
           {
-            "text": "\u0022Just passing through. Good luck with your search.\u0022",
+            "text": "\"Just passing through. Good luck with your search.\"",
             "next": "end"
           }
         ]
       },
       "mention_guild_first": {
-        "text": "Silvacis\u0027 eyes widen with interest. \u0022The old guild hall? Interesting... I could use the help of a guild actually. The lost item I mentioned - it\u0027s a weather-worn silver amulet. I dropped it somewhere in this cursed forest and I can\u0027t find it anywhere!\u0022",
+        "text": "Silvacis' eyes widen with interest. \"The old guild hall? Interesting... I could use the help of a guild actually. The lost item I mentioned - it's a weather-worn silver amulet. I dropped it somewhere in this cursed forest and I can't find it anywhere!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "You pull the amulet out of your satchel and present it to Silvacis.  \u0022Is this it?\u0022",
+            "text": "You pull the amulet out of your satchel and present it to Silvacis.  \"Is this it?\"",
             "next": "give_amulet_guild_known",
             "requiredItem": "amulet",
             "action": {
@@ -1369,17 +1369,17 @@
             }
           },
           {
-            "text": "\u0022What\u0027s so special about this amulet?\u0022",
+            "text": "\"What's so special about this amulet?\"",
             "next": "amulet_importance"
           },
           {
-            "text": "\u0022I\u0027ll keep an eye out for it.\u0022",
+            "text": "\"I'll keep an eye out for it.\"",
             "next": "will_search"
           }
         ]
       },
       "exploring": {
-        "text": "Silvacis nods gravely. \u0022Be careful then. These woods are dangerous... Actually, since you\u0027re here, maybe you can help me. I\u0027ve lost something important - a weather-worn silver amulet. Have you seen it?\u0022",
+        "text": "Silvacis nods gravely. \"Be careful then. These woods are dangerous... Actually, since you're here, maybe you can help me. I've lost something important - a weather-worn silver amulet. Have you seen it?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -1395,55 +1395,55 @@
             }
           },
           {
-            "text": "\u0022What kind of amulet?\u0022",
+            "text": "\"What kind of amulet?\"",
             "next": "describe_amulet_no_guild"
           },
           {
-            "text": "\u0022Sorry, haven\u0027t seen it.\u0022",
+            "text": "\"Sorry, haven't seen it.\"",
             "next": "end"
           }
         ]
       },
       "give_amulet_guild_known": {
-        "text": "Silvacis\u0027 face lights up with joy as he clutches the amulet. \u0022That\u0027s it! That\u0027s my amulet! Thank you so much!\u0022 He pauses, considering. \u0022You know what? I\u0027ve been alone and without purpose for too long. A guild could be exactly what I need.\u0022",
+        "text": "Silvacis' face lights up with joy as he clutches the amulet. \"That's it! That's my amulet! Thank you so much!\" He pauses, considering. \"You know what? I've been alone and without purpose for too long. A guild could be exactly what I need.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022It is good to have you, Silvacis.\u0022",
+            "text": "\"It is good to have you, Silvacis.\"",
             "next": "recruit_offer"
           }
         ]
       },
       "give_amulet_no_guild": {
-        "text": "Silvacis takes the amulet reverently, his eyes glistening. \u0022That\u0027s it! That\u0027s my amulet! Thank you so much! I owe you a great debt...\u0022 He looks at you appraisingly. \u0022Say, you seem capable. I don\u0027t suppose you\u0027re looking for companions? I\u0027m a skilled ranger, and I\u0027ve been thinking it\u0027s time to leave these woods.\u0022",
+        "text": "Silvacis takes the amulet reverently, his eyes glistening. \"That's it! That's my amulet! Thank you so much! I owe you a great debt...\" He looks at you appraisingly. \"Say, you seem capable. I don't suppose you're looking for companions? I'm a skilled ranger, and I've been thinking it's time to leave these woods.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Actually, I was very recently tasked with rebuilding the Adventurer\u0027s Guild. Interested?\u0022",
+            "text": "\"Actually, I was very recently tasked with rebuilding the Adventurer's Guild. Interested?\"",
             "next": "reveal_guild"
           }
         ]
       },
       "reveal_guild": {
-        "text": "Silvacis straightens with renewed purpose. \u0022It\u0027s been too long since I had companions or a real purpose.  Count me in.\u0022",
+        "text": "Silvacis straightens with renewed purpose. \"It's been too long since I had companions or a real purpose.  Count me in.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022It is good to have you, Silvacis.\u0022",
+            "text": "\"It is good to have you, Silvacis.\"",
             "next": "recruit_offer"
           }
         ]
       },
       "amulet_importance": {
-        "text": "Silvacis\u0027 expression becomes somber. \u0022It belonged to someone important to me. It\u0027s all I have left of them... Please, if you find it, bring it to me.\u0022",
+        "text": "Silvacis' expression becomes somber. \"It belonged to someone important to me. It's all I have left of them... Please, if you find it, bring it to me.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "You pull the amulet out of your satchel and present it to Silvacis.  \u0022Is this it?\u0022",
+            "text": "You pull the amulet out of your satchel and present it to Silvacis.  \"Is this it?\"",
             "next": "give_amulet_guild_known",
             "requiredItem": "amulet",
             "action": {
@@ -1454,24 +1454,24 @@
             }
           },
           {
-            "text": "\u0022I\u0027ll look for it.\u0022",
+            "text": "\"I'll look for it.\"",
             "next": "will_search"
           }
         ]
       },
       "will_search": {
-        "text": "Silvacis nods gratefully. \u0022Thank you. I\u0027ll keep searching here. If you find it, please bring it to me.\u0022",
+        "text": "Silvacis nods gratefully. \"Thank you. I'll keep searching here. If you find it, please bring it to me.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
       },
       "main_hub": {
-        "text": "Silvacis looks up hopefully. \u0022Have you found my amulet yet? It\u0027s a weather-worn silver piece, very important to me.\u0022",
+        "text": "Silvacis looks up hopefully. \"Have you found my amulet yet? It's a weather-worn silver piece, very important to me.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "You pull the amulet out of your satchel and present it to Silvacis. \u0022Is this it?\u0022",
+            "text": "You pull the amulet out of your satchel and present it to Silvacis. \"Is this it?\"",
             "next": "give_amulet_return",
             "requiredItem": "amulet",
             "action": {
@@ -1482,24 +1482,24 @@
             }
           },
           {
-            "text": "\u0022Still looking for it.\u0022",
+            "text": "\"Still looking for it.\"",
             "next": "end"
           }
         ]
       },
       "give_amulet_return": {
-        "text": "Silvacis takes the amulet with trembling hands. \u0022My amulet! Thank you!\u0022 He clutches it to his chest for a moment, then looks at you with determination. \u0022You know, I\u0027ve been thinking about what you said about that guild. I\u0027d like to join, if you\u0027ll have me.\u0022",
+        "text": "Silvacis takes the amulet with trembling hands. \"My amulet! Thank you!\" He clutches it to his chest for a moment, then looks at you with determination. \"You know, I've been thinking about what you said about that guild. I'd like to join, if you'll have me.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022It is good to have you, Silvacis.\u0022",
+            "text": "\"It is good to have you, Silvacis.\"",
             "next": "recruit_offer"
           }
         ]
       },
       "recruit_offer": {
-        "text": "Silvacis shoulders his pack with renewed energy. \u0022Lead on, Guild Master. Oh, and if you\u0027re looking for more recruits, I heard there\u0027s a fighter who camps deeper in these woods - bit of a hermit, but skilled with a blade.\u0022",
+        "text": "Silvacis shoulders his pack with renewed energy. \"Lead on, Guild Master. Oh, and if you're looking for more recruits, I heard there's a fighter who camps deeper in these woods - bit of a hermit, but skilled with a blade.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -1511,13 +1511,13 @@
         "choices": []
       },
       "end": {
-        "text": "Silvacis returns to his search, his movements methodical but desperate. \u0022Please, if you find it, let me know. I\u0027ll be searching around here.\u0022",
+        "text": "Silvacis returns to his search, his movements methodical but desperate. \"Please, if you find it, let me know. I'll be searching around here.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
       },
       "describe_amulet_no_guild": {
-        "text": "Silvacis\u0027 voice becomes quieter. \u0022It\u0027s a weather-worn silver amulet, quite old. It belonged to someone important to me. It\u0027s all I have left of them.\u0022",
+        "text": "Silvacis' voice becomes quieter. \"It's a weather-worn silver amulet, quite old. It belonged to someone important to me. It's all I have left of them.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -1533,7 +1533,7 @@
             }
           },
           {
-            "text": "\u0022I\u0027ll keep an eye out for it.\u0022",
+            "text": "\"I'll keep an eye out for it.\"",
             "next": "end"
           }
         ]
@@ -1683,29 +1683,29 @@
     "recruitableAfterDefeat": true,
     "recruitClass": "Legionnaire",
     "yieldDialogue": "You fight well. Perhaps... perhaps I was wrong about you.",
-    "acceptDialogue": "I\u0027ll head to your guild hall. You\u0027ve earned my respect.",
+    "acceptDialogue": "I'll head to your guild hall. You've earned my respect.",
     "isVendor": false,
     "shopInventory": {},
     "shopPrices": {},
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "Braxus stops mid-swing and turns to face you, his expression hard. \u0022Leave me be, stranger. I came to these woods for solitude, not conversation.\u0022",
+        "text": "Braxus stops mid-swing and turns to face you, his expression hard. \"Leave me be, stranger. I came to these woods for solitude, not conversation.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I\u0027m rebuilding the Adventurer\u0027s Guild. Interested?\u0022",
+            "text": "\"I'm rebuilding the Adventurer's Guild. Interested?\"",
             "next": "reject_guild"
           },
           {
-            "text": "\u0022Fair enough. I\u0027ll leave you alone.\u0022",
+            "text": "\"Fair enough. I'll leave you alone.\"",
             "next": "goodbye"
           }
         ]
       },
       "reject_guild": {
-        "text": "Braxus laughs bitterly. \u0022Ha! I\u0027m done taking orders. If you want me to join anything, you\u0027ll have to prove you\u0027re worth following. Draw your weapon!\u0022",
+        "text": "Braxus laughs bitterly. \"Ha! I'm done taking orders. If you want me to join anything, you'll have to prove you're worth following. Draw your weapon!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -1715,7 +1715,7 @@
         "choices": []
       },
       "goodbye": {
-        "text": "Braxus grunts and returns to his practice. \u0022Smart choice. Now leave me be.\u0022",
+        "text": "Braxus grunts and returns to his practice. \"Smart choice. Now leave me be.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -1790,82 +1790,82 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "first_greeting": {
-        "text": "The priestess regards you with eyes that seem to see more than most. \u0022Welcome to the Temple of Keius, traveler. I am Caelia, High Priestess of this sanctuary.\u0022 Her voice is melodious, almost musical.\u003Cbr\u003E\u003Cbr\u003EShe tilts her head slightly, studying you. \u0022You carry yourself like one who has seen battle. A guild master, perhaps?\u0022 A knowing smile touches her lips. \u0022My old friend Quintus mentioned that the guild might be reformed. Come seeking guidance, or merely respite?\u0022",
+        "text": "The priestess regards you with eyes that seem to see more than most. \"Welcome to the Temple of Keius, traveler. I am Caelia, High Priestess of this sanctuary.\" Her voice is melodious, almost musical.<br><br>She tilts her head slightly, studying you. \"You carry yourself like one who has seen battle. A guild master, perhaps?\" A knowing smile touches her lips. \"My old friend Quintus mentioned that the guild might be reformed. Come seeking guidance, or merely respite?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Quintus said I could trust you. I found a translated letter with strange words - \u0027Ordo Dissolutus\u0027. What does it mean?\u0022",
+            "text": "\"Quintus said I could trust you. I found a translated letter with strange words - 'Ordo Dissolutus'. What does it mean?\"",
             "next": "ask_about_passphrase",
             "requiredItem": "translated letter",
             "requireNotDiscussedNode": "ask_about_passphrase"
           },
           {
-            "text": "\u0022Just looking around. Beautiful temple.\u0022",
+            "text": "\"Just looking around. Beautiful temple.\"",
             "next": "end"
           },
           {
-            "text": "\u0022Tell me about Keius.\u0022",
+            "text": "\"Tell me about Keius.\"",
             "next": "about_keius"
           }
         ]
       },
       "repeat_greeting": {
-        "text": "Caelia\u0027s luminous eyes find yours as you approach. \u0022Welcome back, guild master.\u0022 There\u0027s a hint of warmth in her smile. \u0022Quintus speaks highly of you. How may I assist you today?\u0022",
+        "text": "Caelia's luminous eyes find yours as you approach. \"Welcome back, guild master.\" There's a hint of warmth in her smile. \"Quintus speaks highly of you. How may I assist you today?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Quintus said I could trust you. I found a translated letter with strange words - \u0027Ordo Dissolutus\u0027. What does it mean?\u0022",
+            "text": "\"Quintus said I could trust you. I found a translated letter with strange words - 'Ordo Dissolutus'. What does it mean?\"",
             "next": "ask_about_passphrase",
             "requiredItem": "translated letter",
             "requireNotDiscussedNode": "ask_about_passphrase"
           },
           {
-            "text": "\u0022Tell me about Keius.\u0022",
+            "text": "\"Tell me about Keius.\"",
             "next": "about_keius"
           },
           {
-            "text": "\u0022Just passing through.\u0022",
+            "text": "\"Just passing through.\"",
             "next": "end"
           }
         ]
       },
       "about_keius": {
-        "text": "Caelia\u0027s expression becomes reverent. \u0022Keius is the god of light, knowledge, and truth. He teaches that understanding dispels darkness, and that wisdom is the greatest weapon against chaos.\u0022 She gestures to the temple around you. \u0022This sanctuary has stood for centuries, a beacon against ignorance and fear.\u0022",
+        "text": "Caelia's expression becomes reverent. \"Keius is the god of light, knowledge, and truth. He teaches that understanding dispels darkness, and that wisdom is the greatest weapon against chaos.\" She gestures to the temple around you. \"This sanctuary has stood for centuries, a beacon against ignorance and fear.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Thank you for explaining.\u0022",
+            "text": "\"Thank you for explaining.\"",
             "next": "end"
           }
         ]
       },
       "ask_about_passphrase": {
-        "text": "Caelia\u0027s expression shifts immediately - surprise gives way to grim satisfaction. \u0022\u0027Ordo Dissolutus\u0027...\u0022 She exhales slowly. \u0022Then Quintus was right. You found his research.\u0022\u003Cbr\u003E\u003Cbr\u003EShe takes your arm gently, guiding you to a quieter corner of the temple. \u0022Quintus and I have been tracking this cult for decades - since before the guild fell. He was once a member himself, you know. Before politics called him to Aevoria.\u0022 Her luminous eyes bore into yours.\u003Cbr\u003E\u003Cbr\u003E\u0022The Dissolved Order worships entropy and decay. They believe the Empire is a corruption that must be... undone. For years, we\u0027ve gathered fragments - intercepted letters, translated texts, whispers in the dark. Quintus handles the political intelligence from the capital. I use the temple\u0027s network to track their movements in the provinces.\u0022\u003Cbr\u003E\u003Cbr\u003EShe lowers her voice. \u0022We found their hideout months ago. An old smuggler\u0027s cave in the Hircinian Forest, repurposed for darker purposes. But we needed proof, evidence we could bring before the Emperor.\u0022 She meets your eyes. \u0022That\u0027s where you come in. If you have the passphrase, you can infiltrate their sanctuary and find what we need.\u0022",
+        "text": "Caelia's expression shifts immediately - surprise gives way to grim satisfaction. \"'Ordo Dissolutus'...\" She exhales slowly. \"Then Quintus was right. You found his research.\"<br><br>She takes your arm gently, guiding you to a quieter corner of the temple. \"Quintus and I have been tracking this cult for decades - since before the guild fell. He was once a member himself, you know. Before politics called him to Aevoria.\" Her luminous eyes bore into yours.<br><br>\"The Dissolved Order worships entropy and decay. They believe the Empire is a corruption that must be... undone. For years, we've gathered fragments - intercepted letters, translated texts, whispers in the dark. Quintus handles the political intelligence from the capital. I use the temple's network to track their movements in the provinces.\"<br><br>She lowers her voice. \"We found their hideout months ago. An old smuggler's cave in the Hircinian Forest, repurposed for darker purposes. But we needed proof, evidence we could bring before the Emperor.\" She meets your eyes. \"That's where you come in. If you have the passphrase, you can infiltrate their sanctuary and find what we need.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Where exactly in the forest is this entrance?\u0022",
+            "text": "\"Where exactly in the forest is this entrance?\"",
             "next": "forest_location"
           }
         ]
       },
       "forest_location": {
-        "text": "\u0022Deep in the eastern reaches of the Hircinian Forest. You\u0027ll know it when you see it - a cave entrance with guards posted. They\u0027ll challenge anyone who approaches.\u0022 She places a hand on your shoulder, her touch surprisingly warm.\u003Cbr\u003E\u003Cbr\u003E\u0022Speak the passphrase, and they\u0027ll let you pass. But once inside...\u0022 She pauses, her expression grave. \u0022Quintus and I have lost agents trying to infiltrate them. You\u0027ll be on your own, but you\u0027re a guild master. You have resources we never did.\u0022\u003Cbr\u003E\u003Cbr\u003EShe squeezes your shoulder. \u0022When you find evidence of their plans - documents, correspondence, anything - bring it to Quintus in Aevoria. He\u0027ll know what to do with it. Together, we\u0027ll finally expose this threat.\u0022 Her voice drops to a whisper. \u0022May Keius light your path through the darkness ahead. You\u0027ll need all the light you can get.\u0022",
+        "text": "\"Deep in the eastern reaches of the Hircinian Forest. You'll know it when you see it - a cave entrance with guards posted. They'll challenge anyone who approaches.\" She places a hand on your shoulder, her touch surprisingly warm.<br><br>\"Speak the passphrase, and they'll let you pass. But once inside...\" She pauses, her expression grave. \"Quintus and I have lost agents trying to infiltrate them. You'll be on your own, but you're a guild master. You have resources we never did.\"<br><br>She squeezes your shoulder. \"When you find evidence of their plans - documents, correspondence, anything - bring it to Quintus in Aevoria. He'll know what to do with it. Together, we'll finally expose this threat.\" Her voice drops to a whisper. \"May Keius light your path through the darkness ahead. You'll need all the light you can get.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Thank you, Caelia. I\u0027ll be careful.\u0022",
+            "text": "\"Thank you, Caelia. I'll be careful.\"",
             "next": "end"
           }
         ]
       },
       "end": {
-        "text": "\u0022May Keius light your path.\u0022",
+        "text": "\"May Keius light your path.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -1951,7 +1951,7 @@
     "key": "Bandit Enforcer",
     "name": "Bandit Enforcer",
     "shortDescription": "A bandit enforcer",
-    "description": "A heavily armored bandit wielding a large axe. This one looks like they\u0027ve seen many battles and won most of them.",
+    "description": "A heavily armored bandit wielding a large axe. This one looks like they've seen many battles and won most of them.",
     "isHostile": true,
     "health": 60,
     "maxHealth": 60,
@@ -2051,14 +2051,14 @@
       "Cleave"
     ],
     "lootTable": {
-      "warlord\u0027s head": 100,
+      "warlord's head": 100,
       "indecipherable letter": 100,
       "steel gladius": 30,
       "chainmail": 25,
       "potion": 60,
       "greater potion": 40
     },
-    "preCombatDialogue": "As you step into the chamber, the Bandit Warlord rises from his makeshift throne as his enforcers on either side grab their weapons and approach you.  The Warlord eyes you with a cruel grin on his face, then speaks: \u0022So, you\u0027ve come to take all of this from me?  Let\u0027s get this over with.\u0022",
+    "preCombatDialogue": "As you step into the chamber, the Bandit Warlord rises from his makeshift throne as his enforcers on either side grab their weapons and approach you.  The Warlord eyes you with a cruel grin on his face, then speaks: \"So, you've come to take all of this from me?  Let's get this over with.\"",
     "currentDialogueNode": "greeting",
     "recruitableAfterDefeat": false,
     "recruitClass": "Fighter",
@@ -2072,7 +2072,7 @@
     "key": "Livia",
     "name": "Livia",
     "shortDescription": "A woman with a bow",
-    "description": "A skilled hunter with a hunter\u0027s bow slung across her back. She eyes you warily, hand near her quiver. Her stance suggests she\u0027s been fighting for survival in these caves.",
+    "description": "A skilled hunter with a hunter's bow slung across her back. She eyes you warily, hand near her quiver. Her stance suggests she's been fighting for survival in these caves.",
     "isHostile": true,
     "health": 50,
     "maxHealth": 50,
@@ -2099,8 +2099,8 @@
     "currentDialogueNode": "greeting",
     "recruitableAfterDefeat": true,
     "recruitClass": "Venator",
-    "yieldDialogue": "Wait! [She lowers her bow] I surrender. I\u0027m not one of these bandits - they captured me weeks ago and forced me to stand guard. Please, let me join you. I\u0027m a skilled hunter and I know how to survive.",
-    "acceptDialogue": "Thank the gods. I won\u0027t let you down. These bandits will pay for what they\u0027ve done. [She reaches into her pouch] Here - take this bronze key. The bandits took it from me when they captured me. It unlocks the gate to the Warlord\u0027s chamber. You\u0027ll need it to reach him.",
+    "yieldDialogue": "Wait! [She lowers her bow] I surrender. I'm not one of these bandits - they captured me weeks ago and forced me to stand guard. Please, let me join you. I'm a skilled hunter and I know how to survive.",
+    "acceptDialogue": "Thank the gods. I won't let you down. These bandits will pay for what they've done. [She reaches into her pouch] Here - take this bronze key. The bandits took it from me when they captured me. It unlocks the gate to the Warlord's chamber. You'll need it to reach him.",
     "isVendor": false,
     "shopInventory": {},
     "shopPrices": {},
@@ -2141,7 +2141,7 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "Greetings! I\u0027ve been waiting for someone from the guild. Ready to serve!",
+        "text": "Greetings! I've been waiting for someone from the guild. Ready to serve!",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -2152,7 +2152,7 @@
         ]
       },
       "recruit_offer": {
-        "text": "Absolutely! I\u0027ll head to the guild hall immediately.",
+        "text": "Absolutely! I'll head to the guild hall immediately.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2210,7 +2210,7 @@
         ]
       },
       "recruit_offer": {
-        "text": "Count me in. I\u0027ll make my way to the guild hall.",
+        "text": "Count me in. I'll make my way to the guild hall.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2257,7 +2257,7 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "The stars told me you\u0027d come. I see a guild in your future... and mine.",
+        "text": "The stars told me you'd come. I see a guild in your future... and mine.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -2317,37 +2317,37 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "Marcus eyes you with a mixture of pride and wariness. \u0022So, you\u0027re the one rebuilding the old Adventurer\u0027s Guild. I\u0027ve heard whispers.\u0022\u003Cbr\u003E\u003Cbr\u003EHe crosses his arms. \u0022I served with the Sixth Legion for twenty years. Honor. Discipline. Victory. That legion is gone now - disbanded after our general fell.\u0022 His jaw tightens. \u0022I won\u0027t join just anyone\u0027s banner again.\u0022",
+        "text": "Marcus eyes you with a mixture of pride and wariness. \"So, you're the one rebuilding the old Adventurer's Guild. I've heard whispers.\"<br><br>He crosses his arms. \"I served with the Sixth Legion for twenty years. Honor. Discipline. Victory. That legion is gone now - disbanded after our general fell.\" His jaw tightens. \"I won't join just anyone's banner again.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022What would it take to earn your service?\u0022",
+            "text": "\"What would it take to earn your service?\"",
             "next": "explain_honor"
           },
           {
-            "text": "\u0022Your loss. I don\u0027t need reluctant recruits.\u0022",
+            "text": "\"Your loss. I don't need reluctant recruits.\"",
             "next": "offended"
           }
         ]
       },
       "explain_honor": {
-        "text": "Marcus nods approvingly. \u0022The right question. I seek a leader worthy of following - someone who won\u0027t abandon their soldiers when times grow dark.\u0022\u003Cbr\u003E\u003Cbr\u003EHe draws his gladius, sunlight glinting off the well-maintained blade. \u0022Prove your strength. Best me in honorable combat, and I\u0027ll know you have what it takes. Refuse, and you\u0027re not the leader I\u0027m looking for.\u0022",
+        "text": "Marcus nods approvingly. \"The right question. I seek a leader worthy of following - someone who won't abandon their soldiers when times grow dark.\"<br><br>He draws his gladius, sunlight glinting off the well-maintained blade. \"Prove your strength. Best me in honorable combat, and I'll know you have what it takes. Refuse, and you're not the leader I'm looking for.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I accept your challenge. Draw steel!\u0022",
+            "text": "\"I accept your challenge. Draw steel!\"",
             "next": "accept_duel"
           },
           {
-            "text": "\u0022I don\u0027t have time for this.\u0022",
+            "text": "\"I don't have time for this.\"",
             "next": "refuse_duel"
           }
         ]
       },
       "accept_duel": {
-        "text": "\u0022Good!\u0022 Marcus assumes a combat stance, respect flickering in his eyes. \u0022Show me the mettle of the new guild master!\u0022",
+        "text": "\"Good!\" Marcus assumes a combat stance, respect flickering in his eyes. \"Show me the mettle of the new guild master!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2357,13 +2357,13 @@
         "choices": []
       },
       "refuse_duel": {
-        "text": "Marcus\u0027s expression hardens with disappointment. \u0022Then you\u0027re not the leader I thought you were. Leave me.\u0022",
+        "text": "Marcus's expression hardens with disappointment. \"Then you're not the leader I thought you were. Leave me.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
       },
       "offended": {
-        "text": "Marcus\u0027s eyes flash with anger. \u0022Arrogant whelp! You\u0027ll regret those words!\u0022\u003Cbr\u003E\u003Cbr\u003EHe draws his sword aggressively. \u0022I\u0027ll teach you some respect!\u0022",
+        "text": "Marcus's eyes flash with anger. \"Arrogant whelp! You'll regret those words!\"<br><br>He draws his sword aggressively. \"I'll teach you some respect!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2378,7 +2378,7 @@
     "key": "Aria Swift",
     "name": "Aria Swift",
     "shortDescription": "A swift archer",
-    "description": "A lithe archer with a cocky grin leans against a tree, her hunter\u0027s bow already strung. Her movements are fluid and precise - the mark of someone who\u0027s spent years stalking prey through dense wilderness.",
+    "description": "A lithe archer with a cocky grin leans against a tree, her hunter's bow already strung. Her movements are fluid and precise - the mark of someone who's spent years stalking prey through dense wilderness.",
     "isHostile": false,
     "health": 8,
     "maxHealth": 8,
@@ -2402,45 +2402,45 @@
     "currentDialogueNode": "greeting",
     "recruitableAfterDefeat": true,
     "recruitClass": "Venator",
-    "yieldDialogue": "[She laughs breathlessly, lowering her bow] Alright, alright! You\u0027re faster than you look. Diana\u0027s grace, I haven\u0027t had a fight that intense in months!",
-    "acceptDialogue": "You\u0027ve got my attention - and my bow. Fair warning though: I don\u0027t follow slow leaders. Keep up that pace, and we\u0027ll get along just fine. See you at the guild hall!",
+    "yieldDialogue": "[She laughs breathlessly, lowering her bow] Alright, alright! You're faster than you look. Diana's grace, I haven't had a fight that intense in months!",
+    "acceptDialogue": "You've got my attention - and my bow. Fair warning though: I don't follow slow leaders. Keep up that pace, and we'll get along just fine. See you at the guild hall!",
     "isVendor": false,
     "shopInventory": {},
     "shopPrices": {},
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "Aria\u0027s eyes light up as you approach. \u0022Well, well! Fresh meat walking through my hunting grounds.\u0022 She grins mischievously. \u0022Wait - I\u0027ve heard about you. The guild master wannabe, right?\u0022\u003Cbr\u003E\u003Cbr\u003EShe spins an arrow between her fingers with practiced ease. \u0022I\u0027ve been hunting these woods solo for three years. Bandits, beasts, bounties - you name it. Never needed a team before.\u0022 She tilts her head. \u0022But I\u0027m bored out of my mind. Maybe a guild could be... interesting.\u0022",
+        "text": "Aria's eyes light up as you approach. \"Well, well! Fresh meat walking through my hunting grounds.\" She grins mischievously. \"Wait - I've heard about you. The guild master wannabe, right?\"<br><br>She spins an arrow between her fingers with practiced ease. \"I've been hunting these woods solo for three years. Bandits, beasts, bounties - you name it. Never needed a team before.\" She tilts her head. \"But I'm bored out of my mind. Maybe a guild could be... interesting.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Interested enough to join?\u0022",
+            "text": "\"Interested enough to join?\"",
             "next": "explain_boredom"
           },
           {
-            "text": "\u0022A lone wolf, huh? We don\u0027t need loners.\u0022",
+            "text": "\"A lone wolf, huh? We don't need loners.\"",
             "next": "provoked"
           }
         ]
       },
       "explain_boredom": {
-        "text": "\u0022Ha! Maybe.\u0022 Aria nocks an arrow casually. \u0022But here\u0027s the thing - I\u0027m not joining some amateur operation. I need to know you can keep up.\u0022\u003Cbr\u003E\u003Cbr\u003EShe grins wolfishly. \u0022So how about this: a friendly duel. You and me. If you can match my speed, prove you\u0027re not just another plodding swordsman... then yeah, I\u0027m in. What do you say, guild master?\u0022",
+        "text": "\"Ha! Maybe.\" Aria nocks an arrow casually. \"But here's the thing - I'm not joining some amateur operation. I need to know you can keep up.\"<br><br>She grins wolfishly. \"So how about this: a friendly duel. You and me. If you can match my speed, prove you're not just another plodding swordsman... then yeah, I'm in. What do you say, guild master?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022You\u0027re on. Let\u0027s dance!\u0022",
+            "text": "\"You're on. Let's dance!\"",
             "next": "accept_duel"
           },
           {
-            "text": "\u0022I don\u0027t have time for games.\u0022",
+            "text": "\"I don't have time for games.\"",
             "next": "refuse_duel"
           }
         ]
       },
       "accept_duel": {
-        "text": "\u0022Now we\u0027re talking!\u0022 Aria takes a few steps back, grinning ear to ear. \u0022Try to keep up!\u0022",
+        "text": "\"Now we're talking!\" Aria takes a few steps back, grinning ear to ear. \"Try to keep up!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2450,13 +2450,13 @@
         "choices": []
       },
       "refuse_duel": {
-        "text": "Aria shrugs, clearly disappointed. \u0022Boring. Come back when you\u0027ve got some fire in you.\u0022\u003Cbr\u003E\u003Cbr\u003EShe turns away, already losing interest.",
+        "text": "Aria shrugs, clearly disappointed. \"Boring. Come back when you've got some fire in you.\"<br><br>She turns away, already losing interest.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
       },
       "provoked": {
-        "text": "Aria\u0027s grin widens dangerously. \u0022Oh, you did NOT just say that.\u0022 She draws her bow in one smooth motion. \u0022Let me show you what this \u0027loner\u0027 can do!\u0022",
+        "text": "Aria's grin widens dangerously. \"Oh, you did NOT just say that.\" She draws her bow in one smooth motion. \"Let me show you what this 'loner' can do!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2471,7 +2471,7 @@
     "key": "Aldric the Wise",
     "name": "Aldric the Wise",
     "shortDescription": "An old mage",
-    "description": "An elderly mage with silver hair and penetrating eyes studies you carefully. His gnarled staff pulses with barely-contained arcane power, and ancient runes glow faintly on his weathered robes. Despite his age, there\u0027s a sharpness to his gaze that suggests a keen and dangerous mind.",
+    "description": "An elderly mage with silver hair and penetrating eyes studies you carefully. His gnarled staff pulses with barely-contained arcane power, and ancient runes glow faintly on his weathered robes. Despite his age, there's a sharpness to his gaze that suggests a keen and dangerous mind.",
     "isHostile": false,
     "health": 6,
     "maxHealth": 6,
@@ -2503,37 +2503,37 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "The old mage regards you with calculating eyes. \u0022You carry yourself like one touched by destiny.\u0022 His voice is measured, scholarly. \u0022I am Aldric - once court wizard to House Valerius, now... merely a wanderer.\u0022\u003Cbr\u003E\u003Cbr\u003EHe taps his staff thoughtfully. \u0022I\u0027ve heard whispers of someone rebuilding the Adventurer\u0027s Guild. A bold undertaking. Foolish, perhaps... but bold nonetheless.\u0022",
+        "text": "The old mage regards you with calculating eyes. \"You carry yourself like one touched by destiny.\" His voice is measured, scholarly. \"I am Aldric - once court wizard to House Valerius, now... merely a wanderer.\"<br><br>He taps his staff thoughtfully. \"I've heard whispers of someone rebuilding the Adventurer's Guild. A bold undertaking. Foolish, perhaps... but bold nonetheless.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Would you consider joining our cause?\u0022",
+            "text": "\"Would you consider joining our cause?\"",
             "next": "explain_caution"
           },
           {
-            "text": "\u0022Foolish? Watch your tongue, old man.\u0022",
+            "text": "\"Foolish? Watch your tongue, old man.\"",
             "next": "insulted"
           }
         ]
       },
       "explain_caution": {
-        "text": "Aldric strokes his beard. \u0022Direct. I appreciate that.\u0022 He pauses, studying you more intently. \u0022My last lord squandered my counsel, pursuing glory over wisdom. His house fell to ruin.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Before I pledge my knowledge to another... I must know you possess both strength AND judgment. A test, then - one of magical prowess and restraint.\u0022 His staff begins to glow. \u0022Face me in arcane combat. But know this: how you fight matters as much as whether you win.\u0022",
+        "text": "Aldric strokes his beard. \"Direct. I appreciate that.\" He pauses, studying you more intently. \"My last lord squandered my counsel, pursuing glory over wisdom. His house fell to ruin.\"<br><br>\"Before I pledge my knowledge to another... I must know you possess both strength AND judgment. A test, then - one of magical prowess and restraint.\" His staff begins to glow. \"Face me in arcane combat. But know this: how you fight matters as much as whether you win.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I accept your test, Aldric.\u0022",
+            "text": "\"I accept your test, Aldric.\"",
             "next": "accept_test"
           },
           {
-            "text": "\u0022I don\u0027t have time for tests.\u0022",
+            "text": "\"I don't have time for tests.\"",
             "next": "refuse_test"
           }
         ]
       },
       "accept_test": {
-        "text": "\u0022Good.\u0022 Aldric\u0027s eyes gleam with approval. \u0022Let us see what you are made of.\u0022\u003Cbr\u003E\u003Cbr\u003EArcane energy crackles around his staff as he takes a defensive stance.",
+        "text": "\"Good.\" Aldric's eyes gleam with approval. \"Let us see what you are made of.\"<br><br>Arcane energy crackles around his staff as he takes a defensive stance.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2543,13 +2543,13 @@
         "choices": []
       },
       "refuse_test": {
-        "text": "Aldric\u0027s expression grows cold. \u0022Then you lack the patience required for true leadership. Do not waste more of my time.\u0022\u003Cbr\u003E\u003Cbr\u003EHe turns away dismissively.",
+        "text": "Aldric's expression grows cold. \"Then you lack the patience required for true leadership. Do not waste more of my time.\"<br><br>He turns away dismissively.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
       },
       "insulted": {
-        "text": "Aldric\u0027s eyes narrow dangerously, and power surges around him. \u0022Arrogance AND ignorance. A lethal combination.\u0022 His voice drops to a deadly whisper. \u0022Let me educate you, child!\u0022\u003Cbr\u003E\u003Cbr\u003ELightning crackles along his staff.",
+        "text": "Aldric's eyes narrow dangerously, and power surges around him. \"Arrogance AND ignorance. A lethal combination.\" His voice drops to a deadly whisper. \"Let me educate you, child!\"<br><br>Lightning crackles along his staff.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2594,7 +2594,7 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "greeting": {
-        "text": "I\u0027ve been looking for a worthy guild to join. Is this it?",
+        "text": "I've been looking for a worthy guild to join. Is this it?",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -2605,7 +2605,7 @@
         ]
       },
       "recruit_offer": {
-        "text": "I\u0027m in. Let\u0027s make this guild legendary.",
+        "text": "I'm in. Let's make this guild legendary.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2663,7 +2663,7 @@
         ]
       },
       "recruit_offer": {
-        "text": "We\u0027re in. The guild hall is south of the crossroads, right?",
+        "text": "We're in. The guild hall is south of the crossroads, right?",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2768,12 +2768,12 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "first_greeting": {
-        "text": "The senator looks up from his work and offers a polite nod. \u0022Greetings, traveler. I am Senator Quintus. While I serve in the capital city of Aevoria, I am native to Belum and return here often to handle administrative matters for the town.\u0022 He gestures to the documents on his desk. \u0022How may I assist you today?\u0022",
+        "text": "The senator looks up from his work and offers a polite nod. \"Greetings, traveler. I am Senator Quintus. While I serve in the capital city of Aevoria, I am native to Belum and return here often to handle administrative matters for the town.\" He gestures to the documents on his desk. \"How may I assist you today?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Senator, I found these documents in a cultist hideout. You should see this.\u0022",
+            "text": "\"Senator, I found these documents in a cultist hideout. You should see this.\"",
             "next": "hideout_discovered",
             "requiredAnyItems": [
               "cultist orders",
@@ -2782,7 +2782,7 @@
             ]
           },
           {
-            "text": "\u0022I found this letter on the Bandit Warlord. Can you decipher it?\u0022",
+            "text": "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
             "next": "give_letter",
             "requiredItem": "indecipherable letter",
             "action": {
@@ -2793,22 +2793,22 @@
             }
           },
           {
-            "text": "\u0022Tell me about yourself.\u0022",
+            "text": "\"Tell me about yourself.\"",
             "next": "about_quintus"
           },
           {
-            "text": "\u0022Just looking around. Thank you.\u0022",
+            "text": "\"Just looking around. Thank you.\"",
             "next": "end"
           }
         ]
       },
       "repeat_greeting": {
-        "text": "Senator Quintus looks up from his paperwork. \u0022Ah, back again. How can I help you?\u0022",
+        "text": "Senator Quintus looks up from his paperwork. \"Ah, back again. How can I help you?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Senator, I found these documents in a cultist hideout. You should see this.\u0022",
+            "text": "\"Senator, I found these documents in a cultist hideout. You should see this.\"",
             "next": "hideout_discovered",
             "requiredAnyItems": [
               "cultist orders",
@@ -2817,7 +2817,7 @@
             ]
           },
           {
-            "text": "\u0022I found this letter on the Bandit Warlord. Can you decipher it?\u0022",
+            "text": "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
             "next": "give_letter",
             "requiredItem": "indecipherable letter",
             "action": {
@@ -2828,22 +2828,22 @@
             }
           },
           {
-            "text": "\u0022Tell me about yourself.\u0022",
+            "text": "\"Tell me about yourself.\"",
             "next": "about_quintus"
           },
           {
-            "text": "\u0022Just looking around. Thank you.\u0022",
+            "text": "\"Just looking around. Thank you.\"",
             "next": "end"
           }
         ]
       },
       "about_quintus": {
-        "text": "Quintus leans back in his chair. \u0022I\u0027ve spent most of my career in Aevoria, serving in the Senate. But Belum is my home, and I try to give back when I can.\u0022 A subtle smile crosses his face. \u0022I\u0027ve also maintained certain... interests from my younger days. Let\u0027s just say I\u0027ve always had an appreciation for those who venture into danger for the greater good.\u0022",
+        "text": "Quintus leans back in his chair. \"I've spent most of my career in Aevoria, serving in the Senate. But Belum is my home, and I try to give back when I can.\" A subtle smile crosses his face. \"I've also maintained certain... interests from my younger days. Let's just say I've always had an appreciation for those who venture into danger for the greater good.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I found this letter on the Bandit Warlord. Can you decipher it?\u0022",
+            "text": "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
             "next": "give_letter",
             "requiredItem": "indecipherable letter",
             "action": {
@@ -2854,13 +2854,13 @@
             }
           },
           {
-            "text": "\u0022I should get going.\u0022",
+            "text": "\"I should get going.\"",
             "next": "end"
           }
         ]
       },
       "give_letter": {
-        "text": "You hand the letter to Quintus. He opens it and studies it closely for several minutes, his brow furrowing in concentration. Finally, he looks up.\u003Cbr\u003E\u003Cbr\u003E\u0022Yes, I recognize this cipher. It\u0027s an old one, but I can translate it. This will take some time, though - give me a full day to work on it. Meet me back here at this time tomorrow, and I\u0027ll have it ready for you.\u0022\u003Cbr\u003E\u003Cbr\u003EHe carefully sets the letter aside on his desk.",
+        "text": "You hand the letter to Quintus. He opens it and studies it closely for several minutes, his brow furrowing in concentration. Finally, he looks up.<br><br>\"Yes, I recognize this cipher. It's an old one, but I can translate it. This will take some time, though - give me a full day to work on it. Meet me back here at this time tomorrow, and I'll have it ready for you.\"<br><br>He carefully sets the letter aside on his desk.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2873,18 +2873,18 @@
         "choices": []
       },
       "waiting": {
-        "text": "Quintus looks up from his work on the letter. \u0022I\u0027m still working on the translation. These ciphers take time to crack properly. Come back tomorrow, please.\u0022",
+        "text": "Quintus looks up from his work on the letter. \"I'm still working on the translation. These ciphers take time to crack properly. Come back tomorrow, please.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I\u0027ll return later.\u0022",
+            "text": "\"I'll return later.\"",
             "next": "end"
           }
         ]
       },
       "translation_ready": {
-        "text": "Quintus rises as you approach, holding both the original letter and a fresh parchment with his translation. \u0022Ah, excellent timing. I\u0027ve finished the translation.\u0022 He hands you the documents.\u003Cbr\u003E\u003Cbr\u003E\u0022The letter has two parts - one asking \u0027How soon can you deliver on your part of the plan?\u0027 and the Warlord\u0027s unsent response saying he\u0027s no longer interested.\u0022\u003Cbr\u003E\u003Cbr\u003EHe taps the bottom of the page. \u0022There\u0027s a passphrase at the end: \u0027Ordo Dissolutus.\u0027 If someone is using passphrases, they\u0027re protecting something valuable.\u0022",
+        "text": "Quintus rises as you approach, holding both the original letter and a fresh parchment with his translation. \"Ah, excellent timing. I've finished the translation.\" He hands you the documents.<br><br>\"The letter has two parts - one asking 'How soon can you deliver on your part of the plan?' and the Warlord's unsent response saying he's no longer interested.\"<br><br>He taps the bottom of the page. \"There's a passphrase at the end: 'Ordo Dissolutus.' If someone is using passphrases, they're protecting something valuable.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2895,35 +2895,35 @@
         },
         "choices": [
           {
-            "text": "\u0022Do you know who sent the original message?\u0022",
+            "text": "\"Do you know who sent the original message?\"",
             "next": "about_sender"
           }
         ]
       },
       "about_sender": {
-        "text": "Quintus shakes his head. \u0022The letter is unsigned, but whoever wrote it was no common criminal. The cipher itself suggests education and resources. Given the context, I\u0027d wager you\u0027re dealing with something more organized than simple bandits.\u0022 He pauses thoughtfully. \u0022Be careful out there. If this passphrase opens something, it may lead you somewhere dangerous.\u0022\u003Cbr\u003E\u003Cbr\u003EHe strokes his chin. \u0022If you\u0027re looking for answers about where to use this passphrase... you might want to speak with Caelia, the High Priestess at the Temple of Keius. She has knowledge of hidden places and ancient secrets. If anyone would know about secretive groups operating in the area, it would be her.\u0022",
+        "text": "Quintus shakes his head. \"The letter is unsigned, but whoever wrote it was no common criminal. The cipher itself suggests education and resources. Given the context, I'd wager you're dealing with something more organized than simple bandits.\" He pauses thoughtfully. \"Be careful out there. If this passphrase opens something, it may lead you somewhere dangerous.\"<br><br>He strokes his chin. \"If you're looking for answers about where to use this passphrase... you might want to speak with Caelia, the High Priestess at the Temple of Keius. She has knowledge of hidden places and ancient secrets. If anyone would know about secretive groups operating in the area, it would be her.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I\u0027ll seek her out. Thank you for your help, Senator.\u0022",
+            "text": "\"I'll seek her out. Thank you for your help, Senator.\"",
             "next": "end"
           }
         ]
       },
       "hideout_discovered": {
-        "text": "Quintus\u0027s eyes widen as he examines the documents you\u0027ve brought. \u0022By the gods... \u0027Strike at the heart,\u0027 \u0027remove the pillar,\u0027 references to the anniversary festival...\u0022\u003Cbr\u003E\u003Cbr\u003EHe spreads the papers across his desk, his expression growing darker. \u0022This is worse than I feared. This isn\u0027t just bandits or common criminals. This is an organized cult planning something catastrophic.\u0022\u003Cbr\u003E\u003Cbr\u003EHe points to symbols at the bottom of one document. \u0022These markings here - I can\u0027t decipher them alone. They appear to be religious in nature, but not from any faith I recognize.\u0022",
+        "text": "Quintus's eyes widen as he examines the documents you've brought. \"By the gods... 'Strike at the heart,' 'remove the pillar,' references to the anniversary festival...\"<br><br>He spreads the papers across his desk, his expression growing darker. \"This is worse than I feared. This isn't just bandits or common criminals. This is an organized cult planning something catastrophic.\"<br><br>He points to symbols at the bottom of one document. \"These markings here - I can't decipher them alone. They appear to be religious in nature, but not from any faith I recognize.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022What do you need to figure this out?\u0022",
+            "text": "\"What do you need to figure this out?\"",
             "next": "examination_time"
           }
         ]
       },
       "examination_time": {
-        "text": "Quintus gathers the documents carefully. \u0022I\u0027ll need to consult with High Priestess Caelia at the temple - she\u0027s an expert in ancient faiths and forgotten symbols. Together, we should be able to decipher these markings and understand the full scope of this threat.\u0022\u003Cbr\u003E\u003Cbr\u003EHe looks at you seriously. \u0022Give us two days to examine everything thoroughly. Meet me back at your guild hall study in 48 hours - I\u0027ll bring Caelia and we\u0027ll discuss what we\u0027ve learned. This is too important for rushed work.\u0022",
+        "text": "Quintus gathers the documents carefully. \"I'll need to consult with High Priestess Caelia at the temple - she's an expert in ancient faiths and forgotten symbols. Together, we should be able to decipher these markings and understand the full scope of this threat.\"<br><br>He looks at you seriously. \"Give us two days to examine everything thoroughly. Meet me back at your guild hall study in 48 hours - I'll bring Caelia and we'll discuss what we've learned. This is too important for rushed work.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -2935,41 +2935,41 @@
         },
         "choices": [
           {
-            "text": "\u0022I\u0027ll be there. Two days.\u0022",
+            "text": "\"I'll be there. Two days.\"",
             "next": "end_examination_start"
           }
         ]
       },
       "end_examination_start": {
-        "text": "\u0022Good. Use this time to prepare yourself - I have a feeling whatever we uncover will require action.\u0022 He returns to studying the documents, already deep in thought.",
+        "text": "\"Good. Use this time to prepare yourself - I have a feeling whatever we uncover will require action.\" He returns to studying the documents, already deep in thought.",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
       },
       "waiting_examination": {
-        "text": "Quintus is surrounded by scrolls and ancient texts, working alongside several temple scribes. He looks up briefly. \u0022Still working on these documents. Caelia and I need more time. Meet us at your guild hall study when the two days are up.\u0022",
+        "text": "Quintus is surrounded by scrolls and ancient texts, working alongside several temple scribes. He looks up briefly. \"Still working on these documents. Caelia and I need more time. Meet us at your guild hall study when the two days are up.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I\u0027ll return later.\u0022",
+            "text": "\"I'll return later.\"",
             "next": "end"
           }
         ]
       },
       "examination_complete": {
-        "text": "Quintus looks up with urgency as you approach. \u0022We\u0027ve finished our analysis. Caelia and I are heading to your guild hall study now - what we\u0027ve discovered is... concerning. Meet us there as soon as you can. This can\u0027t wait.\u0022",
+        "text": "Quintus looks up with urgency as you approach. \"We've finished our analysis. Caelia and I are heading to your guild hall study now - what we've discovered is... concerning. Meet us there as soon as you can. This can't wait.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022I\u0027ll head there immediately.\u0022",
+            "text": "\"I'll head there immediately.\"",
             "next": "end"
           }
         ]
       },
       "end": {
-        "text": "Quintus nods courteously. \u0022Safe travels, adventurer. My door is always open if you need assistance.\u0022",
+        "text": "Quintus nods courteously. \"Safe travels, adventurer. My door is always open if you need assistance.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -3010,195 +3010,195 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "first_greeting": {
-        "text": "The Emperor rises from his throne as you enter, a warm smile crossing his weathered face. \u0022Ah, you must be the one Quintus spoke so highly of!\u0022 His voice carries the weight of authority tempered with genuine friendliness. \u0022The guild master who uncovered this cult business. Come, come - let us speak as equals. Any friend of Quintus is a friend of mine.\u0022\u003Cbr\u003E\u003Cbr\u003EHe gestures to a chair. \u0022I must confess, I\u0027m far more excited about the anniversary celebration than worried about some doomsday cult, but Quintus assures me you have urgent information. Before we discuss such grim matters, tell me - what would you like to know about your Emperor?\u0022",
+        "text": "The Emperor rises from his throne as you enter, a warm smile crossing his weathered face. \"Ah, you must be the one Quintus spoke so highly of!\" His voice carries the weight of authority tempered with genuine friendliness. \"The guild master who uncovered this cult business. Come, come - let us speak as equals. Any friend of Quintus is a friend of mine.\"<br><br>He gestures to a chair. \"I must confess, I'm far more excited about the anniversary celebration than worried about some doomsday cult, but Quintus assures me you have urgent information. Before we discuss such grim matters, tell me - what would you like to know about your Emperor?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Your Majesty, we must discuss the cult threat immediately.\u0022",
+            "text": "\"Your Majesty, we must discuss the cult threat immediately.\"",
             "next": "cult_warning"
           },
           {
-            "text": "\u0022Tell me about your conquests, Emperor. Your legacy is legendary.\u0022",
+            "text": "\"Tell me about your conquests, Emperor. Your legacy is legendary.\"",
             "next": "about_conquests"
           },
           {
-            "text": "\u0022What are your plans for the Empire\u0027s future?\u0022",
+            "text": "\"What are your plans for the Empire's future?\"",
             "next": "future_plans"
           },
           {
-            "text": "\u0022If I may ask, Your Majesty, tell me about yourself personally.\u0022",
+            "text": "\"If I may ask, Your Majesty, tell me about yourself personally.\"",
             "next": "personal_questions"
           }
         ]
       },
       "repeat_greeting": {
-        "text": "Emperor Certius greets you warmly. \u0022Ah, guild master! Back again? I enjoy our conversations. What would you like to discuss?\u0022",
+        "text": "Emperor Certius greets you warmly. \"Ah, guild master! Back again? I enjoy our conversations. What would you like to discuss?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Your Majesty, about the cult threat...\u0022",
+            "text": "\"Your Majesty, about the cult threat...\"",
             "next": "cult_warning"
           },
           {
-            "text": "\u0022Tell me more about your conquests.\u0022",
+            "text": "\"Tell me more about your conquests.\"",
             "next": "about_conquests"
           },
           {
-            "text": "\u0022What are your plans for the future?\u0022",
+            "text": "\"What are your plans for the future?\"",
             "next": "future_plans"
           },
           {
-            "text": "\u0022I\u0027d like to know more about you personally, if that\u0027s appropriate.\u0022",
+            "text": "\"I'd like to know more about you personally, if that's appropriate.\"",
             "next": "personal_questions"
           },
           {
-            "text": "\u0022Just paying my respects, Your Majesty.\u0022",
+            "text": "\"Just paying my respects, Your Majesty.\"",
             "next": "end"
           }
         ]
       },
       "about_conquests": {
-        "text": "Certius\u0027s eyes light up with pride. \u0022Ah, the campaigns! Where to begin?\u0022 He walks to a map on the wall. \u0022When I took the throne forty years ago, the Empire was half its current size. The northern tribes raided our borders with impunity. The eastern kingdoms refused to acknowledge our sovereignty.\u0022\u003Cbr\u003E\u003Cbr\u003EHe traces routes on the map. \u0022The Northern Campaign lasted eight years. I led the Sixth and Eighth Legions personally - young and foolish, my advisors said, but we crushed the tribal alliance at the Battle of Frozen River. Twenty thousand warriors, and we routed them with only four thousand casualties.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022The eastern kingdoms fell like dominoes after that. They saw our strength and chose diplomacy over destruction. Wise of them.\u0022 He smiles. \u0022Fifteen kingdoms now pay tribute and enjoy imperial protection. Peace through strength - that\u0027s been my philosophy.\u0022",
+        "text": "Certius's eyes light up with pride. \"Ah, the campaigns! Where to begin?\" He walks to a map on the wall. \"When I took the throne forty years ago, the Empire was half its current size. The northern tribes raided our borders with impunity. The eastern kingdoms refused to acknowledge our sovereignty.\"<br><br>He traces routes on the map. \"The Northern Campaign lasted eight years. I led the Sixth and Eighth Legions personally - young and foolish, my advisors said, but we crushed the tribal alliance at the Battle of Frozen River. Twenty thousand warriors, and we routed them with only four thousand casualties.\"<br><br>\"The eastern kingdoms fell like dominoes after that. They saw our strength and chose diplomacy over destruction. Wise of them.\" He smiles. \"Fifteen kingdoms now pay tribute and enjoy imperial protection. Peace through strength - that's been my philosophy.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Impressive. And the southern expansion?\u0022",
+            "text": "\"Impressive. And the southern expansion?\"",
             "next": "southern_campaign"
           },
           {
-            "text": "\u0022You led legions personally? That\u0027s remarkable.\u0022",
+            "text": "\"You led legions personally? That's remarkable.\"",
             "next": "personal_combat"
           },
           {
-            "text": "\u0022Thank you for sharing, Your Majesty.\u0022",
+            "text": "\"Thank you for sharing, Your Majesty.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "southern_campaign": {
-        "text": "\u0022Ah yes, the south!\u0022 Certius chuckles. \u0022That was... complicated. The Southern Kingdoms were more civilized, you see. Great cities, rich culture, formidable armies. We couldn\u0027t simply conquer them - we had to win them over.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I spent five years in diplomatic missions, arranging marriages between their nobles and ours, establishing trade agreements, cultural exchanges. My daughter married the Crown Prince of Solaria - creating the strongest alliance in imperial history.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Only two kingdoms refused to negotiate. They fell quickly when they realized they stood alone. Now all of the south prospers under the Imperial Peace. Trade has tripled, banditry has been eliminated, and the people are safer than ever.\u0022",
+        "text": "\"Ah yes, the south!\" Certius chuckles. \"That was... complicated. The Southern Kingdoms were more civilized, you see. Great cities, rich culture, formidable armies. We couldn't simply conquer them - we had to win them over.\"<br><br>\"I spent five years in diplomatic missions, arranging marriages between their nobles and ours, establishing trade agreements, cultural exchanges. My daughter married the Crown Prince of Solaria - creating the strongest alliance in imperial history.\"<br><br>\"Only two kingdoms refused to negotiate. They fell quickly when they realized they stood alone. Now all of the south prospers under the Imperial Peace. Trade has tripled, banditry has been eliminated, and the people are safer than ever.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Diplomacy and strength - a wise combination.\u0022",
+            "text": "\"Diplomacy and strength - a wise combination.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "personal_combat": {
-        "text": "The Emperor grins. \u0022Oh, in my youth I fancied myself quite the warrior! Trained since childhood in the imperial martial traditions. My father insisted that every emperor should be able to defend the Empire with sword as well as decree.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I\u0027ve scars to prove I wasn\u0027t just a figurehead at Frozen River - took an axe to the shoulder that still aches in winter. But I learned my lesson after that. A dead emperor helps no one. I left the frontline fighting to younger, more expendable commanders.\u0022\u003Cbr\u003E\u003Cbr\u003EHe laughs heartily. \u0022Though I\u0027ll admit, some nights I miss the simplicity of battle. Politics is far more treacherous than any battlefield.\u0022",
+        "text": "The Emperor grins. \"Oh, in my youth I fancied myself quite the warrior! Trained since childhood in the imperial martial traditions. My father insisted that every emperor should be able to defend the Empire with sword as well as decree.\"<br><br>\"I've scars to prove I wasn't just a figurehead at Frozen River - took an axe to the shoulder that still aches in winter. But I learned my lesson after that. A dead emperor helps no one. I left the frontline fighting to younger, more expendable commanders.\"<br><br>He laughs heartily. \"Though I'll admit, some nights I miss the simplicity of battle. Politics is far more treacherous than any battlefield.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022A warrior-emperor. The people are fortunate.\u0022",
+            "text": "\"A warrior-emperor. The people are fortunate.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "future_plans": {
-        "text": "Certius settles back into his throne, expression thoughtful. \u0022The Empire is vast, but there\u0027s always more to accomplish. My immediate focus is the anniversary celebration - 1500 years of continuous civilization! We\u0027re hosting games at the Colosseum, feasts throughout the city, diplomatic envoys from every corner of the known world.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Beyond that?\u0022 He leans forward. \u0022I want to establish the Imperial Academy - a center of learning to rival the ancient schools of philosophy. Knowledge preserved and expanded for future generations.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I\u0027m also funding expeditions beyond our borders. There are lands to the far west none have explored. Imagine - expanding human knowledge itself! That would be a legacy worth leaving.\u0022",
+        "text": "Certius settles back into his throne, expression thoughtful. \"The Empire is vast, but there's always more to accomplish. My immediate focus is the anniversary celebration - 1500 years of continuous civilization! We're hosting games at the Colosseum, feasts throughout the city, diplomatic envoys from every corner of the known world.\"<br><br>\"Beyond that?\" He leans forward. \"I want to establish the Imperial Academy - a center of learning to rival the ancient schools of philosophy. Knowledge preserved and expanded for future generations.\"<br><br>\"I'm also funding expeditions beyond our borders. There are lands to the far west none have explored. Imagine - expanding human knowledge itself! That would be a legacy worth leaving.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022The Imperial Academy sounds magnificent.\u0022",
+            "text": "\"The Imperial Academy sounds magnificent.\"",
             "next": "academy_details"
           },
           {
-            "text": "\u0022Exploration beyond the known world is ambitious.\u0022",
+            "text": "\"Exploration beyond the known world is ambitious.\"",
             "next": "exploration_details"
           },
           {
-            "text": "\u0022Noble goals, Your Majesty.\u0022",
+            "text": "\"Noble goals, Your Majesty.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "academy_details": {
-        "text": "\u0022Isn\u0027t it though?\u0022 The Emperor\u0027s enthusiasm is infectious. \u0022I\u0027ve already commissioned the building - it will be the largest library in the world. Scholars from every discipline will teach there: mathematics, philosophy, natural sciences, engineering, medicine.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Free admission for any citizen with the aptitude, regardless of birth. Can you imagine? A farmer\u0027s son could become the Empire\u0027s greatest mathematician! That\u0027s true progress.\u0022\u003Cbr\u003E\u003Cbr\u003EHis eyes shine with excitement. \u0022Construction begins after the anniversary celebration. It\u0027s my gift to future generations - a foundation of knowledge that will outlast any military conquest.\u0022",
+        "text": "\"Isn't it though?\" The Emperor's enthusiasm is infectious. \"I've already commissioned the building - it will be the largest library in the world. Scholars from every discipline will teach there: mathematics, philosophy, natural sciences, engineering, medicine.\"<br><br>\"Free admission for any citizen with the aptitude, regardless of birth. Can you imagine? A farmer's son could become the Empire's greatest mathematician! That's true progress.\"<br><br>His eyes shine with excitement. \"Construction begins after the anniversary celebration. It's my gift to future generations - a foundation of knowledge that will outlast any military conquest.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022A lasting legacy indeed.\u0022",
+            "text": "\"A lasting legacy indeed.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "exploration_details": {
-        "text": "\u0022My cartographers say there are entire continents we\u0027ve never mapped!\u0022 Certius gestures excitedly. \u0022The western ocean may lead to new lands, new peoples, new knowledge. I\u0027ve funded three expeditions already - two returned with fascinating discoveries, one is still at sea.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Think of it - what if there\u0027s an empire equal to ours across that ocean? What could we learn from them? What could we teach them? The possibilities are endless!\u0022\u003Cbr\u003E\u003Cbr\u003EHe chuckles. \u0022My advisors think I\u0027m mad, spending the treasury on ships that might never return. But what\u0027s the point of empire if not to push the boundaries of what\u0027s possible?\u0022",
+        "text": "\"My cartographers say there are entire continents we've never mapped!\" Certius gestures excitedly. \"The western ocean may lead to new lands, new peoples, new knowledge. I've funded three expeditions already - two returned with fascinating discoveries, one is still at sea.\"<br><br>\"Think of it - what if there's an empire equal to ours across that ocean? What could we learn from them? What could we teach them? The possibilities are endless!\"<br><br>He chuckles. \"My advisors think I'm mad, spending the treasury on ships that might never return. But what's the point of empire if not to push the boundaries of what's possible?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022An inspiring vision, Your Majesty.\u0022",
+            "text": "\"An inspiring vision, Your Majesty.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "personal_questions": {
-        "text": "Certius laughs warmly. \u0022Most people are too intimidated to ask! I like your boldness. What would you like to know? I\u0027m an open book - well, mostly.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I\u0027m sixty-two years old, married to Empress Livia for forty-three wonderful years. Three children: my son Marcus commands the Tenth Legion in the north, my daughter Julia is married to the King of Solaria, and my youngest, Titus, studies philosophy and drives me mad with his abstract questions.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I wake at dawn every day, review reports from across the Empire over breakfast, hold court until midday, then spend afternoons on whatever project captures my interest. Simple pleasures - good wine, interesting conversation, watching the sunset from the palace gardens.\u0022",
+        "text": "Certius laughs warmly. \"Most people are too intimidated to ask! I like your boldness. What would you like to know? I'm an open book - well, mostly.\"<br><br>\"I'm sixty-two years old, married to Empress Livia for forty-three wonderful years. Three children: my son Marcus commands the Tenth Legion in the north, my daughter Julia is married to the King of Solaria, and my youngest, Titus, studies philosophy and drives me mad with his abstract questions.\"<br><br>\"I wake at dawn every day, review reports from across the Empire over breakfast, hold court until midday, then spend afternoons on whatever project captures my interest. Simple pleasures - good wine, interesting conversation, watching the sunset from the palace gardens.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022You sound like a happy man, Your Majesty.\u0022",
+            "text": "\"You sound like a happy man, Your Majesty.\"",
             "next": "happy_emperor"
           },
           {
-            "text": "\u0022Tell me about the Empress.\u0022",
+            "text": "\"Tell me about the Empress.\"",
             "next": "about_empress"
           },
           {
-            "text": "\u0022Thank you for your candor.\u0022",
+            "text": "\"Thank you for your candor.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "happy_emperor": {
-        "text": "\u0022I am!\u0022 Certius beams. \u0022Not every emperor can say that. The crown is a burden, certainly, but it\u0027s also a privilege. I\u0027ve seen the Empire prosper, watched millions of people live better lives because of decisions I\u0027ve made.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Yes, there are always problems - there always will be. But look at what we\u0027ve built! Fifteen hundred years of continuous civilization. Roads connecting every corner of the empire. Cities where art and knowledge flourish. Common people living in peace and prosperity.\u0022\u003Cbr\u003E\u003Cbr\u003EHe spreads his hands. \u0022How could I not be happy? I\u0027m the luckiest man alive.\u0022",
+        "text": "\"I am!\" Certius beams. \"Not every emperor can say that. The crown is a burden, certainly, but it's also a privilege. I've seen the Empire prosper, watched millions of people live better lives because of decisions I've made.\"<br><br>\"Yes, there are always problems - there always will be. But look at what we've built! Fifteen hundred years of continuous civilization. Roads connecting every corner of the empire. Cities where art and knowledge flourish. Common people living in peace and prosperity.\"<br><br>He spreads his hands. \"How could I not be happy? I'm the luckiest man alive.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022The Empire is fortunate to have you.\u0022",
+            "text": "\"The Empire is fortunate to have you.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "about_empress": {
-        "text": "The Emperor\u0027s expression softens. \u0022Aurelia is the steel behind the throne. Where I\u0027m all grand visions and bold declarations, she\u0027s practical wisdom and careful planning. We balance each other perfectly.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022We met when I was crown prince - she was daughter of a general, brilliant and beautiful. My father approved the match for political reasons, but I fell genuinely in love. Forty-three years later, I still do.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022She\u0027ll join us for the anniversary celebration. You\u0027ll meet her - though I warn you, she\u0027s far more skeptical of your cult warnings than I am. She thinks we\u0027re both being paranoid.\u0022 He chuckles. \u0022She\u0027s probably right.\u0022",
+        "text": "The Emperor's expression softens. \"Aurelia is the steel behind the throne. Where I'm all grand visions and bold declarations, she's practical wisdom and careful planning. We balance each other perfectly.\"<br><br>\"We met when I was crown prince - she was daughter of a general, brilliant and beautiful. My father approved the match for political reasons, but I fell genuinely in love. Forty-three years later, I still do.\"<br><br>\"She'll join us for the anniversary celebration. You'll meet her - though I warn you, she's far more skeptical of your cult warnings than I am. She thinks we're both being paranoid.\" He chuckles. \"She's probably right.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022A true partnership. That\u0027s wonderful.\u0022",
+            "text": "\"A true partnership. That's wonderful.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "cult_warning": {
-        "text": "Certius\u0027s jovial expression becomes more serious, though you can tell he\u0027s humoring you. \u0022Yes, yes - Quintus briefed me on your discoveries. A cult planning to assassinate me during the celebration, break some ancient seals, end the world. Quite dramatic!\u0022\u003Cbr\u003E\u003Cbr\u003EHe leans back. \u0022Look, I appreciate your concern. Truly. And I\u0027ll have the Imperial Guard increase security during the games. But...\u0022 He smiles gently. \u0022I\u0027ve been emperor for forty years. There\u0027s always someone plotting assassination. The guard is the best in the world - they\u0027ll handle it.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022More importantly, I can\u0027t cancel or modify the celebration. Fifteen hundred years! Diplomatic envoys from every kingdom will be there. To show fear would be to show weakness. The Empire doesn\u0027t cower before threats.\u0022",
+        "text": "Certius's jovial expression becomes more serious, though you can tell he's humoring you. \"Yes, yes - Quintus briefed me on your discoveries. A cult planning to assassinate me during the celebration, break some ancient seals, end the world. Quite dramatic!\"<br><br>He leans back. \"Look, I appreciate your concern. Truly. And I'll have the Imperial Guard increase security during the games. But...\" He smiles gently. \"I've been emperor for forty years. There's always someone plotting assassination. The guard is the best in the world - they'll handle it.\"<br><br>\"More importantly, I can't cancel or modify the celebration. Fifteen hundred years! Diplomatic envoys from every kingdom will be there. To show fear would be to show weakness. The Empire doesn't cower before threats.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Your Majesty, the Five Seals are real. This is apocalyptic.\u0022",
+            "text": "\"Your Majesty, the Five Seals are real. This is apocalyptic.\"",
             "next": "cult_insistence"
           },
           {
-            "text": "\u0022I understand your position, but please be careful.\u0022",
+            "text": "\"I understand your position, but please be careful.\"",
             "next": "cult_acceptance"
           }
         ]
       },
       "cult_insistence": {
-        "text": "Certius regards you kindly but skeptically. \u0022The Five Seals are mythology, friend. Old legends from before the Empire. I respect that you believe otherwise - and I respect Caelia\u0027s scholarship on ancient faiths - but I cannot make decisions based on myths.\u0022\u003Cbr\u003E\u003Cbr\u003EHe stands, placing a hand on your shoulder. \u0022I tell you what - I\u0027ll let you attend the celebration. You and your party can watch for these cultists yourselves. Consider yourselves... unofficial imperial guards for the day. If you spot a genuine threat, raise the alarm. Fair enough?\u0022",
+        "text": "Certius regards you kindly but skeptically. \"The Five Seals are mythology, friend. Old legends from before the Empire. I respect that you believe otherwise - and I respect Caelia's scholarship on ancient faiths - but I cannot make decisions based on myths.\"<br><br>He stands, placing a hand on your shoulder. \"I tell you what - I'll let you attend the celebration. You and your party can watch for these cultists yourselves. Consider yourselves... unofficial imperial guards for the day. If you spot a genuine threat, raise the alarm. Fair enough?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -3210,13 +3210,13 @@
         },
         "choices": [
           {
-            "text": "\u0022Thank you, Your Majesty. We\u0027ll be vigilant.\u0022",
+            "text": "\"Thank you, Your Majesty. We'll be vigilant.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "cult_acceptance": {
-        "text": "\u0022I will be careful, you have my word.\u0022 Certius nods appreciatively. \u0022And I\u0027m grateful you made the journey to warn me. That shows character.\u0022\u003Cbr\u003E\u003Cbr\u003EHe considers for a moment. \u0022Tell you what - attend the celebration as my guests. You can keep watch for these cultists, and if you see anything suspicious, you\u0027ll have direct access to me. How\u0027s that?\u0022",
+        "text": "\"I will be careful, you have my word.\" Certius nods appreciatively. \"And I'm grateful you made the journey to warn me. That shows character.\"<br><br>He considers for a moment. \"Tell you what - attend the celebration as my guests. You can keep watch for these cultists, and if you see anything suspicious, you'll have direct access to me. How's that?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -3228,36 +3228,36 @@
         },
         "choices": [
           {
-            "text": "\u0022We\u0027d be honored, Your Majesty.\u0022",
+            "text": "\"We'd be honored, Your Majesty.\"",
             "next": "return_to_greeting"
           }
         ]
       },
       "return_to_greeting": {
-        "text": "\u0022Was there anything else you wished to discuss?\u0022",
+        "text": "\"Was there anything else you wished to discuss?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Tell me more about your conquests.\u0022",
+            "text": "\"Tell me more about your conquests.\"",
             "next": "about_conquests"
           },
           {
-            "text": "\u0022What are your plans for the future?\u0022",
+            "text": "\"What are your plans for the future?\"",
             "next": "future_plans"
           },
           {
-            "text": "\u0022I\u0027d like to know more about you personally.\u0022",
+            "text": "\"I'd like to know more about you personally.\"",
             "next": "personal_questions"
           },
           {
-            "text": "\u0022That\u0027s all for now, Your Majesty.\u0022",
+            "text": "\"That's all for now, Your Majesty.\"",
             "next": "end"
           }
         ]
       },
       "end": {
-        "text": "\u0022Excellent conversation! Feel free to explore the villa - the gardens are particularly lovely this time of year. I\u0027ll see you at the celebration!\u0022",
+        "text": "\"Excellent conversation! Feel free to explore the villa - the gardens are particularly lovely this time of year. I'll see you at the celebration!\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
@@ -3623,7 +3623,7 @@
       "scroll of haste": 40,
       "scroll of protection": 35
     },
-    "preCombatDialogue": "Archon Malachar turns from the altar, his eyes burning with fanatic certainty. \u0022You\u0027ve come far, but you understand nothing. The Empire built its glory on stolen foundations - ancient seals that bind what should be free. We will undo their theft. We will return everything to its natural state.\u0022 He raises the ritual dagger. \u0022Your interference ends here.\u0022",
+    "preCombatDialogue": "Archon Malachar turns from the altar, his eyes burning with fanatic certainty. \"You've come far, but you understand nothing. The Empire built its glory on stolen foundations - ancient seals that bind what should be free. We will undo their theft. We will return everything to its natural state.\" He raises the ritual dagger. \"Your interference ends here.\"",
     "currentDialogueNode": "greeting",
     "recruitableAfterDefeat": false,
     "recruitClass": "Fighter",
@@ -3637,7 +3637,7 @@
     "key": "Imperial Assassin",
     "name": "Imperial Assassin",
     "shortDescription": "The Imperial Assassin",
-    "description": "The assassin has discarded their imperial guard helmet, revealing a face covered in cultist tattoos. Their eyes burn with fanatic zeal. Blood - the Emperor\u0027s blood - still drips from the ornate dagger in their hand. This is a true believer, willing to die for the Unbound\u0027s cause.",
+    "description": "The assassin has discarded their imperial guard helmet, revealing a face covered in cultist tattoos. Their eyes burn with fanatic zeal. Blood - the Emperor's blood - still drips from the ornate dagger in their hand. This is a true believer, willing to die for the Unbound's cause.",
     "isHostile": true,
     "health": 110,
     "maxHealth": 110,
@@ -3662,14 +3662,14 @@
       "Entropy Bolt"
     ],
     "lootTable": {
-      "emperor\u0027s blood dagger": 100,
+      "emperor's blood dagger": 100,
       "greater potion": 100,
       "greater energy potion": 100,
       "elixir of vigor": 80,
       "scroll of haste": 60,
       "scroll of protection": 50
     },
-    "preCombatDialogue": "The assassin laughs, a sound of pure madness. \u0022Feel it? The first crack in the seal! Ten thousand witnesses saw him fall! Their terror, their despair - it feeds the breach!\u0022 Blood-flecked spittle flies from their lips. \u0022You think killing me matters? The work is done! The Empire\u0027s pillar has fallen! Soon the others will follow, and the Bound Ones will reshape this broken world!\u0022",
+    "preCombatDialogue": "The assassin laughs, a sound of pure madness. \"Feel it? The first crack in the seal! Ten thousand witnesses saw him fall! Their terror, their despair - it feeds the breach!\" Blood-flecked spittle flies from their lips. \"You think killing me matters? The work is done! The Empire's pillar has fallen! Soon the others will follow, and the Bound Ones will reshape this broken world!\"",
     "currentDialogueNode": "greeting",
     "recruitableAfterDefeat": false,
     "recruitClass": "Fighter",
@@ -3683,7 +3683,7 @@
     "key": "Althea",
     "name": "Althea",
     "shortDescription": "An imprisoned oracle",
-    "description": "A young woman in tattered oracle robes huddles in the corner of the cell. Despite obvious signs of captivity - gaunt cheeks, bruises, dirt-streaked face - her eyes still glow with an eerie inner light. She watches you with a mixture of hope and wariness, as if she\u0027s seen too many visions of betrayal to trust easily. Silver hair falls in tangles around her face, and strange rune-tattoos shimmer faintly on her forearms.",
+    "description": "A young woman in tattered oracle robes huddles in the corner of the cell. Despite obvious signs of captivity - gaunt cheeks, bruises, dirt-streaked face - her eyes still glow with an eerie inner light. She watches you with a mixture of hope and wariness, as if she's seen too many visions of betrayal to trust easily. Silver hair falls in tangles around her face, and strange rune-tattoos shimmer faintly on her forearms.",
     "isHostile": false,
     "health": 40,
     "maxHealth": 40,
@@ -3713,93 +3713,93 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "first_greeting": {
-        "text": "The woman in the cell rises slowly, gripping the bars for support. Her eyes - glowing with an otherworldly light - study you intensely.\u003Cbr\u003E\u003Cbr\u003E\u0022You... you\u0027re not one of them,\u0022 she says, her voice hoarse from disuse. \u0022I didn\u0027t foresee this. My visions showed only darkness and spirals... but you\u0027re here. How?\u0022\u003Cbr\u003E\u003Cbr\u003EShe seems to catch herself, taking a shaky breath. \u0022Forgive me. I am Althea. An oracle... or I was, before they took me.\u0022",
+        "text": "The woman in the cell rises slowly, gripping the bars for support. Her eyes - glowing with an otherworldly light - study you intensely.<br><br>\"You... you're not one of them,\" she says, her voice hoarse from disuse. \"I didn't foresee this. My visions showed only darkness and spirals... but you're here. How?\"<br><br>She seems to catch herself, taking a shaky breath. \"Forgive me. I am Althea. An oracle... or I was, before they took me.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {
-          "Braxus": "Braxus freezes, his face going pale. \u0022Althea...\u0022 His voice cracks. \u0022By the gods, I found you.\u0022 He grips the cell bars beside you, knuckles white. \u0022I got your letter. I\u0027ve been searching for weeks. I thought... I thought you were dead.\u0022"
+          "Braxus": "Braxus freezes, his face going pale. \"Althea...\" His voice cracks. \"By the gods, I found you.\" He grips the cell bars beside you, knuckles white. \"I got your letter. I've been searching for weeks. I thought... I thought you were dead.\""
         },
         "choices": [
           {
-            "text": "\u0022Who took you? The cultists?\u0022",
+            "text": "\"Who took you? The cultists?\"",
             "next": "ask_about_cultists"
           },
           {
-            "text": "\u0022Are you alright? How long have you been here?\u0022",
+            "text": "\"Are you alright? How long have you been here?\"",
             "next": "ask_about_condition"
           }
         ]
       },
       "repeat_greeting": {
-        "text": "Althea looks up as you approach the cell, a weak smile crossing her face. \u0022You came back. I... I wasn\u0027t sure you would.\u0022",
+        "text": "Althea looks up as you approach the cell, a weak smile crossing her face. \"You came back. I... I wasn't sure you would.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Tell me more about what the cultists are planning.\u0022",
+            "text": "\"Tell me more about what the cultists are planning.\"",
             "next": "explain_cult_plan",
             "requireNotDiscussedNode": "explain_cult_plan"
           },
           {
-            "text": "\u0022I have the cell key. Let me get you out of here.\u0022",
+            "text": "\"I have the cell key. Let me get you out of here.\"",
             "next": "offer_recruitment",
             "requiredItem": "cell key"
           },
           {
-            "text": "\u0022I need to go for now.\u0022",
+            "text": "\"I need to go for now.\"",
             "next": "end"
           }
         ]
       },
       "ask_about_cultists": {
-        "text": "Althea\u0027s expression darkens. \u0022The Ordo Dissolutus. The Dissolved Order. They call themselves philosophers, but they\u0027re fanatics. They worship entropy, decay, the unmaking of all things.\u0022\u003Cbr\u003E\u003Cbr\u003EShe grips the bars tighter. \u0022They took me because of my visions. They wanted to know about the seals - the ancient barriers that hold back chaos. When I wouldn\u0027t help them... they locked me here.\u0022",
+        "text": "Althea's expression darkens. \"The Ordo Dissolutus. The Dissolved Order. They call themselves philosophers, but they're fanatics. They worship entropy, decay, the unmaking of all things.\"<br><br>She grips the bars tighter. \"They took me because of my visions. They wanted to know about the seals - the ancient barriers that hold back chaos. When I wouldn't help them... they locked me here.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {
-          "Braxus": "Althea\u0027s eyes find Braxus through the bars, and tears well up. \u0022I\u0027m so sorry I left. I tried to protect you by disappearing, but...\u0022 Her voice breaks. \u0022I should have trusted you. You always said we\u0027d face danger together.\u0022"
+          "Braxus": "Althea's eyes find Braxus through the bars, and tears well up. \"I'm so sorry I left. I tried to protect you by disappearing, but...\" Her voice breaks. \"I should have trusted you. You always said we'd face danger together.\""
         },
         "choices": [
           {
-            "text": "\u0022What are they planning?\u0022",
+            "text": "\"What are they planning?\"",
             "next": "explain_cult_plan"
           }
         ]
       },
       "ask_about_condition": {
-        "text": "Althea looks down at her tattered robes and bruised arms. \u0022I... I don\u0027t know how long it\u0027s been. Days? Weeks? Time blurs when you\u0027re locked in darkness.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022They fed me enough to keep me alive. Questioned me endlessly about the seals, about my visions. But I wouldn\u0027t tell them what they wanted to know.\u0022\u003Cbr\u003E\u003Cbr\u003EHer glowing eyes meet yours. \u0022Thank you for asking. It\u0027s been... a very long time since anyone showed me kindness.\u0022",
+        "text": "Althea looks down at her tattered robes and bruised arms. \"I... I don't know how long it's been. Days? Weeks? Time blurs when you're locked in darkness.\"<br><br>\"They fed me enough to keep me alive. Questioned me endlessly about the seals, about my visions. But I wouldn't tell them what they wanted to know.\"<br><br>Her glowing eyes meet yours. \"Thank you for asking. It's been... a very long time since anyone showed me kindness.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022What were they questioning you about?\u0022",
+            "text": "\"What were they questioning you about?\"",
             "next": "ask_about_cultists"
           }
         ]
       },
       "explain_cult_plan": {
-        "text": "Althea\u0027s eyes unfocus slightly, as if seeing something far away. \u0022They\u0027re planning something during the anniversary festival in Aevoria. When the empire celebrates, when crowds gather at the capital...\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022In my visions, I saw fire and screaming. The cult intends to strike at \u0027the pillar\u0027 - they speak in metaphors, but I believe they mean someone important. Perhaps... perhaps the Emperor himself.\u0022\u003Cbr\u003E\u003Cbr\u003EShe shudders. \u0022If they weaken the seals at the same time, the chaos released by so many deaths could cascade. The barriers could fail. Ancient things that were bound long ago... they could break free.\u0022",
+        "text": "Althea's eyes unfocus slightly, as if seeing something far away. \"They're planning something during the anniversary festival in Aevoria. When the empire celebrates, when crowds gather at the capital...\"<br><br>\"In my visions, I saw fire and screaming. The cult intends to strike at 'the pillar' - they speak in metaphors, but I believe they mean someone important. Perhaps... perhaps the Emperor himself.\"<br><br>She shudders. \"If they weaken the seals at the same time, the chaos released by so many deaths could cascade. The barriers could fail. Ancient things that were bound long ago... they could break free.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {
-          "Braxus": "Braxus steps closer to the bars, his voice urgent. \u0022An assassination attempt on the Emperor? Althea, we can stop this together - like we should have done from the start.\u0022 He looks at you. \u0022Boss, we need to get her out of here. Then we warn Aevoria. We\u0027ll need proof, but if anyone can help us, it\u0027s her.\u0022"
+          "Braxus": "Braxus steps closer to the bars, his voice urgent. \"An assassination attempt on the Emperor? Althea, we can stop this together - like we should have done from the start.\" He looks at you. \"Boss, we need to get her out of here. Then we warn Aevoria. We'll need proof, but if anyone can help us, it's her.\""
         },
         "choices": [
           {
-            "text": "\u0022We need to warn the Emperor. But first, let me get you out of here.\u0022",
+            "text": "\"We need to warn the Emperor. But first, let me get you out of here.\"",
             "next": "offer_rescue"
           }
         ]
       },
       "offer_rescue": {
-        "text": "Althea\u0027s eyes widen. \u0022You... you\u0027d do that? You don\u0027t even know me.\u0022\u003Cbr\u003E\u003Cbr\u003EShe pauses, and for a moment her eyes glow brighter. \u0022No... wait. I see it now. You\u0027re the guild master. The one trying to rebuild what was lost.\u0022\u003Cbr\u003E\u003Cbr\u003EA genuine smile crosses her face. \u0022Perhaps the visions knew you were coming after all.\u0022",
+        "text": "Althea's eyes widen. \"You... you'd do that? You don't even know me.\"<br><br>She pauses, and for a moment her eyes glow brighter. \"No... wait. I see it now. You're the guild master. The one trying to rebuild what was lost.\"<br><br>A genuine smile crosses her face. \"Perhaps the visions knew you were coming after all.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022Join my guild. Help me stop this cult and protect the empire.\u0022",
+            "text": "\"Join my guild. Help me stop this cult and protect the empire.\"",
             "next": "offer_recruitment"
           }
         ]
       },
       "offer_recruitment": {
-        "text": "You unlock the cell door with the iron key, and it swings open with a rusty creak. Althea steps out hesitantly, as if unsure her legs will hold her weight.\u003Cbr\u003E\u003Cbr\u003EShe straightens despite her weakened state, determination replacing the fear in her eyes. \u0022Yes. I will join you. My visions may be clouded, but I can see that our paths are meant to cross. Together, we can stop the Ordo Dissolutus and warn Aevoria.\u0022",
+        "text": "You unlock the cell door with the iron key, and it swings open with a rusty creak. Althea steps out hesitantly, as if unsure her legs will hold her weight.<br><br>She straightens despite her weakened state, determination replacing the fear in her eyes. \"Yes. I will join you. My visions may be clouded, but I can see that our paths are meant to cross. Together, we can stop the Ordo Dissolutus and warn Aevoria.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -3810,13 +3810,13 @@
         },
         "choices": [
           {
-            "text": "\u0022Welcome to the guild.\u0022",
+            "text": "\"Welcome to the guild.\"",
             "next": "recruit_althea"
           }
         ]
       },
       "recruit_althea": {
-        "text": "Althea takes a deep breath of free air, her eyes glowing brighter. \u0022Thank you. I won\u0027t forget this. Together, we\u0027ll stop the cult and save the Empire.\u0022",
+        "text": "Althea takes a deep breath of free air, her eyes glowing brighter. \"Thank you. I won't forget this. Together, we'll stop the cult and save the Empire.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {
@@ -3828,35 +3828,35 @@
         "choices": []
       },
       "end": {
-        "text": "Althea nods gratefully. \u0022Thank you. Be careful - the cultists are dangerous, and their leader is even more so.\u0022",
+        "text": "Althea nods gratefully. \"Thank you. Be careful - the cultists are dangerous, and their leader is even more so.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": []
       },
       "guild_hall_greeting": {
-        "text": "Althea looks up from her meditation, her eyes glowing softly. \u0022Ah, Guild Master. The visions have been clearer since joining you. It\u0027s... comforting to have purpose again.\u0022",
+        "text": "Althea looks up from her meditation, her eyes glowing softly. \"Ah, Guild Master. The visions have been clearer since joining you. It's... comforting to have purpose again.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
           {
-            "text": "\u0022How are you settling in?\u0022",
+            "text": "\"How are you settling in?\"",
             "next": "guild_settling"
           },
           {
-            "text": "\u0022I\u0027ll leave you to your meditation.\u0022",
+            "text": "\"I'll leave you to your meditation.\"",
             "next": "guild_end"
           }
         ]
       },
       "guild_settling": {
-        "text": "Althea smiles faintly. \u0022Better than I expected. The guild feels... safe. Though I must admit, some of the others are... intense.\u0022\u003Cbr\u003E\u003Cbr\u003EShe glances across the hall. \u0022Braxus, for instance. He\u0027s still suspicious of me, I think. But his caution is understandable. Perhaps in time, he\u0027ll see I mean no harm.\u0022",
+        "text": "Althea smiles faintly. \"Better than I expected. The guild feels... safe. Though I must admit, some of the others are... intense.\"<br><br>She glances across the hall. \"Braxus, for instance. He's still suspicious of me, I think. But his caution is understandable. Perhaps in time, he'll see I mean no harm.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {
-          "Braxus": "From across the hall, Braxus grunts. \u0022I can hear you, oracle. And yeah, I\u0027m keeping an eye on you. Nothing personal - just don\u0027t trust magic I can\u0027t punch.\u0022 He pauses. \u0022But... you fought well in that last battle. Keep that up and we\u0027ll get along fine.\u0022"
+          "Braxus": "From across the hall, Braxus grunts. \"I can hear you, oracle. And yeah, I'm keeping an eye on you. Nothing personal - just don't trust magic I can't punch.\" He pauses. \"But... you fought well in that last battle. Keep that up and we'll get along fine.\""
         },
         "choices": [
           {
-            "text": "\u0022You\u0027ll both fit in here just fine.\u0022",
+            "text": "\"You'll both fit in here just fine.\"",
             "next": "guild_end"
           }
         ]
@@ -4289,7 +4289,7 @@
     "key": "Lamia",
     "name": "Lamia",
     "shortDescription": "A hostile lamia",
-    "description": "A serpentine sorceress with a woman\u0027s torso and a snake\u0027s lower body, eyes glowing with dark magic.",
+    "description": "A serpentine sorceress with a woman's torso and a snake's lower body, eyes glowing with dark magic.",
     "isHostile": true,
     "health": 60,
     "maxHealth": 60,
@@ -4369,7 +4369,7 @@
     "key": "Chimera",
     "name": "Chimera",
     "shortDescription": "A hostile chimera",
-    "description": "A monstrous hybrid with a lion\u0027s body, goat\u0027s head, and serpent\u0027s tail, breathing fire.",
+    "description": "A monstrous hybrid with a lion's body, goat's head, and serpent's tail, breathing fire.",
     "isHostile": true,
     "health": 90,
     "maxHealth": 90,
