@@ -2754,7 +2754,12 @@ namespace GuildMaster.Managers
                 totalGold += goldDrop;
                 // Remove by name since 'enemy' is a clone
                 currentRoom.NPCs.RemoveAll(n => n.Name == enemy.Name);
-                currentRoom.OriginalNPCs.RemoveAll(n => n.Name == enemy.Name);
+                // Dungeon rooms keep their OriginalNPCs so leaving the dungeon
+                // can respawn the floors; overworld kills stay permanent
+                if (!DungeonRules.IsDungeonRoom(currentRoom.NumericId))
+                {
+                    currentRoom.OriginalNPCs.RemoveAll(n => n.Name == enemy.Name);
+                }
             }
 
             // Check if this is a dungeon floor-ending room and unlock the way down
@@ -4627,26 +4632,23 @@ namespace GuildMaster.Managers
 
         private void UnlockFloorTransition(Room room)
         {
-            // Check if all enemies in room are defeated
-            if (room.NPCs.Any(n => n.IsHostile && n.Health > 0))
-            {
-                return; // Still enemies alive, don't unlock yet
-            }
+            // Announce when a victory clears the LAST enemy on a dungeon floor.
+            // The gate itself is enforced dynamically at move time (DungeonRules
+            // .IsDescentBlocked), computed from live enemy state - nothing to
+            // mutate or persist here.
+            var floor = DungeonRules.FloorOf(room.NumericId);
+            if (floor == null) return;
 
-            // Determine if this is a floor-ending room and what the next floor is
-            int nextFloor = room.NumericId switch
+            if (DungeonRules.LivingEnemiesOnFloor(context.Rooms, floor.Value.Start, floor.Value.End) == 0)
             {
-                905 => 906,  // Floor 1 -> Floor 2
-                910 => 911,  // Floor 2 -> Floor 3
-                915 => 916,  // Floor 3 -> Floor 4
-                _ => -1
-            };
-
-            // If this is a floor-ending room and exit not already added, unlock it
-            if (nextFloor != -1 && !room.Exits.ContainsKey("down"))
-            {
-                room.Exits["down"] = nextFloor;
-                AnsiConsole.MarkupLine("\n[#90FF90]With the guardians defeated, stone steps leading down become visible.[/]");
+                if (DungeonRules.IsGateRoom(floor.Value.End) )
+                {
+                    AnsiConsole.MarkupLine("\n[#90FF90]A deep rumble echoes through the ruins - with its guardians defeated, the floor's great stone door grinds open. The way down is clear![/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("\n[#90FF90]Silence falls over the deepest halls. This floor's guardians are no more.[/]");
+                }
             }
         }
 

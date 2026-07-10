@@ -449,6 +449,15 @@ namespace GuildMaster.Managers
                     return; // Don't move yet - wait for confirmation
                 }
 
+                // Dungeon floor gates: the way down opens only once the floor is cleared
+                if (direction == "down" && DungeonRules.IsDescentBlocked(rooms, player.CurrentRoom, out int remaining))
+                {
+                    AnsiConsole.MarkupLine("");
+                    AnsiConsole.MarkupLine("[#FA935F]A massive stone door bars the way down, ancient mechanisms holding it fast.[/]");
+                    AnsiConsole.MarkupLine($"[#FA935F]The dungeon's guardians still prowl this floor - defeat {(remaining == 1 ? "the last enemy" : $"all {remaining} remaining enemies")} to release the seal.[/]");
+                    return;
+                }
+
                 // Clear recruit NPCs from current room before leaving
                 recruitNPCManager.ClearDynamicNPCsInRoom(player.CurrentRoom);
 

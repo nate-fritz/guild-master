@@ -2866,6 +2866,7 @@
     "title": "Ancient Ruins - Bronze Treasury",
     "description": "The passage opens into a circular chamber with a domed ceiling. Ancient bronze weapons and armor line the walls on racks and stands. A harpy roosts on a bronze chandelier above, while two satyrs guard a stone chest in the center of the room. Stone steps descend deeper into the ruins.",
     "exits": {
+      "down": 906,
       "west": 904
     },
     "items": [
@@ -3040,6 +3041,7 @@
     "title": "Ancient Ruins - Enchanted Armory",
     "description": "A magnificent chamber whose walls are lined with enchanted weapons and armor that pulse with magical energy. A bronze automaton and a gorgon guard a large stone chest. Stairs descend to the depths below.",
     "exits": {
+      "down": 911,
       "west": 909
     },
     "items": [
@@ -3219,6 +3221,7 @@
     "title": "Ancient Ruins - Legendary Vault",
     "description": "A treasure vault of legendary proportions. Weapons and armor of incredible craftsmanship line the walls. A cyclops and a medusa guard the central chest. Steps lead down to the final depths of the ruins.",
     "exits": {
+      "down": 916,
       "west": 914
     },
     "items": [

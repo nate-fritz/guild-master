@@ -1148,17 +1148,9 @@ namespace GuildMaster.Services
                 {
                     var room = rooms[roomId];
 
-                    // Respawn enemies
+                    // Respawn enemies; the floor gates re-lock automatically since
+                    // DungeonRules computes cleared-state from live enemy lists
                     room.RespawnEnemies();
-
-                    // Remove conditional "down" exits from floor-end rooms
-                    if (roomId == 905 || roomId == 910 || roomId == 915)
-                    {
-                        if (room.Exits.ContainsKey("down"))
-                        {
-                            room.Exits.Remove("down");
-                        }
-                    }
                 }
             }
         }
