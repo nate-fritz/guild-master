@@ -75,7 +75,7 @@
   </div>
 </div>
 <script>
-let mode='rooms', rooms=[], npcs=[], npcNames=[], sel=null, dirty=false;
+let mode='rooms', rooms=[], npcs=[], npcNames=[], sel=null, dirty=false, ACTION_TYPES=[];
 const $ = id => document.getElementById(id);
 const DIRS = ["north","east","south","west","up","down"];
 const esc = s => (s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
@@ -83,6 +83,7 @@ const esc = s => (s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g
 async function init() {
   rooms = await (await fetch('/api/rooms')).json();
   npcs = await (await fetch('/api/npcs-full')).json();
+  ACTION_TYPES = await (await fetch('/api/action-types')).json();
   npcNames = npcs.map(n=>n.key).sort();
   renderList();
 }
@@ -200,17 +201,44 @@ function renderDialogue(){
         <div class="row"><span class="hint">→</span><select onchange="sel.dialogue['${id}'].choices[${ci}].next=this.value;markDirty()">${nodeOpts(c.next)}</select>
         <input value="${esc(c.requiredItem??'')}" placeholder="required item (optional)" onchange="sel.dialogue['${id}'].choices[${ci}].requiredItem=this.value||null;markDirty()">
         <button class="del" onclick="sel.dialogue['${id}'].choices.splice(${ci},1);markDirty();renderDialogue()">✕</button></div>
-        ${c.action?`<span class="hint">action: ${esc(c.action.type)}</span>`:''}</div>`).join('');
+        ${actEditor(id, ci)}</div>`).join('');
       return `<div class="node"><h3>${esc(id)} ${id===sel.currentDialogueNode?'★':''}</h3>
         <textarea class="w100" style="height:70px" onchange="sel.dialogue['${id}'].text=this.value;markDirty()">${esc(n.text)}</textarea>
-        ${n.action?`<span class="hint">node action: ${esc(n.action.type)}</span>`:''}
+        ${actEditor(id, null)}
         ${choices}
         <button class="add-btn" onclick="(sel.dialogue['${id}'].choices??=[]).push({text:'...',next:'end'});markDirty();renderDialogue()">+ choice</button>
         <button class="del" onclick="if(confirm('Delete node ${esc(id)}?')){delete sel.dialogue['${id}'];markDirty();renderDialogue()}">delete node</button>
       </div>`; }).join('') +
     `<div class="row"><input id="newnode" placeholder="new node id"><button class="add-btn" onclick="const k=$('newnode').value.trim();if(k){(sel.dialogue??={})[k]={text:'...',permanentlyEndsDialogue:false,partyInterjections:{},choices:[]};markDirty();renderDialogue()}">+ node</button></div>
-    <p class="hint">★ = entry node. Choices with actions/conditions beyond required-item keep them (shown as hints); edit JSON for those.</p>`;
+    <p class="hint">★ = entry node. Actions run when the node is shown / the choice is picked.</p>`;
 }
+
+/* ---------- dialogue actions ---------- */
+function getActHolder(nodeId, ci){ return ci==null ? sel.dialogue[nodeId] : sel.dialogue[nodeId].choices[ci]; }
+function actEditor(nodeId, ci){
+  const holder = getActHolder(nodeId, ci);
+  const path = `'${nodeId}',${ci==null?'null':ci}`;
+  if(!holder.action) return `<button class="add-btn" style="font-size:11px" onclick="addAction(${path})">+ action</button>`;
+  const a = holder.action;
+  const opts = ACTION_TYPES.map(t=>`<option ${t.type===a.type?'selected':''}>${t.type}</option>`).join('');
+  const params = Object.entries(a.parameters||{}).map(([k,v])=>`<div class="row">
+      <input value="${esc(k)}" style="flex:0 0 120px" onchange="renameParam(${path},'${esc(k)}',this.value)">
+      <input value="${esc(String(v))}" onchange="setParam(${path},'${esc(k)}',this.value)">
+      <button class="del" onclick="delParam(${path},'${esc(k)}')">✕</button></div>`).join('');
+  return `<div class="choice" style="border-left-color:#FA935F">
+    <div class="row"><span class="hint">⚡ action</span>
+      <select onchange="setActionType(${path},this.value)">${opts}</select>
+      <button class="del" onclick="removeAction(${path})">remove</button></div>
+    ${params}<button class="add-btn" style="font-size:11px" onclick="addParam(${path})">+ param</button></div>`;
+}
+function fillDefaults(a){ const t=ACTION_TYPES.find(x=>x.type===a.type); a.parameters??={}; (t?.params||[]).forEach(p=>{ if(!(p in a.parameters)) a.parameters[p]=''; }); }
+function addAction(n,ci){ const h=getActHolder(n,ci); h.action={type:ACTION_TYPES[0].type, parameters:{}}; fillDefaults(h.action); markDirty(); renderDialogue(); }
+function removeAction(n,ci){ delete getActHolder(n,ci).action; markDirty(); renderDialogue(); }
+function setActionType(n,ci,v){ const a=getActHolder(n,ci).action; a.type=v; a.parameters={}; fillDefaults(a); markDirty(); renderDialogue(); }
+function setParam(n,ci,k,v){ getActHolder(n,ci).action.parameters[k]=v; markDirty(); }
+function renameParam(n,ci,o,k){ const p=getActHolder(n,ci).action.parameters; p[k]=p[o]; delete p[o]; markDirty(); renderDialogue(); }
+function delParam(n,ci,k){ delete getActHolder(n,ci).action.parameters[k]; markDirty(); renderDialogue(); }
+function addParam(n,ci){ getActHolder(n,ci).action.parameters['param']=''; markDirty(); renderDialogue(); }
 
 async function save(){
   const [url, body] = mode==='rooms' ? ['/api/rooms', rooms] : ['/api/npcs-full', npcs];

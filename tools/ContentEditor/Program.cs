@@ -29,6 +29,22 @@ app.MapGet("/api/rooms", () => Results.Text(File.ReadAllText(roomsPath), "applic
 // NPC names the game actually knows, for reference dropdowns
 app.MapGet("/api/npcs", () => NPCData.InitializeNPCs().Keys.OrderBy(k => k).ToList());
 
+// Dialogue action catalog: the types DialogueManager.ExecuteDialogueAction
+// understands and the parameters each one reads. Keep in sync with that switch.
+app.MapGet("/api/action-types", () => new[]
+{
+    new { type = "give_item",     @params = new[] { "item" } },                    // takes item FROM player
+    new { type = "receive_item",  @params = new[] { "item" } },                    // gives item TO player
+    new { type = "add_recruit",   @params = new[] { "class" } },
+    new { type = "trigger_combat",@params = Array.Empty<string>() },
+    new { type = "open_gate",     @params = Array.Empty<string>() },
+    new { type = "start_timer",   @params = new[] { "timer_id", "duration_hours" } },
+    new { type = "force_travel",  @params = new[] { "room_id", "silent" } },
+    new { type = "set_quest_flag",@params = new[] { "flag", "value" } },
+    new { type = "remove_npc",    @params = new[] { "npc_name", "room_id" } },
+    new { type = "show_tutorial", @params = new[] { "tutorial_id" } },
+});
+
 // Full NPC content (stats + dialogue trees), raw
 app.MapGet("/api/npcs-full", () => Results.Text(File.ReadAllText(npcsPath), "application/json"));
 
