@@ -367,27 +367,8 @@ namespace GuildMaster.Services
 
             var player = gameContext.Player;
 
-            // Check for pagination "more" command or empty input (if there are more pages)
-            if (paginationManager.HasMorePages && (input.ToLower() == "more" || string.IsNullOrWhiteSpace(input)))
-            {
-                paginationManager.ShowNextPage();
-
-                // Re-check if pagination is done after showing the page
-                if (!paginationManager.HasMorePages)
-                {
-                    // Pagination complete - show status bar after final page
-                    if (player.CurrentRoom == 1)
-                    {
-                        // Check if we just finished reading the note (by checking if we're in room 1)
-                        string afterNoteText = "After you finish reading the letter, you notice a door to the east.";
-                        AnsiConsole.MarkupLine("");
-                        TextHelper.DisplayTextWithPaging(afterNoteText, "#FA935F");
-                        ProgramStatics.messageManager?.CheckAndShowMessage("first_movement_tutorial");
-                    }
-                    // Status bar will be shown by Home.razor after command completes
-                }
-                return;
-            }
+            // (Page-break pagination was retired 2026-07-06 - long output anchors
+            // to the top of the new text instead; see wwwroot/js/console-ui.js.)
 
             // Check if we're in combat mode first
             if (player.DebugLogsEnabled)
