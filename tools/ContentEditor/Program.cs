@@ -13,6 +13,9 @@ using GuildMaster.Data;
 var repoRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
 var roomsPath = Path.Combine(repoRoot, "wwwroot", "data", "rooms.json");
 
+var npcsPath = Path.Combine(repoRoot, "wwwroot", "data", "npcs.json");
+NpcTemplateStore.Load(File.ReadAllText(npcsPath));
+
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://localhost:5100");
 var app = builder.Build();

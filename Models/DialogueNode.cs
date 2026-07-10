@@ -26,6 +26,11 @@ namespace GuildMaster.Models
             public string choiceText { get; set; }
             public string nextNodeID { get; set; }
             public Func<List<string>, bool> IsAvailable { get; set; } = (inventory) => true;
+            // Declarative forms of the availability checks (serializable to
+            // npcs.json, unlike the lambda): choice shows only if inventory has
+            // this item / any of these items
+            public string RequiredItem { get; set; } = null;
+            public List<string> RequiredAnyItems { get; set; } = null;
             public DialogueAction Action { get; set; }  // ADD THIS LINE
 
             // Topic tracking - show choice only if node has/hasn't been visited

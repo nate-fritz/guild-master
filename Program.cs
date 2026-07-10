@@ -19,6 +19,8 @@ using (var contentClient = new HttpClient { BaseAddress = new Uri(builder.HostEn
 {
     var roomsJson = await contentClient.GetStringAsync("data/rooms.json");
     GuildMaster.Data.RoomTemplateStore.Load(roomsJson);
+    var npcsJson = await contentClient.GetStringAsync("data/npcs.json");
+    GuildMaster.Data.NpcTemplateStore.Load(npcsJson);
 }
 
 await builder.Build().RunAsync();

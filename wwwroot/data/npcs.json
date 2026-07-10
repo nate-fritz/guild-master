@@ -1,0 +1,4487 @@
+[
+  {
+    "key": "Town Guard",
+    "name": "Town Guard",
+    "shortDescription": "A town guard",
+    "description": "A guard in bronze armor keeps watch over the area.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "The guard glances at you briefly and says \u0022Move along, citizen. Keep your nose clean and we won\u0027t have any problems.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Can you give me directions?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Understood.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "ask_directions": {
+        "text": "The guard nods. \u0022What are you looking for?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Where is the Town Hall?\u0022",
+            "next": "dir_town_hall"
+          },
+          {
+            "text": "\u0022Where is the Temple District?\u0022",
+            "next": "dir_temple"
+          },
+          {
+            "text": "\u0022Where can I find the tavern?\u0022",
+            "next": "dir_tavern"
+          },
+          {
+            "text": "\u0022Where\u0027s the blacksmith?\u0022",
+            "next": "dir_blacksmith"
+          },
+          {
+            "text": "\u0022Never mind.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "dir_town_hall": {
+        "text": "\u0022The Town Hall is in the western part of Belum. Head to the town square and go west through the residential area. You can\u0027t miss it - big marble columns and bronze doors.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Anything else?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Thank you.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "dir_temple": {
+        "text": "\u0022The Temple District is northwest of the town square. Head north to the residential area, then west. The temples surround a central plaza.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Anything else?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Thank you.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "dir_tavern": {
+        "text": "\u0022The Golden Grape? Popular place. It\u0027s in the eastern part of town. From the town square, head east and you\u0027ll find it in the poor quarter area. Can\u0027t miss the golden grape sign.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Anything else?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Thank you.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "dir_blacksmith": {
+        "text": "\u0022The Iron Anvil is in the southern market district. From the south gate, head north through the market and you\u0027ll hear the forges. Big place, can\u0027t miss it.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Anything else?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Thank you.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "end": {
+        "text": "The guard nods and returns to his duties.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Villager",
+    "name": "Villager",
+    "shortDescription": "A villager",
+    "description": "A local going about their daily business.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "The villager greets you with a friendly smile. \u0022Good day to you, traveler. Welcome to Belum!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Can you help me find my way around?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Good day to you as well.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "ask_directions": {
+        "text": "\u0022Of course! I\u0027d be happy to help. What are you looking for?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Where is the Town Hall?\u0022",
+            "next": "dir_town_hall"
+          },
+          {
+            "text": "\u0022Where is the Temple District?\u0022",
+            "next": "dir_temple"
+          },
+          {
+            "text": "\u0022Where can I get a drink?\u0022",
+            "next": "dir_tavern"
+          },
+          {
+            "text": "\u0022Where\u0027s the blacksmith?\u0022",
+            "next": "dir_blacksmith"
+          },
+          {
+            "text": "\u0022I\u0027m all set, thank you.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "dir_town_hall": {
+        "text": "\u0022The Town Hall? That\u0027s on the western side of town. Go to the town square and head west through the nice residential area. You\u0027ll see it - big impressive building with marble columns!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022What else is there?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Thank you!\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "dir_temple": {
+        "text": "\u0022Ah, the temples! Northwest of the town square. Head north from the square to the residential area, then west. There\u0027s a whole plaza surrounded by temples to the different gods.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022What else is there?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Thank you!\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "dir_tavern": {
+        "text": "\u0022The Golden Grape is the best tavern in Belum! It\u0027s in the eastern part of town. From the square, head east and you\u0027ll find it. Look for the golden grape on the sign - can\u0027t miss it!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022What else is there?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Thank you!\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "dir_blacksmith": {
+        "text": "\u0022The Iron Anvil is the best smithy around! It\u0027s in the southern part of town near the market. If you\u0027re coming from the south gate, head north through the market district and follow your ears - you\u0027ll hear the hammers on the anvils!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022What else is there?\u0022",
+            "next": "ask_directions"
+          },
+          {
+            "text": "\u0022Thank you!\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "end": {
+        "text": "The villager waves cheerfully and continues on their way.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Merchant",
+    "name": "Merchant",
+    "shortDescription": "A merchant",
+    "description": "A trader with goods from distant lands.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "The merchant spreads his arms wide and says \u0022Looking to buy? Looking to sell? Either way, you\u0027ve come to the right place!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Barkeep",
+    "name": "Barkeep",
+    "shortDescription": "The barkeep",
+    "description": "A jovial man with a towel over his shoulder wipes down the bar.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "The barkeep looks up from wiping down the bar and greets you warmly. \u0022Welcome to the Golden Grape! What\u0027ll it be? Ale? Wine? Or perhaps you\u0027re looking for information?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Blacksmith",
+    "name": "Blacksmith",
+    "shortDescription": "The blacksmith",
+    "description": "A massive man with bulging arms works the forge, sweat glistening on his brow.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": true,
+    "shopInventory": {
+      "iron gladius": 50,
+      "battle axe": 60,
+      "hunter\u0027s bow": 55,
+      "steel gladius": 120,
+      "leather armor": 40,
+      "chainmail": 80,
+      "iron helm": 35
+    },
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "The blacksmith sets down his hammer and wipes the sweat from his brow. \u0022Need something forged? Repaired? I\u0027m the best smith in Belum - ask anyone.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Apothecary",
+    "name": "Apothecary",
+    "shortDescription": "The apothecary",
+    "description": "A thin, scholarly woman with ink-stained fingers carefully organizes vials and jars. The scent of herbs and alchemical reagents fills the air around her shop.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": true,
+    "shopInventory": {
+      "potion": 25,
+      "energy potion": 30,
+      "greater potion": 60,
+      "greater energy potion": 70,
+      "elixir of vigor": 100,
+      "antidote": 20
+    },
+    "shopPrices": {},
+    "buybackMultiplier": 0.4,
+    "dialogue": {
+      "greeting": {
+        "text": "The apothecary looks up from her work and smiles. \u0022Welcome to my apothecary. I stock the finest potions and remedies in all of Belum. What can I prepare for you today?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Scribe",
+    "name": "Scribe",
+    "shortDescription": "The scribe",
+    "description": "An elderly man with careful hands and keen eyes sits among stacks of scrolls and parchments. His workspace is meticulously organized, with quills and inks arranged by color.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": true,
+    "shopInventory": {
+      "restoration scroll": 50,
+      "scroll of fireball": 80,
+      "scroll of healing": 70,
+      "scroll of protection": 90,
+      "scroll of haste": 100,
+      "teleport scroll": 150
+    },
+    "shopPrices": {},
+    "buybackMultiplier": 0.3,
+    "dialogue": {
+      "greeting": {
+        "text": "The scribe carefully sets down his quill and regards you with keen eyes. \u0022Greetings, traveler. I deal in scrolls, both mundane and mystical. Are you in need of knowledge... or power?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Guild Armorer",
+    "name": "Guild Armorer",
+    "shortDescription": "A master armorer",
+    "description": "A grizzled veteran with a master smith\u0027s apron stands before an array of exceptional weapons and armor. Scars and burn marks on his weathered hands speak to decades of forge work. His eyes gleam with professional pride as he examines each piece of equipment.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": true,
+    "shopInventory": {
+      "mithril sword": 200,
+      "elven bow": 180,
+      "arcane staff": 160,
+      "war hammer": 220,
+      "dragon scale armor": 300,
+      "mithril chainmail": 250,
+      "plate armor": 100,
+      "crown of focus": 75
+    },
+    "shopPrices": {},
+    "buybackMultiplier": 0.6,
+    "dialogue": {
+      "greeting": {
+        "text": "The armorer nods respectfully as you approach. \u0022Welcome to the guild armory. Your reputation precedes you - only the finest equipment for proven adventurers. What catches your eye?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Marcus",
+    "name": "Marcus",
+    "shortDescription": "Belum South Gate Sentry",
+    "description": "A weathered veteran guard in bronze armor stands at attention. His scarred face and alert eyes suggest many years of service. The crest of Belum is emblazoned on his breastplate.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "As you approach the gate, the sentry adjusts his shield and spear, then barks \u0022Halt, traveler. This gate to Belum is closed by order of the town council. None may enter.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I have the Bandit Warlord\u0027s head.\u0022 (Show him the head)",
+            "next": "quest_complete",
+            "requiredItem": "warlord\u0027s head",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "warlord\u0027s head"
+              }
+            }
+          },
+          {
+            "text": "\u0022Why is the gate closed?\u0022",
+            "next": "explain_bandits"
+          },
+          {
+            "text": "\u0022I understand. I\u0027ll move along.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "explain_bandits": {
+        "text": "Marcus scowls. \u0022Bandits. A large group has made camp in caves to the southwest - west of Gaius\u0027 farm, south of the mountains. They\u0027ve been raiding travelers and farms. Until they\u0027re dealt with, the council won\u0027t allow the southern gate to open. Too dangerous.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022You\u0027re not going to believe this, but I have the Warlord\u0027s head.\u0022 (Show him)",
+            "next": "quest_complete",
+            "requiredItem": "warlord\u0027s head",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "warlord\u0027s head"
+              }
+            }
+          },
+          {
+            "text": "\u0022I could deal with these bandits.\u0022",
+            "next": "offer_help"
+          },
+          {
+            "text": "\u0022That sounds dangerous. I\u0027ll stay away.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "offer_help": {
+        "text": "He sizes you up. \u0022You?\u0022 He pauses, then continues, \u0022...Perhaps. The leader calls himself the Bandit Warlord. Pompous bastard. If you can kill him and bring me proof - his head will do - I\u0027ll convince the council to open the gate.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I\u0027ll do it. The Warlord will fall.\u0022",
+            "next": "quest_accepted"
+          },
+          {
+            "text": "\u0022Let me think about it.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "quest_accepted": {
+        "text": "Marcus nods grimly. \u0022Good luck. You\u0027ll need it. Be careful down there - the bandits fight dirty and they outnumber you. Return with the Warlord\u0027s head and your reward will be access to Belum.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I have the Bandit Warlord\u0027s head.\u0022 (Show him)",
+            "next": "quest_complete",
+            "requiredItem": "warlord\u0027s head",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "warlord\u0027s head"
+              }
+            }
+          },
+          {
+            "text": "\u0022I\u0027m still working on it.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "quest_complete": {
+        "text": "Marcus\u0027 eyes widen as you unwrap the grisly trophy. \u0022By the gods... you actually did it! The Warlord\u0027s head!\u0022 He examines it grimly. \u0022This will send a message to any other bandits thinking of setting up shop here. Well done, adventurer. I\u0027ll inform the council immediately - the southern gate is now open to you.\u0022\u003Cbr\u003E\u003Cbr\u003EHe pauses, then adds, \u0022If you found anything unusual on the Warlord - letters, documents, anything like that - you should take them to Senator Quintus in the town hall. He\u0027s skilled with ciphers and codes. Might be able to make sense of it.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "open_gate",
+          "parameters": {}
+        },
+        "choices": []
+      },
+      "after_quest": {
+        "text": "Marcus nods at you respectfully. \u0022Thank you again for taking care of those bandits. The roads are safer now because of you.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Just doing my part.\u0022",
+            "next": "end"
+          },
+          {
+            "text": "\u0022Happy to help. Take care, Marcus.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "end": {
+        "text": "He nods curtly. \u0022Stay safe out there.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Lucius",
+    "name": "Lucius",
+    "shortDescription": "Lucius",
+    "description": "A battle-hardened warrior with scars from countless fights. He wields a massive two-handed sword with practiced ease.",
+    "isHostile": false,
+    "health": 25,
+    "maxHealth": 25,
+    "energy": 0,
+    "maxEnergy": 8,
+    "attackDamage": 2,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 1,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Grax",
+    "name": "Grax",
+    "shortDescription": "Grax",
+    "description": "A grizzled mountain hunter with keen eyes and a weather-worn bow. He moves with the quiet confidence of someone who\u0027s survived years in the wilderness.",
+    "isHostile": false,
+    "health": 18,
+    "maxHealth": 18,
+    "energy": 12,
+    "maxEnergy": 12,
+    "attackDamage": 3,
+    "defense": 1,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 3,
+    "isBackRow": true,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cassia",
+    "name": "Cassia",
+    "shortDescription": "Cassia",
+    "description": "A mysterious Oracle draped in flowing robes, her eyes gleaming with ancient knowledge. She carries a gnarled staff adorned with mystical runes.",
+    "isHostile": false,
+    "health": 15,
+    "maxHealth": 15,
+    "energy": 18,
+    "maxEnergy": 18,
+    "attackDamage": 1,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": true,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Felix",
+    "name": "Felix",
+    "shortDescription": "Felix",
+    "description": "A young but determined Legionnaire with polished armor and a sharp gladius. His disciplined stance speaks of rigorous training.",
+    "isHostile": false,
+    "health": 25,
+    "maxHealth": 25,
+    "energy": 0,
+    "maxEnergy": 8,
+    "attackDamage": 2,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 1,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Mountain Bandit",
+    "name": "Mountain Bandit",
+    "shortDescription": "A mountain bandit",
+    "description": "A hardened bandit wielding twin daggers, scarred from countless mountain raids.",
+    "isHostile": true,
+    "health": 25,
+    "maxHealth": 25,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 6,
+    "defense": 1,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 3,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 5,
+    "maxGold": 10,
+    "experienceReward": 100,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 50,
+      "energy potion": 30
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Frost Wolf",
+    "name": "Frost Wolf",
+    "shortDescription": "A frost wolf",
+    "description": "A massive wolf with ice-white fur and frost forming on its breath.",
+    "isHostile": true,
+    "health": 30,
+    "maxHealth": 30,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 8,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 4,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 3,
+    "maxGold": 8,
+    "experienceReward": 150,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 60,
+      "energy potion": 40
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Ice Elemental",
+    "name": "Ice Elemental",
+    "shortDescription": "An ice elemental",
+    "description": "A swirling mass of ice and snow, barely holding a humanoid form.",
+    "isHostile": true,
+    "health": 35,
+    "maxHealth": 35,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 10,
+    "defense": 2,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 8,
+    "maxGold": 15,
+    "experienceReward": 200,
+    "role": "Ranged",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 70,
+      "energy potion": 50,
+      "restoration scroll": 20
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Thunder Eagle",
+    "name": "Thunder Eagle",
+    "shortDescription": "A thunder eagle",
+    "description": "A massive eagle crackling with lightning, its eyes glowing with electrical energy.",
+    "isHostile": true,
+    "health": 40,
+    "maxHealth": 40,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 12,
+    "defense": 1,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 5,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 10,
+    "maxGold": 20,
+    "experienceReward": 250,
+    "role": "Ranged",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 80,
+      "energy potion": 60,
+      "restoration scroll": 30
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Mountain Warlord",
+    "name": "Mountain Warlord",
+    "shortDescription": "A mountain warlord",
+    "description": "A towering warrior clad in ancient armor, wielding a massive two-handed sword. Runes glow faintly on the blade.",
+    "isHostile": true,
+    "health": 80,
+    "maxHealth": 80,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 15,
+    "defense": 4,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 30,
+    "maxGold": 50,
+    "experienceReward": 500,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 100,
+      "energy potion": 80,
+      "restoration scroll": 50,
+      "battle axe": 40
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Elite Guard",
+    "name": "Elite Guard",
+    "shortDescription": "An elite guard",
+    "description": "A disciplined warrior in polished armor, standing at attention near the warlord.",
+    "isHostile": true,
+    "health": 45,
+    "maxHealth": 45,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 10,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 3,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 10,
+    "maxGold": 20,
+    "experienceReward": 200,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 70,
+      "energy potion": 50,
+      "iron gladius": 30
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Gaius",
+    "name": "Gaius",
+    "shortDescription": "A farmer",
+    "description": "A burly man of over two meters leans against one of the four posts of his small stall.  His olive skin is deeply tanned from years of tending to his farm in the sun.  As he notices you, he regards you with a mixture of kindness and mild surprise.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "first_greeting": {
+        "text": "As you approach the farmer\u0027s stand, he rises to meet you with a smile.\u003Cbr\u003E\u003Cbr\u003E\u0022Greetings, friend. Haven\u0027t seen you \u0027round these parts before. Name\u0027s Gaius.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Greetings. {player.name}, and I actually have no idea where \u0027these parts\u0027 even are. Where am I?\u0022",
+            "next": "ask_about_area"
+          },
+          {
+            "text": "\u0022I should get going.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "repeat_greeting": {
+        "text": "Gaius looks up from arranging his wares and greets you with a familiar smile.\u003Cbr\u003E\u003Cbr\u003E\u0022Good to see you again, {player.name}. What can I do for you?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I cleared out the bandits from your farm.\u0022",
+            "next": "bandits_cleared",
+            "requireNotDiscussedNode": "bandits_cleared"
+          },
+          {
+            "text": "\u0022Could you tell me more about this forest and the people you\u0027ve seen going into it?\u0022",
+            "next": "ask_about_forest",
+            "requireNotDiscussedNode": "ask_about_forest"
+          },
+          {
+            "text": "\u0022Tell me about that closed gate again?\u0022",
+            "next": "ask_about_gate",
+            "requireNotDiscussedNode": "ask_about_gate"
+          },
+          {
+            "text": "\u0022Just passing through. Take care, Gaius.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "greeting": {
+        "text": "As you approach the farmer\u0027s stand, Gaius rises to meet you with a smile. \u0022Greetings, friend. Haven\u0027t seen you \u0027round these parts before. Name\u0027s Gaius.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Greetings. {player.name}, and I actually have no idea where \u0027these parts\u0027 even are. Where am I?\u0022",
+            "next": "ask_about_area"
+          },
+          {
+            "text": "\u0022I should get going.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "ask_about_area": {
+        "text": "Gaius briefly raises an eyebrow at this, but a smile quickly replaces the suspicious look on his face. \u0022Well, in that case, welcome to Belum.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022The town itself is behind those fortress walls to the north. My farm is a ways to the west, before you reach Mount Gelus. Hircinian Forest is east of here, although you\u0027d be better off avoiding it. Strange folk have been coming and going from there of late.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I saw you come from the south, so I imagine you saw that old guild hall. I think it\u0027s been abandoned for a while now.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I did come from there, but it\u0027s not exactly abandoned any more.   It\u0027s mine now, apparently.\u0022",
+            "next": "explain_guild"
+          },
+          {
+            "text": "\u0022I should get going.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "explain_guild": {
+        "text": "At this, Gaius makes no more attempts to hide his surprise. \u0022Now that\u0027s not something I expected to hear! I\u0027m not sure if I should offer congratulations or condolences.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Too early to say, I think.  I\u0027ve been tasked with rebuilding the Adventurer\u0027s Guild, which means I need to start recruiting.  I suppose I should head into town and see if I can find anyone interested.\u0022",
+            "next": "recruit"
+          },
+          {
+            "text": "Talk about something else.",
+            "next": "other_topics"
+          }
+        ]
+      },
+      "other_topics": {
+        "text": "Gaius nods. \u0022What can I help you with?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022You said the gate to town was closed.  Permanently?\u0022",
+            "next": "ask_about_gate"
+          },
+          {
+            "text": "\u0022Could you tell me more about this forest and the people you\u0027ve seen going into it?\u0022",
+            "next": "ask_about_forest"
+          }
+        ]
+      },
+      "ask_about_gate": {
+        "text": "Gaius gives a small frown. \u0022The sentry can tell you more, but it seems to me that they\u0027re nervous about leaving that gate open given all of the unusual activity down this way. Bandits, mostly, but also whatever\u0027s going on in the forest.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022If I\u0027m being honest, I hope they can resolve it quickly. I\u0027m uncomfortable with those bandits holing up so close to my farm, and there\u0027s not enough traffic through these crossroads for me to make a living.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022If you think you can help, talk to Marcus at the gate.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I might just do that.  I wanted to ask about something else.\u0022",
+            "next": "other_topics"
+          }
+        ]
+      },
+      "recruit": {
+        "text": "Gaius sighs. \u0022Well, I\u0027ve got bad news. The south gate is closed, which is why I\u0027m out here. Normally I\u0027d head into the market to sell my goods, but with the gate being closed I\u0027m forced to set up shop out here.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022There\u0027s a north gate and a west gate, but you\u0027ll have a hard time getting to either of them.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Bandits have holed up in the caves to the west, and all sorts of foul creatures live in the mountains.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I hate to say it, but if you\u0027re looking for anyone to help you clear out monsters or bandits, maybe your best bet is to head into that nasty old forest after all.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Could you tell me more about this forest and the people you\u0027ve seen going into it?\u0022",
+            "next": "ask_about_forest"
+          }
+        ]
+      },
+      "ask_about_forest": {
+        "text": "Gaius shakes his head. \u0022Dark woods, full of wolves and worse things. Lost a few chickens to whatever lurks in there.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Lately a lot of horse-drawn carts have been headed in to the woods. A couple of them stopped here and bought some food, although part of me wished they hadn\u0027t. Unsettling folk, every one of them.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022The last two weren\u0027t so bad, though. A venator passed through, and said he\u0027d be back this way once he found whatever it is that he\u0027s looking for. Besides him, a soldier went into the forest just this morning. Friendly enough, but had a crazed look in his eye. Seemed like he was looking for someone or something to fight.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Interesting.  It sounds like the woods are my best bet, then.  Maybe one of these interesting characters will join up with me.\u0022",
+            "next": "look_for_recruits"
+          }
+        ]
+      },
+      "look_for_recruits": {
+        "text": "Gaius smiles at that. \u0022Ha! Maybe they will. Be safe in there, friend, and good luck finding those recruits.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Thank you. With luck, you\u0027ll see me coming back through here soon.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "bandits_cleared": {
+        "text": "Gaius\u0027 eyes widen in amazement. \u0022You what?! The bandits are gone?\u0022 He rushes around the stand and grips your shoulders with both hands. \u0022{player.name}, you have no idea what this means to me! Those bastards have been terrorizing my farm for weeks!\u0022\u003Cbr\u003E\u003Cbr\u003EHe releases you and reaches into his coin purse. \u0022Here, please take this. It\u0027s all I can offer right now, but you\u0027ve saved my livelihood. My family can finally return home safely!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "give_gold",
+          "parameters": {
+            "amount": "100"
+          }
+        },
+        "choices": [
+          {
+            "text": "\u0022Happy to help, Gaius. Your farm is safe now.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "end": {
+        "text": "Gaius nods warmly. \u0022Alright, don\u0027t let me keep you.\u003Cbr\u003E\u003Cbr\u003EIf you ever end up west of here, stop by my farm some time.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Silvacis",
+    "name": "Silvacis",
+    "shortDescription": "A venator",
+    "description": "A tall, slender man with light hair and a green cloak is here, digging through the mud rather frantically.  Suddenly, his head raises and turns towards you with a scowl.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "first_greeting": {
+        "text": "Silvacis looks up suddenly, his eyes narrowing. \u0022Damn it, don\u0027t sneak up on me like that!\u0022\u003Cbr\u003E\u003Cbr\u003EAfter a moment, the venator regains his composure.\u0022Apologies, I\u0027ve been searching for something and haven\u0027t had much luck.  I certainly didn\u0027t expect to see someone standing over me, but I should be paying more attention.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I\u0027m Silvacis.  What brings you out into these woods?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I\u0027m rebuilding the Adventurer\u0027s Guild nearby.\u0022",
+            "next": "mention_guild_first"
+          },
+          {
+            "text": "\u0022Just exploring the area.\u0022",
+            "next": "exploring"
+          }
+        ]
+      },
+      "repeat_greeting": {
+        "text": "Silvacis looks up from his search and nods in recognition. \u0022Ah, it\u0027s you again.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Still looking for that amulet?\u0022",
+            "next": "main_hub",
+            "requireDiscussedNode": "mention_guild_first"
+          },
+          {
+            "text": "\u0022Still looking for that amulet?\u0022",
+            "next": "main_hub",
+            "requireDiscussedNode": "exploring"
+          },
+          {
+            "text": "\u0022Just passing through. Good luck with your search.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "mention_guild_first": {
+        "text": "Silvacis\u0027 eyes widen with interest. \u0022The old guild hall? Interesting... I could use the help of a guild actually. The lost item I mentioned - it\u0027s a weather-worn silver amulet. I dropped it somewhere in this cursed forest and I can\u0027t find it anywhere!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "You pull the amulet out of your satchel and present it to Silvacis.  \u0022Is this it?\u0022",
+            "next": "give_amulet_guild_known",
+            "requiredItem": "amulet",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "amulet"
+              }
+            }
+          },
+          {
+            "text": "\u0022What\u0027s so special about this amulet?\u0022",
+            "next": "amulet_importance"
+          },
+          {
+            "text": "\u0022I\u0027ll keep an eye out for it.\u0022",
+            "next": "will_search"
+          }
+        ]
+      },
+      "exploring": {
+        "text": "Silvacis nods gravely. \u0022Be careful then. These woods are dangerous... Actually, since you\u0027re here, maybe you can help me. I\u0027ve lost something important - a weather-worn silver amulet. Have you seen it?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "Is this it? (Give amulet)",
+            "next": "give_amulet_no_guild",
+            "requiredItem": "amulet",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "amulet"
+              }
+            }
+          },
+          {
+            "text": "\u0022What kind of amulet?\u0022",
+            "next": "describe_amulet_no_guild"
+          },
+          {
+            "text": "\u0022Sorry, haven\u0027t seen it.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "give_amulet_guild_known": {
+        "text": "Silvacis\u0027 face lights up with joy as he clutches the amulet. \u0022That\u0027s it! That\u0027s my amulet! Thank you so much!\u0022 He pauses, considering. \u0022You know what? I\u0027ve been alone and without purpose for too long. A guild could be exactly what I need.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022It is good to have you, Silvacis.\u0022",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "give_amulet_no_guild": {
+        "text": "Silvacis takes the amulet reverently, his eyes glistening. \u0022That\u0027s it! That\u0027s my amulet! Thank you so much! I owe you a great debt...\u0022 He looks at you appraisingly. \u0022Say, you seem capable. I don\u0027t suppose you\u0027re looking for companions? I\u0027m a skilled ranger, and I\u0027ve been thinking it\u0027s time to leave these woods.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Actually, I was very recently tasked with rebuilding the Adventurer\u0027s Guild. Interested?\u0022",
+            "next": "reveal_guild"
+          }
+        ]
+      },
+      "reveal_guild": {
+        "text": "Silvacis straightens with renewed purpose. \u0022It\u0027s been too long since I had companions or a real purpose.  Count me in.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022It is good to have you, Silvacis.\u0022",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "amulet_importance": {
+        "text": "Silvacis\u0027 expression becomes somber. \u0022It belonged to someone important to me. It\u0027s all I have left of them... Please, if you find it, bring it to me.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "You pull the amulet out of your satchel and present it to Silvacis.  \u0022Is this it?\u0022",
+            "next": "give_amulet_guild_known",
+            "requiredItem": "amulet",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "amulet"
+              }
+            }
+          },
+          {
+            "text": "\u0022I\u0027ll look for it.\u0022",
+            "next": "will_search"
+          }
+        ]
+      },
+      "will_search": {
+        "text": "Silvacis nods gratefully. \u0022Thank you. I\u0027ll keep searching here. If you find it, please bring it to me.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      },
+      "main_hub": {
+        "text": "Silvacis looks up hopefully. \u0022Have you found my amulet yet? It\u0027s a weather-worn silver piece, very important to me.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "You pull the amulet out of your satchel and present it to Silvacis. \u0022Is this it?\u0022",
+            "next": "give_amulet_return",
+            "requiredItem": "amulet",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "amulet"
+              }
+            }
+          },
+          {
+            "text": "\u0022Still looking for it.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "give_amulet_return": {
+        "text": "Silvacis takes the amulet with trembling hands. \u0022My amulet! Thank you!\u0022 He clutches it to his chest for a moment, then looks at you with determination. \u0022You know, I\u0027ve been thinking about what you said about that guild. I\u0027d like to join, if you\u0027ll have me.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022It is good to have you, Silvacis.\u0022",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "recruit_offer": {
+        "text": "Silvacis shoulders his pack with renewed energy. \u0022Lead on, Guild Master. Oh, and if you\u0027re looking for more recruits, I heard there\u0027s a fighter who camps deeper in these woods - bit of a hermit, but skilled with a blade.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "add_recruit",
+          "parameters": {
+            "class": "Venator"
+          }
+        },
+        "choices": []
+      },
+      "end": {
+        "text": "Silvacis returns to his search, his movements methodical but desperate. \u0022Please, if you find it, let me know. I\u0027ll be searching around here.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      },
+      "describe_amulet_no_guild": {
+        "text": "Silvacis\u0027 voice becomes quieter. \u0022It\u0027s a weather-worn silver amulet, quite old. It belonged to someone important to me. It\u0027s all I have left of them.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "Is this it? (Give amulet)",
+            "next": "give_amulet_no_guild",
+            "requiredItem": "amulet",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "amulet"
+              }
+            }
+          },
+          {
+            "text": "\u0022I\u0027ll keep an eye out for it.\u0022",
+            "next": "end"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "key": "Bandit",
+    "name": "Bandit",
+    "shortDescription": "A hostile bandit",
+    "description": "A rough-looking bandit blocks your path, weapon drawn.",
+    "isHostile": true,
+    "health": 8,
+    "maxHealth": 8,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 2,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 3,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 30,
+      "iron gladius": 5
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Bandit Thug",
+    "name": "Bandit Thug",
+    "shortDescription": "A hostile bandit thug",
+    "description": "A rougher-looking bandit blocks your path, weapons drawn.",
+    "isHostile": true,
+    "health": 12,
+    "maxHealth": 12,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 5,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 2,
+    "maxGold": 4,
+    "experienceReward": 40,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 40,
+      "iron gladius": 10
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Bandit Leader",
+    "name": "Bandit Leader",
+    "shortDescription": "A hostile bandit leader",
+    "description": "A roughest-looking bandit blocks your path, weapon and shield drawn.",
+    "isHostile": true,
+    "health": 18,
+    "maxHealth": 18,
+    "energy": 10,
+    "maxEnergy": 10,
+    "attackDamage": 4,
+    "defense": 1,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 2,
+    "minGold": 3,
+    "maxGold": 5,
+    "experienceReward": 60,
+    "role": "Melee",
+    "abilityNames": [
+      "Power Attack"
+    ],
+    "lootTable": {
+      "potion": 50,
+      "battle axe": 20,
+      "iron gladius": 15
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Braxus",
+    "name": "Braxus",
+    "shortDescription": "A lone fighter",
+    "description": "A grizzled warrior in worn leather armor, practicing sword forms with intense focus. Scars tell the story of countless battles.",
+    "isHostile": false,
+    "health": 15,
+    "maxHealth": 15,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 3,
+    "defense": 1,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 1,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 0,
+    "maxGold": 0,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": true,
+    "recruitClass": "Legionnaire",
+    "yieldDialogue": "You fight well. Perhaps... perhaps I was wrong about you.",
+    "acceptDialogue": "I\u0027ll head to your guild hall. You\u0027ve earned my respect.",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "Braxus stops mid-swing and turns to face you, his expression hard. \u0022Leave me be, stranger. I came to these woods for solitude, not conversation.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I\u0027m rebuilding the Adventurer\u0027s Guild. Interested?\u0022",
+            "next": "reject_guild"
+          },
+          {
+            "text": "\u0022Fair enough. I\u0027ll leave you alone.\u0022",
+            "next": "goodbye"
+          }
+        ]
+      },
+      "reject_guild": {
+        "text": "Braxus laughs bitterly. \u0022Ha! I\u0027m done taking orders. If you want me to join anything, you\u0027ll have to prove you\u0027re worth following. Draw your weapon!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "trigger_combat",
+          "parameters": {}
+        },
+        "choices": []
+      },
+      "goodbye": {
+        "text": "Braxus grunts and returns to his practice. \u0022Smart choice. Now leave me be.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Dire Wolf",
+    "name": "Dire Wolf",
+    "shortDescription": "A hostile dire wolf",
+    "description": "A huge dire wolf bares its fangs and snarls at you.",
+    "isHostile": true,
+    "health": 19,
+    "maxHealth": 19,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 6,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 2,
+    "maxGold": 4,
+    "experienceReward": 35,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Caelia",
+    "name": "Caelia",
+    "shortDescription": "High Priestess Caelia",
+    "description": "A woman of striking beauty stands before the altar, her age impossible to determine - she could be anywhere from thirty to three hundred. Golden hair cascades down her back, and her silver eyes hold an otherworldly luminescence. She wears the ornate robes of a High Priestess of Keius, marked with symbols of light and knowledge. As you approach, she turns with a knowing smile, as if she sensed your presence before you entered.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "first_greeting": {
+        "text": "The priestess regards you with eyes that seem to see more than most. \u0022Welcome to the Temple of Keius, traveler. I am Caelia, High Priestess of this sanctuary.\u0022 Her voice is melodious, almost musical.\u003Cbr\u003E\u003Cbr\u003EShe tilts her head slightly, studying you. \u0022You carry yourself like one who has seen battle. A guild master, perhaps?\u0022 A knowing smile touches her lips. \u0022My old friend Quintus mentioned that the guild might be reformed. Come seeking guidance, or merely respite?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Quintus said I could trust you. I found a translated letter with strange words - \u0027Ordo Dissolutus\u0027. What does it mean?\u0022",
+            "next": "ask_about_passphrase",
+            "requiredItem": "translated letter",
+            "requireNotDiscussedNode": "ask_about_passphrase"
+          },
+          {
+            "text": "\u0022Just looking around. Beautiful temple.\u0022",
+            "next": "end"
+          },
+          {
+            "text": "\u0022Tell me about Keius.\u0022",
+            "next": "about_keius"
+          }
+        ]
+      },
+      "repeat_greeting": {
+        "text": "Caelia\u0027s luminous eyes find yours as you approach. \u0022Welcome back, guild master.\u0022 There\u0027s a hint of warmth in her smile. \u0022Quintus speaks highly of you. How may I assist you today?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Quintus said I could trust you. I found a translated letter with strange words - \u0027Ordo Dissolutus\u0027. What does it mean?\u0022",
+            "next": "ask_about_passphrase",
+            "requiredItem": "translated letter",
+            "requireNotDiscussedNode": "ask_about_passphrase"
+          },
+          {
+            "text": "\u0022Tell me about Keius.\u0022",
+            "next": "about_keius"
+          },
+          {
+            "text": "\u0022Just passing through.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "about_keius": {
+        "text": "Caelia\u0027s expression becomes reverent. \u0022Keius is the god of light, knowledge, and truth. He teaches that understanding dispels darkness, and that wisdom is the greatest weapon against chaos.\u0022 She gestures to the temple around you. \u0022This sanctuary has stood for centuries, a beacon against ignorance and fear.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Thank you for explaining.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "ask_about_passphrase": {
+        "text": "Caelia\u0027s expression shifts immediately - surprise gives way to grim satisfaction. \u0022\u0027Ordo Dissolutus\u0027...\u0022 She exhales slowly. \u0022Then Quintus was right. You found his research.\u0022\u003Cbr\u003E\u003Cbr\u003EShe takes your arm gently, guiding you to a quieter corner of the temple. \u0022Quintus and I have been tracking this cult for decades - since before the guild fell. He was once a member himself, you know. Before politics called him to Aevoria.\u0022 Her luminous eyes bore into yours.\u003Cbr\u003E\u003Cbr\u003E\u0022The Dissolved Order worships entropy and decay. They believe the Empire is a corruption that must be... undone. For years, we\u0027ve gathered fragments - intercepted letters, translated texts, whispers in the dark. Quintus handles the political intelligence from the capital. I use the temple\u0027s network to track their movements in the provinces.\u0022\u003Cbr\u003E\u003Cbr\u003EShe lowers her voice. \u0022We found their hideout months ago. An old smuggler\u0027s cave in the Hircinian Forest, repurposed for darker purposes. But we needed proof, evidence we could bring before the Emperor.\u0022 She meets your eyes. \u0022That\u0027s where you come in. If you have the passphrase, you can infiltrate their sanctuary and find what we need.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Where exactly in the forest is this entrance?\u0022",
+            "next": "forest_location"
+          }
+        ]
+      },
+      "forest_location": {
+        "text": "\u0022Deep in the eastern reaches of the Hircinian Forest. You\u0027ll know it when you see it - a cave entrance with guards posted. They\u0027ll challenge anyone who approaches.\u0022 She places a hand on your shoulder, her touch surprisingly warm.\u003Cbr\u003E\u003Cbr\u003E\u0022Speak the passphrase, and they\u0027ll let you pass. But once inside...\u0022 She pauses, her expression grave. \u0022Quintus and I have lost agents trying to infiltrate them. You\u0027ll be on your own, but you\u0027re a guild master. You have resources we never did.\u0022\u003Cbr\u003E\u003Cbr\u003EShe squeezes your shoulder. \u0022When you find evidence of their plans - documents, correspondence, anything - bring it to Quintus in Aevoria. He\u0027ll know what to do with it. Together, we\u0027ll finally expose this threat.\u0022 Her voice drops to a whisper. \u0022May Keius light your path through the darkness ahead. You\u0027ll need all the light you can get.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Thank you, Caelia. I\u0027ll be careful.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "end": {
+        "text": "\u0022May Keius light your path.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Bandit Scout",
+    "name": "Bandit Scout",
+    "shortDescription": "A bandit scout",
+    "description": "A wiry bandit in leather armor, alert and quick on their feet. They carry a short bow and dagger.",
+    "isHostile": true,
+    "health": 35,
+    "maxHealth": 35,
+    "energy": 20,
+    "maxEnergy": 20,
+    "attackDamage": 6,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 6,
+    "damageBonus": 4,
+    "speed": 12,
+    "isBackRow": true,
+    "energyRegenPerTurn": 2,
+    "minGold": 5,
+    "maxGold": 12,
+    "experienceReward": 40,
+    "role": "Ranged",
+    "abilityNames": [
+      "Piercing Arrow"
+    ],
+    "lootTable": {
+      "potion": 30
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Bandit Cutthroat",
+    "name": "Bandit Cutthroat",
+    "shortDescription": "A bandit cutthroat",
+    "description": "A dangerous-looking bandit with multiple scars and a cruel sneer. Dual daggers hang at their belt.",
+    "isHostile": true,
+    "health": 45,
+    "maxHealth": 45,
+    "energy": 25,
+    "maxEnergy": 25,
+    "attackDamage": 8,
+    "defense": 4,
+    "damageCount": 1,
+    "damageDie": 8,
+    "damageBonus": 6,
+    "speed": 14,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 8,
+    "maxGold": 18,
+    "experienceReward": 55,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 40,
+      "energy potion": 20
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Bandit Enforcer",
+    "name": "Bandit Enforcer",
+    "shortDescription": "A bandit enforcer",
+    "description": "A heavily armored bandit wielding a large axe. This one looks like they\u0027ve seen many battles and won most of them.",
+    "isHostile": true,
+    "health": 60,
+    "maxHealth": 60,
+    "energy": 30,
+    "maxEnergy": 30,
+    "attackDamage": 10,
+    "defense": 6,
+    "damageCount": 1,
+    "damageDie": 10,
+    "damageBonus": 8,
+    "speed": 10,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 12,
+    "maxGold": 25,
+    "experienceReward": 75,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 50,
+      "energy potion": 30,
+      "battle axe": 15
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Bandit Guard",
+    "name": "Bandit Guard",
+    "shortDescription": "A bandit guard",
+    "description": "A heavily armored bandit stands guard, clearly the most formidable warrior in this section of the cave. A large iron key hangs from his belt alongside a wicked-looking axe.",
+    "isHostile": true,
+    "health": 80,
+    "maxHealth": 80,
+    "energy": 35,
+    "maxEnergy": 35,
+    "attackDamage": 12,
+    "defense": 7,
+    "damageCount": 1,
+    "damageDie": 12,
+    "damageBonus": 10,
+    "speed": 11,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 15,
+    "maxGold": 30,
+    "experienceReward": 100,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "iron key": 100,
+      "potion": 60,
+      "energy potion": 40,
+      "battle axe": 20
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Bandit Warlord",
+    "name": "Bandit Warlord",
+    "shortDescription": "The Bandit Warlord",
+    "description": "The bandit leader stands before you, clad in stolen armor and wielding a wicked-looking blade. His eyes gleam with malice and greed. This is the Warlord who has terrorized the region.",
+    "isHostile": true,
+    "health": 85,
+    "maxHealth": 85,
+    "energy": 40,
+    "maxEnergy": 40,
+    "attackDamage": 12,
+    "defense": 8,
+    "damageCount": 2,
+    "damageDie": 8,
+    "damageBonus": 10,
+    "speed": 12,
+    "isBackRow": false,
+    "energyRegenPerTurn": 2,
+    "minGold": 50,
+    "maxGold": 100,
+    "experienceReward": 150,
+    "role": "Melee",
+    "abilityNames": [
+      "Power Attack",
+      "Cleave"
+    ],
+    "lootTable": {
+      "warlord\u0027s head": 100,
+      "indecipherable letter": 100,
+      "steel gladius": 30,
+      "chainmail": 25,
+      "potion": 60,
+      "greater potion": 40
+    },
+    "preCombatDialogue": "As you step into the chamber, the Bandit Warlord rises from his makeshift throne as his enforcers on either side grab their weapons and approach you.  The Warlord eyes you with a cruel grin on his face, then speaks: \u0022So, you\u0027ve come to take all of this from me?  Let\u0027s get this over with.\u0022",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Livia",
+    "name": "Livia",
+    "shortDescription": "A woman with a bow",
+    "description": "A skilled hunter with a hunter\u0027s bow slung across her back. She eyes you warily, hand near her quiver. Her stance suggests she\u0027s been fighting for survival in these caves.",
+    "isHostile": true,
+    "health": 50,
+    "maxHealth": 50,
+    "energy": 30,
+    "maxEnergy": 30,
+    "attackDamage": 9,
+    "defense": 4,
+    "damageCount": 1,
+    "damageDie": 8,
+    "damageBonus": 7,
+    "speed": 13,
+    "isBackRow": true,
+    "energyRegenPerTurn": 2,
+    "minGold": 10,
+    "maxGold": 20,
+    "experienceReward": 60,
+    "role": "Ranged",
+    "abilityNames": [
+      "Piercing Arrow",
+      "Covering Shot"
+    ],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": true,
+    "recruitClass": "Venator",
+    "yieldDialogue": "Wait! [She lowers her bow] I surrender. I\u0027m not one of these bandits - they captured me weeks ago and forced me to stand guard. Please, let me join you. I\u0027m a skilled hunter and I know how to survive.",
+    "acceptDialogue": "Thank the gods. I won\u0027t let you down. These bandits will pay for what they\u0027ve done. [She reaches into her pouch] Here - take this bronze key. The bandits took it from me when they captured me. It unlocks the gate to the Warlord\u0027s chamber. You\u0027ll need it to reach him.",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Valeria",
+    "name": "Valeria",
+    "shortDescription": "A veteran warrior",
+    "description": "A strong woman in battle-worn armor stands at attention, clearly experienced in combat.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "Greetings! I\u0027ve been waiting for someone from the guild. Ready to serve!",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "Join the guild?",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "recruit_offer": {
+        "text": "Absolutely! I\u0027ll head to the guild hall immediately.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "add_recruit",
+          "parameters": {
+            "class": "Legionnaire"
+          }
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Darius",
+    "name": "Darius",
+    "shortDescription": "A skilled hunter",
+    "description": "A skilled archer with keen eyes scans the area, bow at the ready.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "Good timing. I was just thinking about joining an adventuring guild.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "Join us?",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "recruit_offer": {
+        "text": "Count me in. I\u0027ll make my way to the guild hall.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "add_recruit",
+          "parameters": {
+            "class": "Venator"
+          }
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Lyra",
+    "name": "Lyra",
+    "shortDescription": "A mystic",
+    "description": "A young woman in flowing robes hums softly, her hands glowing with faint magical energy.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "The stars told me you\u0027d come. I see a guild in your future... and mine.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "Will you join?",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "recruit_offer": {
+        "text": "Destiny calls. I shall follow.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "add_recruit",
+          "parameters": {
+            "class": "Oracle"
+          }
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Marcus the Bold",
+    "name": "Marcus the Bold",
+    "shortDescription": "A proud warrior",
+    "description": "A proud warrior with a stern expression stands before you, his hand resting on the pommel of his sword. Battle scars mark his arms, and his weathered armor bears the crest of a fallen legion.",
+    "isHostile": false,
+    "health": 10,
+    "maxHealth": 10,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 2,
+    "defense": 1,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 1,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 0,
+    "maxGold": 0,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": true,
+    "recruitClass": "Legionnaire",
+    "yieldDialogue": "[He lowers his sword, breathing heavily] You fight with honor. Few have bested me in single combat. The gods have spoken - I was meant to follow you.",
+    "acceptDialogue": "You have my blade, guild master. I swear by Mars himself - I will defend your guild as I once defended the Sixth Legion. Lead on, and I shall follow.",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "Marcus eyes you with a mixture of pride and wariness. \u0022So, you\u0027re the one rebuilding the old Adventurer\u0027s Guild. I\u0027ve heard whispers.\u0022\u003Cbr\u003E\u003Cbr\u003EHe crosses his arms. \u0022I served with the Sixth Legion for twenty years. Honor. Discipline. Victory. That legion is gone now - disbanded after our general fell.\u0022 His jaw tightens. \u0022I won\u0027t join just anyone\u0027s banner again.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022What would it take to earn your service?\u0022",
+            "next": "explain_honor"
+          },
+          {
+            "text": "\u0022Your loss. I don\u0027t need reluctant recruits.\u0022",
+            "next": "offended"
+          }
+        ]
+      },
+      "explain_honor": {
+        "text": "Marcus nods approvingly. \u0022The right question. I seek a leader worthy of following - someone who won\u0027t abandon their soldiers when times grow dark.\u0022\u003Cbr\u003E\u003Cbr\u003EHe draws his gladius, sunlight glinting off the well-maintained blade. \u0022Prove your strength. Best me in honorable combat, and I\u0027ll know you have what it takes. Refuse, and you\u0027re not the leader I\u0027m looking for.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I accept your challenge. Draw steel!\u0022",
+            "next": "accept_duel"
+          },
+          {
+            "text": "\u0022I don\u0027t have time for this.\u0022",
+            "next": "refuse_duel"
+          }
+        ]
+      },
+      "accept_duel": {
+        "text": "\u0022Good!\u0022 Marcus assumes a combat stance, respect flickering in his eyes. \u0022Show me the mettle of the new guild master!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "trigger_combat",
+          "parameters": {}
+        },
+        "choices": []
+      },
+      "refuse_duel": {
+        "text": "Marcus\u0027s expression hardens with disappointment. \u0022Then you\u0027re not the leader I thought you were. Leave me.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      },
+      "offended": {
+        "text": "Marcus\u0027s eyes flash with anger. \u0022Arrogant whelp! You\u0027ll regret those words!\u0022\u003Cbr\u003E\u003Cbr\u003EHe draws his sword aggressively. \u0022I\u0027ll teach you some respect!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "trigger_combat",
+          "parameters": {}
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Aria Swift",
+    "name": "Aria Swift",
+    "shortDescription": "A swift archer",
+    "description": "A lithe archer with a cocky grin leans against a tree, her hunter\u0027s bow already strung. Her movements are fluid and precise - the mark of someone who\u0027s spent years stalking prey through dense wilderness.",
+    "isHostile": false,
+    "health": 8,
+    "maxHealth": 8,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 3,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 0,
+    "maxGold": 0,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": true,
+    "recruitClass": "Venator",
+    "yieldDialogue": "[She laughs breathlessly, lowering her bow] Alright, alright! You\u0027re faster than you look. Diana\u0027s grace, I haven\u0027t had a fight that intense in months!",
+    "acceptDialogue": "You\u0027ve got my attention - and my bow. Fair warning though: I don\u0027t follow slow leaders. Keep up that pace, and we\u0027ll get along just fine. See you at the guild hall!",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "Aria\u0027s eyes light up as you approach. \u0022Well, well! Fresh meat walking through my hunting grounds.\u0022 She grins mischievously. \u0022Wait - I\u0027ve heard about you. The guild master wannabe, right?\u0022\u003Cbr\u003E\u003Cbr\u003EShe spins an arrow between her fingers with practiced ease. \u0022I\u0027ve been hunting these woods solo for three years. Bandits, beasts, bounties - you name it. Never needed a team before.\u0022 She tilts her head. \u0022But I\u0027m bored out of my mind. Maybe a guild could be... interesting.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Interested enough to join?\u0022",
+            "next": "explain_boredom"
+          },
+          {
+            "text": "\u0022A lone wolf, huh? We don\u0027t need loners.\u0022",
+            "next": "provoked"
+          }
+        ]
+      },
+      "explain_boredom": {
+        "text": "\u0022Ha! Maybe.\u0022 Aria nocks an arrow casually. \u0022But here\u0027s the thing - I\u0027m not joining some amateur operation. I need to know you can keep up.\u0022\u003Cbr\u003E\u003Cbr\u003EShe grins wolfishly. \u0022So how about this: a friendly duel. You and me. If you can match my speed, prove you\u0027re not just another plodding swordsman... then yeah, I\u0027m in. What do you say, guild master?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022You\u0027re on. Let\u0027s dance!\u0022",
+            "next": "accept_duel"
+          },
+          {
+            "text": "\u0022I don\u0027t have time for games.\u0022",
+            "next": "refuse_duel"
+          }
+        ]
+      },
+      "accept_duel": {
+        "text": "\u0022Now we\u0027re talking!\u0022 Aria takes a few steps back, grinning ear to ear. \u0022Try to keep up!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "trigger_combat",
+          "parameters": {}
+        },
+        "choices": []
+      },
+      "refuse_duel": {
+        "text": "Aria shrugs, clearly disappointed. \u0022Boring. Come back when you\u0027ve got some fire in you.\u0022\u003Cbr\u003E\u003Cbr\u003EShe turns away, already losing interest.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      },
+      "provoked": {
+        "text": "Aria\u0027s grin widens dangerously. \u0022Oh, you did NOT just say that.\u0022 She draws her bow in one smooth motion. \u0022Let me show you what this \u0027loner\u0027 can do!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "trigger_combat",
+          "parameters": {}
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Aldric the Wise",
+    "name": "Aldric the Wise",
+    "shortDescription": "An old mage",
+    "description": "An elderly mage with silver hair and penetrating eyes studies you carefully. His gnarled staff pulses with barely-contained arcane power, and ancient runes glow faintly on his weathered robes. Despite his age, there\u0027s a sharpness to his gaze that suggests a keen and dangerous mind.",
+    "isHostile": false,
+    "health": 6,
+    "maxHealth": 6,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 4,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 1,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 0,
+    "maxGold": 0,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": true,
+    "recruitClass": "Oracle",
+    "yieldDialogue": "[He leans heavily on his staff, breathing with effort] Remarkable. Your command of the arcane... and more importantly, your restraint in not delivering a killing blow... speaks to both power and wisdom. Perhaps you ARE worth following.",
+    "acceptDialogue": "I shall lend my knowledge to your guild. My days of solitary study grow lonely, and I sense great events approaching. The stars themselves whisper of change. Lead wisely, young one, and I shall stand with you.",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "The old mage regards you with calculating eyes. \u0022You carry yourself like one touched by destiny.\u0022 His voice is measured, scholarly. \u0022I am Aldric - once court wizard to House Valerius, now... merely a wanderer.\u0022\u003Cbr\u003E\u003Cbr\u003EHe taps his staff thoughtfully. \u0022I\u0027ve heard whispers of someone rebuilding the Adventurer\u0027s Guild. A bold undertaking. Foolish, perhaps... but bold nonetheless.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Would you consider joining our cause?\u0022",
+            "next": "explain_caution"
+          },
+          {
+            "text": "\u0022Foolish? Watch your tongue, old man.\u0022",
+            "next": "insulted"
+          }
+        ]
+      },
+      "explain_caution": {
+        "text": "Aldric strokes his beard. \u0022Direct. I appreciate that.\u0022 He pauses, studying you more intently. \u0022My last lord squandered my counsel, pursuing glory over wisdom. His house fell to ruin.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Before I pledge my knowledge to another... I must know you possess both strength AND judgment. A test, then - one of magical prowess and restraint.\u0022 His staff begins to glow. \u0022Face me in arcane combat. But know this: how you fight matters as much as whether you win.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I accept your test, Aldric.\u0022",
+            "next": "accept_test"
+          },
+          {
+            "text": "\u0022I don\u0027t have time for tests.\u0022",
+            "next": "refuse_test"
+          }
+        ]
+      },
+      "accept_test": {
+        "text": "\u0022Good.\u0022 Aldric\u0027s eyes gleam with approval. \u0022Let us see what you are made of.\u0022\u003Cbr\u003E\u003Cbr\u003EArcane energy crackles around his staff as he takes a defensive stance.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "trigger_combat",
+          "parameters": {}
+        },
+        "choices": []
+      },
+      "refuse_test": {
+        "text": "Aldric\u0027s expression grows cold. \u0022Then you lack the patience required for true leadership. Do not waste more of my time.\u0022\u003Cbr\u003E\u003Cbr\u003EHe turns away dismissively.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      },
+      "insulted": {
+        "text": "Aldric\u0027s eyes narrow dangerously, and power surges around him. \u0022Arrogance AND ignorance. A lethal combination.\u0022 His voice drops to a deadly whisper. \u0022Let me educate you, child!\u0022\u003Cbr\u003E\u003Cbr\u003ELightning crackles along his staff.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "trigger_combat",
+          "parameters": {}
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Thora",
+    "name": "Thora",
+    "shortDescription": "A shield-maiden",
+    "description": "A shield-maiden practices defensive stances.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "I\u0027ve been looking for a worthy guild to join. Is this it?",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "Join us!",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "recruit_offer": {
+        "text": "I\u0027m in. Let\u0027s make this guild legendary.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "add_recruit",
+          "parameters": {
+            "class": "Legionnaire"
+          }
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Fenris",
+    "name": "Fenris",
+    "shortDescription": "A beast tracker",
+    "description": "A tracker studies animal prints in the dirt, his wolf companion nearby.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "Me and my wolf are available for hire. Guild work sounds good.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "Join the guild?",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "recruit_offer": {
+        "text": "We\u0027re in. The guild hall is south of the crossroads, right?",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "add_recruit",
+          "parameters": {
+            "class": "Venator"
+          }
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Celestia",
+    "name": "Celestia",
+    "shortDescription": "A priestess",
+    "description": "A priestess meditates peacefully, surrounded by softly glowing orbs of light.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "greeting": {
+        "text": "I sense great potential in your guild. I would be honored to join.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "Please do!",
+            "next": "recruit_offer"
+          }
+        ]
+      },
+      "recruit_offer": {
+        "text": "The light guides me to your guild hall. I shall go there now.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "add_recruit",
+          "parameters": {
+            "class": "Oracle"
+          }
+        },
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Senator Quintus",
+    "name": "Senator Quintus",
+    "shortDescription": "Senator Quintus",
+    "description": "An older man with dark gray hair, dressed in the white robes and colored sashes marking him as a senator. Despite his age, his eyes are sharp and observant. He works at a desk covered in scrolls and documents.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "first_greeting": {
+        "text": "The senator looks up from his work and offers a polite nod. \u0022Greetings, traveler. I am Senator Quintus. While I serve in the capital city of Aevoria, I am native to Belum and return here often to handle administrative matters for the town.\u0022 He gestures to the documents on his desk. \u0022How may I assist you today?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Senator, I found these documents in a cultist hideout. You should see this.\u0022",
+            "next": "hideout_discovered",
+            "requiredAnyItems": [
+              "cultist orders",
+              "ritual notes",
+              "philosophical tract"
+            ]
+          },
+          {
+            "text": "\u0022I found this letter on the Bandit Warlord. Can you decipher it?\u0022",
+            "next": "give_letter",
+            "requiredItem": "indecipherable letter",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "indecipherable letter"
+              }
+            }
+          },
+          {
+            "text": "\u0022Tell me about yourself.\u0022",
+            "next": "about_quintus"
+          },
+          {
+            "text": "\u0022Just looking around. Thank you.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "repeat_greeting": {
+        "text": "Senator Quintus looks up from his paperwork. \u0022Ah, back again. How can I help you?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Senator, I found these documents in a cultist hideout. You should see this.\u0022",
+            "next": "hideout_discovered",
+            "requiredAnyItems": [
+              "cultist orders",
+              "ritual notes",
+              "philosophical tract"
+            ]
+          },
+          {
+            "text": "\u0022I found this letter on the Bandit Warlord. Can you decipher it?\u0022",
+            "next": "give_letter",
+            "requiredItem": "indecipherable letter",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "indecipherable letter"
+              }
+            }
+          },
+          {
+            "text": "\u0022Tell me about yourself.\u0022",
+            "next": "about_quintus"
+          },
+          {
+            "text": "\u0022Just looking around. Thank you.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "about_quintus": {
+        "text": "Quintus leans back in his chair. \u0022I\u0027ve spent most of my career in Aevoria, serving in the Senate. But Belum is my home, and I try to give back when I can.\u0022 A subtle smile crosses his face. \u0022I\u0027ve also maintained certain... interests from my younger days. Let\u0027s just say I\u0027ve always had an appreciation for those who venture into danger for the greater good.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I found this letter on the Bandit Warlord. Can you decipher it?\u0022",
+            "next": "give_letter",
+            "requiredItem": "indecipherable letter",
+            "action": {
+              "type": "give_item",
+              "parameters": {
+                "item": "indecipherable letter"
+              }
+            }
+          },
+          {
+            "text": "\u0022I should get going.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "give_letter": {
+        "text": "You hand the letter to Quintus. He opens it and studies it closely for several minutes, his brow furrowing in concentration. Finally, he looks up.\u003Cbr\u003E\u003Cbr\u003E\u0022Yes, I recognize this cipher. It\u0027s an old one, but I can translate it. This will take some time, though - give me a full day to work on it. Meet me back here at this time tomorrow, and I\u0027ll have it ready for you.\u0022\u003Cbr\u003E\u003Cbr\u003EHe carefully sets the letter aside on his desk.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "start_timer",
+          "parameters": {
+            "timer_id": "quintus_translation",
+            "duration_hours": "24"
+          }
+        },
+        "choices": []
+      },
+      "waiting": {
+        "text": "Quintus looks up from his work on the letter. \u0022I\u0027m still working on the translation. These ciphers take time to crack properly. Come back tomorrow, please.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I\u0027ll return later.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "translation_ready": {
+        "text": "Quintus rises as you approach, holding both the original letter and a fresh parchment with his translation. \u0022Ah, excellent timing. I\u0027ve finished the translation.\u0022 He hands you the documents.\u003Cbr\u003E\u003Cbr\u003E\u0022The letter has two parts - one asking \u0027How soon can you deliver on your part of the plan?\u0027 and the Warlord\u0027s unsent response saying he\u0027s no longer interested.\u0022\u003Cbr\u003E\u003Cbr\u003EHe taps the bottom of the page. \u0022There\u0027s a passphrase at the end: \u0027Ordo Dissolutus.\u0027 If someone is using passphrases, they\u0027re protecting something valuable.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "receive_item",
+          "parameters": {
+            "item": "translated letter"
+          }
+        },
+        "choices": [
+          {
+            "text": "\u0022Do you know who sent the original message?\u0022",
+            "next": "about_sender"
+          }
+        ]
+      },
+      "about_sender": {
+        "text": "Quintus shakes his head. \u0022The letter is unsigned, but whoever wrote it was no common criminal. The cipher itself suggests education and resources. Given the context, I\u0027d wager you\u0027re dealing with something more organized than simple bandits.\u0022 He pauses thoughtfully. \u0022Be careful out there. If this passphrase opens something, it may lead you somewhere dangerous.\u0022\u003Cbr\u003E\u003Cbr\u003EHe strokes his chin. \u0022If you\u0027re looking for answers about where to use this passphrase... you might want to speak with Caelia, the High Priestess at the Temple of Keius. She has knowledge of hidden places and ancient secrets. If anyone would know about secretive groups operating in the area, it would be her.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I\u0027ll seek her out. Thank you for your help, Senator.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "hideout_discovered": {
+        "text": "Quintus\u0027s eyes widen as he examines the documents you\u0027ve brought. \u0022By the gods... \u0027Strike at the heart,\u0027 \u0027remove the pillar,\u0027 references to the anniversary festival...\u0022\u003Cbr\u003E\u003Cbr\u003EHe spreads the papers across his desk, his expression growing darker. \u0022This is worse than I feared. This isn\u0027t just bandits or common criminals. This is an organized cult planning something catastrophic.\u0022\u003Cbr\u003E\u003Cbr\u003EHe points to symbols at the bottom of one document. \u0022These markings here - I can\u0027t decipher them alone. They appear to be religious in nature, but not from any faith I recognize.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022What do you need to figure this out?\u0022",
+            "next": "examination_time"
+          }
+        ]
+      },
+      "examination_time": {
+        "text": "Quintus gathers the documents carefully. \u0022I\u0027ll need to consult with High Priestess Caelia at the temple - she\u0027s an expert in ancient faiths and forgotten symbols. Together, we should be able to decipher these markings and understand the full scope of this threat.\u0022\u003Cbr\u003E\u003Cbr\u003EHe looks at you seriously. \u0022Give us two days to examine everything thoroughly. Meet me back at your guild hall study in 48 hours - I\u0027ll bring Caelia and we\u0027ll discuss what we\u0027ve learned. This is too important for rushed work.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "start_timer",
+          "parameters": {
+            "timer_id": "quintus_examination",
+            "duration_hours": "48"
+          }
+        },
+        "choices": [
+          {
+            "text": "\u0022I\u0027ll be there. Two days.\u0022",
+            "next": "end_examination_start"
+          }
+        ]
+      },
+      "end_examination_start": {
+        "text": "\u0022Good. Use this time to prepare yourself - I have a feeling whatever we uncover will require action.\u0022 He returns to studying the documents, already deep in thought.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      },
+      "waiting_examination": {
+        "text": "Quintus is surrounded by scrolls and ancient texts, working alongside several temple scribes. He looks up briefly. \u0022Still working on these documents. Caelia and I need more time. Meet us at your guild hall study when the two days are up.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I\u0027ll return later.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "examination_complete": {
+        "text": "Quintus looks up with urgency as you approach. \u0022We\u0027ve finished our analysis. Caelia and I are heading to your guild hall study now - what we\u0027ve discovered is... concerning. Meet us there as soon as you can. This can\u0027t wait.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022I\u0027ll head there immediately.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "end": {
+        "text": "Quintus nods courteously. \u0022Safe travels, adventurer. My door is always open if you need assistance.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Emperor Certius",
+    "name": "Emperor Certius",
+    "shortDescription": "Emperor Certius",
+    "description": "Emperor Certius Rex Maximus stands before you - a man in his sixties with commanding presence despite his age. His silver hair is crowned with a simple golden circlet, and his purple robes bear the imperial eagle. Kind eyes and laugh lines speak to a benevolent ruler, while his bearing shows the confidence of one who has shaped an empire. He exudes warmth and pride, clearly in excellent spirits.",
+    "isHostile": false,
+    "health": 0,
+    "maxHealth": 0,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 0,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "first_greeting": {
+        "text": "The Emperor rises from his throne as you enter, a warm smile crossing his weathered face. \u0022Ah, you must be the one Quintus spoke so highly of!\u0022 His voice carries the weight of authority tempered with genuine friendliness. \u0022The guild master who uncovered this cult business. Come, come - let us speak as equals. Any friend of Quintus is a friend of mine.\u0022\u003Cbr\u003E\u003Cbr\u003EHe gestures to a chair. \u0022I must confess, I\u0027m far more excited about the anniversary celebration than worried about some doomsday cult, but Quintus assures me you have urgent information. Before we discuss such grim matters, tell me - what would you like to know about your Emperor?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Your Majesty, we must discuss the cult threat immediately.\u0022",
+            "next": "cult_warning"
+          },
+          {
+            "text": "\u0022Tell me about your conquests, Emperor. Your legacy is legendary.\u0022",
+            "next": "about_conquests"
+          },
+          {
+            "text": "\u0022What are your plans for the Empire\u0027s future?\u0022",
+            "next": "future_plans"
+          },
+          {
+            "text": "\u0022If I may ask, Your Majesty, tell me about yourself personally.\u0022",
+            "next": "personal_questions"
+          }
+        ]
+      },
+      "repeat_greeting": {
+        "text": "Emperor Certius greets you warmly. \u0022Ah, guild master! Back again? I enjoy our conversations. What would you like to discuss?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Your Majesty, about the cult threat...\u0022",
+            "next": "cult_warning"
+          },
+          {
+            "text": "\u0022Tell me more about your conquests.\u0022",
+            "next": "about_conquests"
+          },
+          {
+            "text": "\u0022What are your plans for the future?\u0022",
+            "next": "future_plans"
+          },
+          {
+            "text": "\u0022I\u0027d like to know more about you personally, if that\u0027s appropriate.\u0022",
+            "next": "personal_questions"
+          },
+          {
+            "text": "\u0022Just paying my respects, Your Majesty.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "about_conquests": {
+        "text": "Certius\u0027s eyes light up with pride. \u0022Ah, the campaigns! Where to begin?\u0022 He walks to a map on the wall. \u0022When I took the throne forty years ago, the Empire was half its current size. The northern tribes raided our borders with impunity. The eastern kingdoms refused to acknowledge our sovereignty.\u0022\u003Cbr\u003E\u003Cbr\u003EHe traces routes on the map. \u0022The Northern Campaign lasted eight years. I led the Sixth and Eighth Legions personally - young and foolish, my advisors said, but we crushed the tribal alliance at the Battle of Frozen River. Twenty thousand warriors, and we routed them with only four thousand casualties.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022The eastern kingdoms fell like dominoes after that. They saw our strength and chose diplomacy over destruction. Wise of them.\u0022 He smiles. \u0022Fifteen kingdoms now pay tribute and enjoy imperial protection. Peace through strength - that\u0027s been my philosophy.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Impressive. And the southern expansion?\u0022",
+            "next": "southern_campaign"
+          },
+          {
+            "text": "\u0022You led legions personally? That\u0027s remarkable.\u0022",
+            "next": "personal_combat"
+          },
+          {
+            "text": "\u0022Thank you for sharing, Your Majesty.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "southern_campaign": {
+        "text": "\u0022Ah yes, the south!\u0022 Certius chuckles. \u0022That was... complicated. The Southern Kingdoms were more civilized, you see. Great cities, rich culture, formidable armies. We couldn\u0027t simply conquer them - we had to win them over.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I spent five years in diplomatic missions, arranging marriages between their nobles and ours, establishing trade agreements, cultural exchanges. My daughter married the Crown Prince of Solaria - creating the strongest alliance in imperial history.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Only two kingdoms refused to negotiate. They fell quickly when they realized they stood alone. Now all of the south prospers under the Imperial Peace. Trade has tripled, banditry has been eliminated, and the people are safer than ever.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Diplomacy and strength - a wise combination.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "personal_combat": {
+        "text": "The Emperor grins. \u0022Oh, in my youth I fancied myself quite the warrior! Trained since childhood in the imperial martial traditions. My father insisted that every emperor should be able to defend the Empire with sword as well as decree.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I\u0027ve scars to prove I wasn\u0027t just a figurehead at Frozen River - took an axe to the shoulder that still aches in winter. But I learned my lesson after that. A dead emperor helps no one. I left the frontline fighting to younger, more expendable commanders.\u0022\u003Cbr\u003E\u003Cbr\u003EHe laughs heartily. \u0022Though I\u0027ll admit, some nights I miss the simplicity of battle. Politics is far more treacherous than any battlefield.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022A warrior-emperor. The people are fortunate.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "future_plans": {
+        "text": "Certius settles back into his throne, expression thoughtful. \u0022The Empire is vast, but there\u0027s always more to accomplish. My immediate focus is the anniversary celebration - 1500 years of continuous civilization! We\u0027re hosting games at the Colosseum, feasts throughout the city, diplomatic envoys from every corner of the known world.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Beyond that?\u0022 He leans forward. \u0022I want to establish the Imperial Academy - a center of learning to rival the ancient schools of philosophy. Knowledge preserved and expanded for future generations.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I\u0027m also funding expeditions beyond our borders. There are lands to the far west none have explored. Imagine - expanding human knowledge itself! That would be a legacy worth leaving.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022The Imperial Academy sounds magnificent.\u0022",
+            "next": "academy_details"
+          },
+          {
+            "text": "\u0022Exploration beyond the known world is ambitious.\u0022",
+            "next": "exploration_details"
+          },
+          {
+            "text": "\u0022Noble goals, Your Majesty.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "academy_details": {
+        "text": "\u0022Isn\u0027t it though?\u0022 The Emperor\u0027s enthusiasm is infectious. \u0022I\u0027ve already commissioned the building - it will be the largest library in the world. Scholars from every discipline will teach there: mathematics, philosophy, natural sciences, engineering, medicine.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Free admission for any citizen with the aptitude, regardless of birth. Can you imagine? A farmer\u0027s son could become the Empire\u0027s greatest mathematician! That\u0027s true progress.\u0022\u003Cbr\u003E\u003Cbr\u003EHis eyes shine with excitement. \u0022Construction begins after the anniversary celebration. It\u0027s my gift to future generations - a foundation of knowledge that will outlast any military conquest.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022A lasting legacy indeed.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "exploration_details": {
+        "text": "\u0022My cartographers say there are entire continents we\u0027ve never mapped!\u0022 Certius gestures excitedly. \u0022The western ocean may lead to new lands, new peoples, new knowledge. I\u0027ve funded three expeditions already - two returned with fascinating discoveries, one is still at sea.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Think of it - what if there\u0027s an empire equal to ours across that ocean? What could we learn from them? What could we teach them? The possibilities are endless!\u0022\u003Cbr\u003E\u003Cbr\u003EHe chuckles. \u0022My advisors think I\u0027m mad, spending the treasury on ships that might never return. But what\u0027s the point of empire if not to push the boundaries of what\u0027s possible?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022An inspiring vision, Your Majesty.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "personal_questions": {
+        "text": "Certius laughs warmly. \u0022Most people are too intimidated to ask! I like your boldness. What would you like to know? I\u0027m an open book - well, mostly.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I\u0027m sixty-two years old, married to Empress Livia for forty-three wonderful years. Three children: my son Marcus commands the Tenth Legion in the north, my daughter Julia is married to the King of Solaria, and my youngest, Titus, studies philosophy and drives me mad with his abstract questions.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022I wake at dawn every day, review reports from across the Empire over breakfast, hold court until midday, then spend afternoons on whatever project captures my interest. Simple pleasures - good wine, interesting conversation, watching the sunset from the palace gardens.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022You sound like a happy man, Your Majesty.\u0022",
+            "next": "happy_emperor"
+          },
+          {
+            "text": "\u0022Tell me about the Empress.\u0022",
+            "next": "about_empress"
+          },
+          {
+            "text": "\u0022Thank you for your candor.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "happy_emperor": {
+        "text": "\u0022I am!\u0022 Certius beams. \u0022Not every emperor can say that. The crown is a burden, certainly, but it\u0027s also a privilege. I\u0027ve seen the Empire prosper, watched millions of people live better lives because of decisions I\u0027ve made.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022Yes, there are always problems - there always will be. But look at what we\u0027ve built! Fifteen hundred years of continuous civilization. Roads connecting every corner of the empire. Cities where art and knowledge flourish. Common people living in peace and prosperity.\u0022\u003Cbr\u003E\u003Cbr\u003EHe spreads his hands. \u0022How could I not be happy? I\u0027m the luckiest man alive.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022The Empire is fortunate to have you.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "about_empress": {
+        "text": "The Emperor\u0027s expression softens. \u0022Aurelia is the steel behind the throne. Where I\u0027m all grand visions and bold declarations, she\u0027s practical wisdom and careful planning. We balance each other perfectly.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022We met when I was crown prince - she was daughter of a general, brilliant and beautiful. My father approved the match for political reasons, but I fell genuinely in love. Forty-three years later, I still do.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022She\u0027ll join us for the anniversary celebration. You\u0027ll meet her - though I warn you, she\u0027s far more skeptical of your cult warnings than I am. She thinks we\u0027re both being paranoid.\u0022 He chuckles. \u0022She\u0027s probably right.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022A true partnership. That\u0027s wonderful.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "cult_warning": {
+        "text": "Certius\u0027s jovial expression becomes more serious, though you can tell he\u0027s humoring you. \u0022Yes, yes - Quintus briefed me on your discoveries. A cult planning to assassinate me during the celebration, break some ancient seals, end the world. Quite dramatic!\u0022\u003Cbr\u003E\u003Cbr\u003EHe leans back. \u0022Look, I appreciate your concern. Truly. And I\u0027ll have the Imperial Guard increase security during the games. But...\u0022 He smiles gently. \u0022I\u0027ve been emperor for forty years. There\u0027s always someone plotting assassination. The guard is the best in the world - they\u0027ll handle it.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022More importantly, I can\u0027t cancel or modify the celebration. Fifteen hundred years! Diplomatic envoys from every kingdom will be there. To show fear would be to show weakness. The Empire doesn\u0027t cower before threats.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Your Majesty, the Five Seals are real. This is apocalyptic.\u0022",
+            "next": "cult_insistence"
+          },
+          {
+            "text": "\u0022I understand your position, but please be careful.\u0022",
+            "next": "cult_acceptance"
+          }
+        ]
+      },
+      "cult_insistence": {
+        "text": "Certius regards you kindly but skeptically. \u0022The Five Seals are mythology, friend. Old legends from before the Empire. I respect that you believe otherwise - and I respect Caelia\u0027s scholarship on ancient faiths - but I cannot make decisions based on myths.\u0022\u003Cbr\u003E\u003Cbr\u003EHe stands, placing a hand on your shoulder. \u0022I tell you what - I\u0027ll let you attend the celebration. You and your party can watch for these cultists yourselves. Consider yourselves... unofficial imperial guards for the day. If you spot a genuine threat, raise the alarm. Fair enough?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "set_quest_flag",
+          "parameters": {
+            "flag": "emperor_warned",
+            "value": "true"
+          }
+        },
+        "choices": [
+          {
+            "text": "\u0022Thank you, Your Majesty. We\u0027ll be vigilant.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "cult_acceptance": {
+        "text": "\u0022I will be careful, you have my word.\u0022 Certius nods appreciatively. \u0022And I\u0027m grateful you made the journey to warn me. That shows character.\u0022\u003Cbr\u003E\u003Cbr\u003EHe considers for a moment. \u0022Tell you what - attend the celebration as my guests. You can keep watch for these cultists, and if you see anything suspicious, you\u0027ll have direct access to me. How\u0027s that?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "set_quest_flag",
+          "parameters": {
+            "flag": "emperor_warned",
+            "value": "true"
+          }
+        },
+        "choices": [
+          {
+            "text": "\u0022We\u0027d be honored, Your Majesty.\u0022",
+            "next": "return_to_greeting"
+          }
+        ]
+      },
+      "return_to_greeting": {
+        "text": "\u0022Was there anything else you wished to discuss?\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Tell me more about your conquests.\u0022",
+            "next": "about_conquests"
+          },
+          {
+            "text": "\u0022What are your plans for the future?\u0022",
+            "next": "future_plans"
+          },
+          {
+            "text": "\u0022I\u0027d like to know more about you personally.\u0022",
+            "next": "personal_questions"
+          },
+          {
+            "text": "\u0022That\u0027s all for now, Your Majesty.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "end": {
+        "text": "\u0022Excellent conversation! Feel free to explore the villa - the gardens are particularly lovely this time of year. I\u0027ll see you at the celebration!\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Cultist Scout",
+    "name": "Cultist Scout",
+    "shortDescription": "A cultist scout",
+    "description": "A lightly-armored figure in tattered robes, moving with nervous energy. Their eyes dart constantly, watching for intruders.",
+    "isHostile": true,
+    "health": 40,
+    "maxHealth": 40,
+    "energy": 20,
+    "maxEnergy": 20,
+    "attackDamage": 8,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 8,
+    "damageBonus": 6,
+    "speed": 14,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 10,
+    "maxGold": 25,
+    "experienceReward": 100,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 40,
+      "energy potion": 30,
+      "dagger": 15
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cultist Zealot",
+    "name": "Cultist Zealot",
+    "shortDescription": "A cultist zealot",
+    "description": "A robed figure clutching a profane symbol, eyes burning with fanatic devotion. Dark energy crackles around their fingertips.",
+    "isHostile": true,
+    "health": 55,
+    "maxHealth": 55,
+    "energy": 35,
+    "maxEnergy": 35,
+    "attackDamage": 10,
+    "defense": 4,
+    "damageCount": 1,
+    "damageDie": 10,
+    "damageBonus": 8,
+    "speed": 10,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 15,
+    "maxGold": 30,
+    "experienceReward": 120,
+    "role": "Ranged",
+    "abilityNames": [
+      "Entropy Bolt",
+      "Void Touch"
+    ],
+    "lootTable": {
+      "potion": 50,
+      "energy potion": 60,
+      "scroll of fireball": 20
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cultist Defacer",
+    "name": "Cultist Defacer",
+    "shortDescription": "A cultist defacer",
+    "description": "A wild-eyed cultist carrying tools of destruction - hammers, chisels, and acid vials. They exist to unmake and destroy.",
+    "isHostile": true,
+    "health": 60,
+    "maxHealth": 60,
+    "energy": 25,
+    "maxEnergy": 25,
+    "attackDamage": 11,
+    "defense": 5,
+    "damageCount": 1,
+    "damageDie": 12,
+    "damageBonus": 9,
+    "speed": 9,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 12,
+    "maxGold": 28,
+    "experienceReward": 130,
+    "role": "Melee",
+    "abilityNames": [
+      "Corrosive Strike"
+    ],
+    "lootTable": {
+      "potion": 45,
+      "antidote": 50
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cultist Philosopher",
+    "name": "Cultist Philosopher",
+    "shortDescription": "A cultist philosopher",
+    "description": "An older cultist in pristine robes, speaking in measured tones about entropy and decay. Their calm demeanor is unnerving.",
+    "isHostile": true,
+    "health": 50,
+    "maxHealth": 50,
+    "energy": 40,
+    "maxEnergy": 40,
+    "attackDamage": 7,
+    "defense": 6,
+    "damageCount": 1,
+    "damageDie": 6,
+    "damageBonus": 5,
+    "speed": 8,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 20,
+    "maxGold": 40,
+    "experienceReward": 140,
+    "role": "Support",
+    "abilityNames": [
+      "Defensive Stance"
+    ],
+    "lootTable": {
+      "energy potion": 70,
+      "greater potion": 40,
+      "scroll of protection": 25
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cultist Archivist",
+    "name": "Cultist Archivist",
+    "shortDescription": "A cultist archivist",
+    "description": "A robed figure surrounded by torn pages and ash. They carry burning torches and seem to delight in destroying written knowledge.",
+    "isHostile": true,
+    "health": 52,
+    "maxHealth": 52,
+    "energy": 30,
+    "maxEnergy": 30,
+    "attackDamage": 9,
+    "defense": 4,
+    "damageCount": 2,
+    "damageDie": 6,
+    "damageBonus": 7,
+    "speed": 11,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 15,
+    "maxGold": 35,
+    "experienceReward": 125,
+    "role": "Ranged",
+    "abilityNames": [
+      "Flame Bolt"
+    ],
+    "lootTable": {
+      "potion": 50,
+      "energy potion": 55,
+      "scroll of fireball": 30
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cultist Breaker",
+    "name": "Cultist Breaker",
+    "shortDescription": "A cultist breaker",
+    "description": "A hulking cultist wielding a massive sledgehammer. Their robes are torn, revealing scarred muscles. They live to destroy.",
+    "isHostile": true,
+    "health": 70,
+    "maxHealth": 70,
+    "energy": 20,
+    "maxEnergy": 20,
+    "attackDamage": 14,
+    "defense": 6,
+    "damageCount": 1,
+    "damageDie": 14,
+    "damageBonus": 12,
+    "speed": 7,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 18,
+    "maxGold": 35,
+    "experienceReward": 145,
+    "role": "Melee",
+    "abilityNames": [
+      "Crushing Blow"
+    ],
+    "lootTable": {
+      "potion": 60,
+      "greater potion": 35,
+      "battle axe": 25
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cultist Lieutenant",
+    "name": "Cultist Lieutenant",
+    "shortDescription": "A cultist lieutenant",
+    "description": "A scarred veteran cultist in ornate defaced robes, wielding both blade and dark magic. Their eyes hold the certainty of fanaticism.",
+    "isHostile": true,
+    "health": 75,
+    "maxHealth": 75,
+    "energy": 40,
+    "maxEnergy": 40,
+    "attackDamage": 12,
+    "defense": 7,
+    "damageCount": 2,
+    "damageDie": 8,
+    "damageBonus": 10,
+    "speed": 11,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 25,
+    "maxGold": 50,
+    "experienceReward": 160,
+    "role": "Melee",
+    "abilityNames": [
+      "Entropy Bolt",
+      "Crushing Blow"
+    ],
+    "lootTable": {
+      "greater potion": 80,
+      "greater energy potion": 60,
+      "steel gladius": 40,
+      "scroll of haste": 25
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cultist Unraveler",
+    "name": "Cultist Unraveler",
+    "shortDescription": "A cultist unraveler",
+    "description": "A hunched figure whose very presence seems to distort the air. Reality ripples around them as they chant words that unmake.",
+    "isHostile": true,
+    "health": 48,
+    "maxHealth": 48,
+    "energy": 45,
+    "maxEnergy": 45,
+    "attackDamage": 11,
+    "defense": 3,
+    "damageCount": 2,
+    "damageDie": 8,
+    "damageBonus": 8,
+    "speed": 12,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 20,
+    "maxGold": 45,
+    "experienceReward": 150,
+    "role": "Ranged",
+    "abilityNames": [
+      "Void Touch",
+      "Entropy Bolt",
+      "Flame Bolt"
+    ],
+    "lootTable": {
+      "greater energy potion": 80,
+      "elixir of vigor": 30,
+      "scroll of fireball": 35,
+      "scroll of healing": 25
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Archon Malachar",
+    "name": "Archon Malachar",
+    "shortDescription": "Archon Malachar",
+    "description": "The cult leader stands before an altar of defaced idols, radiating dark purpose. His robes are covered in symbols of entropy and decay. In his hand, a ritual dagger pulses with unnatural energy.",
+    "isHostile": true,
+    "health": 95,
+    "maxHealth": 95,
+    "energy": 50,
+    "maxEnergy": 50,
+    "attackDamage": 13,
+    "defense": 8,
+    "damageCount": 2,
+    "damageDie": 10,
+    "damageBonus": 11,
+    "speed": 13,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 50,
+    "maxGold": 100,
+    "experienceReward": 250,
+    "role": "Ranged",
+    "abilityNames": [
+      "Entropy Bolt",
+      "Void Touch",
+      "Flame Bolt"
+    ],
+    "lootTable": {
+      "ritual dagger": 100,
+      "cultist orders": 100,
+      "greater potion": 100,
+      "greater energy potion": 80,
+      "elixir of vigor": 50,
+      "scroll of haste": 40,
+      "scroll of protection": 35
+    },
+    "preCombatDialogue": "Archon Malachar turns from the altar, his eyes burning with fanatic certainty. \u0022You\u0027ve come far, but you understand nothing. The Empire built its glory on stolen foundations - ancient seals that bind what should be free. We will undo their theft. We will return everything to its natural state.\u0022 He raises the ritual dagger. \u0022Your interference ends here.\u0022",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Imperial Assassin",
+    "name": "Imperial Assassin",
+    "shortDescription": "The Imperial Assassin",
+    "description": "The assassin has discarded their imperial guard helmet, revealing a face covered in cultist tattoos. Their eyes burn with fanatic zeal. Blood - the Emperor\u0027s blood - still drips from the ornate dagger in their hand. This is a true believer, willing to die for the Unbound\u0027s cause.",
+    "isHostile": true,
+    "health": 110,
+    "maxHealth": 110,
+    "energy": 55,
+    "maxEnergy": 55,
+    "attackDamage": 15,
+    "defense": 9,
+    "damageCount": 2,
+    "damageDie": 12,
+    "damageBonus": 13,
+    "speed": 16,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 75,
+    "maxGold": 150,
+    "experienceReward": 350,
+    "role": "Melee",
+    "abilityNames": [
+      "Void Touch",
+      "Corrosive Strike",
+      "Backstab",
+      "Entropy Bolt"
+    ],
+    "lootTable": {
+      "emperor\u0027s blood dagger": 100,
+      "greater potion": 100,
+      "greater energy potion": 100,
+      "elixir of vigor": 80,
+      "scroll of haste": 60,
+      "scroll of protection": 50
+    },
+    "preCombatDialogue": "The assassin laughs, a sound of pure madness. \u0022Feel it? The first crack in the seal! Ten thousand witnesses saw him fall! Their terror, their despair - it feeds the breach!\u0022 Blood-flecked spittle flies from their lips. \u0022You think killing me matters? The work is done! The Empire\u0027s pillar has fallen! Soon the others will follow, and the Bound Ones will reshape this broken world!\u0022",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Althea",
+    "name": "Althea",
+    "shortDescription": "An imprisoned oracle",
+    "description": "A young woman in tattered oracle robes huddles in the corner of the cell. Despite obvious signs of captivity - gaunt cheeks, bruises, dirt-streaked face - her eyes still glow with an eerie inner light. She watches you with a mixture of hope and wariness, as if she\u0027s seen too many visions of betrayal to trust easily. Silver hair falls in tangles around her face, and strange rune-tattoos shimmer faintly on her forearms.",
+    "isHostile": false,
+    "health": 40,
+    "maxHealth": 40,
+    "energy": 50,
+    "maxEnergy": 50,
+    "attackDamage": 8,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 0,
+    "speed": 10,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 1,
+    "maxGold": 5,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {},
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {
+      "first_greeting": {
+        "text": "The woman in the cell rises slowly, gripping the bars for support. Her eyes - glowing with an otherworldly light - study you intensely.\u003Cbr\u003E\u003Cbr\u003E\u0022You... you\u0027re not one of them,\u0022 she says, her voice hoarse from disuse. \u0022I didn\u0027t foresee this. My visions showed only darkness and spirals... but you\u0027re here. How?\u0022\u003Cbr\u003E\u003Cbr\u003EShe seems to catch herself, taking a shaky breath. \u0022Forgive me. I am Althea. An oracle... or I was, before they took me.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {
+          "Braxus": "Braxus freezes, his face going pale. \u0022Althea...\u0022 His voice cracks. \u0022By the gods, I found you.\u0022 He grips the cell bars beside you, knuckles white. \u0022I got your letter. I\u0027ve been searching for weeks. I thought... I thought you were dead.\u0022"
+        },
+        "choices": [
+          {
+            "text": "\u0022Who took you? The cultists?\u0022",
+            "next": "ask_about_cultists"
+          },
+          {
+            "text": "\u0022Are you alright? How long have you been here?\u0022",
+            "next": "ask_about_condition"
+          }
+        ]
+      },
+      "repeat_greeting": {
+        "text": "Althea looks up as you approach the cell, a weak smile crossing her face. \u0022You came back. I... I wasn\u0027t sure you would.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Tell me more about what the cultists are planning.\u0022",
+            "next": "explain_cult_plan",
+            "requireNotDiscussedNode": "explain_cult_plan"
+          },
+          {
+            "text": "\u0022I have the cell key. Let me get you out of here.\u0022",
+            "next": "offer_recruitment",
+            "requiredItem": "cell key"
+          },
+          {
+            "text": "\u0022I need to go for now.\u0022",
+            "next": "end"
+          }
+        ]
+      },
+      "ask_about_cultists": {
+        "text": "Althea\u0027s expression darkens. \u0022The Ordo Dissolutus. The Dissolved Order. They call themselves philosophers, but they\u0027re fanatics. They worship entropy, decay, the unmaking of all things.\u0022\u003Cbr\u003E\u003Cbr\u003EShe grips the bars tighter. \u0022They took me because of my visions. They wanted to know about the seals - the ancient barriers that hold back chaos. When I wouldn\u0027t help them... they locked me here.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {
+          "Braxus": "Althea\u0027s eyes find Braxus through the bars, and tears well up. \u0022I\u0027m so sorry I left. I tried to protect you by disappearing, but...\u0022 Her voice breaks. \u0022I should have trusted you. You always said we\u0027d face danger together.\u0022"
+        },
+        "choices": [
+          {
+            "text": "\u0022What are they planning?\u0022",
+            "next": "explain_cult_plan"
+          }
+        ]
+      },
+      "ask_about_condition": {
+        "text": "Althea looks down at her tattered robes and bruised arms. \u0022I... I don\u0027t know how long it\u0027s been. Days? Weeks? Time blurs when you\u0027re locked in darkness.\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022They fed me enough to keep me alive. Questioned me endlessly about the seals, about my visions. But I wouldn\u0027t tell them what they wanted to know.\u0022\u003Cbr\u003E\u003Cbr\u003EHer glowing eyes meet yours. \u0022Thank you for asking. It\u0027s been... a very long time since anyone showed me kindness.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022What were they questioning you about?\u0022",
+            "next": "ask_about_cultists"
+          }
+        ]
+      },
+      "explain_cult_plan": {
+        "text": "Althea\u0027s eyes unfocus slightly, as if seeing something far away. \u0022They\u0027re planning something during the anniversary festival in Aevoria. When the empire celebrates, when crowds gather at the capital...\u0022\u003Cbr\u003E\u003Cbr\u003E\u0022In my visions, I saw fire and screaming. The cult intends to strike at \u0027the pillar\u0027 - they speak in metaphors, but I believe they mean someone important. Perhaps... perhaps the Emperor himself.\u0022\u003Cbr\u003E\u003Cbr\u003EShe shudders. \u0022If they weaken the seals at the same time, the chaos released by so many deaths could cascade. The barriers could fail. Ancient things that were bound long ago... they could break free.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {
+          "Braxus": "Braxus steps closer to the bars, his voice urgent. \u0022An assassination attempt on the Emperor? Althea, we can stop this together - like we should have done from the start.\u0022 He looks at you. \u0022Boss, we need to get her out of here. Then we warn Aevoria. We\u0027ll need proof, but if anyone can help us, it\u0027s her.\u0022"
+        },
+        "choices": [
+          {
+            "text": "\u0022We need to warn the Emperor. But first, let me get you out of here.\u0022",
+            "next": "offer_rescue"
+          }
+        ]
+      },
+      "offer_rescue": {
+        "text": "Althea\u0027s eyes widen. \u0022You... you\u0027d do that? You don\u0027t even know me.\u0022\u003Cbr\u003E\u003Cbr\u003EShe pauses, and for a moment her eyes glow brighter. \u0022No... wait. I see it now. You\u0027re the guild master. The one trying to rebuild what was lost.\u0022\u003Cbr\u003E\u003Cbr\u003EA genuine smile crosses her face. \u0022Perhaps the visions knew you were coming after all.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022Join my guild. Help me stop this cult and protect the empire.\u0022",
+            "next": "offer_recruitment"
+          }
+        ]
+      },
+      "offer_recruitment": {
+        "text": "You unlock the cell door with the iron key, and it swings open with a rusty creak. Althea steps out hesitantly, as if unsure her legs will hold her weight.\u003Cbr\u003E\u003Cbr\u003EShe straightens despite her weakened state, determination replacing the fear in her eyes. \u0022Yes. I will join you. My visions may be clouded, but I can see that our paths are meant to cross. Together, we can stop the Ordo Dissolutus and warn Aevoria.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "give_item",
+          "parameters": {
+            "item": "cell key"
+          }
+        },
+        "choices": [
+          {
+            "text": "\u0022Welcome to the guild.\u0022",
+            "next": "recruit_althea"
+          }
+        ]
+      },
+      "recruit_althea": {
+        "text": "Althea takes a deep breath of free air, her eyes glowing brighter. \u0022Thank you. I won\u0027t forget this. Together, we\u0027ll stop the cult and save the Empire.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "action": {
+          "type": "add_recruit",
+          "parameters": {
+            "class": "Oracle"
+          }
+        },
+        "choices": []
+      },
+      "end": {
+        "text": "Althea nods gratefully. \u0022Thank you. Be careful - the cultists are dangerous, and their leader is even more so.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      },
+      "guild_hall_greeting": {
+        "text": "Althea looks up from her meditation, her eyes glowing softly. \u0022Ah, Guild Master. The visions have been clearer since joining you. It\u0027s... comforting to have purpose again.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": [
+          {
+            "text": "\u0022How are you settling in?\u0022",
+            "next": "guild_settling"
+          },
+          {
+            "text": "\u0022I\u0027ll leave you to your meditation.\u0022",
+            "next": "guild_end"
+          }
+        ]
+      },
+      "guild_settling": {
+        "text": "Althea smiles faintly. \u0022Better than I expected. The guild feels... safe. Though I must admit, some of the others are... intense.\u0022\u003Cbr\u003E\u003Cbr\u003EShe glances across the hall. \u0022Braxus, for instance. He\u0027s still suspicious of me, I think. But his caution is understandable. Perhaps in time, he\u0027ll see I mean no harm.\u0022",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {
+          "Braxus": "From across the hall, Braxus grunts. \u0022I can hear you, oracle. And yeah, I\u0027m keeping an eye on you. Nothing personal - just don\u0027t trust magic I can\u0027t punch.\u0022 He pauses. \u0022But... you fought well in that last battle. Keep that up and we\u0027ll get along fine.\u0022"
+        },
+        "choices": [
+          {
+            "text": "\u0022You\u0027ll both fit in here just fine.\u0022",
+            "next": "guild_end"
+          }
+        ]
+      },
+      "guild_end": {
+        "text": "Althea nods and returns to her meditation, a peaceful expression on her face.",
+        "permanentlyEndsDialogue": false,
+        "partyInterjections": {},
+        "choices": []
+      }
+    }
+  },
+  {
+    "key": "Satyr",
+    "name": "Satyr",
+    "shortDescription": "A hostile satyr",
+    "description": "A wild creature with goat legs and curved horns, wielding a crude wooden club.",
+    "isHostile": true,
+    "health": 10,
+    "maxHealth": 10,
+    "energy": 5,
+    "maxEnergy": 5,
+    "attackDamage": 3,
+    "defense": 0,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 1,
+    "speed": 3,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 25,
+    "maxGold": 35,
+    "experienceReward": 5,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 20
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Harpy",
+    "name": "Harpy",
+    "shortDescription": "A hostile harpy",
+    "description": "A screeching winged creature with the body of a bird and the face of a woman.",
+    "isHostile": true,
+    "health": 12,
+    "maxHealth": 12,
+    "energy": 8,
+    "maxEnergy": 8,
+    "attackDamage": 4,
+    "defense": 1,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 2,
+    "speed": 5,
+    "isBackRow": true,
+    "energyRegenPerTurn": 2,
+    "minGold": 30,
+    "maxGold": 40,
+    "experienceReward": 6,
+    "role": "Ranged",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 25
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Giant Scorpion",
+    "name": "Giant Scorpion",
+    "shortDescription": "A hostile giant scorpion",
+    "description": "A massive scorpion with gleaming black armor and a venomous stinger.",
+    "isHostile": true,
+    "health": 15,
+    "maxHealth": 15,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 4,
+    "defense": 2,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 2,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 35,
+    "maxGold": 45,
+    "experienceReward": 7,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 30
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Skeleton Warrior",
+    "name": "Skeleton Warrior",
+    "shortDescription": "A hostile skeleton warrior",
+    "description": "An animated skeleton wielding a rusty sword and shield.",
+    "isHostile": true,
+    "health": 14,
+    "maxHealth": 14,
+    "energy": 0,
+    "maxEnergy": 0,
+    "attackDamage": 4,
+    "defense": 1,
+    "damageCount": 1,
+    "damageDie": 4,
+    "damageBonus": 2,
+    "speed": 2,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 30,
+    "maxGold": 40,
+    "experienceReward": 5,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 25
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Centaur Scout",
+    "name": "Centaur Scout",
+    "shortDescription": "A hostile centaur scout",
+    "description": "A proud centaur warrior with bow drawn, hooves pawing the ground.",
+    "isHostile": true,
+    "health": 45,
+    "maxHealth": 45,
+    "energy": 20,
+    "maxEnergy": 20,
+    "attackDamage": 8,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 6,
+    "damageBonus": 4,
+    "speed": 6,
+    "isBackRow": false,
+    "energyRegenPerTurn": 2,
+    "minGold": 100,
+    "maxGold": 120,
+    "experienceReward": 18,
+    "role": "Melee",
+    "abilityNames": [
+      "Piercing Arrow"
+    ],
+    "lootTable": {
+      "potion": 35,
+      "bronze gladius": 10
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Gorgon",
+    "name": "Gorgon",
+    "shortDescription": "A hostile gorgon",
+    "description": "A serpentine woman with writhing snakes for hair and a petrifying gaze.",
+    "isHostile": true,
+    "health": 50,
+    "maxHealth": 50,
+    "energy": 25,
+    "maxEnergy": 25,
+    "attackDamage": 9,
+    "defense": 4,
+    "damageCount": 1,
+    "damageDie": 6,
+    "damageBonus": 5,
+    "speed": 4,
+    "isBackRow": true,
+    "energyRegenPerTurn": 2,
+    "minGold": 110,
+    "maxGold": 130,
+    "experienceReward": 22,
+    "role": "Ranged",
+    "abilityNames": [
+      "Entropy Bolt"
+    ],
+    "lootTable": {
+      "potion": 40,
+      "bronze bow": 10
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Bronze Automaton",
+    "name": "Bronze Automaton",
+    "shortDescription": "A hostile bronze automaton",
+    "description": "A towering mechanical construct of bronze, eyes glowing with arcane energy.",
+    "isHostile": true,
+    "health": 60,
+    "maxHealth": 60,
+    "energy": 10,
+    "maxEnergy": 10,
+    "attackDamage": 10,
+    "defense": 7,
+    "damageCount": 1,
+    "damageDie": 8,
+    "damageBonus": 5,
+    "speed": 3,
+    "isBackRow": false,
+    "energyRegenPerTurn": 1,
+    "minGold": 120,
+    "maxGold": 140,
+    "experienceReward": 25,
+    "role": "Melee",
+    "abilityNames": [],
+    "lootTable": {
+      "potion": 45,
+      "bronze plate": 15
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Fury",
+    "name": "Fury",
+    "shortDescription": "A hostile fury",
+    "description": "A winged demon wreathed in flames, shrieking curses from the depths of Tartarus.",
+    "isHostile": true,
+    "health": 48,
+    "maxHealth": 48,
+    "energy": 30,
+    "maxEnergy": 30,
+    "attackDamage": 10,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 6,
+    "damageBonus": 6,
+    "speed": 7,
+    "isBackRow": true,
+    "energyRegenPerTurn": 2,
+    "minGold": 105,
+    "maxGold": 125,
+    "experienceReward": 20,
+    "role": "Ranged",
+    "abilityNames": [
+      "Flame Bolt"
+    ],
+    "lootTable": {
+      "potion": 40,
+      "bronze staff": 10
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Minotaur",
+    "name": "Minotaur",
+    "shortDescription": "A hostile minotaur",
+    "description": "A massive bull-headed warrior wielding a great axe, snorting with rage.",
+    "isHostile": true,
+    "health": 75,
+    "maxHealth": 75,
+    "energy": 15,
+    "maxEnergy": 15,
+    "attackDamage": 13,
+    "defense": 5,
+    "damageCount": 1,
+    "damageDie": 10,
+    "damageBonus": 7,
+    "speed": 5,
+    "isBackRow": false,
+    "energyRegenPerTurn": 2,
+    "minGold": 160,
+    "maxGold": 180,
+    "experienceReward": 40,
+    "role": "Melee",
+    "abilityNames": [
+      "Crushing Blow"
+    ],
+    "lootTable": {
+      "potion": 50,
+      "enchanted greataxe": 12
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Medusa",
+    "name": "Medusa",
+    "shortDescription": "A hostile medusa",
+    "description": "The legendary gorgon queen with serpents writhing atop her head, her gaze deadly.",
+    "isHostile": true,
+    "health": 65,
+    "maxHealth": 65,
+    "energy": 40,
+    "maxEnergy": 40,
+    "attackDamage": 11,
+    "defense": 4,
+    "damageCount": 1,
+    "damageDie": 8,
+    "damageBonus": 6,
+    "speed": 6,
+    "isBackRow": true,
+    "energyRegenPerTurn": 3,
+    "minGold": 155,
+    "maxGold": 175,
+    "experienceReward": 42,
+    "role": "Ranged",
+    "abilityNames": [
+      "Entropy Bolt",
+      "Void Touch"
+    ],
+    "lootTable": {
+      "potion": 55,
+      "enchanted bow": 12
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cyclops",
+    "name": "Cyclops",
+    "shortDescription": "A hostile cyclops",
+    "description": "A towering one-eyed giant wielding a massive club carved from a tree trunk.",
+    "isHostile": true,
+    "health": 85,
+    "maxHealth": 85,
+    "energy": 10,
+    "maxEnergy": 10,
+    "attackDamage": 15,
+    "defense": 6,
+    "damageCount": 1,
+    "damageDie": 12,
+    "damageBonus": 8,
+    "speed": 4,
+    "isBackRow": false,
+    "energyRegenPerTurn": 2,
+    "minGold": 170,
+    "maxGold": 190,
+    "experienceReward": 45,
+    "role": "Melee",
+    "abilityNames": [
+      "Power Attack"
+    ],
+    "lootTable": {
+      "potion": 60,
+      "enchanted plate": 15
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Lamia",
+    "name": "Lamia",
+    "shortDescription": "A hostile lamia",
+    "description": "A serpentine sorceress with a woman\u0027s torso and a snake\u0027s lower body, eyes glowing with dark magic.",
+    "isHostile": true,
+    "health": 60,
+    "maxHealth": 60,
+    "energy": 45,
+    "maxEnergy": 45,
+    "attackDamage": 9,
+    "defense": 3,
+    "damageCount": 1,
+    "damageDie": 6,
+    "damageBonus": 5,
+    "speed": 8,
+    "isBackRow": true,
+    "energyRegenPerTurn": 3,
+    "minGold": 150,
+    "maxGold": 170,
+    "experienceReward": 38,
+    "role": "Ranged",
+    "abilityNames": [
+      "Void Touch",
+      "Flame Bolt"
+    ],
+    "lootTable": {
+      "potion": 55,
+      "enchanted staff": 12
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Hydra",
+    "name": "Hydra",
+    "shortDescription": "A hostile hydra",
+    "description": "A multi-headed serpent with five snapping heads, each dripping with venom.",
+    "isHostile": true,
+    "health": 95,
+    "maxHealth": 95,
+    "energy": 30,
+    "maxEnergy": 30,
+    "attackDamage": 14,
+    "defense": 7,
+    "damageCount": 2,
+    "damageDie": 8,
+    "damageBonus": 6,
+    "speed": 6,
+    "isBackRow": false,
+    "energyRegenPerTurn": 2,
+    "minGold": 210,
+    "maxGold": 230,
+    "experienceReward": 70,
+    "role": "Melee",
+    "abilityNames": [
+      "Crushing Blow",
+      "Power Attack"
+    ],
+    "lootTable": {
+      "potion": 65,
+      "legendary sword": 15
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Chimera",
+    "name": "Chimera",
+    "shortDescription": "A hostile chimera",
+    "description": "A monstrous hybrid with a lion\u0027s body, goat\u0027s head, and serpent\u0027s tail, breathing fire.",
+    "isHostile": true,
+    "health": 90,
+    "maxHealth": 90,
+    "energy": 40,
+    "maxEnergy": 40,
+    "attackDamage": 13,
+    "defense": 6,
+    "damageCount": 2,
+    "damageDie": 8,
+    "damageBonus": 5,
+    "speed": 8,
+    "isBackRow": false,
+    "energyRegenPerTurn": 3,
+    "minGold": 205,
+    "maxGold": 225,
+    "experienceReward": 68,
+    "role": "Melee",
+    "abilityNames": [
+      "Flame Bolt",
+      "Power Attack"
+    ],
+    "lootTable": {
+      "potion": 65,
+      "legendary bow": 15
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Cerberus",
+    "name": "Cerberus",
+    "shortDescription": "A hostile cerberus",
+    "description": "The legendary three-headed hound of Hades, its jaws dripping with ichor.",
+    "isHostile": true,
+    "health": 100,
+    "maxHealth": 100,
+    "energy": 25,
+    "maxEnergy": 25,
+    "attackDamage": 15,
+    "defense": 8,
+    "damageCount": 3,
+    "damageDie": 6,
+    "damageBonus": 5,
+    "speed": 9,
+    "isBackRow": false,
+    "energyRegenPerTurn": 2,
+    "minGold": 220,
+    "maxGold": 240,
+    "experienceReward": 75,
+    "role": "Melee",
+    "abilityNames": [
+      "Power Attack"
+    ],
+    "lootTable": {
+      "potion": 70,
+      "legendary plate": 18
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  },
+  {
+    "key": "Titan",
+    "name": "Titan",
+    "shortDescription": "A hostile titan",
+    "description": "A colossal primordial being, towering above all others with godlike strength.",
+    "isHostile": true,
+    "health": 110,
+    "maxHealth": 110,
+    "energy": 50,
+    "maxEnergy": 50,
+    "attackDamage": 16,
+    "defense": 9,
+    "damageCount": 2,
+    "damageDie": 10,
+    "damageBonus": 8,
+    "speed": 7,
+    "isBackRow": false,
+    "energyRegenPerTurn": 3,
+    "minGold": 240,
+    "maxGold": 260,
+    "experienceReward": 100,
+    "role": "Melee",
+    "abilityNames": [
+      "Power Attack",
+      "Crushing Blow"
+    ],
+    "lootTable": {
+      "potion": 75,
+      "divine warhammer": 20
+    },
+    "preCombatDialogue": "",
+    "currentDialogueNode": "greeting",
+    "recruitableAfterDefeat": false,
+    "recruitClass": "Fighter",
+    "isVendor": false,
+    "shopInventory": {},
+    "shopPrices": {},
+    "buybackMultiplier": 0.5,
+    "dialogue": {}
+  }
+]

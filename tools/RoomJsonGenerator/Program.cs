@@ -9,10 +9,24 @@ using GuildMaster.Models;
 var repoRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
 var outPath = Path.Combine(repoRoot, "wwwroot", "data", "rooms.json");
 
+var npcsOutPath = Path.Combine(repoRoot, "wwwroot", "data", "npcs.json");
+Console.WriteLine("Generating npcs.json from legacy NPCData...");
+var legacyNpcs = NPCData.InitializeNPCsLegacy();
+var npcsJson = NpcTemplateStore.ToJson(NpcTemplateStore.ToTemplates(legacyNpcs));
+File.WriteAllText(npcsOutPath, npcsJson);
+NpcTemplateStore.Load(npcsJson);
+var npcRoundTrip = NpcTemplateStore.ToJson(NpcTemplateStore.ToTemplates(NpcTemplateStore.BuildNpcs()));
+if (npcsJson != npcRoundTrip)
+{
+    Console.WriteLine("NPC PARITY FAILED: round-trip JSON differs");
+    return 1;
+}
+Console.WriteLine($"NPC PARITY OK: {legacyNpcs.Count} NPCs round-trip identical ({npcsJson.Length:N0} chars)");
+
 Console.WriteLine("Building legacy rooms...");
 // Classification must use the SAME npcs dict the rooms were built with, so
 // ReferenceEquals can detect shared instances.
-var npcs = NPCData.InitializeNPCs();
+var npcs = NPCData.InitializeNPCsLegacy();
 var legacyRooms = RoomData.InitializeRoomsLegacy(npcs);
 
 Console.WriteLine("Classifying NPC references and serializing...");
@@ -31,8 +45,8 @@ Console.WriteLine("NPC reference modes: " + string.Join(", ", modeCounts.Select(
 Console.WriteLine("\nRunning parity check...");
 RoomTemplateStore.Load(json);
 
-var npcsA = NPCData.InitializeNPCs();
-var npcsB = NPCData.InitializeNPCs();
+var npcsA = NPCData.InitializeNPCsLegacy();
+var npcsB = NPCData.InitializeNPCsLegacy();
 var legacy = RoomData.InitializeRoomsLegacy(npcsA);
 var fromJson = RoomTemplateStore.BuildRooms(npcsB);
 

@@ -11,7 +11,21 @@ namespace GuildMaster.Data
 {
     public class NPCData
     {
+        /// <summary>
+        /// Builds NPCs from wwwroot/data/npcs.json (loaded at startup by
+        /// NpcTemplateStore). NPC content lives in that JSON now - edit it
+        /// (or use tools/ContentEditor), not this class.
+        /// </summary>
         public static Dictionary<string, NPC> InitializeNPCs()
+        {
+            return NpcTemplateStore.BuildNpcs();
+        }
+
+        /// <summary>
+        /// LEGACY code-built NPCs, kept temporarily as the source for
+        /// tools/RoomJsonGenerator and the migration parity check.
+        /// </summary>
+        public static Dictionary<string, NPC> InitializeNPCsLegacy()
         {
             var npcs = new Dictionary<string, NPC>();
        
@@ -313,7 +327,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"I have the Bandit Warlord's head.\" (Show him the head)",
                         nextNodeID = "quest_complete",
-                        IsAvailable = (inventory) => inventory.Contains("warlord's head"),
+                        RequiredItem = "warlord's head",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "warlord's head"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"Why is the gate closed?\"", nextNodeID = "explain_bandits" },
@@ -329,7 +343,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"You're not going to believe this, but I have the Warlord's head.\" (Show him)",
                         nextNodeID = "quest_complete",
-                        IsAvailable = (inventory) => inventory.Contains("warlord's head"),
+                        RequiredItem = "warlord's head",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "warlord's head"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"I could deal with these bandits.\"", nextNodeID = "offer_help" },
@@ -355,7 +369,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"I have the Bandit Warlord's head.\" (Show him)",
                         nextNodeID = "quest_complete",
-                        IsAvailable = (inventory) => inventory.Contains("warlord's head"),
+                        RequiredItem = "warlord's head",
                         Action = new DialogueAction {
                             Type = "give_item",
                             Parameters = { { "item", "warlord's head" } }
@@ -409,7 +423,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"Quintus said I could trust you. I found a translated letter with strange words - 'Ordo Dissolutus'. What does it mean?\"",
                         nextNodeID = "ask_about_passphrase",
-                        IsAvailable = (inventory) => inventory.Contains("translated letter"),
+                        RequiredItem = "translated letter",
                         RequireNotDiscussedNode = "ask_about_passphrase"
                     },
                     new DialogueNode.Choice { choiceText = "\"Just looking around. Beautiful temple.\"", nextNodeID = "end" },
@@ -426,7 +440,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"Quintus said I could trust you. I found a translated letter with strange words - 'Ordo Dissolutus'. What does it mean?\"",
                         nextNodeID = "ask_about_passphrase",
-                        IsAvailable = (inventory) => inventory.Contains("translated letter"),
+                        RequiredItem = "translated letter",
                         RequireNotDiscussedNode = "ask_about_passphrase"
                     },
                     new DialogueNode.Choice { choiceText = "\"Tell me about Keius.\"", nextNodeID = "about_keius" },
@@ -662,7 +676,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "You pull the amulet out of your satchel and present it to Silvacis.  \"Is this it?\"",
                         nextNodeID = "give_amulet_guild_known",
-                        IsAvailable = (inventory) => inventory.Contains("amulet"),
+                        RequiredItem = "amulet",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"What's so special about this amulet?\"", nextNodeID = "amulet_importance" },
@@ -678,7 +692,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "Is this it? (Give amulet)",
                         nextNodeID = "give_amulet_no_guild",
-                        IsAvailable = (inventory) => inventory.Contains("amulet"),
+                        RequiredItem = "amulet",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"What kind of amulet?\"", nextNodeID = "describe_amulet_no_guild" },
@@ -727,7 +741,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "You pull the amulet out of your satchel and present it to Silvacis.  \"Is this it?\"",
                         nextNodeID = "give_amulet_guild_known",
-                        IsAvailable = (inventory) => inventory.Contains("amulet"),
+                        RequiredItem = "amulet",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"I'll look for it.\"", nextNodeID = "will_search" }
@@ -749,7 +763,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "You pull the amulet out of your satchel and present it to Silvacis. \"Is this it?\"",
                         nextNodeID = "give_amulet_return",
-                        IsAvailable = (inventory) => inventory.Contains("amulet"),
+                        RequiredItem = "amulet",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"Still looking for it.\"", nextNodeID = "end" }
@@ -792,7 +806,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "Is this it? (Give amulet)",
                         nextNodeID = "give_amulet_no_guild",
-                        IsAvailable = (inventory) => inventory.Contains("amulet"),
+                        RequiredItem = "amulet",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "amulet"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"I'll keep an eye out for it.\"", nextNodeID = "end" }
@@ -1583,12 +1597,12 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"Senator, I found these documents in a cultist hideout. You should see this.\"",
                         nextNodeID = "hideout_discovered",
-                        IsAvailable = (inventory) => (inventory.Contains("cultist orders") || inventory.Contains("ritual notes") || inventory.Contains("philosophical tract"))
+                        RequiredAnyItems = new List<string> { "cultist orders", "ritual notes", "philosophical tract" }
                     },
                     new DialogueNode.Choice {
                         choiceText = "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
                         nextNodeID = "give_letter",
-                        IsAvailable = (inventory) => inventory.Contains("indecipherable letter"),
+                        RequiredItem = "indecipherable letter",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "indecipherable letter"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"Tell me about yourself.\"", nextNodeID = "about_quintus" },
@@ -1605,12 +1619,12 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"Senator, I found these documents in a cultist hideout. You should see this.\"",
                         nextNodeID = "hideout_discovered",
-                        IsAvailable = (inventory) => (inventory.Contains("cultist orders") || inventory.Contains("ritual notes") || inventory.Contains("philosophical tract"))
+                        RequiredAnyItems = new List<string> { "cultist orders", "ritual notes", "philosophical tract" }
                     },
                     new DialogueNode.Choice {
                         choiceText = "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
                         nextNodeID = "give_letter",
-                        IsAvailable = (inventory) => inventory.Contains("indecipherable letter"),
+                        RequiredItem = "indecipherable letter",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "indecipherable letter"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"Tell me about yourself.\"", nextNodeID = "about_quintus" },
@@ -1626,7 +1640,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"I found this letter on the Bandit Warlord. Can you decipher it?\"",
                         nextNodeID = "give_letter",
-                        IsAvailable = (inventory) => inventory.Contains("indecipherable letter"),
+                        RequiredItem = "indecipherable letter",
                         Action = new DialogueAction { Type = "give_item", Parameters = { {"item", "indecipherable letter"} } }
                     },
                     new DialogueNode.Choice { choiceText = "\"I should get going.\"", nextNodeID = "end" }
@@ -2217,7 +2231,7 @@ namespace GuildMaster.Data
                     new DialogueNode.Choice {
                         choiceText = "\"I have the cell key. Let me get you out of here.\"",
                         nextNodeID = "offer_recruitment",
-                        IsAvailable = (inventory) => inventory.Contains("cell key")
+                        RequiredItem = "cell key"
                     },
                     new DialogueNode.Choice { choiceText = "\"I need to go for now.\"", nextNodeID = "end" }
                 }

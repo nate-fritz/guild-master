@@ -15,6 +15,7 @@ using Console = System.Console;
 
 var repoRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
 var roomsJson = File.ReadAllText(Path.Combine(repoRoot, "wwwroot", "data", "rooms.json"));
+GuildMaster.Data.NpcTemplateStore.Load(File.ReadAllText(Path.Combine(repoRoot, "wwwroot", "data", "npcs.json")));
 
 var scenarios = new List<Scenario> { IntroAndTutorials(), TravelCombatSaveLoad() };
 bool allPassed = true;

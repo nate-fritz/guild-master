@@ -212,6 +212,8 @@ namespace GuildMaster.Managers
             // Build choices list first - filter by inventory AND topic tracking
             currentChoices = node.Choices.Where(choice =>
                 choice.IsAvailable(player.Inventory) &&
+                (choice.RequiredItem == null || player.Inventory.Contains(choice.RequiredItem)) &&
+                (choice.RequiredAnyItems == null || choice.RequiredAnyItems.Any(i => player.Inventory.Contains(i))) &&
                 IsChoiceAvailableByTopicTracking(choice, currentNPC.Name)).ToList();
 
             // Auto-inject shop option for vendors
@@ -731,6 +733,8 @@ namespace GuildMaster.Managers
             // Build choices list - filter by inventory AND topic tracking
             currentChoices = node.Choices.Where(choice =>
                 choice.IsAvailable(player.Inventory) &&
+                (choice.RequiredItem == null || player.Inventory.Contains(choice.RequiredItem)) &&
+                (choice.RequiredAnyItems == null || choice.RequiredAnyItems.Any(i => player.Inventory.Contains(i))) &&
                 IsChoiceAvailableByTopicTracking(choice, dialogueTreeId)).ToList();
 
             // Check if there are any choices
