@@ -21,7 +21,7 @@ namespace GuildMaster.Data
             events.Add(CreateGuildHallWelcomeEvent());
             events.Add(CreateTenthRecruitCelebrationEvent());
             events.Add(CreateGuildCouncilMeetingEvent());
-            events.Add(CreateAevoriaArrivalEvent());
+            events.Add(CreateAevorArrivalEvent());
             events.Add(CreateCelebrationStartEvent());
             events.Add(CreateAssassinationEvent());
             events.Add(CreateAftermathEvent());
@@ -146,10 +146,10 @@ namespace GuildMaster.Data
         }
 
         /// <summary>
-        /// Aevoria Arrival: Sets quest flag when arriving at Imperial Villa for the first time
+        /// Aevor Arrival: Sets quest flag when arriving at Imperial Villa for the first time
         /// Used to track arrival time for celebration countdown
         /// </summary>
-        private static EventData CreateAevoriaArrivalEvent()
+        private static EventData CreateAevorArrivalEvent()
         {
             return new EventData("aevoria_arrival", 200)  // Room 200 - Imperial Villa Grand Hall
             {
@@ -158,12 +158,12 @@ namespace GuildMaster.Data
                 DialogueTreeId = "",  // No dialogue, just sets flags
                 Conditions = new List<EventCondition>
                 {
-                    // First visit to Aevoria
+                    // First visit to Aevor
                     new EventCondition(ConditionType.FirstVisit, "aevoria_arrival", true)
                 },
                 Actions = new List<EventAction>
                 {
-                    // Set flag indicating player is in Aevoria
+                    // Set flag indicating player is in Aevor
                     new EventAction(ActionType.SetQuestFlag)
                     {
                         Parameters = new Dictionary<string, object>
@@ -291,7 +291,7 @@ namespace GuildMaster.Data
 
         /// <summary>
         /// Act II Intro: Quintus appears in guild study to explain the ongoing fight
-        /// Triggers after player returns from Aevoria
+        /// Triggers after player returns from Aevor
         /// </summary>
         private static EventData CreateActTwoIntroEvent()
         {
@@ -389,7 +389,7 @@ namespace GuildMaster.Data
                 },
                 ["explain_seals"] = new DialogueNode
                 {
-                    Text = "Caelia's silver eyes find yours. \"In the age before the Empire, five heroes bound the primordial entities that fed on chaos and fear. The Seals aren't physical objects - they're anchors of order, maintained through ritual and collective belief.\"<br><br>Quintus taps the documents. \"The cult plans to assassinate Emperor Certius during the 1500th anniversary celebration in Aevoria. Thousands of witnesses, maximum chaos and terror - they'll use that energy to crack the first seal.\"<br><br>One of your recruits speaks up, voice shaking. \"What happens if a seal breaks?\"",
+                    Text = "Caelia's silver eyes find yours. \"In the age before the Empire, five heroes bound the primordial entities that fed on chaos and fear. The Seals aren't physical objects - they're anchors of order, maintained through ritual and collective belief.\"<br><br>Quintus taps the documents. \"The cult plans to assassinate Emperor Certius during the 1500th anniversary celebration in Aevor. Thousands of witnesses, maximum chaos and terror - they'll use that energy to crack the first seal.\"<br><br>One of your recruits speaks up, voice shaking. \"What happens if a seal breaks?\"",
                     Choices = new List<DialogueNode.Choice>
                     {
                         new DialogueNode.Choice
@@ -406,14 +406,14 @@ namespace GuildMaster.Data
                     {
                         new DialogueNode.Choice
                         {
-                            choiceText = "\"Then I'll go to Aevoria and warn the Emperor.\"",
+                            choiceText = "\"Then I'll go to Aevor and warn the Emperor.\"",
                             nextNodeID = "decision_made"
                         }
                     }
                 },
                 ["decision_made"] = new DialogueNode
                 {
-                    Text = "Quintus nods with satisfaction. \"I knew we could count on you. Caelia and I will accompany you - this requires my senatorial authority and her expertise on the Seals.\"<br><br>Quintus stands, gathering the documents. \"The journey to Aevoria takes three days by the Imperial Highway. We leave immediately. Your guild members will hold the fort here while we're gone.\"<br><br>You look around at the faces of your recruits - determination mixed with fear. They know what's at stake.",
+                    Text = "Quintus nods with satisfaction. \"I knew we could count on you. Caelia and I will accompany you - this requires my senatorial authority and her expertise on the Seals.\"<br><br>Quintus stands, gathering the documents. \"The journey to Aevor takes three days by the Imperial Highway. We leave immediately. Your guild members will hold the fort here while we're gone.\"<br><br>You look around at the faces of your recruits - determination mixed with fear. They know what's at stake.",
                     Choices = new List<DialogueNode.Choice>
                     {
                         new DialogueNode.Choice
@@ -431,7 +431,7 @@ namespace GuildMaster.Data
                         Type = "force_travel",
                         Parameters = { { "room_id", "200" }, { "silent", "true" } }
                     },
-                    Choices = new List<DialogueNode.Choice>() // No choices - dialogue ends and travels to Aevoria
+                    Choices = new List<DialogueNode.Choice>() // No choices - dialogue ends and travels to Aevor
                 }
             };
             dialogueManager.RegisterEventDialogue("guild_council_meeting_dialogue", guildCouncilMeetingDialogue);
@@ -605,7 +605,7 @@ namespace GuildMaster.Data
             {
                 ["start"] = new DialogueNode
                 {
-                    Text = "You find Senator Quintus waiting in your study, a glass of wine in hand. He looks older than when you first met - the events at Aevoria have aged him. He raises the glass in grim salute as you enter.<br><br>\"Welcome back, guild master. I hope you've rested - because the real fight is only beginning.\" He sets down the glass and unfurls a map across your desk. \"I've been gathering intelligence from my contacts in the Senate and military. The Unbound are moving more boldly now, emboldened by their 'success' at Aevoria.\"",
+                    Text = "You find Senator Quintus waiting in your study, a glass of wine in hand. He looks older than when you first met - the events at Aevor have aged him. He raises the glass in grim salute as you enter.<br><br>\"Welcome back, guild master. I hope you've rested - because the real fight is only beginning.\" He sets down the glass and unfurls a map across your desk. \"I've been gathering intelligence from my contacts in the Senate and military. The Unbound are moving more boldly now, emboldened by their 'success' at Aevor.\"",
                     Choices = new List<DialogueNode.Choice>
                     {
                         new DialogueNode.Choice

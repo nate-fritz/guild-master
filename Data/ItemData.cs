@@ -50,10 +50,10 @@ namespace GuildMaster.Data
                             IsLootable = false
                         }},
                         {"dusty tome", new Item {
-                            Description = "A worn leather-bound volume. The spine reads 'Reflections on History' with smaller text beneath: 'By Alaron of the Adventurers' Guild of Aevoria.'<br><br>" +
+                            Description = "A worn leather-bound volume. The spine reads 'Reflections on History' with smaller text beneath: 'By Alaron of the Adventurers' Guild of Aevor.'<br><br>" +
                                         "\"Imperial archaeologists have unearthed numerous clay tablets and stone inscriptions that hint at civilizations far older than our own. Fragments of at least three distinct writing systems have been recovered from ruins across the empire, suggesting cultures that rose and fell over millennia. Why they vanished remains unknown. The archaeological evidence suggests catastrophic, simultaneous collapse, but the cause is lost to time.<br><br>" +
-                                        "Our modern calendar inherits its structure from these predecessor cultures, a practice begun by the first Aevorian scholars who deciphered the ancient dating systems. By their reckoning, human civilization in these lands extends back over seven thousand years, though vast stretches remain utterly dark to us.<br><br>" +
-                                        "The Aevorian Empire itself was founded some fifteen centuries ago by Emperor Praeorus, who united the coastal city-states under one rule. Since then, through conquest and consolidation, the Empire has grown to encompass nearly all known lands. The current Emperor, Certius, presides over an era of unprecedented peace and prosperity.<br><br>" +
+                                        "Our modern calendar inherits its structure from these predecessor cultures, a practice begun by the first Aevoran scholars who deciphered the ancient dating systems. By their reckoning, human civilization in these lands extends back over seven thousand years, though vast stretches remain utterly dark to us.<br><br>" +
+                                        "The Aevoran Empire itself was founded some fifteen centuries ago by Emperor Praeorus, who united the coastal city-states under one rule. Since then, through conquest and consolidation, the Empire has grown to encompass nearly all known lands. The current Emperor, Certius, presides over an era of unprecedented peace and prosperity.<br><br>" +
                                         "A curious development of recent decades: magic, once restricted to priests, military officers, and Imperial officials by ancient law, now spreads quietly among the common folk. The Empire seems content to look the other way, so long as order is maintained.<br><br>" +
                                         "For most, this is merely a few cantrips that improve their every day lives:  instantly creating a spark to start a campfire or healing minor cuts and scrapes.<br><br>" +
                                         "Others have found more creative, and often more destructive, applications for...\"<br><br>" +
@@ -346,7 +346,7 @@ namespace GuildMaster.Data
                             IsConsumable = false
                         }},
                         {"ritual notes", new Item {
-                            Description = "A collection of parchments covered in diagrams and notes:\n\n\"The seals continue to weaken. Our brothers in Aevoria report similar progress. The old barriers were meant to contain what should never have been bound. When enough seals fail, the cascade will be irreversible. Focus efforts on population centers during gatherings - the energy released accelerates our work.\"\n\nThe pages include crude drawings of seal locations and ritual circles.",
+                            Description = "A collection of parchments covered in diagrams and notes:\n\n\"The seals continue to weaken. Our brothers in Aevor report similar progress. The old barriers were meant to contain what should never have been bound. When enough seals fail, the cascade will be irreversible. Focus efforts on population centers during gatherings - the energy released accelerates our work.\"\n\nThe pages include crude drawings of seal locations and ritual circles.",
                             ShortName = "notes",
                             IsLootable = true,
                             IsConsumable = false

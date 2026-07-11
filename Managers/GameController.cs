@@ -754,7 +754,7 @@ namespace GuildMaster.Managers
         {
             var player = context.Player;
 
-            // Special handling for Aevoria Villa - resting triggers the celebration
+            // Special handling for Aevor Villa - resting triggers the celebration
             if (player.QuestFlags.ContainsKey("in_aevoria_villa") &&
                 player.QuestFlags["in_aevoria_villa"] &&
                 player.QuestFlags.ContainsKey("emperor_warned") &&

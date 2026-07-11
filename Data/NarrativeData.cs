@@ -25,7 +25,7 @@ namespace GuildMaster.Data
 
                 "So I leave you the guild - or what remains of it. I am the last member, and Guild Master, of the old Adventurer's Guild. Now the title is yours.<br><br>If you will take it.<br><br>" +
 
-                "I hope that you do. The empire's peace will not last forever, and a time is coming when protectors of the realm will be needed.<br><br>" +
+                "I hope that you do. Xanthea's long peace will not last forever, and a time is coming when protectors of the realm will be needed.<br><br>" +
 
                 "Gather like-minded souls - at least ten - and fill the coffers once more; a hundred gold would be a fine start. Saving the world is expensive work. You have a hundred days; if I survive my journey, I will write to you then.<br><br>" +
 

@@ -1966,7 +1966,7 @@
           "intact books"
         ],
         "defaultDescription": "A reading table with several intact books that survived the destruction.",
-        "lookedAtDescription": "Three books remain intact:\n\n\u0027Principles of Order\u0027 - A philosophical text. The cultists have annotated it heavily with contemptuous notes in the margins: \u0027All order is temporary,\u0027 \u0027Entropy claims all,\u0027 \u0027Why preserve what will inevitably fall?\u0027\n\n\u0027The Founding of Aevoria\u0027 - A historical text. One passage is circled in red: \u0027The five seals were placed to contain the ancient chaos. Should they fail, the empire itself would unravel.\u0027\n\n\u0027Rituals of Unbinding\u0027 - A dangerous tome. Instructions for breaking magical seals and disrupting protective wards. A bookmark marks a page titled \u0027The Festival Convergence - When barriers are weakest.\u0027",
+        "lookedAtDescription": "Three books remain intact:\n\n\u0027Principles of Order\u0027 - A philosophical text. The cultists have annotated it heavily with contemptuous notes in the margins: \u0027All order is temporary,\u0027 \u0027Entropy claims all,\u0027 \u0027Why preserve what will inevitably fall?\u0027\n\n\u0027The Founding of Aevor\u0027 - A historical text. One passage is circled in red: \u0027The five seals were placed to contain the ancient chaos. Should they fail, the empire itself would unravel.\u0027\n\n\u0027Rituals of Unbinding\u0027 - A dangerous tome. Instructions for breaking magical seals and disrupting protective wards. A bookmark marks a page titled \u0027The Festival Convergence - When barriers are weakest.\u0027",
         "isInteractable": false,
         "isHidden": false
       },
@@ -2464,8 +2464,8 @@
   {
     "numericId": 140,
     "id": "imperialHighway140",
-    "title": "Imperial Highway - Aevoria Approaches",
-    "description": "The traffic increases steadily as you travel north. Wagons laden with goods, nobles in carriages, pilgrims on foot - all making their way to or from the Eternal City. To the far north, you can just make out a change in the horizon - something massive and white that must be Aevoria itself. The capital, heart of the Empire, draws near.",
+    "title": "Imperial Highway - Aevor Approaches",
+    "description": "The traffic increases steadily as you travel north. Wagons laden with goods, nobles in carriages, pilgrims on foot - all making their way to or from the Eternal City. To the far north, you can just make out a change in the horizon - something massive and white that must be Aevor itself. The capital, heart of the Empire, draws near.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2479,7 +2479,7 @@
     "numericId": 141,
     "id": "imperialHighway141",
     "title": "Imperial Highway - Capital Road",
-    "description": "Aevoria is clearly visible now to the north - white marble buildings gleaming in the distance, the Colosseum\u0027s massive arches rising above the city walls. The highway here is immaculate, swept daily by work crews who maintain the approaches to the capital. Imperial banners flutter from posts along the road. You\u0027re in the heart of the Empire now.",
+    "description": "Aevor is clearly visible now to the north - white marble buildings gleaming in the distance, the Colosseum\u0027s massive arches rising above the city walls. The highway here is immaculate, swept daily by work crews who maintain the approaches to the capital. Imperial banners flutter from posts along the road. You\u0027re in the heart of the Empire now.",
     "exits": {},
     "items": [],
     "npcs": [],
@@ -2492,8 +2492,8 @@
   {
     "numericId": 142,
     "id": "imperialHighway142",
-    "title": "Imperial Highway - Aevoria Gates",
-    "description": "The Imperial Highway terminates at the massive western gates of Aevoria. The city walls rise fifty feet high, built from gleaming white marble that seems to glow in the sunlight. Guards in ceremonial armor stand at attention, checking travelers entering the capital. Beyond the gates, you can see the city itself - the Eternal City, fifteen centuries old, seat of imperial power. You\u0027ve arrived.",
+    "title": "Imperial Highway - Aevor Gates",
+    "description": "The Imperial Highway terminates at the massive western gates of Aevor. The city walls rise fifty feet high, built from gleaming white marble that seems to glow in the sunlight. Guards in ceremonial armor stand at attention, checking travelers entering the capital. Beyond the gates, you can see the city itself - the Eternal City, fifteen centuries old, seat of imperial power. You\u0027ve arrived.",
     "exits": {},
     "items": [],
     "npcs": [],

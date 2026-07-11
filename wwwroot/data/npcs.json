@@ -1843,7 +1843,7 @@
         ]
       },
       "ask_about_passphrase": {
-        "text": "Caelia's expression shifts immediately - surprise gives way to grim satisfaction. \"'Ordo Dissolutus'...\" She exhales slowly. \"Then Quintus was right. You found his research.\"<br><br>She takes your arm gently, guiding you to a quieter corner of the temple. \"Quintus and I have been tracking this cult for decades - since before the guild fell. He was once a member himself, you know. Before politics called him to Aevoria.\" Her luminous eyes bore into yours.<br><br>\"The Dissolved Order worships entropy and decay. They believe the Empire is a corruption that must be... undone. For years, we've gathered fragments - intercepted letters, translated texts, whispers in the dark. Quintus handles the political intelligence from the capital. I use the temple's network to track their movements in the provinces.\"<br><br>She lowers her voice. \"We found their hideout months ago. An old smuggler's cave in the Hircinian Forest, repurposed for darker purposes. But we needed proof, evidence we could bring before the Emperor.\" She meets your eyes. \"That's where you come in. If you have the passphrase, you can infiltrate their sanctuary and find what we need.\"",
+        "text": "Caelia's expression shifts immediately - surprise gives way to grim satisfaction. \"'Ordo Dissolutus'...\" She exhales slowly. \"Then Quintus was right. You found his research.\"<br><br>She takes your arm gently, guiding you to a quieter corner of the temple. \"Quintus and I have been tracking this cult for decades - since before the guild fell. He was once a member himself, you know. Before politics called him to Aevor.\" Her luminous eyes bore into yours.<br><br>\"The Dissolved Order worships entropy and decay. They believe the Empire is a corruption that must be... undone. For years, we've gathered fragments - intercepted letters, translated texts, whispers in the dark. Quintus handles the political intelligence from the capital. I use the temple's network to track their movements in the provinces.\"<br><br>She lowers her voice. \"We found their hideout months ago. An old smuggler's cave in the Hircinian Forest, repurposed for darker purposes. But we needed proof, evidence we could bring before the Emperor.\" She meets your eyes. \"That's where you come in. If you have the passphrase, you can infiltrate their sanctuary and find what we need.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -1854,7 +1854,7 @@
         ]
       },
       "forest_location": {
-        "text": "\"Deep in the eastern reaches of the Hircinian Forest. You'll know it when you see it - a cave entrance with guards posted. They'll challenge anyone who approaches.\" She places a hand on your shoulder, her touch surprisingly warm.<br><br>\"Speak the passphrase, and they'll let you pass. But once inside...\" She pauses, her expression grave. \"Quintus and I have lost agents trying to infiltrate them. You'll be on your own, but you're a guild master. You have resources we never did.\"<br><br>She squeezes your shoulder. \"When you find evidence of their plans - documents, correspondence, anything - bring it to Quintus in Aevoria. He'll know what to do with it. Together, we'll finally expose this threat.\" Her voice drops to a whisper. \"May Keius light your path through the darkness ahead. You'll need all the light you can get.\"",
+        "text": "\"Deep in the eastern reaches of the Hircinian Forest. You'll know it when you see it - a cave entrance with guards posted. They'll challenge anyone who approaches.\" She places a hand on your shoulder, her touch surprisingly warm.<br><br>\"Speak the passphrase, and they'll let you pass. But once inside...\" She pauses, her expression grave. \"Quintus and I have lost agents trying to infiltrate them. You'll be on your own, but you're a guild master. You have resources we never did.\"<br><br>She squeezes your shoulder. \"When you find evidence of their plans - documents, correspondence, anything - bring it to Quintus in Aevor. He'll know what to do with it. Together, we'll finally expose this threat.\" Her voice drops to a whisper. \"May Keius light your path through the darkness ahead. You'll need all the light you can get.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -2768,7 +2768,7 @@
     "buybackMultiplier": 0.5,
     "dialogue": {
       "first_greeting": {
-        "text": "The senator looks up from his work and offers a polite nod. \"Greetings, traveler. I am Senator Quintus. While I serve in the capital city of Aevoria, I am native to Belum and return here often to handle administrative matters for the town.\" He gestures to the documents on his desk. \"How may I assist you today?\"",
+        "text": "The senator looks up from his work and offers a polite nod. \"Greetings, traveler. I am Senator Quintus. While I serve in the capital city of Aevor, I am native to Belum and return here often to handle administrative matters for the town.\" He gestures to the documents on his desk. \"How may I assist you today?\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -2838,7 +2838,7 @@
         ]
       },
       "about_quintus": {
-        "text": "Quintus leans back in his chair. \"I've spent most of my career in Aevoria, serving in the Senate. But Belum is my home, and I try to give back when I can.\" A subtle smile crosses his face. \"I've also maintained certain... interests from my younger days. Let's just say I've always had an appreciation for those who venture into danger for the greater good.\"",
+        "text": "Quintus leans back in his chair. \"I've spent most of my career in Aevor, serving in the Senate. But Belum is my home, and I try to give back when I can.\" A subtle smile crosses his face. \"I've also maintained certain... interests from my younger days. Let's just say I've always had an appreciation for those who venture into danger for the greater good.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "choices": [
@@ -3775,10 +3775,10 @@
         ]
       },
       "explain_cult_plan": {
-        "text": "Althea's eyes unfocus slightly, as if seeing something far away. \"They're planning something during the anniversary festival in Aevoria. When the empire celebrates, when crowds gather at the capital...\"<br><br>\"In my visions, I saw fire and screaming. The cult intends to strike at 'the pillar' - they speak in metaphors, but I believe they mean someone important. Perhaps... perhaps the Emperor himself.\"<br><br>She shudders. \"If they weaken the seals at the same time, the chaos released by so many deaths could cascade. The barriers could fail. Ancient things that were bound long ago... they could break free.\"",
+        "text": "Althea's eyes unfocus slightly, as if seeing something far away. \"They're planning something during the anniversary festival in Aevor. When the empire celebrates, when crowds gather at the capital...\"<br><br>\"In my visions, I saw fire and screaming. The cult intends to strike at 'the pillar' - they speak in metaphors, but I believe they mean someone important. Perhaps... perhaps the Emperor himself.\"<br><br>She shudders. \"If they weaken the seals at the same time, the chaos released by so many deaths could cascade. The barriers could fail. Ancient things that were bound long ago... they could break free.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {
-          "Braxus": "Braxus steps closer to the bars, his voice urgent. \"An assassination attempt on the Emperor? Althea, we can stop this together - like we should have done from the start.\" He looks at you. \"Boss, we need to get her out of here. Then we warn Aevoria. We'll need proof, but if anyone can help us, it's her.\""
+          "Braxus": "Braxus steps closer to the bars, his voice urgent. \"An assassination attempt on the Emperor? Althea, we can stop this together - like we should have done from the start.\" He looks at you. \"Boss, we need to get her out of here. Then we warn Aevor. We'll need proof, but if anyone can help us, it's her.\""
         },
         "choices": [
           {
@@ -3799,7 +3799,7 @@
         ]
       },
       "offer_recruitment": {
-        "text": "You unlock the cell door with the iron key, and it swings open with a rusty creak. Althea steps out hesitantly, as if unsure her legs will hold her weight.<br><br>She straightens despite her weakened state, determination replacing the fear in her eyes. \"Yes. I will join you. My visions may be clouded, but I can see that our paths are meant to cross. Together, we can stop the Ordo Dissolutus and warn Aevoria.\"",
+        "text": "You unlock the cell door with the iron key, and it swings open with a rusty creak. Althea steps out hesitantly, as if unsure her legs will hold her weight.<br><br>She straightens despite her weakened state, determination replacing the fear in her eyes. \"Yes. I will join you. My visions may be clouded, but I can see that our paths are meant to cross. Together, we can stop the Ordo Dissolutus and warn Aevor.\"",
         "permanentlyEndsDialogue": false,
         "partyInterjections": {},
         "action": {

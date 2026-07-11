@@ -585,7 +585,7 @@ namespace GuildMaster.Managers
                             AnsiConsole.MarkupLine($"\n[#00FFFF]You travel to a new location...[/]");
                         }
 
-                        // Special cleanup for guild council meeting -> Aevoria travel
+                        // Special cleanup for guild council meeting -> Aevor travel
                         // Remove Quintus from town hall so player can't trigger old dialogue
                         if (roomId == 200 && player.QuestFlags.ContainsKey("guild_council_ready") && player.QuestFlags["guild_council_ready"])
                         {

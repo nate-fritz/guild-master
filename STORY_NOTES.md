@@ -4,13 +4,21 @@ This document captures story beats, thematic elements, symbolism, and planned fu
 
 ---
 
+## Canon Names (decided 2026-07-10)
+- **Xanthea** (zan-THEE-ah) — the realm/world; from Greek *xanthos*, "golden land". Game subtitle: "Legends of Xanthea"
+- **Aevor** (AY-vor) — the imperial capital (renamed from "Aevoria" to avoid collision with the Ends of Aevoria project); adjective **Aevoran**
+- **Belum** — starting town (unchanged)
+- "The Empire" remains the polity's informal name; Xanthea is the land it rules
+
+---
+
 ## Current Story Overview
 
 ### Act I: The Unbound Threat
 - **Summary**: The player rebuilds an abandoned Adventurer's Guild while uncovering a cult conspiracy
 - **Main Antagonist**: The Unbound (Ordo Dissolutus) - cult seeking to break the Five Seals
 - **Key NPCs**: Quintus (senator & cipher expert), Caelia (High Priestess of Keius), Emperor Certius
-- **Climax**: Emperor Certius assassinated during 1500th anniversary celebration in Aevoria
+- **Climax**: Emperor Certius assassinated during 1500th anniversary celebration in Aevor
 - **Outcome**: First seal cracks but doesn't break; new Emperor Marcellus takes throne; Senate/military infiltrated by cult
 - **Guild Status**: Player + 4 recruits (Braxus, Livia, Silvacis, Althea) + Quintus unofficially helping
 
@@ -165,7 +173,7 @@ This document captures story beats, thematic elements, symbolism, and planned fu
 - Recall command returns player here
 
 ### Imperial Highway
-- 22 rooms connecting Belum to Aevoria
+- 22 rooms connecting Belum to Aevor
 - Scenic journey showing various biomes
 - Future exploration areas branch from highway
 
@@ -197,7 +205,7 @@ This document captures story beats, thematic elements, symbolism, and planned fu
 - Dangerous terrain
 - Potential recruit location
 
-**Aevoria** (Capital)
+**Aevor** (Capital)
 - Imperial Villa (visited in Act I)
 - Colosseum (assassination site)
 - Future expanded content area
