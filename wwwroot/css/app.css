@@ -62,6 +62,35 @@ html, body {
     background-color: #333;
 }
 
+/* Combat counterpart: earlier text was pushed off the top unseen */
+.jump-pill-top {
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background-color: #262626;
+    color: #FA935F;
+    border: 1px solid #FA935F;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 0.85em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 10;
+}
+
+.jump-pill-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.jump-pill-top:hover {
+    background-color: #333;
+}
+
 .console-output {
     flex: 1;
     overflow-y: auto;

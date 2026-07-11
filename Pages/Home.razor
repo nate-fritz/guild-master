@@ -19,6 +19,7 @@
     </div>
 
     <div class="jump-pill" @onclick="JumpToPresent" title="Ctrl+End">&#9660; new text below</div>
+    <div class="jump-pill-top" @onclick="JumpToBurstStart" title="Jump to where this update began">&#9650; new text above</div>
 
     <div class="console-input">
         <span class="prompt">&gt;</span>
@@ -71,6 +72,12 @@
         await inputField.FocusAsync();
     }
 
+    private async Task JumpToBurstStart()
+    {
+        await JS.InvokeVoidAsync("gmConsole.scrollToBurstStart");
+        await inputField.FocusAsync();
+    }
+
     protected override void OnInitialized()
     {
         GameConsole.OnOutput += HandleOutput;
@@ -99,11 +106,11 @@
             await inputField.FocusAsync();
         }
 
-        // Follows output only while the player is at the bottom; scrolled-up
-        // readers stay where they are (the jump pill offers the way back).
+        // Combat renders follow the bottom (live feed); exploration renders
+        // anchor long output to the top of the new text, once per command.
         try
         {
-            await JS.InvokeVoidAsync("gmConsole.afterRender");
+            await JS.InvokeVoidAsync("gmConsole.afterRender", GameEngine.IsInCombat);
         }
         catch
         {
@@ -123,7 +130,7 @@
         GameConsole.MarkupLine("[#FA5A0A]╚██████╔╝╚██████╔╝██║███████╗██████╔╝██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║[/]");
         GameConsole.MarkupLine("[#BA3E00] ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝[/]");
         GameConsole.MarkupLine("");
-        GameConsole.MarkupLine("[#FA8448]                            A Text Adventure Game[/]");
+        GameConsole.MarkupLine("[#FA8448]                                  A Text Adventure Game[/]");
         GameConsole.MarkupLine("");
         GameConsole.MarkupLine("");
         GameConsole.MarkupLine("");
@@ -179,7 +186,7 @@
             // Submitting a command returns the view to the present and starts
             // a new output burst; whatever was unread is considered caught up.
             unreadMarkerIndex = null;
-            await JS.InvokeVoidAsync("gmConsole.beginOutput");
+            await JS.InvokeVoidAsync("gmConsole.beginOutput", GameEngine.IsInCombat);
 
             // Add non-empty commands to history
             if (!string.IsNullOrEmpty(input))

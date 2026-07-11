@@ -32,6 +32,9 @@ namespace GuildMaster.Services
         public bool IsGameStarted => gameContext?.Player != null;
 
         // Check if we're in an interactive state that displays its own status bar
+        // Combat drives different scroll UX in the UI (follow bottom, not anchor)
+        public bool IsInCombat => combatManager != null && combatManager.IsInCombat;
+
         public bool IsInInteractiveState =>
             (combatManager != null && combatManager.IsInCombat) ||
             (dialogueManager != null && dialogueManager.IsInDialogue) ||

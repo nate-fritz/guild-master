@@ -1,15 +1,22 @@
 // Console scroll/viewport helpers for the game terminal.
 //
-// Output model: when a command produces more text than fits the viewport,
-// the view anchors to the TOP of the new text (reader continues downward at
-// their own pace, "new text below" pill shows the way back). Shorter output
-// keeps the classic follow-the-bottom behavior. This replaces the old
-// "Press Enter to continue" page breaks.
+// Two output modes, chosen per render by whether combat is active:
+//
+// EXPLORATION - reading prose. When a command produces more text than fits
+// the viewport, the view anchors ONCE to the top of the new text (reader
+// continues downward; the bottom "new text below" pill offers the way back).
+//
+// COMBAT - a live feed. The view stays glued to the bottom so turns stream
+// naturally; if the burst has pushed earlier text (room description, an
+// NPC's last words) off the top unseen, a "new text above" pill appears at
+// the top and jumps back to where the burst began.
 window.gmConsole = (function () {
     let output = null;
     let dotNetRef = null;
     let pinned = true;           // view is glued to the bottom
     let burstStart = -1;         // scrollHeight when the current command was submitted
+    let anchored = false;        // this burst already anchored once (exploration)
+    let topSeen = true;          // user has viewed the start of this burst (combat)
     const PIN_THRESHOLD = 40;    // px from bottom still counting as "at bottom"
 
     function distanceFromBottom() {
@@ -23,6 +30,10 @@ window.gmConsole = (function () {
         dotNetRef?.invokeMethodAsync('OnScrollPinnedChanged', pinned);
     }
 
+    function showTopPill(show) {
+        document.querySelector('.jump-pill-top')?.classList.toggle('visible', show);
+    }
+
     function lineHeightPx() {
         const child = output.querySelector('div');
         if (child) {
@@ -33,6 +44,16 @@ window.gmConsole = (function () {
         return isNaN(fs) ? 16 : fs;
     }
 
+    function updateTopPill() {
+        // Combat-mode indicator: the burst's beginning is above the viewport
+        // and the player hasn't deliberately scrolled up to see it yet.
+        // (Only count it "seen" on an unpinned scroll-up - text that was
+        // briefly on screen while streaming past doesn't count as read.)
+        if (burstStart < 0) { showTopPill(false); return; }
+        if (!pinned && output.scrollTop <= burstStart + 4) topSeen = true;
+        showTopPill(!topSeen && output.scrollTop > burstStart + 4);
+    }
+
     return {
         init(outputElementId, ref) {
             output = document.getElementById(outputElementId);
@@ -41,27 +62,47 @@ window.gmConsole = (function () {
 
             output.addEventListener('scroll', () => {
                 setPinned(distanceFromBottom() <= PIN_THRESHOLD);
+                updateTopPill();
             });
         },
 
-        // Called when the player submits a command: return to the present and
-        // remember where the new output will begin.
-        beginOutput() {
+        // Called when the player submits a command: return to the present.
+        // Out of combat this also starts a fresh burst; during combat the
+        // burst reference stays where the FIGHT began, so "new text above"
+        // keeps pointing at the pre-combat narrative rather than resetting
+        // on every action keystroke.
+        beginOutput(combatActive) {
             if (!output) return;
             output.scrollTop = output.scrollHeight;
             setPinned(true);
-            burstStart = output.scrollHeight;
+            if (!combatActive) {
+                burstStart = output.scrollHeight;
+                anchored = false;
+                topSeen = false;
+                showTopPill(false);
+            }
         },
 
-        // Called after each Blazor render.
-        afterRender() {
-            if (!output || !pinned) return;
+        // Called after each Blazor render. combatActive selects the mode.
+        afterRender(combatActive) {
+            if (!output) return;
 
-            // If this command's output has outgrown the viewport, anchor the
-            // view to where the new text starts instead of its bottom.
-            if (burstStart >= 0) {
+            if (combatActive) {
+                // Live feed: follow the bottom while pinned, surface the
+                // top pill if the burst start has scrolled out of view
+                if (pinned) output.scrollTop = output.scrollHeight;
+                updateTopPill();
+                return;
+            }
+
+            if (!pinned) return;
+
+            // Exploration: anchor at most once per burst, then follow normally
+            if (!anchored && burstStart >= 0) {
                 const newContentHeight = output.scrollHeight - burstStart;
                 if (newContentHeight > output.clientHeight * 0.95) {
+                    anchored = true;
+                    topSeen = true;   // reader is at the burst start by definition
                     output.scrollTop = Math.max(0, burstStart - lineHeightPx());
                     setPinned(false);
                     dotNetRef?.invokeMethodAsync('OnAnchoredToNewText');
@@ -70,6 +111,15 @@ window.gmConsole = (function () {
             }
 
             output.scrollTop = output.scrollHeight;
+        },
+
+        // Top pill: jump to where this burst began (combat scrollback)
+        scrollToBurstStart() {
+            if (!output || burstStart < 0) return;
+            setPinned(false);   // unpin BEFORE the scroll so renders don't yank us down
+            output.scrollTop = Math.max(0, burstStart - lineHeightPx());
+            topSeen = true;
+            showTopPill(false);
         },
 
         scrollPage(direction) {
