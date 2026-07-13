@@ -50,6 +50,10 @@ namespace GuildMaster.Data
         public Dictionary<string, int> ShopPrices { get; set; } = new();
         public float BuybackMultiplier { get; set; } = 0.5f;
         public Dictionary<string, DialogueNodeTemplate> Dialogue { get; set; } = new();
+
+        // Authoring metadata (no gameplay effect): has a human reviewed and
+        // approved this NPC's text/dialogue? Surfaced in tools/ContentEditor.
+        public bool Reviewed { get; set; }
     }
 
     public class DialogueNodeTemplate

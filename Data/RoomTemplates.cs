@@ -28,6 +28,10 @@ namespace GuildMaster.Data
         public string? PuzzleId { get; set; }
         public bool CanRespawn { get; set; }
         public float RespawnTimeHours { get; set; } = 48f;
+
+        // Authoring metadata (no gameplay effect): has a human reviewed and
+        // approved this room's text? Surfaced in tools/ContentEditor.
+        public bool Reviewed { get; set; }
     }
 
     /// <summary>

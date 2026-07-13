@@ -56,6 +56,11 @@
       <button id="tab-npcs" onclick="setMode('npcs')">NPCs</button>
     </div>
     <input id="search" placeholder="filter...">
+    <select id="reviewFilter" style="width:100%; margin-top:6px" onchange="renderList()">
+      <option value="all">show: all</option>
+      <option value="unreviewed">show: needs review</option>
+      <option value="reviewed">show: reviewed ✓</option>
+    </select>
   </header>
   <div id="list"></div>
   <div style="padding:10px; border-top:1px solid #333;">
@@ -92,13 +97,23 @@ function setMode(m){ mode=m; sel=null; $('tab-rooms').className=m==='rooms'?'on'
   $('newbtn').textContent = m==='rooms'?'+ New Room':'+ New NPC';
   $('form').innerHTML='<p class="hint">Select an entry to edit.</p>'; $('side').innerHTML=''; renderList(); }
 
+const revMark = e => e.reviewed ? '<span style="color:#90FF90">✓</span> ' : '<span style="color:#666">○</span> ';
+function revFilter(list){
+  const f = $('reviewFilter').value;
+  return f==='all' ? list : list.filter(e => f==='reviewed' ? e.reviewed : !e.reviewed);
+}
 function renderList(){
   const q=$('search').value.toLowerCase();
   $('list').innerHTML = mode==='rooms'
-    ? rooms.filter(r=>!q||String(r.numericId).includes(q)||(r.title||'').toLowerCase().includes(q))
-        .map(r=>`<div class="item ${sel===r?'active':''}" onclick="pickRoom(${r.numericId})"><span class="rid">${r.numericId}</span>${esc(r.title)}</div>`).join('')
-    : npcs.filter(n=>!q||n.key.toLowerCase().includes(q))
-        .map((n,i)=>`<div class="item ${sel===n?'active':''}" onclick="pickNpc(${i})"><span class="rid">${n.isHostile?'⚔':n.isVendor?'🪙':'💬'}</span>${esc(n.key)}</div>`).join('');
+    ? revFilter(rooms.filter(r=>!q||String(r.numericId).includes(q)||(r.title||'').toLowerCase().includes(q)))
+        .map(r=>`<div class="item ${sel===r?'active':''}" onclick="pickRoom(${r.numericId})">${revMark(r)}<span class="rid">${r.numericId}</span>${esc(r.title)}</div>`).join('')
+    : revFilter(npcs.filter(n=>!q||n.key.toLowerCase().includes(q)))
+        .map(n=>`<div class="item ${sel===n?'active':''}" onclick="pickNpc(${npcs.indexOf(n)})">${revMark(n)}<span class="rid">${n.isHostile?'⚔':n.isVendor?'🪙':'💬'}</span>${esc(n.key)}</div>`).join('');
+}
+function reviewedBox(){
+  return `<label style="display:flex;align-items:center;gap:8px;margin-top:14px;cursor:pointer;color:${sel.reviewed?'#90FF90':'#FA935F'}">
+    <input type="checkbox" ${sel.reviewed?'checked':''} onchange="sel.reviewed=this.checked;markDirty();renderList();"
+    style="width:16px;height:16px"> text reviewed &amp; approved</label>`;
 }
 function pickRoom(id){ sel=rooms.find(r=>r.numericId===id); renderList(); renderRoomForm(); renderGraph(); }
 function pickNpc(i){ sel=npcs[i]; renderList(); renderNpcForm(); }
@@ -136,7 +151,8 @@ function renderRoomForm(){
     <label>NPCs</label>${nrefs}<button class="add-btn" onclick="(sel.npcs??=[]).push({mode:'clone',name:npcNames[0]});markDirty();renderRoomForm()">+ npc</button>
     <label>Respawn</label>
     <div class="row"><select onchange="sel.canRespawn=this.value==='true';markDirty()"><option value="false" ${!sel.canRespawn?'selected':''}>no respawn</option><option value="true" ${sel.canRespawn?'selected':''}>enemies respawn</option></select>
-    <input value="${sel.respawnTimeHours??48}" title="hours" onchange="sel.respawnTimeHours=parseFloat(this.value);markDirty()" style="flex:0 0 80px"></div>`;
+    <input value="${sel.respawnTimeHours??48}" title="hours" onchange="sel.respawnTimeHours=parseFloat(this.value);markDirty()" style="flex:0 0 80px"></div>
+    ${reviewedBox()}`;
 }
 const exitEntries=()=>Object.entries(sel.exits||{});
 function rebuildExits(e){ sel.exits=Object.fromEntries(e); markDirty(); renderRoomForm(); renderGraph(); }
@@ -186,8 +202,56 @@ function renderNpcForm(){
     <label>Loot table <span class="hint">(item / % chance)</span></label>${loot}
     <button class="add-btn" onclick="sel.lootTable['new item']=10;markDirty();renderNpcForm()">+ loot</button>
     ${sel.isVendor?`<label>Shop inventory <span class="hint">(item / price)</span></label>${shop}<button class="add-btn" onclick="sel.shopInventory['new item']=10;markDirty();renderNpcForm()">+ shop item</button>`:''}
-    <label>Pre-combat dialogue</label><input class="w100" value="${esc(sel.preCombatDialogue)}" onchange="sel.preCombatDialogue=this.value;markDirty()">`;
+    <label>Pre-combat dialogue</label><input class="w100" value="${esc(sel.preCombatDialogue)}" onchange="sel.preCombatDialogue=this.value;markDirty()">
+    ${reviewedBox()}
+    ${Object.keys(sel.dialogue||{}).length ? `<button class="primary" style="margin-top:14px" onclick="startTest()">▶ Test conversation</button>` : ''}`;
   renderDialogue();
+}
+
+/* ---------- dialogue tester ---------- */
+let testNode = null;
+function startTest(){
+  const d = sel.dialogue || {};
+  testNode = d[sel.currentDialogueNode] ? sel.currentDialogueNode : Object.keys(d)[0];
+  renderTest();
+}
+function testGo(next){
+  if (next === 'end' || !next || !sel.dialogue[next]) { testNode = '__ended__'; }
+  else testNode = next;
+  renderTest();
+}
+function renderTest(){
+  if (testNode === '__ended__') {
+    $('side').innerHTML = `<h1 style="font-size:14px">💬 Conversation test</h1>
+      <p class="hint">The conversation ends here.</p>
+      <button class="primary" onclick="startTest()">↻ Restart</button>
+      <button onclick="testNode=null;renderDialogue()">✕ Back to tree editor</button>`;
+    return;
+  }
+  const n = sel.dialogue[testNode];
+  const text = (n.text||'').replace(/<br\s*\/?>/gi, '\n');
+  const choices = (n.choices||[]).map((c,i)=>{
+    const gates = [];
+    if (c.requiredItem) gates.push(`needs ${c.requiredItem}`);
+    if (c.requiredAnyItems) gates.push(`needs one of: ${c.requiredAnyItems.join(', ')}`);
+    if (c.requireDiscussedNode) gates.push(`after "${c.requireDiscussedNode}"`);
+    if (c.requireNotDiscussedNode) gates.push(`before "${c.requireNotDiscussedNode}"`);
+    return `<div style="margin:6px 0">
+      <button style="text-align:left;width:100%" onclick="testGo('${esc(c.next??'end')}')">${i+1}. ${esc(c.text)}</button>
+      ${gates.length?`<div class="hint">🔒 ${esc(gates.join(' · '))}</div>`:''}
+      ${c.action?`<div class="hint">⚡ would run: ${esc(c.action.type)}</div>`:''}
+    </div>`;
+  }).join('');
+  $('side').innerHTML = `<h1 style="font-size:14px">💬 Conversation test — <span class="rid">${esc(testNode)}</span></h1>
+    ${n.action?`<div class="hint">⚡ node action would run: ${esc(n.action.type)}</div>`:''}
+    <div style="white-space:pre-wrap; border:1px solid #333; border-radius:4px; padding:10px; margin:8px 0; color:#FC8E6B">${esc(text)}</div>
+    ${choices || '<p class="hint">(no choices - conversation would end)</p>'}
+    ${!choices ? `<button class="primary" onclick="testGo('end')">continue →</button>` : ''}
+    <div style="margin-top:12px">
+      <button onclick="startTest()">↻ Restart</button>
+      <button onclick="testNode=null;renderDialogue()">✕ Back to tree editor</button>
+    </div>
+    <p class="hint">Gated choices (🔒) are always clickable here so you can test every branch.</p>`;
 }
 function renameKey(dict,oldK,newK){ const v=sel[dict][oldK]; delete sel[dict][oldK]; sel[dict][newK]=v; markDirty(); renderNpcForm(); }
 

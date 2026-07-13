@@ -1,6 +1,7 @@
 [
   {
     "numericId": 1,
+    "reviewed": true,
     "id": "guildHallBedroom",
     "title": "The Guild Hall - Bedroom",
     "description": "You\u0027re in a small bedroom with a bed and a nightstand.  There\u0027s a small locked chest at the foot of the bed.  There\u0027s a desk with a small copper mug sitting on it. To the east is a door that leads to a hallway.",
@@ -21,6 +22,7 @@
   },
   {
     "numericId": 2,
+    "reviewed": true,
     "id": "guildHallHallway",
     "title": "The Guild Hall - Hallway",
     "description": "You\u0027re in a narrow hallway that runs north to south.  To the west is your bedroom.  A study is to the south, and a large common area is open to the north.",
@@ -39,6 +41,7 @@
   },
   {
     "numericId": 3,
+    "reviewed": true,
     "id": "guildHallStudy",
     "title": "The Guild Hall - Study",
     "description": "You\u0027re in a dusty study filled with old books, scrolls, and other trinkets.  The hallway that you entered from is to the north.",
@@ -59,6 +62,7 @@
   },
   {
     "numericId": 4,
+    "reviewed": true,
     "id": "guildHallCommonArea",
     "title": "The Guild Hall - Common Area",
     "description": "A large common area with tables, chairs, and couches in front of a large fireplace.  You imagine this room was once quite lively, but today it sits unused.  The main door to the guildhall is to the north, and a hallway is to the south.",
@@ -81,6 +85,7 @@
   },
   {
     "numericId": 5,
+    "reviewed": true,
     "id": "guildHallFrontDoor",
     "title": "The Guild Hall - Front Door",
     "description": "You stand before a modest two-story building made of white stone with a roof of red terracotta tiles. Ivy climbs the cracked walls and the plants around the house are untamed and overgrown, but considering it\u0027s been largely abandoned in recent years, it\u0027s relatively well maintained. Two large wooden doors stand at the back of the portico at the front of the guildhall. A hanging sign sways lazily in the wind, its painted lettering worn away to the point of being indecipherable.",
@@ -98,6 +103,7 @@
   },
   {
     "numericId": 6,
+    "reviewed": true,
     "id": "guildPath",
     "title": "A Dirt Road",
     "description": "You\u0027re on a wide dirt road that runs roughly north to south.  Stagnant water pools in two deep parallel  grooves along the road where years of carts coming and going have left their mark. A dozen tall, thin, coniferous trees line either side of the road leading up to the guild hall just to the south. Further north, it looks like another road intersects with the one that you\u0027re on.",
@@ -115,6 +121,7 @@
   },
   {
     "numericId": 7,
+    "reviewed": true,
     "id": "theCrossRoads",
     "title": "A crossroads",
     "description": "Two dirt roads intersect here, creating a crossroads that extends in the four cardinal directions.  A wooden sign post has four signs pointing towards each. \u003Cbr\u003E\u003Cbr\u003ENorth:   The Town of Belum\u003Cbr\u003EEast:    Hircinian Forest\u003Cbr\u003ESouth:   [this sign looks long neglected, and can\u0027t be read]\u003Cbr\u003EWest:    Avinten Foothills",
@@ -141,6 +148,7 @@
   },
   {
     "numericId": 8,
+    "reviewed": true,
     "id": "westPath",
     "title": "A path west of the crossroads",
     "description": "You are west of The Crossroads on a wide dirt path.  In some areas, where the road is deeply pitted from use and weather, one might notice ancient cobblestone.  Further west the skyline is dominated by distant snow tipped mountains.",
@@ -158,6 +166,7 @@
   },
   {
     "numericId": 9,
+    "reviewed": true,
     "id": "westernBend",
     "title": "A bend in the road",
     "description": "The road bends sharply before resuming a west-to-east orientation.  To the west you see a nearby mountain range.  To the far east you can barely make out a crossroads.",
@@ -185,6 +194,7 @@
   },
   {
     "numericId": 10,
+    "reviewed": true,
     "id": "gaiusFarmFields",
     "title": "A farm in the Avinten foothills",
     "description": "You see fields of grain extending to the north and vineyards to the south as far as your eye can see.  Further west you see graneries and barns, stables and sheds for livestock.",
@@ -251,6 +261,7 @@
   },
   {
     "numericId": 11,
+    "reviewed": true,
     "id": "gaiusFarmHouse",
     "title": "Gaius\u0027 Farmhouse",
     "description": "A large stone house with baked clay roof tiles stands before you, surrounded by the fields and other buildings that make up Gaius\u0027 farm.  To the east are the fields, and to the west the land begins to climb upwards towards the peak of Mount Gelus.",
@@ -278,6 +289,7 @@
   },
   {
     "numericId": 12,
+    "reviewed": true,
     "id": "lowerSlopes",
     "title": "The Lower Slopes",
     "description": "Here the rolling fields of the foothills meet the base of Mount Gelus, which begins to slope sharply upward to the west.  The mountain\u0027s snow-touched peaks are nearly hidden by wispy clouds above.  The steep incline and high winds make a trek up the mountain seem ill advised.  To the south you see a cave mouth, and to the east is Gaius\u0027 farm.",
@@ -296,6 +308,7 @@
   },
   {
     "numericId": 13,
+    "reviewed": true,
     "id": "caveEntrance",
     "title": "Bandit Cave - Entrance",
     "description": "You approach the mouth of a cave that extends deep into the roots of Mount Gelus.  Flickering torches line the walls, and the smell of smoke and warm bodies hangs in the air.  Back to the north are the lower slopes of Mount Gelus, while the cave slopes downward to the south.",
@@ -322,6 +335,7 @@
   },
   {
     "numericId": 14,
+    "reviewed": true,
     "id": "caveTunnel",
     "title": "Bandit Cave - Tunnel",
     "description": "The tunnel slopes downward, the ceiling dripping with moisture. Crude wooden supports brace the walls. You hear voices echoing from deeper in the cave. The passage splits here - continuing south or branching west.",
@@ -349,6 +363,7 @@
   },
   {
     "numericId": 15,
+    "reviewed": true,
     "id": "westernBranch",
     "title": "Bandit Cave - Western Branch",
     "description": "This narrower passage winds westward. Makeshift sleeping areas line the walls - dirty bedrolls and stolen goods scattered about. Someone has been living here. The passage continues west and opens into a larger chamber.",
@@ -375,6 +390,7 @@
   },
   {
     "numericId": 16,
+    "reviewed": true,
     "id": "westernChamber",
     "title": "Bandit Cave - Western Chamber",
     "description": "A natural chamber opens up here, its high ceiling lost in darkness. Crates of stolen supplies are stacked against the walls - food, weapons, and trade goods taken from travelers. The bandits have made this their storage room. The tunnel continues west into deeper darkness.",
@@ -401,6 +417,7 @@
   },
   {
     "numericId": 17,
+    "reviewed": true,
     "id": "darkPassage",
     "title": "Bandit Cave - Dark Passage",
     "description": "The torches are fewer here, leaving long stretches of shadow. Your footsteps echo ominously. Blood stains mark the floor, evidence of past violence. The passage slopes further downward to the south, while a faint light glows from the north.",
@@ -423,6 +440,7 @@
   },
   {
     "numericId": 18,
+    "reviewed": true,
     "id": "deepCave",
     "title": "Bandit Cave - Deep Cavern",
     "description": "You\u0027ve descended deep into the mountain. The air here is cold and still. Strange rock formations create eerie shapes in the torchlight. Water drips steadily somewhere in the darkness. A massive iron gate blocks the passage east. The way north leads back toward the cave exit.",
@@ -460,6 +478,7 @@
   },
   {
     "numericId": 19,
+    "reviewed": true,
     "id": "floodedChamber",
     "title": "Bandit Cave - Flooded Chamber",
     "description": "An underground stream flows through this chamber, the water black and swift. A narrow ledge runs along the eastern wall. Someone is standing guard here - a woman with a bow. She doesn\u0027t look like the other bandits. The only way forward is west, across a rickety wooden bridge.",
@@ -482,6 +501,7 @@
   },
   {
     "numericId": 20,
+    "reviewed": true,
     "id": "undergroundRiver",
     "title": "Bandit Cave - Underground River",
     "description": "A narrow chasm opens up in the middle of this cavern, with a rickety looking wood and rope bridge spanning across it. It\u0027s too dark to see the bottom of the chasm, but you can faintly hear the flowing water of an underground river far below you. A bronze gate blocks the passage west. To the north is the way back toward the cave\u0027s entrance.",
