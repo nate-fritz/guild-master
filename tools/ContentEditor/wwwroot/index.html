@@ -164,18 +164,73 @@ function addExit(){ const e=exitEntries(); const used=e.map(x=>x[0]); e.push([DI
 function renderGraph(){
   if(mode!=='rooms'||!sel) return;
   const byId=Object.fromEntries(rooms.map(r=>[r.numericId,r]));
-  const root=sel.numericId, depth={[root]:0}, cols={0:[root]}, seen=new Set([root]);
-  let q=[root];
-  while(q.length){ const c=q.shift(); for(const t of Object.values(byId[c]?.exits||{})){ if(!seen.has(t)&&byId[t]){ seen.add(t); depth[t]=depth[c]+1; (cols[depth[t]]??=[]).push(t); q.push(t);} } }
-  const W=170,H=52,pos={}; for(const[d,ids]of Object.entries(cols)) ids.forEach((id,i)=>pos[id]=[30+d*W,30+i*H]);
-  let edges='',nodes='';
-  for(const id of seen){ for(const[dir,t]of Object.entries(byId[id].exits||{})){ const broken=!byId[t];
-      if(pos[t]||broken){ const[x1,y1]=pos[id],[x2,y2]=pos[t]||[x1+60,y1+30];
-        edges+=`<line x1="${x1+65}" y1="${y1+14}" x2="${x2??x1}" y2="${y2??y1}" stroke="${broken?'#FF4444':'#444'}"/>`; } }
-    nodes+=`<g onclick="pickRoom(${id})" style="cursor:pointer"><rect x="${pos[id][0]}" y="${pos[id][1]}" width="130" height="28" rx="4" fill="${id===sel.numericId?'#332211':'#1e1e1e'}" stroke="${id===sel.numericId?'#FA935F':'#555'}"/><text x="${pos[id][0]+6}" y="${pos[id][1]+18}" font-size="10" fill="#e0e0e0">${id} ${esc((byId[id].title||'').slice(0,14))}</text></g>`; }
-  const maxRow=Math.max(1,...Object.values(cols).map(c=>c.length));
-  $('side').innerHTML=`<svg width="${30+Object.keys(cols).length*W+150}" height="${60+maxRow*H}">${edges}${nodes}</svg>
-    <p class="hint">Rooms reachable from the selected room. Red = broken exit. Click to edit.</p>`;
+  const DIR={north:[0,-1],south:[0,1],east:[1,0],west:[-1,0]};
+  const MAXD=3, CW=195, CH=95, NW=165, NH=52, PAD=24;
+
+  // Place rooms on a compass grid, selected room at origin. First room to
+  // claim a cell wins (the world isn't always euclidean).
+  const placed={ [sel.numericId]:[0,0] }, cellOf={'0,0':sel.numericId};
+  const q=[[sel.numericId,0,0,0]];
+  while(q.length){
+    const [id,x,y,d]=q.shift();
+    if(d>=MAXD) continue;
+    for(const [dir,[dx,dy]] of Object.entries(DIR)){
+      const t=byId[id]?.exits?.[dir];
+      if(t==null || !byId[t] || placed[t]!=null) continue;
+      const key=(x+dx)+','+(y+dy);
+      if(cellOf[key]!=null) continue;
+      placed[t]=[x+dx,y+dy]; cellOf[key]=t; q.push([t,x+dx,y+dy,d+1]);
+    }
+  }
+
+  const xs=Object.values(placed).map(p=>p[0]), ys=Object.values(placed).map(p=>p[1]);
+  const minX=Math.min(...xs), minY=Math.min(...ys);
+  const px=(x,y)=>[PAD+(x-minX)*CW, PAD+(y-minY)*CH];
+  const center=(id)=>{ const [x,y]=px(...placed[id]); return [x+NW/2, y+NH/2]; };
+
+  let edges='', nodes='';
+  const drawn=new Set();
+  for(const [idStr,[x,y]] of Object.entries(placed)){
+    const id=+idStr, r=byId[id], [X,Y]=px(x,y);
+    for(const [dir,[dx,dy]] of Object.entries(DIR)){
+      const t=r.exits?.[dir];
+      if(t==null) continue;
+      const [ex,ey]=[X+NW/2+dx*(NW/2), Y+NH/2+dy*(NH/2)];   // edge midpoint of this node
+      if(!byId[t]){   // broken exit
+        edges+=`<line x1="${ex}" y1="${ey}" x2="${ex+dx*28}" y2="${ey+dy*28}" stroke="#FF4444" stroke-width="2"/>
+                <text x="${ex+dx*32-6}" y="${ey+dy*32+4}" fill="#FF4444" font-size="10">${t}?</text>`;
+        continue;
+      }
+      if(placed[t]){
+        const [tx,ty]=placed[t];
+        const pairKey=[Math.min(id,t),Math.max(id,t),dir==='north'||dir==='south'?'v':'h'].join('|');
+        if(drawn.has(pairKey)) continue; drawn.add(pairKey);
+        if(tx===x+dx && ty===y+dy){   // sits where the compass says
+          const [cx2,cy2]=center(t);
+          edges+=`<line x1="${ex}" y1="${ey}" x2="${cx2-dx*(NW/2)}" y2="${cy2-dy*(NH/2)}" stroke="#555" stroke-width="1.5"/>`;
+        } else {                       // folded space: connected, but not adjacent here
+          const [cx2,cy2]=center(t);
+          edges+=`<line x1="${ex}" y1="${ey}" x2="${cx2}" y2="${cy2}" stroke="#444" stroke-dasharray="4 4"/>`;
+        }
+      } else {   // exists but beyond view (depth cut or cell taken): stub with id
+        edges+=`<line x1="${ex}" y1="${ey}" x2="${ex+dx*24}" y2="${ey+dy*24}" stroke="#555"/>
+                <text x="${ex+dx*30-8}" y="${ey+dy*30+4}" fill="#777" font-size="10">${t}</text>`;
+      }
+    }
+  }
+  for(const [idStr,[x,y]] of Object.entries(placed)){
+    const id=+idStr, r=byId[id], [X,Y]=px(x,y), isSel=id===sel.numericId;
+    const upT=r.exits?.up, downT=r.exits?.down;
+    const vert=(upT!=null?'▲':'')+(downT!=null?'▼':'');
+    nodes+=`<g onclick="pickRoom(${id})" style="cursor:pointer">
+      <title>${esc(r.title)}${upT!=null?` | up: ${upT} ${esc(byId[upT]?.title??'?')}`:''}${downT!=null?` | down: ${downT} ${esc(byId[downT]?.title??'?')}`:''}</title>
+      <rect x="${X}" y="${Y}" width="${NW}" height="${NH}" rx="5" fill="${isSel?'#332211':'#1e1e1e'}" stroke="${isSel?'#FA935F':'#555'}" stroke-width="${isSel?2:1}"/>
+      <text x="${X+8}" y="${Y+20}" font-size="10" fill="#75C8FF">${id}${r.reviewed?' <tspan fill="#90FF90">✓</tspan>':''}${vert?` <tspan fill="#75C8FF" font-size="12">${vert}</tspan>`:''}</text>
+      <text x="${X+8}" y="${Y+38}" font-size="10" fill="#e0e0e0">${esc((r.title||'').slice(0,24))}</text></g>`;
+  }
+  const w=PAD*2+(Math.max(...xs)-minX+1)*CW, h=PAD*2+(Math.max(...ys)-minY+1)*CH;
+  $('side').innerHTML=`<svg width="${Math.max(w,420)}" height="${h+30}">${edges}${nodes}</svg>
+    <p class="hint" style="padding:0 10px">Compass map, ${MAXD} rooms out from the selected room. ▲▼ = stairs/ladders (click the room, then its up/down neighbor id on the stub or hover for the target). Dashed = connected but folded space. Red = broken exit. Numbers on stubs = rooms beyond the map edge.</p>`;
 }
 
 /* ---------- NPCs ---------- */
