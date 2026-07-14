@@ -141,8 +141,8 @@ function renderRoomForm(){
       ${n.mode==='inline'?`<input value="${esc(n.name)}" disabled title="inline NPCs: edit JSON directly">`:`<select onchange="sel.npcs[${i}].name=this.value;markDirty()">${refOpts(n.name)}</select>`}
       <button class="del" onclick="sel.npcs.splice(${i},1);markDirty();renderRoomForm()">✕</button></div>`).join('');
   $('form').innerHTML = `
-    <label>Room ID / internal name</label>
-    <div class="row"><input value="${sel.numericId}" disabled style="flex:0 0 70px"><input value="${esc(sel.id)}" onchange="sel.id=this.value;markDirty()"></div>
+    <label>Room ID / internal name <span class="hint">(renumbering updates every exit and dialogue reference)</span></label>
+    <div class="row"><input value="${sel.numericId}" style="flex:0 0 70px" onchange="changeRoomId(this)"><input value="${esc(sel.id)}" onchange="sel.id=this.value;markDirty()"></div>
     <label>Title</label><input class="w100" value="${esc(sel.title)}" onchange="sel.title=this.value;markDirty();renderList();renderGraph()">
     <label>Description <span class="hint">(&lt;br&gt; = line break)</span></label>
     <textarea class="w100" onchange="sel.description=this.value;markDirty()">${esc(sel.description)}</textarea>
@@ -154,6 +154,34 @@ function renderRoomForm(){
     <input value="${sel.respawnTimeHours??48}" title="hours" onchange="sel.respawnTimeHours=parseFloat(this.value);markDirty()" style="flex:0 0 80px"></div>
     ${reviewedBox()}`;
 }
+function changeRoomId(input){
+  const newId = parseInt(input.value), oldId = sel.numericId;
+  const st = $('status');
+  if (!Number.isInteger(newId) || newId < 0) { input.value = oldId; st.className='err'; st.textContent = 'Room id must be a non-negative integer'; return; }
+  if (newId === oldId) return;
+  if (rooms.some(r => r.numericId === newId)) { input.value = oldId; st.className='err'; st.textContent = `Room id ${newId} is already in use`; return; }
+
+  let refs = 0;
+  // Every exit in every room that pointed at the old id
+  for (const r of rooms)
+    for (const [dir, t] of Object.entries(r.exits || {}))
+      if (t === oldId) { r.exits[dir] = newId; refs++; }
+  // Dialogue action parameters carrying the room id (force_travel, remove_npc)
+  const fixAction = a => {
+    if (a?.parameters && ('room_id' in a.parameters) && String(a.parameters.room_id) === String(oldId)) { a.parameters.room_id = String(newId); refs++; }
+  };
+  for (const n of npcs)
+    for (const node of Object.values(n.dialogue || {})) {
+      fixAction(node.action);
+      for (const c of node.choices || []) fixAction(c.action);
+    }
+
+  sel.numericId = newId;
+  markDirty();
+  st.className=''; st.textContent = `Room ${oldId} → ${newId} (${refs} reference${refs===1?'':'s'} updated)`;
+  renderList(); renderRoomForm(); renderGraph();
+}
+
 const exitEntries=()=>Object.entries(sel.exits||{});
 function rebuildExits(e){ sel.exits=Object.fromEntries(e); markDirty(); renderRoomForm(); renderGraph(); }
 function exitDir(i,v){ const e=exitEntries(); e[i][0]=v; rebuildExits(e); }
@@ -360,11 +388,19 @@ function delParam(n,ci,k){ delete getActHolder(n,ci).action.parameters[k]; markD
 function addParam(n,ci){ getActHolder(n,ci).action.parameters['param']=''; markDirty(); renderDialogue(); }
 
 async function save(){
-  const [url, body] = mode==='rooms' ? ['/api/rooms', rooms] : ['/api/npcs-full', npcs];
-  const res = await fetch(url, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body, null, 2)});
-  const out = await res.json(); const st=$('status');
-  if(res.ok){ dirty=false; $('dirty').style.display='none'; st.className=''; st.textContent=`saved ✓ (backup: ${out.backup})`; }
-  else { st.className='err'; st.textContent='NOT saved - validation failed:\n'+out.error; }
+  // Always save both files: cross-cutting edits (room renumbering) can touch
+  // rooms and NPC dialogue actions in the same gesture.
+  const st=$('status');
+  const targets = [['/api/rooms', rooms], ['/api/npcs-full', npcs]];
+  const backups = [];
+  for (const [url, body] of targets) {
+    const res = await fetch(url, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body, null, 2)});
+    const out = await res.json();
+    if(!res.ok){ st.className='err'; st.textContent='NOT saved - validation failed:\n'+out.error; return; }
+    backups.push(out.backup);
+  }
+  dirty=false; $('dirty').style.display='none'; st.className='';
+  st.textContent=`saved ✓ (backups: ${backups.join(', ')})`;
 }
 $('search').addEventListener('input', renderList);
 init();
