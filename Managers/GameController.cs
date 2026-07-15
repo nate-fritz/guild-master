@@ -373,12 +373,26 @@ namespace GuildMaster.Managers
                     }
                     else
                     {
-                        // Check for NPCs
+                        // Check for NPCs - match on name, full short description, or
+                        // any significant word within it (so "l fighter" resolves
+                        // "A lone fighter" without knowing the NPC's proper name)
                         NPC targetNPC = currentRoomObj.NPCs.FirstOrDefault(npc =>
                             npc.Name.ToLower() == itemToExamine ||
-                            npc.ShortDescription.ToLower() == itemToExamine ||
-                            npc.ShortDescription.ToLower().Replace("a ", "").Replace("an ", "") == itemToExamine
+                            npc.Name.ToLower().Contains(itemToExamine) ||
+                            (npc.ShortDescription != null && npc.ShortDescription.ToLower() == itemToExamine)
                         );
+
+                        if (targetNPC == null)
+                        {
+                            targetNPC = currentRoomObj.NPCs.FirstOrDefault(npc =>
+                            {
+                                if (string.IsNullOrEmpty(npc.ShortDescription)) return false;
+                                string[] descWords = npc.ShortDescription.ToLower()
+                                    .Replace("a ", "").Replace("an ", "").Replace("the ", "")
+                                    .Split(' ');
+                                return descWords.Any(word => word == itemToExamine);
+                            });
+                        }
 
                         if (targetNPC != null)
                         {

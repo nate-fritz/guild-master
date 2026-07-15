@@ -78,6 +78,8 @@ static Scenario TravelCombatSaveLoad() => new("travel-combat-save-load", "Harnes
         Step.Cmd("north", expect: new[] { "Front Door" }),
         Step.Cmd("north", expect: new[] { "Dirt Road" }),
         Step.Cmd("north", expect: new[] { "crossroads", "farmer" }),
+        // Examine an NPC by a keyword from its short description, not its name
+        Step.Cmd("l farmer", expect: new[] { "burly man" }, forbid: new[] { "don't see" }),
         Step.Cmd("west", expect: new[] { "west of the crossroads" }),
         // Room 9 has a respawning hostile bandit; entering starts combat.
         // Enemy turns advance on their own (async pacing); the runner waits
